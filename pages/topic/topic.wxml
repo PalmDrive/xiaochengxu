@@ -1,0 +1,47 @@
+<!--
+  media: array
+-->
+<template name="mediumList">
+  <view class="medium-list">
+    <view class="medium" wx:for="{{media}}" wx:for-item="medium" wx:key="id" bindtap="goToMedium">
+      <view class="break-line"></view>
+      <view class="time text-grey">{{medium.attributes.publishedAt}}</view>
+      <view class="medium-container-without-image" wx:if="{{!medium.attributes.picurl}}">
+        <view class="title">{{medium.attributes.title}}</view>
+        <view class="summary">{{medium.attributes.summary}}</view>
+      </view>
+      <view class="medium-container-with-image" wx:if="{{medium.attributes.picurl}}">
+        <view class="medium-text-container d-ib">
+          <view class="title">{{medium.attributes.title}}</view>
+          <view class="summary">{{medium.attributes.summary}}</view>
+        </view>
+        <image class="medium-img" src="{{medium.attributes.picurl}}" mode="aspectFill"></image>
+        <text class="editor-comment text-grey" wx:if="{{medium.attributes.editorComment}}">{{medium.attributes.editorComment}}</text>
+      </view>
+    </view>
+  </view>
+</template>
+
+<view>
+  <image class="topic-img" src="{{topic.attributes.imgUrl}}" mode="aspectFill"></image>
+  <view class="topic-info">
+    <view class="topic-title">{{topic.attributes.name}}</view>
+    <view class="topic-meta text-grey">
+      <image class="icon-xs" src="../../images/content.png"></image>
+      <text>{{topic.attributes.fields[0] || '领域'}}</text>
+      <image class="icon-xs" src="../../images/update.png"></image>
+      <text>上次更新：{{media[0].attributes.publishedAt}}</text>
+    </view>
+    <view class="topic-desc">{{topic.attributes.description}}</view>
+  </view>
+
+  <view class="section-break"></view>
+
+  <scroll-view class="tabs" scroll-x wx:if="{{isFeatured}}">
+    <view class="tab" wx:for="{{tabs}}" wx:key="*this" bindtap="selectTab">
+      <text>{{item}}</text>
+    </view>
+  </scroll-view>
+
+  <template is="mediumList" data="{{media}}"></template>
+</view>

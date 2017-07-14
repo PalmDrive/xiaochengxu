@@ -1,0 +1,150 @@
+/**app.wxss**/
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 200rpx 0;
+  box-sizing: border-box;
+} 
+
+.d-ib {
+  display: inline-block;
+}
+
+.icon-xs {
+  width: 10px;
+  height: 10px;
+  padding: 0 3px;
+}
+
+.section-break {
+  height: 6px;
+  background: #F7F7F7;
+}
+
+.break-line {
+  height: 1px;
+  background: rgba(216,216,216,0.30);
+}
+
+scroll-view {
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
+/*text*/
+
+.text-grey {
+  color: #B7B7B7;
+}
+
+/*medium list*/
+
+.break-line {
+  margin-bottom: 20px;
+}
+
+.editor-comment {
+  background: #FBFBFB;
+  border: 1px solid #EDEDED;
+  padding: 10px 15px;
+  line-height: 21px;
+  margin-left: -10px;
+  margin-right: -10px;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.medium-list {
+  padding: 0 20px;
+}
+
+.medium-list .time {
+  margin-bottom: 15px;
+  height: 14px;
+  letter-spacing: 0.33px;
+}
+
+
+.medium-list .title, .medium-list .summary {
+  width: 100%;
+}
+
+.medium-list .title {
+  line-height: 24px;
+  max-height: 48px;
+  overflow: hidden;
+  margin-bottom: 6px;     
+}
+
+.medium-list .summary {
+  line-height: 22px;
+  max-height: 44px;
+  overflow: hidden;
+}
+
+.medium-container-with-image, .medium-container-without-image {
+  margin-bottom: 20px;
+}
+
+.medium-container-with-image .medium-img {
+  width: 35%;
+  height: 94px;
+}
+
+
+.medium-text-container {
+  width: 61%;
+  margin-right: 2%;
+}
+
+/*topic list*/
+
+  .topics-header {
+    padding: 15px;
+  }
+
+  .topic .break-line {
+    margin: 0 15px;
+  }
+  
+
+  .t-top {
+    padding: 17px 20px 11px;
+    position: relative;
+  }
+
+  .t-top-image {
+    width: 54px;
+    height: 54px;
+    margin-right: 10px;
+  }
+
+  .t-top-text {
+    position: absolute;
+    left: 84px;
+    top:0;
+    height: 54px;
+    margin-top: 17px;
+  }
+
+  .t-title {
+    padding-top: 4px;
+    margin-bottom: 10px;
+    color: rgba(0,0,0,0.90);
+  }
+
+  .t-meta {
+    letter-spacing: 0.33px;
+    height: 14px;
+  }
+
+  .t-desc {
+    margin: 0 20px 22px;
+    color: rgba(26,26,26,0.68);
+    line-height: 22px;
+    max-height: 44px;
+    overflow: hidden;
+  }

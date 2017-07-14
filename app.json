@@ -1,0 +1,13 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/topic/topic",
+    "pages/medium/medium"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "职得看",
+    "navigationBarTextStyle":"black"
+  }
+}
