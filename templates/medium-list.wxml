@@ -1,0 +1,23 @@
+<!--
+  media: array
+-->
+<template name="mediumList">
+  <view class="medium-list">
+    <view class="medium" wx:for="{{media}}" wx:for-item="medium" wx:key="id" bindtap="goToMedium">
+      <view class="break-line"></view>
+      <view class="time text-grey size-12">{{medium.attributes.publishedAt}}</view>
+      <view class="medium-container-without-image" wx:if="{{!medium.attributes.picurl}}">
+        <view class="title size-18 text-bold">{{medium.attributes.title}}</view>
+        <view class="summary size-14">{{medium.attributes.summary}}</view>
+      </view>
+      <view class="medium-container-with-image" wx:if="{{medium.attributes.picurl}}">
+        <view class="medium-text-container d-ib">
+          <view class="title size-18 text-bold">{{medium.attributes.title}}</view>
+          <view class="summary size-14">{{medium.attributes.summary}}</view>
+        </view>
+        <image class="medium-img" src="{{medium.attributes.picurl}}" mode="aspectFill"></image>
+        <text class="editor-comment text-grey" wx:if="{{medium.attributes.editorComment}}">{{medium.attributes.editorComment}}</text>
+      </view>
+    </view>
+  </view>
+</template>

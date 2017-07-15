@@ -1,2 +1,10 @@
-<!--pages/medium/medium.wxml-->
-<text>pages/medium/medium.wxml</text>
+<import src="../../templates/medium-list.wxml"/>
+
+<view class="container">
+  <view class="medium-container">
+    <view class="title text-bold size-20">{{medium.attributes.title}}</view>
+    <image class="pic" src="{{medium.attributes.picurl}}" wx:if="{{medium.attributes.picurl}}"></image>
+    <view class="summary size-16">{{medium.attributes.summary}}</view>
+    <view class="read text-center"></view>
+  </view>
+</view>

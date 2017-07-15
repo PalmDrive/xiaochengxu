@@ -55,46 +55,48 @@
   color: #48A2C9;
 }
 
-.index-list .break-line {
-  margin: 0 20px;
-}
+/* 相关专题 */
 
-.index-card-container {
-  padding: 10px 15px;
-}
+  .index-list .break-line {
+    margin: 0 20px;
+  }
 
-.index-card-banner-inner {
-  height: 67px;
-  background: rgba(0,0,0,0.70);
-  padding: 12px 16px 10px;
-}
+  .index-card-container {
+    padding: 10px 15px;
+  }
 
-.index-card-topic-img {
-  width: 45px;
-  height: 45px;
-  margin-right: 8px;
-}
+  .index-card-banner-inner {
+    height: 50px;
+    background: rgba(0,0,0,0.70);
+    padding: 12px 16px 10px;
+  }
 
-.index-card-topic-title {
-  line-height: 25px;
-  margin-bottom: 5px;
-}
+  .index-card-topic-img {
+    width: 45px;
+    height: 45px;
+    margin-right: 8px;
+  }
 
-.index-card-media {
-  padding: 12px;
-  border: 1px solid #EDEDED;
-}
+  .index-card-topic-title {
+    line-height: 25px;
+    margin-bottom: 5px;
+  }
 
-.index-card-medium-title {
-  height: 34px;
-  line-height: 34px;
-  overflow: hidden;
-}
+  .index-card-media {
+    padding: 12px;
+    border: 1px solid #EDEDED;
+  }
 
-.index-card-more {
-  border: 1px solid #EDEDED;
-  border-top: none;
-  line-height: 40px;
-  color: #48A2C9;
-  letter-spacing: 0.33px;
-}
+  .index-card-medium-title {
+    height: 34px;
+    line-height: 34px;
+    overflow: hidden;
+  }
+
+  .index-card-more {
+    border: 1px solid #EDEDED;
+    border-top: none;
+    line-height: 40px;
+    color: #48A2C9;
+    letter-spacing: 0.33px;
+  }

@@ -1,1 +1,73 @@
 /* pages/medium/medium.wxss */
+
+.medium-container {
+  padding: 17px 15px 0 15px;
+}
+
+.medium-container .title {
+  line-height: 27px;
+  max-height: 54px;
+  overflow: hidden;
+}
+
+.medium-container .pic {
+  margin-top: 20px;
+  height: 180px;
+  width: 100%;
+}
+
+.medium-container .summary {
+  margin-top: 21px;
+  margin-bottom: 18px;
+  letter-spacing: 0;
+  line-height: 24px;
+  max-height: 96px;
+  overflow: hidden;
+}
+
+.read {
+  margin-bottom: 32px;
+}
+
+.read-arrow-container {
+  width: 20px;
+  height: 20px;
+  margin: auto;
+  margin-bottom: 12px;
+}
+
+.section-break {
+  margin-top: 20px;
+}
+
+.media-container {
+  padding: 0 15px;
+}
+
+.media-container .section-title {
+  padding: 15px 0;
+  letter-spacing: 0;
+}
+
+.media-container .break-line {
+  margin-bottom: 15px;
+  background: #EDEDED;
+}
+
+.medium {
+  padding-top: 0;
+}
+
+.medium-topic {
+  margin-bottom: 9px;
+}
+
+.medium-topic-image {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}
+
+.medium-topic-name {
+  vertical-align: middle;
+}
