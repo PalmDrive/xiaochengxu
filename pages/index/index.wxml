@@ -1,15 +1,22 @@
 <!--index.wxml-->
+<import src="../../templates/topic-list.wxml"/>
+
 <view class="container">
-  <view class="userinfo">
-    <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
-    <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-  </view>
-  <view class="usermotto">
-    <text class="user-motto">{{motto}}</text>
-  </view>
-  <view class="featured-topic-list">
-    <view wx:for="{{featuredTopics}}" wx:key="id" class="featured-topic">
-      <text data-id="{{item.id}}" bindtap="goToTopic">{{item.attributes.name}}</text>
+  <view class="featured">
+    <view class="featured-title size-16">
+      <view class="featured-title-left d-ib text-bold">精选专题</view>
+      <scroll-view class="featured-slides" scroll-x>
+        <view data-id="{{topic.id}}" bindtap="goToTopic" class="featured-slide d-ib" wx:for="{{featuredTopics}}" wx:for-item="topic" wx:key="id">
+          <view class="featured-slide-img img-cover" style="background-image: {{'url(' + topic.attributes.imgUrl + ')'}}"></view>
+          <view class="featured-slide-title text-center size-15 text-bold">{{topic.attributes.name}}</view>
+        </view>
+      </scroll-view>
     </view>
+  </view>
+
+  <view class="guess">
+    <view class="guess-title text-bold size-16">猜你喜欢</view>
+
+    <template is="topicList" data="{{topics: guessTopics}}"></template>
   </view>
 </view>

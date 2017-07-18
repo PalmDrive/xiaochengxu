@@ -1,5 +1,6 @@
 /**app.wxss**/
 @import "wxss/text.wxss";
+@import "wxss/templates/topic-list.wxss";
 
 .container {
   box-sizing: border-box;
@@ -20,6 +21,10 @@
 .section-break {
   height: 6px;
   background: #F7F7F7;
+}
+
+.section-title {
+  padding: 15px;
 }
 
 .break-line {

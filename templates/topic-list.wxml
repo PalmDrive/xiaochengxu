@@ -1,0 +1,17 @@
+<!--
+  topics: array
+-->
+<template name="topicList">
+  <view class="topic-list">
+    <view class="topic-card" wx:for="{{topics}}" wx:for-item="topic" wx:key="id" bindtap="goToTopic" data-id="{{topic.id}}">
+      <view class="topic-img img-cover d-ib" style="background-image: {{'url(' + topic.attributes.imgUrl + ')'}}">
+        <image class="topic-featured" src="../../images/featured.png" wx:if="{{topic.attributes.type === 'featured'}}"></image>
+      </view>
+      <view class="topic-info d-ib">
+        <view class="topic-title size-15 text-bold">{{topic.attributes.name}}</view>
+        <view class="topic-update size-10 text-grey d-ib">{{topic.attributes.lastMediumAddedAt}}更新</view>
+        <view class="topic-last-medium size-12 text-grey">{{topic.attributes.lastMediumTitle}}</view>
+      </view>
+    </view>
+  </view>
+</template>

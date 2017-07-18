@@ -1,5 +1,4 @@
-//index.js
-//获取应用实例
+//my.js
 var app = getApp()
 Page({
   data: {
@@ -11,7 +10,7 @@ Page({
       "attributes": {
         "topicId": "0c20f890-4b25-11e7-9b14-eb405934b63b",
         "name": "26位世界级产品经理的持续思考分享 | 海外精选",
-        "imgUrl": "http://via.placeholder.com/350x150",
+        "imgUrl": "http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%93%E9%A2%98%E5%9B%BE%E7%89%87/Rectangle%2018%20Copy%2010%403x.png",
         "description": "26位身经百战的产品经理在博客上分享他们最新的思考和分析",
         "subscriptionsCount": 21,
         "updatedAt": 1499856697615,
@@ -31,7 +30,7 @@ Page({
     }]
   },
   //事件处理函数
-  goToTopic: function(event) {
+  goToTopic: function (event) {
     const id = event.target.dataset.id;
     wx.navigateTo({
       url: `../topic/topic?id=${id}`
@@ -41,10 +40,10 @@ Page({
     console.log('onLoad')
     var that = this
     //调用应用实例的方法获取全局数据
-    app.getUserInfo(function(userInfo){
+    app.getUserInfo(function (userInfo) {
       //更新数据
       that.setData({
-        userInfo:userInfo
+        userInfo: userInfo
       })
     });
     //获取精选专题

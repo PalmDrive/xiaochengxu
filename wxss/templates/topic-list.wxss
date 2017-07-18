@@ -1,0 +1,48 @@
+.topic-list {
+  padding: 0 15px;
+}
+
+.topic-card {
+  margin: 10px 0;
+  background: #FFFFFF;
+  box-shadow: 0 0 4px 0 rgba(0,0,0,0.08);
+  border-radius: 3px;
+}
+
+.topic-img {
+  width: 25%;
+  height: 86px;
+  position: relative;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px; 
+}
+
+.topic-featured {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 36px;
+  height: 36px;
+}
+
+.topic-info {
+  padding-left: 8px;
+  padding-top: 8px;
+  max-width: 73%;
+}
+
+.topic-title {
+  line-height: 21px;
+  margin-bottom: 10px;
+  max-width: 240px;
+  height: 21px;
+  overflow: hidden;
+}
+
+.topic-update {
+  border: 1px solid #D5D5D5;
+  border-radius: 3px;
+  padding: 3px 5px;
+  margin-bottom: 8px;
+  height: 11px;
+}

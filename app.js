@@ -22,6 +22,6 @@ App({
   globalData: {
     userInfo: null,
     userId: null,
-    apiBase: 'http://ainterest-service-staging.ailingual.cn/api/v1'
+    apiBase: 'https://ainterest-service-staging.ailingual.cn/api/v1'
   }
 })

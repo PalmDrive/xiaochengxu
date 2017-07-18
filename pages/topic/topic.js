@@ -211,7 +211,8 @@ Page({
   },
 
   goToMedium(event) {
-    const mediumId = event.target.dataset.id;
+    const mediumId = event.currentTarget.dataset.id;
+    console.log('goToMedium:', mediumId);
     wx.navigateTo({
       url: `../medium/medium?id=${mediumId}`
     })
@@ -291,7 +292,7 @@ Page({
                   t.media5 = t.media.slice(0, 5);
                 }
               });
-              that.setDate({
+              that.setData({
                 childTopics: topics
               });
             },

@@ -1,10 +1,22 @@
 <import src="../../templates/medium-list.wxml"/>
+<import src="../../templates/topic-list.wxml"/>
 
 <view class="container">
   <view class="medium-container">
     <view class="title text-bold size-20">{{medium.attributes.title}}</view>
-    <image class="pic" src="{{medium.attributes.picurl}}" wx:if="{{medium.attributes.picurl}}"></image>
+    <image class="pic" src="{{medium.attributes.picurl}}" wx:if="{{medium.attributes.picurl}}" mode="aspectFill"></image>
     <view class="summary size-16">{{medium.attributes.summary}}</view>
     <view class="read text-center"></view>
   </view>
+
+  <view class="section-break"></view>
+
+  <view class="section-title text-grey size-14">文章推荐</view>
+
+  <template is="mediumList" data="{{media: relatedMedia}}"></template>
+
+  <view class="section-break"></view>
+
+  <view class="section-title text-grey size-14">专题推荐</view>
+  <template is="topicList" data="{{topics: relatedTopics}}"></template>
 </view>
