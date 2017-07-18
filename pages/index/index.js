@@ -3,36 +3,11 @@
 var app = getApp()
 Page({
   data: {
-    motto: '欢迎来到职得看',
-    userInfo: {},
-    featuredTopics: [{
-      "type": "topics",
-      "id": "0c20f890-4b25-11e7-9b14-eb405934b63b",
-      "attributes": {
-        "topicId": "0c20f890-4b25-11e7-9b14-eb405934b63b",
-        "name": "26位世界级产品经理的持续思考分享 | 海外精选",
-        "imgUrl": "http://via.placeholder.com/350x150",
-        "description": "26位身经百战的产品经理在博客上分享他们最新的思考和分析",
-        "subscriptionsCount": 21,
-        "updatedAt": 1499856697615,
-        "publishedAt": 1492502232704,
-        "createdAt": 1492505847449,
-        "proposedBy": "99279540-2a83-11e7-992f-b36260038d03",
-        "labels": [
-          "Topic",
-          "Visible",
-          "UGC"
-        ],
-        "reviewStatus": 1,
-        "lastMediumAddedAt": "2017-07-12T23:00:00.000Z",
-        "lastMediumTitle": "Stop Using noreply@",
-        "type": "featured"
-      }
-    }]
+    featuredTopics: []
   },
   //事件处理函数
   goToTopic: function(event) {
-    const id = event.target.dataset.id;
+    const id = event.currentTarget.dataset.id;
     wx.navigateTo({
       url: `../topic/topic?id=${id}`
     })

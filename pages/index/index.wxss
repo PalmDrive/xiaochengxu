@@ -1,35 +1,46 @@
 /**index.wxss**/
-.container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 200rpx 0;
-  box-sizing: border-box;
-} 
 
-.userinfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.banner {
+  background-image: url('/images/discovery/banner.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 160px;
 }
 
-.userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
+.featured {
+  background: #F7F7F7;
+  padding-bottom: 14px;
 }
 
-.userinfo-nickname {
-  color: #aaa;
+.featured-title {
+  padding: 13px 15px 15px;
+  position: relative;
 }
 
-.usermotto {
-  margin-top: 20px;
+.featured-title-right {
+  position: absolute;
+  right: 15px;
 }
 
-.featured-topic-list {
-  margin-top: 20px;
+.featured-slides {
+  padding-left: 15px;
+}
+
+.featured-slide {
+  margin-right: 10px;
+  background: #fff;
+}
+
+.featured-slide-img {
+  width: 300px;
+  height: 188px;
+}
+
+.featured-slide-title {
+  height: 46px;
+  line-height: 46px;
+}
+
+.guess-title {
+  padding: 15px 20px 5px;
 }

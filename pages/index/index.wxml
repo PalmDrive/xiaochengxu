@@ -5,18 +5,18 @@
   <view class="featured">
     <view class="featured-title size-16">
       <view class="featured-title-left d-ib text-bold">精选专题</view>
-      <scroll-view class="featured-slides" scroll-x>
-        <view data-id="{{topic.id}}" bindtap="goToTopic" class="featured-slide d-ib" wx:for="{{featuredTopics}}" wx:for-item="topic" wx:key="id">
-          <view class="featured-slide-img img-cover" style="background-image: {{'url(' + topic.attributes.imgUrl + ')'}}"></view>
-          <view class="featured-slide-title text-center size-15 text-bold">{{topic.attributes.name}}</view>
-        </view>
-      </scroll-view>
     </view>
+    <scroll-view class="featured-slides" scroll-x>
+      <view data-id="{{topic.id}}" bindtap="goToTopic" class="featured-slide d-ib" wx:for="{{featuredTopics}}" wx:for-item="topic" wx:key="id">
+        <view class="featured-slide-img img-cover" style="background-image: {{'url(' + topic.attributes.imgUrl + ')'}}"></view>
+        <view class="featured-slide-title text-center size-15 text-bold">{{topic.attributes.name}}</view>
+      </view>
+    </scroll-view>
   </view>
 
-  <view class="guess">
+  <!-- <view class="guess">
     <view class="guess-title text-bold size-16">猜你喜欢</view>
 
     <template is="topicList" data="{{topics: guessTopics}}"></template>
-  </view>
+  </view> -->
 </view>
