@@ -65,7 +65,7 @@ App({
                             }
                           },
                           success(res) {
-                            const userId = result.data.data.id;
+                            const userId = res.data.data.id;
                             console.log('userId:', userId);
                             Auth.setLocalUserId(userId);
                           },
