@@ -16,8 +16,8 @@
           <view class="summary size-14">{{medium.attributes.summary}}</view>
         </view>
         <image class="medium-img" src="{{medium.attributes.picurl}}" mode="aspectFill"></image>
-        <text class="editor-comment text-grey" wx:if="{{medium.attributes.editorComment}}">{{medium.attributes.editorComment}}</text>
       </view>
+      <view class="editor-comment size-13 text-grey" wx:if="{{medium.attributes.editorComment}}">{{medium.attributes.editorComment}}</view>
     </view>
   </view>
 </template>

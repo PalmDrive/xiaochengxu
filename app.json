@@ -10,5 +10,22 @@
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "职得看",
     "navigationBarTextStyle":"black"
+  },
+  "tabBar": {
+    "color": "#000",
+    "selectedColor": "#34aadc",
+    "backgroundColor": "#fff",
+    "borderStyle": "white",
+    "position": "top",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的"
+      }
+    ]
   }
 }

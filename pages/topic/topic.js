@@ -40,9 +40,24 @@ Page({
   goToMedium(event) {
     const mediumId = event.currentTarget.dataset.id;
     console.log('goToMedium:', mediumId);
-    wx.navigateTo({
+    wx.redirectTo({
       url: `../medium/medium?id=${mediumId}`
     })
+  },
+
+  showMoreMedia(event) {
+    const topicId = event.currentTarget.dataset.id;
+    const childTopics = this.data.childTopics;
+    for (let i = 0; i < childTopics.length; i++) {
+      if (childTopics[i].id === topicId) {
+        const topic = childTopics[i];
+        topic.media5 = topic.media;
+        topic.moreShowed = true;
+        this.setData({
+          childTopics
+        });
+      }
+    }
   },
 
   /**
@@ -93,7 +108,9 @@ Page({
           topicId,
           topic,
           isFeatured,
-          tabs,
+          tabs
+        });
+        that.setData({
           mediumData
         });
 

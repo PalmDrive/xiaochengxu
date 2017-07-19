@@ -1,7 +1,7 @@
 // pages/medium/medium.js
-const app = getApp();
+const app = getApp(),
+      util = require('../../utils/util.js');
 Page({
-
   /**
    * 页面的初始数据
    */
@@ -55,10 +55,16 @@ Page({
       success(result) {
         const relatedMedia = result.data.data;
         relatedMedia.forEach(m => {
-          if (Object.keys(m.attributes.topics).length === 0) {
-            delete m.attributes.topics;
+          // if (Object.keys(m.attributes.topics).length === 0) {
+          //   delete m.attributes.topics;
+          // } else {
+          //   m.attributes.topic = m.attributes.topics[Object.keys(m.attributes.topics)[0]];
+          // }
+
+          if (m.attributes.publishedAt) {
+            m.attributes.publishedAt = util.convertDate(new Date(m.attributes.publishedAt));
           } else {
-            m.attributes.topic = m.attributes.topics[Object.keys(m.attributes.topics)[0]];
+            m.attributes.publishedAt = '';
           }
         });
         that.setData({
@@ -73,8 +79,17 @@ Page({
     wx.request({
       url: `${app.globalData.apiBase}/media/${mediumId}/related-topics`,
       success(result) {
+        const topics = result.data.data;
+        topics.forEach(t => {
+          if (t.attributes.lastMediumAddedAt) {
+            t.attributes.lastMediumAddedAt = util.convertDate(new Date(t.attributes.lastMediumAddedAt));
+          }
+          if (t.attributes.lastMediumTitle) {
+            t.attributes.lastMediumTitle = t.attributes.lastMediumTitle.slice(0, 15) + '...';
+          }
+        });
         that.setData({
-          relatedTopics: result.data.data
+          relatedTopics: topics
         });
       },
       fail() {

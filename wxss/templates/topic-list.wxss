@@ -2,14 +2,14 @@
   padding: 0 15px;
 }
 
-.topic-card {
+.topic-list .topic-card {
   margin: 10px 0;
   background: #FFFFFF;
   box-shadow: 0 0 4px 0 rgba(0,0,0,0.08);
   border-radius: 3px;
 }
 
-.topic-img {
+.topic-list .topic-img {
   width: 25%;
   height: 86px;
   position: relative;
@@ -17,7 +17,7 @@
   border-bottom-left-radius: 3px; 
 }
 
-.topic-featured {
+.topic-list .topic-featured {
   position: absolute;
   left: 0;
   top: 0;
@@ -25,24 +25,24 @@
   height: 36px;
 }
 
-.topic-info {
+.topic-list .topic-info {
   padding-left: 8px;
   padding-top: 8px;
-  max-width: 73%;
+  padding-bottom: 8px;
+  max-width: 72%; 
 }
 
-.topic-title {
+.topic-list .topic-title {
   line-height: 21px;
   margin-bottom: 10px;
-  max-width: 240px;
+   max-width: 240px; 
   height: 21px;
   overflow: hidden;
 }
 
-.topic-update {
+.topic-list .topic-update {
   border: 1px solid #D5D5D5;
   border-radius: 3px;
   padding: 3px 5px;
   margin-bottom: 8px;
-  height: 11px;
 }

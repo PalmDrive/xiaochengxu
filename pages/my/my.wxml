@@ -5,12 +5,4 @@
     <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
     <text class="userinfo-nickname">{{userInfo.nickName}}</text>
   </view>
-  <view class="usermotto">
-    <text class="user-motto">{{motto}}</text>
-  </view>
-  <view class="featured-topic-list">
-    <view wx:for="{{featuredTopics}}" wx:key="id" class="featured-topic">
-      <text data-id="{{item.id}}" bindtap="goToTopic">{{item.attributes.name}}</text>
-    </view>
-  </view>
 </view>

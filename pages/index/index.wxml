@@ -14,9 +14,8 @@
     </scroll-view>
   </view>
 
-  <!-- <view class="guess">
+   <view class="guess">
     <view class="guess-title text-bold size-16">猜你喜欢</view>
-
     <template is="topicList" data="{{topics: guessTopics}}"></template>
-  </view> -->
+  </view> 
 </view>

@@ -15,7 +15,7 @@
         </view>
         <view class="index-card-media">
           <view class="index-card-media-inner">
-            <view class="index-card-medium-title size-13" wx:for="{{topic.media}}" wx:for-item="medium" wx:key="id" bindtap="goToMedium" data-id="{{medium.id}}">{{medium.attributes.title}}</view>
+            <view class="index-card-medium-title size-13" wx:for="{{topic.media5}}" wx:for-item="medium" wx:key="id" bindtap="goToMedium" data-id="{{medium.id}}">{{medium.attributes.title}}</view>
           </view>
         </view>
         <view class="index-card-more size-12 text-center" bindtap="showMoreMedia" data-id="{{topic.id}}" hidden="{{topic.moreShowed || topic.media.length <= 5}}">查看更多</view>
