@@ -1,0 +1,6 @@
+<!--pages/read/read.wxml-->
+<import src="../../templates/medium-list-2.wxml"/>
+
+<view class="container">
+  <template is="mediumList2" data="{{media}}"></template>
+</view>

@@ -49,7 +49,38 @@ function convertDate(date) {
   }
 }
 
+function formatTopic(t) {
+  //格式化时间
+  if (t.attributes.lastMediumAddedAt) {
+    t.attributes.lastMediumAddedAt = convertDate(new Date(t.attributes.lastMediumAddedAt));
+  } else {
+    t.attributes.lastMediumAddedAt = '';
+  }
+  // trim 文章标题
+  if (t.attributes.lastMediumTitle) {
+    t.attributes.lastMediumTitle = t.attributes.lastMediumTitle.slice(0, 15) + '...';
+  }
+}
+
+function formatMedium(m) {
+  if (Object.keys(m.attributes.topics).length === 0) {
+    delete m.attributes.topics;
+  } else {
+    m.attributes.topic = m.attributes.topics[Object.keys(m.attributes.topics)[0]];
+  }
+}
+
+function goToMedium(event) {
+  const mediumId = event.currentTarget.dataset.id;
+  wx.redirectTo({
+    url: `../medium/medium?id=${mediumId}`
+  });
+}
+
 module.exports = {
   formatTime,
-  convertDate
+  convertDate,
+  formatTopic,
+  formatMedium,
+  goToMedium
 }

@@ -1,9 +1,10 @@
 <!--index.wxml-->
 <import src="../../templates/topic-list.wxml"/>
+<import src="../../templates/homepage-topic-section.wxml"/>
 
 <view class="container">
   <view class="featured">
-    <view class="featured-title size-16">
+    <view class="featured-title size-17">
       <view class="featured-title-left d-ib text-bold">精选专题</view>
     </view>
     <scroll-view class="featured-slides" scroll-x>
@@ -14,8 +15,12 @@
     </scroll-view>
   </view>
 
+  <view wx:for="{{sections}}" wx:for-item="section" wx:key="sectionName">
+    <template is="homepageTopicSection" data="{{section}}"></template>
+  </view>
+
    <view class="guess">
-    <view class="guess-title text-bold size-16">猜你喜欢</view>
+    <view class="guess-title text-bold size-17">猜你喜欢</view>
     <template is="topicList" data="{{topics: guessTopics}}"></template>
   </view> 
 </view>

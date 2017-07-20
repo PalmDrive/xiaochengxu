@@ -1,6 +1,7 @@
 {
   "pages":[
     "pages/index/index",
+    "pages/read/read",
     "pages/topic/topic",
     "pages/medium/medium",
     "pages/my/my"
@@ -23,8 +24,8 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/my/my",
-        "text": "我的"
+        "pagePath": "pages/read/read",
+        "text": "日读"
       }
     ]
   }

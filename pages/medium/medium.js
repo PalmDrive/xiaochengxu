@@ -1,6 +1,7 @@
 // pages/medium/medium.js
 const app = getApp(),
-      util = require('../../utils/util.js');
+      util = require('../../utils/util.js'),
+      WxParse = require('../../utils/wxParse/wxParse.js');
 Page({
   /**
    * 页面的初始数据
@@ -33,17 +34,27 @@ Page({
 
     //获取文章数据
     wx.request({
-      url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=title,picurl,summary,link,topics`,
+      url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt`,
       success(result) {
         const medium = result.data.data;
 
-        // 把文章所属专题id放到medium.topicId
-        const topicIds = Object.keys(medium.attributes.topics);
-        medium.topicId = topicIds.length ? topicIds[0] : '';
+        if (Object.keys(medium.attributes.topics).length === 0) {
+          delete medium.attributes.topics;
+        } else {
+          medium.attributes.topic = medium.attributes.topics[Object.keys(medium.attributes.topics)[0]];
+        }
+
+        if (medium.attributes.publishedAt) {
+          medium.attributes.publishedAt = util.convertDate(new Date(medium.attributes.publishedAt));
+        } else {
+          medium.attributes.publishedAt = '';
+        }
 
         that.setData({
           medium
         });
+
+        WxParse.wxParse('htmlContent', 'html', medium.attributes.htmlContent, that, 0);
       },
       fail() {
         console.log('medium page request medium data fail');
@@ -54,19 +65,7 @@ Page({
       url: `${app.globalData.apiBase}/media/${mediumId}/related-media`,
       success(result) {
         const relatedMedia = result.data.data;
-        relatedMedia.forEach(m => {
-          // if (Object.keys(m.attributes.topics).length === 0) {
-          //   delete m.attributes.topics;
-          // } else {
-          //   m.attributes.topic = m.attributes.topics[Object.keys(m.attributes.topics)[0]];
-          // }
-
-          if (m.attributes.publishedAt) {
-            m.attributes.publishedAt = util.convertDate(new Date(m.attributes.publishedAt));
-          } else {
-            m.attributes.publishedAt = '';
-          }
-        });
+        relatedMedia.forEach(util.formatMedium);
         that.setData({
           relatedMedia
         });

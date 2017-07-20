@@ -37,13 +37,7 @@ Page({
     });
   },
 
-  goToMedium(event) {
-    const mediumId = event.currentTarget.dataset.id;
-    console.log('goToMedium:', mediumId);
-    wx.redirectTo({
-      url: `../medium/medium?id=${mediumId}`
-    })
-  },
+  goToMedium: util.goToMedium,
 
   showMoreMedia(event) {
     const topicId = event.currentTarget.dataset.id;

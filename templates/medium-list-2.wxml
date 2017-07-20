@@ -1,0 +1,31 @@
+<!--
+  media: array
+
+  相比 mediumList，删除了发布时间，增加了所属专题的图标和名称
+-->
+
+<template name="mediumList2">
+  <view class="medium-list medium-list-2">
+    <view class="medium" wx:for="{{media}}" wx:for-item="medium" wx:key="id" data-id="{{medium.id}}" bindtap="goToMedium">
+      <view class="break-line"></view>
+
+      <view class="medium-topic">
+        <view class="medium-topic-image img-cover d-ib" style="background-image: {{'url(' + medium.attributes.topic.imgUrl + ')'}}"></view>
+        <view class="medium-topic-name d-ib size-10 text-grey">{{medium.attributes.topic.name}}</view>
+      </view>
+
+      <view class="medium-container-without-image" wx:if="{{!medium.attributes.picurl}}">
+        <view class="title size-18 text-bold">{{medium.attributes.title}}</view>
+        <view class="summary size-14">{{medium.attributes.summary}}</view>
+      </view>
+      <view class="medium-container-with-image" wx:if="{{medium.attributes.picurl}}">
+        <view class="medium-text-container d-ib">
+          <view class="title size-18 text-bold">{{medium.attributes.title}}</view>
+          <view class="summary size-14">{{medium.attributes.summary}}</view>
+        </view>
+        <image class="medium-img" src="{{medium.attributes.picurl}}" mode="aspectFill"></image>
+      </view>
+      <view class="editor-comment size-13 text-grey" wx:if="{{medium.attributes.editorComment}}">{{medium.attributes.editorComment}}</view>
+    </view>
+  </view>
+</template>

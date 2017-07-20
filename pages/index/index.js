@@ -4,7 +4,8 @@ var app = getApp(),
     util = require('../../utils/util');
 Page({
   data: {
-    featuredTopics: []
+    featuredTopics: [],
+    sections: [] //分块专题
   },
   //事件处理函数
   goToTopic: function(event) {
@@ -27,23 +28,28 @@ Page({
         console.log('request featured topics fail');
       }
     });
+    //获取首页分块专题
+    wx.request({
+      url: `${app.globalData.apiBase}/topics/homepage`,
+      success(res) {
+        const sections = res.data.data;
+        sections.forEach(section => {
+          section.topics.forEach(util.formatTopic);
+        });
+        that.setData({
+          sections
+        });
+      },
+      fail() {
+        console.log('request /topics/homepage fail');
+      }
+    });
     //获取猜你喜欢
     wx.request({
       url: `${app.globalData.apiBase}/topics/guess`,
       success(res) {
         const topics = res.data.data;
-        topics.forEach(t => {
-          // 格式化时间
-          if (t.attributes.lastMediumAddedAt) {
-            t.attributes.lastMediumAddedAt = util.convertDate(new Date(t.attributes.lastMediumAddedAt));
-          } else {
-            t.attributes.lastMediumAddedAt = '';
-          }
-
-          if (t.attributes.lastMediumTitle) {
-            t.attributes.lastMediumTitle = t.attributes.lastMediumTitle.slice(0, 15) + '...';
-          }
-        });
+        topics.forEach(util.formatTopic);
         that.setData({
           guessTopics: topics
         });

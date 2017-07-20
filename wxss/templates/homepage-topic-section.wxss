@@ -1,0 +1,18 @@
+.homepage-topic-section .topic-list{
+  display: flex;
+  display: -webkit-flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 310px;
+  padding-left: 10px;
+}
+
+.homepage-topic-section .section-name {
+  padding: 15px;
+}
+
+.homepage-topic-section .topic-card {
+  margin: 5px;
+  width: 340px;
+}

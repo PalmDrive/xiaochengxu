@@ -1,6 +1,13 @@
 /**app.wxss**/
 @import "wxss/text.wxss";
 @import "wxss/templates/topic-list.wxss";
+@import "wxss/templates/homepage-topic-section.wxss";
+@import "wxss/templates/medium-list-2.wxss";
+@import "utils/wxParse/wxParse.wxss";
+
+view {
+  box-sizing: border-box;
+}
 
 .container {
   box-sizing: border-box;

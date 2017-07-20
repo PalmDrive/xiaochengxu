@@ -4,6 +4,10 @@
   color: #B7B7B7;
 }
 
+.text-dark-grey {
+  color: #606060;
+}
+
 .text-white {
   color: #FFF;
 }

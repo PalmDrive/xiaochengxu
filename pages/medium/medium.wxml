@@ -1,22 +1,35 @@
-<import src="../../templates/medium-list.wxml"/>
+<import src="../../templates/medium-list-2.wxml"/>
 <import src="../../templates/topic-list.wxml"/>
+<import src="../../utils/wxParse/wxParse.wxml"/>
 
 <view class="container">
   <view class="medium-container">
     <view class="title text-bold size-20">{{medium.attributes.title}}</view>
-    <image class="pic" src="{{medium.attributes.picurl}}" wx:if="{{medium.attributes.picurl}}" mode="aspectFill"></image>
-    <view class="summary size-16">{{medium.attributes.summary}}</view>
-    <view class="read text-center"></view>
+    <view class="meta size-12">
+      <view class="source-image img-cover d-ib" style="background-image: {{'url(' + medium.attributes.sourcePicUrl + ')'}}"></view>
+      <view class="source text-dark-grey d-ib meta-text">{{medium.attributes.source}}</view>
+      <view class="author text-grey d-ib meta-text">{{medium.attributes.author}}</view>
+      <view class="time text-dark-grey d-ib meta-text">{{medium.attributes.publishedAt}}</view>
+    </view>
+    <view class="html-content size-15">
+      <template is="wxParse" data="{{wxParseData:htmlContent.nodes}}"/>
+    </view>
+  </view>
+
+  <view class="size-12 html-footer text-center text-grey">网页由“职得看”转码以便移动设备阅读</view>
+
+  <view class="topic" wx:if="{{medium.attributes.topic}}">
+    <view class="topic-img img-cover d-ib" style="background-image: {{'url(' + medium.attributes.topic.imgUrl + ')'}}"></view>
   </view>
 
   <view class="section-break"></view>
 
   <view class="section-title text-grey size-14">文章推荐</view>
 
-  <template is="mediumList" data="{{media: relatedMedia}}"></template>
+  <template is="mediumList2" data="{{media: relatedMedia}}"></template>
 
   <view class="section-break"></view>
 
-  <view class="section-title text-grey size-14">专题推荐</view>
-  <template is="topicList" data="{{topics: relatedTopics}}"></template>
+  <!-- <view class="section-title text-grey size-14">专题推荐</view>
+  <template is="topicList" data="{{topics: relatedTopics}}"></template> -->
 </view>

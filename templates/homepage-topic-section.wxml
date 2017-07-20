@@ -1,0 +1,11 @@
+<import src="topic-list.wxml"/>
+
+<!-- section: object -->
+<template name="homepageTopicSection">
+  <view class="homepage-topic-section">
+    <view class="section-name size-17 text-bold">{{section.sectionName}}</view>
+    <scroll-view scroll-x>
+      <template is="topicList" data="{{topics: section.topics}}"></template>
+    </scroll-view>
+  </view>
+</template>
