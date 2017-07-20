@@ -72,7 +72,7 @@ function formatMedium(m) {
 
 function goToMedium(event) {
   const mediumId = event.currentTarget.dataset.id;
-  wx.redirectTo({
+  wx.navigateTo({
     url: `../medium/medium?id=${mediumId}`
   });
 }

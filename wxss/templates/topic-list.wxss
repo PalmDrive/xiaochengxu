@@ -35,8 +35,8 @@
 
 .topic-list .topic-title {
   line-height: 21px;
-  margin-bottom: 10px;
-   max-width: 240px; 
+  margin-bottom: 5px;
+  max-width: 240px; 
   height: 21px;
   overflow: hidden;
 }

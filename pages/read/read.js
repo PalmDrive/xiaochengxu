@@ -9,6 +9,7 @@ Page({
    */
   data: {
     media: [],
+    loading: false,
     loadingMore: false,
     pageNumber: 1
   },
@@ -43,13 +44,15 @@ Page({
   onLoad: function (options) {
     const that = this;
     //获取推荐文章
+    that.setData({loading: true});
     wx.request({
       url: `${app.globalData.apiBase}/media/feeds2?userId=${Auth.getLocalUserId()}&subscribed=false`,
       success(res) {
         const media = res.data.data;
         media.forEach(util.formatMedium);
         that.setData({
-          media
+          media,
+          loading: false
         });
       },
       fail(res) {

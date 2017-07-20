@@ -3,6 +3,12 @@
 
 <view class="container">
   <scroll-view scroll-y bindscrolltolower="loadMore" lower-threshold="800">
+    <view class="loading text-center" hidden="{{!loading}}">
+      <text>数据加载中...</text>
+    </view>
     <template is="mediumList2" data="{{media}}"></template>
+    <view class="loading-more text-center" hidden="{{!loadingMore}}">
+      <text>更多数据加载中...</text>
+    </view>
   </scroll-view>
 </view>

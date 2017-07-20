@@ -36,7 +36,8 @@ Page({
     wx.request({
       url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt`,
       success(result) {
-        const medium = result.data.data;
+        const medium = result.data.data,
+              css = result.data.meta.css || '';
 
         if (Object.keys(medium.attributes.topics).length === 0) {
           delete medium.attributes.topics;
@@ -60,41 +61,41 @@ Page({
         console.log('medium page request medium data fail');
       }
     });
-    //获取推荐文章
-    wx.request({
-      url: `${app.globalData.apiBase}/media/${mediumId}/related-media`,
-      success(result) {
-        const relatedMedia = result.data.data;
-        relatedMedia.forEach(util.formatMedium);
-        that.setData({
-          relatedMedia
-        });
-      },
-      fail() {
-        console.log('medium page request related-media data fail');
-      }
-    });
-    //获取推荐专题
-    wx.request({
-      url: `${app.globalData.apiBase}/media/${mediumId}/related-topics`,
-      success(result) {
-        const topics = result.data.data;
-        topics.forEach(t => {
-          if (t.attributes.lastMediumAddedAt) {
-            t.attributes.lastMediumAddedAt = util.convertDate(new Date(t.attributes.lastMediumAddedAt));
-          }
-          if (t.attributes.lastMediumTitle) {
-            t.attributes.lastMediumTitle = t.attributes.lastMediumTitle.slice(0, 15) + '...';
-          }
-        });
-        that.setData({
-          relatedTopics: topics
-        });
-      },
-      fail() {
-        console.log('medium page request related-topics data fail');
-      }
-    });
+    // //获取推荐文章
+    // wx.request({
+    //   url: `${app.globalData.apiBase}/media/${mediumId}/related-media`,
+    //   success(result) {
+    //     const relatedMedia = result.data.data;
+    //     relatedMedia.forEach(util.formatMedium);
+    //     that.setData({
+    //       relatedMedia
+    //     });
+    //   },
+    //   fail() {
+    //     console.log('medium page request related-media data fail');
+    //   }
+    // });
+    // //获取推荐专题
+    // wx.request({
+    //   url: `${app.globalData.apiBase}/media/${mediumId}/related-topics`,
+    //   success(result) {
+    //     const topics = result.data.data;
+    //     topics.forEach(t => {
+    //       if (t.attributes.lastMediumAddedAt) {
+    //         t.attributes.lastMediumAddedAt = util.convertDate(new Date(t.attributes.lastMediumAddedAt));
+    //       }
+    //       if (t.attributes.lastMediumTitle) {
+    //         t.attributes.lastMediumTitle = t.attributes.lastMediumTitle.slice(0, 15) + '...';
+    //       }
+    //     });
+    //     that.setData({
+    //       relatedTopics: topics
+    //     });
+    //   },
+    //   fail() {
+    //     console.log('medium page request related-topics data fail');
+    //   }
+    // });
   },
 
   /**

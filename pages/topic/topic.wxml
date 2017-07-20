@@ -24,10 +24,10 @@
 
   <view wx:for="{{tabs}}" wx:for-item="tab" wx:key="*this">
     <view hidden="{{selectedTab !== tab}}">
-      <view wx:if="{{tab !== '相关专题'}}">
+      <view wx:if="{{tab !== '子专题'}}">
         <template is="mediumList" data="{{media: mediumData[tab]}}"></template>
       </view>
-      <view wx:if="{{tab === '相关专题'}}">
+      <view wx:if="{{tab === '子专题'}}">
         <template is="childTopicList" data="{{topics: childTopics}}"></template>
       </view>
     </view>

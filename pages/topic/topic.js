@@ -108,7 +108,7 @@ Page({
           mediumData
         });
 
-        if (tabs.indexOf('相关专题') > -1) {
+        if (tabs.indexOf('子专题') > -1) {
           wx.request({
             url: `${app.globalData.apiBase}/topics/${topicId}/topics?include=media`,
             success(result) {
