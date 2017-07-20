@@ -3,7 +3,7 @@ const Auth = require('utils/auth');
 
 App({
   onLaunch: function() {
-    return console.log('app on launch');
+    console.log('app on launch');
     const that = this;
     //检查storage里是否有userInfo，没有则请求
     if (Auth.getLocalUserInfo() && Auth.getLocalUserId()) {

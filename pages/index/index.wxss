@@ -1,5 +1,9 @@
 /**index.wxss**/
 
+scroll-view {
+  white-space: nowrap;
+}
+
 .banner {
   background-image: url('/images/discovery/banner.jpg');
   background-size: cover;

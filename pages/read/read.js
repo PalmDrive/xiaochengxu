@@ -1,16 +1,42 @@
 // pages/read/read.js
 const app = getApp(),
-      util = require('../../utils/util');
+      util = require('../../utils/util'),
+      Auth = require('../../utils/auth');
+
 Page({
   /**
    * 页面的初始数据
    */
   data: {
-    media: []
+    media: [],
+    loadingMore: false,
+    pageNumber: 1
   },
-
+  //点击文章
   goToMedium: util.goToMedium,
-
+  //加载更多
+  loadMore() {
+    const that = this;
+    if (!that.data.loadingMore) {
+      console.log('loadMore');
+      that.setData({loadingMore: true});
+      //获取推荐文章
+      wx.request({
+        url: `${app.globalData.apiBase}/media/feeds2?userId=${Auth.getLocalUserId()}&subscribed=false`,
+        success(res) {
+          const media = res.data.data;
+          media.forEach(util.formatMedium);
+          that.setData({
+            media: that.data.media.concat(media),
+            loadingMore: false
+          });
+        },
+        fail(res) {
+          console.log('request recommended media fail');
+        }
+      });
+    }
+  },
   /**
    * 生命周期函数--监听页面加载
    */
@@ -18,7 +44,7 @@ Page({
     const that = this;
     //获取推荐文章
     wx.request({
-      url: `${app.globalData.apiBase}/media/351d8540-6940-11e7-82a5-bf71cd1429e6/related-media`,
+      url: `${app.globalData.apiBase}/media/feeds2?userId=${Auth.getLocalUserId()}&subscribed=false`,
       success(res) {
         const media = res.data.data;
         media.forEach(util.formatMedium);

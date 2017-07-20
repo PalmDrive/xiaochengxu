@@ -1,5 +1,7 @@
 /* pages/medium/medium.wxss */
 
+@import "utils/wxParse/wxParse.wxss";
+
 .medium-container {
   padding: 18px 15px 0 15px;
 }
