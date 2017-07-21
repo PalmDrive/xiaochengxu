@@ -1,6 +1,8 @@
 // pages/topic/topic.js
 const app = getApp(),
-      util = require('../../utils/util.js');
+      util = require('../../utils/util.js'),
+      Auth = require('../../utils/auth'),
+      Topic = require('../../utils/topic');
 
 const contentTypes = ['观点', '推荐书籍', '资讯', '案例'];
 
@@ -27,18 +29,17 @@ Page({
       return acc;
     }, {}),
     selectedTab: '动态',
-    childTopics: []
+    childTopics: [],
+    subscribeButton: '订阅'
   },
-
+  //绑定事件
   selectTab(event) {
     const tab = event.target.dataset.tab;
     this.setData({
       selectedTab: tab
     });
   },
-
   goToMedium: util.goToMedium,
-
   showMoreMedia(event) {
     const topicId = event.currentTarget.dataset.id;
     const childTopics = this.data.childTopics;
@@ -53,24 +54,47 @@ Page({
       }
     }
   },
-
+  clickSubscribe(event) {
+    const that = this;
+    const topicId = that.data.topicId;
+    const userId = Auth.getLocalUserId();
+    if (userId) {
+      if (that.data.subscribeButton === '订阅') {
+        that.setData({subscribeButton: '订阅中...'});
+        Topic.subscribe(userId, topicId, () => {
+          that.setData({subscribeButton: '已订阅'});
+        });
+      } else if (that.data.subscribeButton === '已订阅') {
+        that.setData({subscribeButton: '取消中...'});
+        Topic.unsubscribe(userId, topicId, () => {
+          that.setData({subscribeButton: '订阅'});
+        });
+      }
+    }
+  },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
     const that = this,
-          topicId = options.id;
+          topicId = options.id,
+          userId = Auth.getLocalUserId();
+    let topicUrl = `${app.globalData.apiBase}/topics/${topicId}?fields[topics]=name,description,imgUrl,mediaCount,fields,tabs,type&include=media&fields[media]=id,title,summary,publishedAt,picUrl`;
+    if (userId) {
+      topicUrl += `&userId=${userId}`;
+    }
 
     //获取专题数据
     wx.request({
-      url: `${app.globalData.apiBase}/topics/${topicId}?fields[topics]=name,description,imgUrl,mediaCount,fields,tabs,type&include=media&fields[media]=id,title,summary,publishedAt,picUrl`,
+      url: topicUrl,
       success(res) {
         const topic = res.data.data;
-        // if (result.data.meta && result.data.meta.subscribe) {
-        //   $scope.subscribeButton = '已订阅';
-        // } else {
-        //   $scope.subscribeButton = '订阅';
-        // }
+        let subscribeButton;
+        if (res.data.meta && res.data.meta.subscribe) {
+          subscribeButton = '已订阅';
+        } else {
+          subscribeButton = '订阅';
+        }
         const isFeatured = topic.attributes.type === 'featured';
 
         let media = res.data.included;
@@ -102,7 +126,8 @@ Page({
           topicId,
           topic,
           isFeatured,
-          tabs
+          tabs,
+          subscribeButton
         });
         that.setData({
           mediumData

@@ -12,6 +12,7 @@
       <text>上次更新：{{mediumData['动态'][0].attributes.publishedAt}}</text>
     </view>
     <view class="topic-desc size-13">{{topic.attributes.description}}</view>
+    <view class="btn-subscribe size-14 text-center" bindtap="clickSubscribe">{{subscribeButton}}</view>
   </view>
 
   <view class="section-break"></view>
