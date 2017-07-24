@@ -7,7 +7,7 @@
     "pages/my/my"
   ],
   "window":{
-    "backgroundTextStyle":"light",
+    "backgroundTextStyle":"dark",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "职得看",
     "navigationBarTextStyle":"black"
