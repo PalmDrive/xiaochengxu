@@ -43,6 +43,10 @@ view {
   background-position: center;
 }
 
+.loading {
+  margin-top: 50px;
+}
+
 /*medium list*/
 
 .break-line {

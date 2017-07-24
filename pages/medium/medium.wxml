@@ -3,6 +3,9 @@
 <import src="../../utils/wxParse/wxParse.wxml"/>
 
 <view class="container">
+  <view class="loading text-center" hidden="{{!loading}}">
+    <text>数据加载中...</text>
+  </view>
   <view class="medium-container">
     <view class="title text-bold size-20">{{medium.attributes.title}}</view>
     <view class="meta size-12">
@@ -16,7 +19,7 @@
     </view>
   </view>
 
-  <view class="size-12 html-footer text-center text-grey">网页由“职得看”转码以便移动设备阅读</view>
+  <view class="size-12 html-footer text-center text-grey" hidden="{{loading}}">网页由“职得看”转码以便移动设备阅读</view>
 
   <!-- <view class="topic" wx:if="{{medium.attributes.topic}}">
     <view class="topic-img img-cover d-ib" style="background-image: {{'url(' + medium.attributes.topic.imgUrl + ')'}}"></view>

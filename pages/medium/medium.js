@@ -9,7 +9,8 @@ Page({
   data: {
     medium: {},
     relatedMedia: [],
-    relatedTopics: []
+    relatedTopics: [],
+    loading: true
   },
   //事件处理函数
   goToTopic: function (event) {
@@ -51,11 +52,12 @@ Page({
           medium.attributes.publishedAt = '';
         }
 
-        that.setData({
-          medium
-        });
-
         WxParse.wxParse('htmlContent', 'html', medium.attributes.htmlContent, that, 0);
+
+        that.setData({
+          medium,
+          loading: false
+        });
       },
       fail() {
         console.log('medium page request medium data fail');
