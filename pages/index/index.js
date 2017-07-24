@@ -47,9 +47,9 @@ Page({
       //获取推荐文章
       let url;
       if (that.data.needRead) {
-        url = `${app.globalData.apiBase}/media/read?userId=${Auth.getLocalUserId()}&lastInitedAt=${that.data.lastInitedAt}&page[number]=${that.data.pageNumber}&page[size]=${that.data.pageSize}`;
+        url = `${app.globalData.apiBase}/media/read?mediumType=article&userId=${Auth.getLocalUserId()}&lastInitedAt=${that.data.lastInitedAt}&page[number]=${that.data.pageNumber}&page[size]=${that.data.pageSize}`;
       } else {
-        url = `${app.globalData.apiBase}/media/feeds2?userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`;
+        url = `${app.globalData.apiBase}/media/feeds2?mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`;
       }
       wx.request({
         url,
@@ -116,7 +116,7 @@ Page({
     function init() {
       //获取推荐文章
       wx.request({
-        url: `${app.globalData.apiBase}/media/feeds2?userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`,
+        url: `${app.globalData.apiBase}/media/feeds2?mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`,
         success(res) {
           const media = res.data.data;
           const len = media.length;
