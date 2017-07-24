@@ -105,48 +105,56 @@ Page({
    */
   onLoad: function (options) {
     const that = this;
-    that.setData({loading: true, loadingSubscribe: true});
+    that.setData({ loading: true, loadingSubscribe: true });
+    //检查storage里是否有userId，没有则请求
+    if (Auth.getLocalUserId()) {
+      init();
+    } else {
+      Auth.login(init);
+    }
 
-    //获取推荐文章
-    wx.request({
-      url: `${app.globalData.apiBase}/media/feeds2?userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`,
-      success(res) {
-        const media = res.data.data;
-        const len = media.length;
-        console.log('onload recommend media length:', len);
-        media.forEach(util.formatMedium);
-        that.setData({
-          media,
-          loading: false
-        });
-        if (len < that.data.pageSize) {
-          that.setData({needRead: true});
-          that.loadMore();
+    function init() {
+      //获取推荐文章
+      wx.request({
+        url: `${app.globalData.apiBase}/media/feeds2?userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`,
+        success(res) {
+          const media = res.data.data;
+          const len = media.length;
+          console.log('onload recommend media length:', len);
+          media.forEach(util.formatMedium);
+          that.setData({
+            media,
+            loading: false
+          });
+          if (len < that.data.pageSize) {
+            that.setData({ needRead: true });
+            that.loadMore();
+          }
+        },
+        fail(res) {
+          console.log('request recommended media fail');
         }
-      },
-      fail(res) {
-        console.log('request recommended media fail');
-      }
-    });
+      });
 
-    //获取订阅专题下的文章
-    wx.request({
-      url: `${app.globalData.apiBase}/media/subscribed-timeline?userId=${Auth.getLocalUserId()}&page[size]=${that.data.pageSize}`,
-      success(res) {
-        const media = res.data.data;
-        const len = media.length;
-        console.log('onload subscribed-timeline media length:', len);
-        media.forEach(util.formatMedium);
-        that.setData({
-          subscribedTopicMedia: media,
-          loadingSubscribe: false,
-          lastId: media[media.length - 1].id
-        });
-      },
-      fail(res) {
-        console.log('request /media/subscribed-timeline fail');
-      }
-    });
+      //获取订阅专题下的文章
+      wx.request({
+        url: `${app.globalData.apiBase}/media/subscribed-timeline?userId=${Auth.getLocalUserId()}&page[size]=${that.data.pageSize}`,
+        success(res) {
+          const media = res.data.data;
+          const len = media.length;
+          console.log('onload subscribed-timeline media length:', len);
+          media.forEach(util.formatMedium);
+          that.setData({
+            subscribedTopicMedia: media,
+            loadingSubscribe: false,
+            lastId: media[media.length - 1].id
+          });
+        },
+        fail(res) {
+          console.log('request /media/subscribed-timeline fail');
+        }
+      });
+    }
   },
 
   /**
