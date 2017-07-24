@@ -1,4 +1,15 @@
-/**index.wxss**/
+/**topics.wxss**/
+page {
+  height: 100%;
+}
+
+.container {
+  height: 100%;
+}
+
+.scroll-container {
+  height: 100%;
+}
 
 scroll-view {
   white-space: nowrap;
