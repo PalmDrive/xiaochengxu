@@ -1,7 +1,7 @@
 {
   "pages":[
     "pages/index/index",
-    "pages/read/read",
+    "pages/topics/topics",
     "pages/topic/topic",
     "pages/medium/medium",
     "pages/my/my"
@@ -21,11 +21,11 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "首页"
+        "text": "日读"
       },
       {
-        "pagePath": "pages/read/read",
-        "text": "日读"
+        "pagePath": "pages/topics/topics",
+        "text": "专题"
       }
     ]
   }

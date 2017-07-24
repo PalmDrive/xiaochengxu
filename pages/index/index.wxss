@@ -1,50 +1,34 @@
-/**index.wxss**/
+/* pages/read/read.wxss */
+
+page {
+  height: 100%;
+}
+
+.container {
+  height: 100%;
+  display:flex;
+  flex-direction: column;
+}
 
 scroll-view {
-  white-space: nowrap;
+  /* height: 100%; */
+  flex: 1;
+  overflow: auto;
 }
 
-.banner {
-  background-image: url('/images/discovery/banner.jpg');
-  background-size: cover;
-  background-position: center;
-  height: 160px;
+.loading {
+  margin-top: 50px;
 }
 
-.featured {
-  background: #F7F7F7;
-  padding-bottom: 14px;
+.loading-more {
+  margin-top: 50px;
+  padding-bottom: 50px;
 }
 
-.featured-title {
-  padding: 13px 15px 15px;
-  position: relative;
+.tabs {
+  border-bottom: 1px solid rgba(216,216,216,0.20);
 }
 
-.featured-title-right {
-  position: absolute;
-  right: 15px;
-}
-
-.featured-slides {
-  padding-left: 15px;
-}
-
-.featured-slide {
-  margin-right: 10px;
-  background: #fff;
-}
-
-.featured-slide-img {
-  width: 300px;
-  height: 188px;
-}
-
-.featured-slide-title {
-  height: 46px;
-  line-height: 46px;
-}
-
-.guess-title {
-  padding: 15px 20px 5px;
+.tab {
+  padding: 20px 20px 7px;
 }
