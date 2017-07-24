@@ -7,8 +7,8 @@
     <view class="title text-bold size-20">{{medium.attributes.title}}</view>
     <view class="meta size-12">
       <view class="source-image img-cover d-ib" style="background-image: {{'url(' + medium.attributes.sourcePicUrl + ')'}}"></view>
-      <view class="source text-dark-grey d-ib meta-text">{{medium.attributes.source}}</view>
-      <view class="author text-grey d-ib meta-text">{{medium.attributes.author}}</view>
+      <view class="source text-dark-grey d-ib meta-text">{{medium.attributes.source ? medium.attributes.source : ''}}</view>
+      <view class="author text-grey d-ib meta-text">{{medium.attributes.author ? medium.attributes.author : ''}}</view>
       <view class="time text-dark-grey d-ib meta-text">{{medium.attributes.publishedAt}}</view>
     </view>
     <view class="html-content size-15">
