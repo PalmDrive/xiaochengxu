@@ -2,7 +2,9 @@
 const app = getApp(),
       util = require('../../utils/util.js'),
       Auth = require('../../utils/auth.js'),
-      WxParse = require('../../utils/wxParse/wxParse.js');
+      WxParse = require('../../utils/wxParse/wxParse.js'),
+      he = require('../../utils/he.js');
+
 Page({
   /**
    * 页面的初始数据
@@ -65,7 +67,9 @@ Page({
             medium.attributes.publishedAt = '';
           }
 
-          WxParse.wxParse('htmlContent', 'html', medium.attributes.htmlContent, that, 0);
+          const html = medium.attributes.htmlContent,
+            decoded = he.decode(html);
+          WxParse.wxParse('htmlContent', 'html', decoded, that, 0);
 
           that.setData({
             medium,
