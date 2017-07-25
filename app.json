@@ -30,6 +30,12 @@
         "text": "专题",
         "iconPath": "images/tabIcons/topics.png",
         "selectedIconPath": "images/tabIcons/topics_selected.png"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的",
+        "iconPath": "images/tabIcons/my.png",
+        "selectedIconPath": "images/tabIcons/my_selected.png"
       }
     ]
   }

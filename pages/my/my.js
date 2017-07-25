@@ -1,24 +1,47 @@
 //my.js
-var app = getApp();
+const app = getApp(),
+  Util = require('../../utils/util'),
+  Auth = require('../../utils/auth');
 Page({
   data: {
-    userInfo: {}
+    userInfo: {},
+    userId: null,
+    loading: true,
+    favoriteTopics: []
   },
   //事件处理函数
-  goToTopic: function (event) {
-    const id = event.target.dataset.id;
-    wx.navigateTo({
-      url: `../topic/topic?id=${id}`
-    });
-  },
+  goToTopic: Util.goToTopic,
+
   onLoad: function () {
-    var that = this;
-    //调用应用实例的方法获取全局数据
-    app.getUserInfo(function (userInfo) {
-      //更新数据
-      that.setData({
-        userInfo: userInfo
+    const that = this;
+    //检查storage里是否有需要的数据，没有则请求
+    if (Auth.getLocalUserId() && Auth.getLocalUserInfo()) {
+      init();
+    } else {
+      Auth.login(init);
+    }
+
+    function init() {
+      const userId = Auth.getLocalUserId();
+
+      wx.request({
+        url: `${app.globalData.apiBase}/users/${userId}/favorite-topics`,
+        success(res) {
+          const topics = res.data.data;
+          const userTopics = res.data.included;
+          topics.forEach(Util.formatTopic);
+          console.log('log:', topics);
+          that.setData({
+            loading: false,
+            userInfo: Auth.getLocalUserInfo(),
+            userId,
+            favoriteTopics: topics
+          });
+        },
+        fail() {
+          console.log('request /users/:id/favorite-topics fail');
+        }
       });
-    });
+    }
   }
 })

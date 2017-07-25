@@ -77,10 +77,18 @@ function goToMedium(event) {
   });
 }
 
+function goToTopic(event) {
+  const topicId = event.currentTarget.dataset.id;
+  wx.navigateTo({
+    url: `../topic/topic?id=${topicId}`
+  });
+}
+
 module.exports = {
   formatTime,
   convertDate,
   formatTopic,
   formatMedium,
-  goToMedium
+  goToMedium,
+  goToTopic
 }
