@@ -103,9 +103,15 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad: function () {
     const that = this;
-    that.setData({ loading: true, loadingSubscribe: true });
+    that.setData({
+      loading: true,
+      loadingSubscribe: true,
+      needRead: false,
+      lastInitedAt: + new Date(),
+      recommendNoMore: false
+    });
     //检查storage里是否有userId，没有则请求
     if (Auth.getLocalUserId()) {
       init();
@@ -122,12 +128,16 @@ Page({
           const len = media.length;
           console.log('onload recommend media length:', len);
           media.forEach(util.formatMedium);
+
+          const needRead = len < that.data.pageSize;
           that.setData({
             media,
-            loading: false
+            loading: false,
+            needRead
           });
-          if (len < that.data.pageSize) {
-            that.setData({ needRead: true });
+          wx.stopPullDownRefresh();
+
+          if (needRead) {
             that.loadMore();
           }
         },
@@ -189,14 +199,14 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-  
+    this.onLoad();
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-  
+    this.loadMore();
   },
 
   /**

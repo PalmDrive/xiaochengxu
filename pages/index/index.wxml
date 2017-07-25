@@ -8,28 +8,28 @@
     </view>
   </view> -->
   
-  <scroll-view hidden="{{selectedTab !== '推荐'}}" scroll-y bindscrolltolower="loadMore" lower-threshold="800">
+  <view hidden="{{selectedTab !== '推荐'}}" scroll-y bindscrolltolower="loadMore" lower-threshold="800">
     <view class="loading text-center" hidden="{{!loading}}">
       <text>数据加载中...</text>
     </view>
     <template is="mediumList2" data="{{media}}"></template>
-    <view class="loading-more text-center" hidden="{{!loadingMore}}">
+    <view class="loading text-center" hidden="{{!loadingMore}}">
       <text>更多数据加载中...</text>
     </view>
-    <view class="loading-more text-center" hidden="{{!recommendNoMore}}">
+    <view class="loading text-center" hidden="{{!recommendNoMore}}">
       <text>没有更多了</text>
     </view>
-  </scroll-view>
+  </view>
   
   <!-- <scroll-view hidden="{{selectedTab !== '订阅'}}" scroll-y bindscrolltolower="loadMoreSubscribe" lower-threshold="800">
     <view class="loading text-center" hidden="{{!loadingSubscribe}}">
       <text>数据加载中...</text>
     </view>
     <template is="mediumList2" data="{{media: subscribedTopicMedia}}"></template>
-    <view class="loading-more text-center" hidden="{{!loadingMoreSubscribe}}">
+    <view class="loading text-center" hidden="{{!loadingMoreSubscribe}}">
       <text>更多数据加载中...</text>
     </view>
-    <view class="loading-more text-center" hidden="{{!subscribeNoMore}}">
+    <view class="loading text-center" hidden="{{!subscribeNoMore}}">
       <text>没有更多了</text>
     </view>
   </scroll-view> -->
