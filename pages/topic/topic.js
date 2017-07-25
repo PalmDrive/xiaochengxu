@@ -31,7 +31,8 @@ Page({
     selectedTab: '动态',
     childTopics: [],
     subscribeButton: '订阅',
-    showHint: false
+    showHint: false,
+    loading: true
   },
   //绑定事件
   selectTab(event) {
@@ -140,7 +141,8 @@ Page({
             subscribeButton
           });
           that.setData({
-            mediumData
+            mediumData,
+            loading: false
           });
 
           if (tabs.indexOf('子专题') > -1) {

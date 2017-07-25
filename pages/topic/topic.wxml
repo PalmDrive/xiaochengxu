@@ -3,34 +3,39 @@
 <include src="../../includes/hint.wxml"/>
 
 <view class="container">
-  <image class="topic-img" src="{{topic.attributes.imgUrl}}" mode="aspectFill"></image>
-  <view class="topic-info">
-    <view class="topic-title text-bold size-17">{{topic.attributes.name}}</view>
-    <view class="topic-meta text-grey size-9">
-      <image class="icon-xs" src="../../images/content.png"></image>
-      <text>{{topic.attributes.fields[0] || '领域'}}</text>
-      <image class="icon-xs" src="../../images/update.png"></image>
-      <text>上次更新：{{mediumData['动态'][0].attributes.publishedAt}}</text>
-    </view>
-    <view class="topic-desc size-13">{{topic.attributes.description}}</view>
-    <view class="btn-subscribe size-14 text-center" bindtap="clickSubscribe">{{subscribeButton}}</view>
+  <view class="loading text-center" hidden="{{!loading}}">
+    <text>数据加载中...</text>
   </view>
-
-  <view class="section-break"></view>
-
-  <scroll-view class="tabs size-14" scroll-x wx:if="{{isFeatured}}">
-    <view class="tab" wx:for="{{tabs}}" wx:key="*this">
-      <text style="color: {{selectedTab === item ? '#48A2C9' : '#000'}};" bindtap="selectTab" data-tab="{{item}}">{{item}}</text>
-    </view>
-  </scroll-view>
-
-  <view wx:for="{{tabs}}" wx:for-item="tab" wx:key="*this">
-    <view hidden="{{selectedTab !== tab}}">
-      <view wx:if="{{tab !== '子专题'}}">
-        <template is="mediumList" data="{{media: mediumData[tab]}}"></template>
+  <view hidden="{{loading}}">
+    <image class="topic-img" src="{{topic.attributes.imgUrl}}" mode="aspectFill"></image>
+    <view class="topic-info">
+      <view class="topic-title text-bold size-17">{{topic.attributes.name}}</view>
+      <view class="topic-meta text-grey size-9">
+        <image class="icon-xs" src="../../images/content.png"></image>
+        <text>{{topic.attributes.fields[0] || '领域'}}</text>
+        <image class="icon-xs" src="../../images/update.png"></image>
+        <text>上次更新：{{mediumData['动态'][0].attributes.publishedAt}}</text>
       </view>
-      <view wx:if="{{tab === '子专题'}}">
-        <template is="childTopicList" data="{{topics: childTopics}}"></template>
+      <view class="topic-desc size-13">{{topic.attributes.description}}</view>
+      <view class="btn-subscribe size-14 text-center" bindtap="clickSubscribe">{{subscribeButton}}</view>
+    </view>
+
+    <view class="section-break"></view>
+
+    <scroll-view class="tabs size-14" scroll-x wx:if="{{isFeatured}}">
+      <view class="tab" wx:for="{{tabs}}" wx:key="*this">
+        <text style="color: {{selectedTab === item ? '#48A2C9' : '#000'}};" bindtap="selectTab" data-tab="{{item}}">{{item}}</text>
+      </view>
+    </scroll-view>
+
+    <view wx:for="{{tabs}}" wx:for-item="tab" wx:key="*this">
+      <view hidden="{{selectedTab !== tab}}">
+        <view wx:if="{{tab !== '子专题'}}">
+          <template is="mediumList" data="{{media: mediumData[tab]}}"></template>
+        </view>
+        <view wx:if="{{tab === '子专题'}}">
+          <template is="childTopicList" data="{{topics: childTopics}}"></template>
+        </view>
       </view>
     </view>
   </view>
