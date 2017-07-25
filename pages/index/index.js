@@ -27,7 +27,8 @@ Page({
       recommendUnread: '/media/feeds2',
       recommendRead: '/media/read',
       subscribeTimeLine: '/media/subscribed-timeline'
-    }
+    },
+    showHint: false
   },
   //点击tab
   selectTab(event) {
@@ -100,6 +101,10 @@ Page({
       });
     }
   },
+  //关闭首次登陆弹窗
+  closeHint: function () {
+    util.closeHint(this);
+  },
   /**
    * 生命周期函数--监听页面加载
    */
@@ -116,7 +121,7 @@ Page({
     if (Auth.getLocalUserId()) {
       init();
     } else {
-      Auth.login(init);
+      Auth.login(init, that);
     }
 
     function init() {

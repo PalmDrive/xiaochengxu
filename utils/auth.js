@@ -17,7 +17,8 @@ const setLocalUserId = userId => {
   wx.setStorageSync(`${nameSpace}:userId`, userId);
 };
 
-const login = cb => {
+// that is the page obj
+const login = (cb, that) => {
   wx.login({
     success(res) {
       if (res.code) {
@@ -75,6 +76,21 @@ const login = cb => {
                         console.log('userId:', userId);
                         setLocalUserId(userId);
                         cb();
+                        if (that) {
+                          const systemInfo = wx.getSystemInfoSync();
+                          let title, content;
+                          if (systemInfo.platform === 'ios') {
+                            title = 'iOS用户福利';
+                            content = 'App Store中下载“职得看”，获得更好体验。';
+                          } else {
+                            title = '小程序Tips';
+                            content = '点击右上角按钮，选择“添加到桌面”，可随时访问。';
+                          }
+                          that.setData({
+                            showHint: true,
+                            firstLoginHint: {title, content}
+                          });
+                        }
                       },
                       fail() {
                         console.log('request /users/login fail');

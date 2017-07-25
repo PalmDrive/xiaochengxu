@@ -8,7 +8,8 @@ Page({
     featuredTopics: [],
     sections: [], //分块专题
     initedAt: +new Date(),
-    loadingMore: false
+    loadingMore: false,
+    showHint: false
   },
   //点击专题
   goToTopic: function(event) {
@@ -40,6 +41,10 @@ Page({
       });
     }
   },
+  //关闭首次登陆弹窗
+  closeHint: function() {
+    util.closeHint(this);
+  },
 
   onLoad: function () {
     const that = this;
@@ -50,7 +55,7 @@ Page({
     if (Auth.getLocalUserId()) {
       init();
     } else {
-      Auth.login(init);
+      Auth.login(init, that);
     }
 
     function init() {

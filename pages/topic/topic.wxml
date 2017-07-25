@@ -1,5 +1,6 @@
 <import src="../../templates/medium-list.wxml"/>
 <import src="../../templates/child-topic-list.wxml"/>
+<include src="../../includes/hint.wxml"/>
 
 <view class="container">
   <image class="topic-img" src="{{topic.attributes.imgUrl}}" mode="aspectFill"></image>

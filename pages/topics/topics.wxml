@@ -1,6 +1,7 @@
 <!--topics.wxml-->
 <import src="../../templates/topic-list.wxml"/>
 <import src="../../templates/homepage-topic-section.wxml"/>
+<include src="../../includes/hint.wxml"/>
 
 <view class="container">
   <!-- <scroll-view class="scroll-container" scroll-y bindscrolltolower="loadMore" lower-threshold="800"> -->

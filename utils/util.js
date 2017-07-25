@@ -84,11 +84,16 @@ function goToTopic(event) {
   });
 }
 
+function closeHint(that) {
+  that.setData({showHint: false});
+} 
+
 module.exports = {
   formatTime,
   convertDate,
   formatTopic,
   formatMedium,
   goToMedium,
-  goToTopic
+  goToTopic,
+  closeHint
 }

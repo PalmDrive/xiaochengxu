@@ -1,5 +1,6 @@
 <!--pages/index/index.wxml-->
 <import src="../../templates/medium-list-2.wxml"/>
+<include src="../../includes/hint.wxml"/>
 
 <view class="container">
   <!-- <view class="tabs size-18">

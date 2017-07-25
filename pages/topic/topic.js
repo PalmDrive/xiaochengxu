@@ -30,7 +30,8 @@ Page({
     }, {}),
     selectedTab: '动态',
     childTopics: [],
-    subscribeButton: '订阅'
+    subscribeButton: '订阅',
+    showHint: false
   },
   //绑定事件
   selectTab(event) {
@@ -72,103 +73,113 @@ Page({
       }
     }
   },
+  //关闭首次登陆弹窗
+  closeHint: function () {
+    util.closeHint(this);
+  },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
     const that = this,
-          topicId = options.id,
-          userId = Auth.getLocalUserId();
-    let topicUrl = `${app.globalData.apiBase}/topics/${topicId}?fields[topics]=name,description,imgUrl,mediaCount,fields,tabs,type&include=media&fields[media]=id,title,summary,publishedAt,picUrl`;
-    if (userId) {
-      topicUrl += `&userId=${userId}`;
+      topicId = options.id;
+
+    //检查storage里是否有userId，没有则请求
+    if (Auth.getLocalUserId()) {
+      init();
+    } else {
+      Auth.login(init, that);
     }
 
-    //获取专题数据
-    wx.request({
-      url: topicUrl,
-      success(res) {
-        const topic = res.data.data;
-        let subscribeButton;
-        if (res.data.meta && res.data.meta.subscribe) {
-          subscribeButton = '已订阅';
-        } else {
-          subscribeButton = '订阅';
-        }
-        const isFeatured = topic.attributes.type === 'featured';
-
-        let media = res.data.included;
-        media = media.map(m => {
-          // 格式化时间
-          if (m.attributes.publishedAt) {
-            m.attributes.publishedAt = util.convertDate(new Date(m.attributes.publishedAt));
+    function init() {
+      const userId = Auth.getLocalUserId(),
+        topicUrl = `${app.globalData.apiBase}/topics/${topicId}?fields[topics]=name,description,imgUrl,mediaCount,fields,tabs,type&include=media&fields[media]=id,title,summary,publishedAt,picUrl&userId=${userId}`;
+      //获取专题数据
+      wx.request({
+        url: topicUrl,
+        success(res) {
+          const topic = res.data.data;
+          let subscribeButton;
+          if (res.data.meta && res.data.meta.subscribe) {
+            subscribeButton = '已订阅';
           } else {
-            m.attributes.publishedAt = '';
+            subscribeButton = '订阅';
           }
-          return m;
-        });
+          const isFeatured = topic.attributes.type === 'featured';
 
-        // Determin tabs
-        const tabs = topic.attributes.newTabs;
-        tabs.unshift('动态');
+          let media = res.data.included;
+          media = media.map(m => {
+            // 格式化时间
+            if (m.attributes.publishedAt) {
+              m.attributes.publishedAt = util.convertDate(new Date(m.attributes.publishedAt));
+            } else {
+              m.attributes.publishedAt = '';
+            }
+            return m;
+          });
 
-        const mediumData = that.data.mediumData;
-        // Push media into mediumData
-        mediumData['动态'] = media;
-        media.forEach(m => {
-          if (m.attributes.contentTypes && m.attributes.contentTypes.length) {
-            pushMedium(m, contentTypes, mediumData);
-          }
-        });
+          // Determin tabs
+          const tabs = topic.attributes.newTabs;
+          tabs.unshift('动态');
 
-        //更新数据
-        that.setData({
-          topicId,
-          topic,
-          isFeatured,
-          tabs,
-          subscribeButton
-        });
-        that.setData({
-          mediumData
-        });
-
-        if (tabs.indexOf('子专题') > -1) {
-          wx.request({
-            url: `${app.globalData.apiBase}/topics/${topicId}/topics?include=media`,
-            success(result) {
-              const topics = result.data.data;
-              const media = result.data.included || [];
-              const mediumId2medium = media.reduce((acc, m) => {
-                acc[m.id] = m;
-                return acc;
-              }, {});
-              // Set topic.media
-              topics.forEach(t => {
-                if (t.relationships && t.relationships.media && t.relationships.media.data) {
-                  t.media = t.relationships.media.data.reduce((acc, m) => {
-                    if (mediumId2medium[m.id]) {
-                      acc.push(mediumId2medium[m.id]);
-                    }
-                    return acc;
-                  }, []);
-                  t.media5 = t.media.slice(0, 5);
-                }
-              });
-              that.setData({
-                childTopics: topics
-              });
-            },
-            fail() {
-              console.log('topic page request child topics fail');
+          const mediumData = that.data.mediumData;
+          // Push media into mediumData
+          mediumData['动态'] = media;
+          media.forEach(m => {
+            if (m.attributes.contentTypes && m.attributes.contentTypes.length) {
+              pushMedium(m, contentTypes, mediumData);
             }
           });
+
+          //更新数据
+          that.setData({
+            topicId,
+            topic,
+            isFeatured,
+            tabs,
+            subscribeButton
+          });
+          that.setData({
+            mediumData
+          });
+
+          if (tabs.indexOf('子专题') > -1) {
+            wx.request({
+              url: `${app.globalData.apiBase}/topics/${topicId}/topics?include=media`,
+              success(result) {
+                const topics = result.data.data;
+                const media = result.data.included || [];
+                const mediumId2medium = media.reduce((acc, m) => {
+                  acc[m.id] = m;
+                  return acc;
+                }, {});
+                // Set topic.media
+                topics.forEach(t => {
+                  if (t.relationships && t.relationships.media && t.relationships.media.data) {
+                    t.media = t.relationships.media.data.reduce((acc, m) => {
+                      if (mediumId2medium[m.id]) {
+                        acc.push(mediumId2medium[m.id]);
+                      }
+                      return acc;
+                    }, []);
+                    t.media5 = t.media.slice(0, 5);
+                  }
+                });
+                that.setData({
+                  childTopics: topics
+                });
+              },
+              fail() {
+                console.log('topic page request child topics fail');
+              }
+            });
+          }
+        },
+        fail() {
+          console.log('topic page request topic data fail');
         }
-      },
-      fail() {
-        console.log('topic page request topic data fail');
-      }
-    });
+      });
+    }
   },
 
   /**

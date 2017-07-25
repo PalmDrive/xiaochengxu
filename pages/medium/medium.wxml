@@ -1,6 +1,8 @@
+<!-- medium.wxml -->
 <import src="../../templates/medium-list-2.wxml"/>
 <import src="../../templates/topic-list.wxml"/>
 <import src="../../utils/wxParse/wxParse.wxml"/>
+<include src="../../includes/hint.wxml"/>
 
 <view class="container">
   <view class="loading text-center" hidden="{{!loading}}">

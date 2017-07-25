@@ -4,6 +4,7 @@ const Auth = require('utils/auth');
 App({
   onLaunch: function() {
     console.log('app on launch');
+    // console.log(wx.getSystemInfoSync());
   },
 
   getUserInfo: function(cb) {

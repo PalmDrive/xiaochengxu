@@ -1,6 +1,7 @@
 // pages/medium/medium.js
 const app = getApp(),
       util = require('../../utils/util.js'),
+      Auth = require('../../utils/auth.js'),
       WxParse = require('../../utils/wxParse/wxParse.js');
 Page({
   /**
@@ -10,7 +11,8 @@ Page({
     medium: {},
     relatedMedia: [],
     relatedTopics: [],
-    loading: true
+    loading: true,
+    showHint: false
   },
   //事件处理函数
   goToTopic: function (event) {
@@ -25,7 +27,10 @@ Page({
       url: `medium?id=${mediumId}`
     })
   },
-
+  //关闭首次登陆弹窗
+  closeHint: function () {
+    util.closeHint(this);
+  },
   /**
    * 生命周期函数--监听页面加载
    */
@@ -33,36 +38,46 @@ Page({
     const that = this,
       mediumId = options.id;
 
-    //获取文章数据
-    wx.request({
-      url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt`,
-      success(result) {
-        const medium = result.data.data,
-              css = result.data.meta.css || '';
+    //检查storage里是否有userId，没有则请求
+    if (Auth.getLocalUserId()) {
+      init();
+    } else {
+      Auth.login(init, that);
+    }
 
-        if (Object.keys(medium.attributes.topics).length === 0) {
-          delete medium.attributes.topics;
-        } else {
-          medium.attributes.topic = medium.attributes.topics[Object.keys(medium.attributes.topics)[0]];
+    function init() {
+      //获取文章数据
+      wx.request({
+        url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt`,
+        success(result) {
+          const medium = result.data.data,
+            css = result.data.meta.css || '';
+
+          if (Object.keys(medium.attributes.topics).length === 0) {
+            delete medium.attributes.topics;
+          } else {
+            medium.attributes.topic = medium.attributes.topics[Object.keys(medium.attributes.topics)[0]];
+          }
+
+          if (medium.attributes.publishedAt) {
+            medium.attributes.publishedAt = util.convertDate(new Date(medium.attributes.publishedAt));
+          } else {
+            medium.attributes.publishedAt = '';
+          }
+
+          WxParse.wxParse('htmlContent', 'html', medium.attributes.htmlContent, that, 0);
+
+          that.setData({
+            medium,
+            loading: false
+          });
+        },
+        fail() {
+          console.log('medium page request medium data fail');
         }
+      });
+    }
 
-        if (medium.attributes.publishedAt) {
-          medium.attributes.publishedAt = util.convertDate(new Date(medium.attributes.publishedAt));
-        } else {
-          medium.attributes.publishedAt = '';
-        }
-
-        WxParse.wxParse('htmlContent', 'html', medium.attributes.htmlContent, that, 0);
-
-        that.setData({
-          medium,
-          loading: false
-        });
-      },
-      fail() {
-        console.log('medium page request medium data fail');
-      }
-    });
     // //获取推荐文章
     // wx.request({
     //   url: `${app.globalData.apiBase}/media/${mediumId}/related-media`,

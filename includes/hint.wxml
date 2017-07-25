@@ -1,0 +1,8 @@
+<view class="first-login-hint" hidden="{{!showHint}}">
+  <view class="hint text-white">
+    <image src="../../images/icon.png" class="icon"></image>
+    <view class="title size-16">{{firstLoginHint.title}}</view>
+    <view class="content size-12">{{firstLoginHint.content}}</view>
+    <image src="../../images/close.png" class="close" bindtap="closeHint"></image>
+  </view>
+</view>
