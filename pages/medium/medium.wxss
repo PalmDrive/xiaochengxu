@@ -63,10 +63,6 @@
   padding-right: 15px;
 }
 
-.html-content {
-  line-height: 25px;
-}
-
 .html-footer {
   height: 70px;
   padding-top: 30px;
@@ -85,4 +81,13 @@
   height: 45px;
   border-radius: 3px;
   margin-right: 11px;
+}
+
+.html-content {
+  font-family:PingFang SC,Lantinghei SC,Helvetica Neue,Helvetica,Arial,Microsoft YaHei,STHeitiSC-Light,simsun,WenQuanYi Zen Hei,WenQuanYi Micro Hei,"sans-serif";
+  font-size: 18px;
+  font-weight: normal;
+  color: #3d464d;
+  line-height: 30px;
+  text-align: justify;
 }
