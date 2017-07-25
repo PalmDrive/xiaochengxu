@@ -13,19 +13,23 @@
     "navigationBarTextStyle":"black"
   },
   "tabBar": {
-    "color": "#000",
-    "selectedColor": "#34aadc",
-    "backgroundColor": "#fff",
+    "color": "#D5D5D5",
+    "selectedColor": "#7F8389",
+    "backgroundColor": "#F7F7FA",
     "borderStyle": "white",
-    "position": "top",
+    "position": "bottom",
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "日读"
+        "text": "日读",
+        "iconPath": "images/tabIcons/index.png",
+        "selectedIconPath": "images/tabIcons/index_selected.png"
       },
       {
         "pagePath": "pages/topics/topics",
-        "text": "专题"
+        "text": "专题",
+        "iconPath": "images/tabIcons/topics.png",
+        "selectedIconPath": "images/tabIcons/topics_selected.png"
       }
     ]
   }
