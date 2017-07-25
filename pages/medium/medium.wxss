@@ -95,3 +95,9 @@
 .html-content image {
   margin-left: -15px;
 }
+
+/* 网易科技 */
+.gg200x300 {display:none;}
+
+/* 猎云网 */
+.poperweima {display: none;}
