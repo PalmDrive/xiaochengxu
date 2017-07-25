@@ -91,3 +91,7 @@
   line-height: 30px;
   text-align: justify;
 }
+
+.html-content image {
+  margin-left: -15px;
+}
