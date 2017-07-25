@@ -14,6 +14,7 @@ Page({
 
   onLoad: function () {
     const that = this;
+    that.setData({loading: true});
     //检查storage里是否有需要的数据，没有则请求
     if (Auth.getLocalUserId() && Auth.getLocalUserInfo()) {
       init();
@@ -36,6 +37,7 @@ Page({
             userId,
             favoriteTopics: topics
           });
+          wx.stopPullDownRefresh();
         },
         fail() {
           console.log('request /users/:id/favorite-topics fail');
@@ -76,7 +78,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+    this.onLoad();
   },
 
   /**
