@@ -3,7 +3,7 @@
 <import src="../../templates/homepage-topic-section.wxml"/>
 
 <view class="container">
-  <scroll-view class="scroll-container" scroll-y bindscrolltolower="loadMore" lower-threshold="800">
+  <!-- <scroll-view class="scroll-container" scroll-y bindscrolltolower="loadMore" lower-threshold="800"> -->
     <view class="featured">
       <view class="featured-title size-17">
         <view class="featured-title-left d-ib text-bold">精选专题</view>
@@ -23,6 +23,9 @@
     <view class="guess">
       <view class="guess-title text-bold size-17">猜你喜欢</view>
       <template is="topicList" data="{{topics: guessTopics}}"></template>
+      <view class="loading text-center" hidden="{{!loadingMore}}">
+        <text>更多数据加载中...</text>
+      </view>
     </view> 
-  </scroll-view>
+  <!-- </scroll-view> -->
 </view>

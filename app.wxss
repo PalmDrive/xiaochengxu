@@ -4,6 +4,11 @@
 @import "wxss/templates/homepage-topic-section.wxss";
 @import "wxss/templates/medium-list-2.wxss";
 
+.loading {
+  margin-top: 50px;
+  padding-bottom: 50px;
+}
+
 view {
   box-sizing: border-box;
 }

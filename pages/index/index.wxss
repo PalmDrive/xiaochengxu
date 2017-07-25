@@ -16,11 +16,6 @@ scroll-view {
   overflow: auto;
 }
 
-.loading {
-  margin-top: 50px;
-  padding-bottom: 50px;
-}
-
 .tabs {
   border-bottom: 1px solid rgba(216,216,216,0.20);
 }

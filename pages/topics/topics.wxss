@@ -1,11 +1,11 @@
 /**topics.wxss**/
-page {
+/* page {
   height: 100%;
 }
 
 .container {
   height: 100%;
-}
+} */
 
 .scroll-container {
   height: 100%;
