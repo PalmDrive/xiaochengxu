@@ -136,24 +136,24 @@ Page({
         }
       });
 
-      //获取订阅专题下的文章
-      wx.request({
-        url: `${app.globalData.apiBase}/media/subscribed-timeline?userId=${Auth.getLocalUserId()}&page[size]=${that.data.pageSize}`,
-        success(res) {
-          const media = res.data.data;
-          const len = media.length;
-          console.log('onload subscribed-timeline media length:', len);
-          media.forEach(util.formatMedium);
-          that.setData({
-            subscribedTopicMedia: media,
-            loadingSubscribe: false,
-            lastId: media[media.length - 1].id
-          });
-        },
-        fail(res) {
-          console.log('request /media/subscribed-timeline fail');
-        }
-      });
+      // //获取订阅专题下的文章
+      // wx.request({
+      //   url: `${app.globalData.apiBase}/media/subscribed-timeline?userId=${Auth.getLocalUserId()}&page[size]=${that.data.pageSize}`,
+      //   success(res) {
+      //     const media = res.data.data;
+      //     const len = media.length;
+      //     console.log('onload subscribed-timeline media length:', len);
+      //     media.forEach(util.formatMedium);
+      //     that.setData({
+      //       subscribedTopicMedia: media,
+      //       loadingSubscribe: false,
+      //       lastId: media[media.length - 1].id
+      //     });
+      //   },
+      //   fail(res) {
+      //     console.log('request /media/subscribed-timeline fail');
+      //   }
+      // });
     }
   },
 

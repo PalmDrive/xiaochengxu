@@ -30,7 +30,6 @@ Page({
           const topics = res.data.data;
           const userTopics = res.data.included;
           topics.forEach(Util.formatTopic);
-          console.log('log:', topics);
           that.setData({
             loading: false,
             userInfo: Auth.getLocalUserInfo(),

@@ -2,11 +2,11 @@
 <import src="../../templates/medium-list-2.wxml"/>
 
 <view class="container">
-  <view class="tabs size-18">
+  <!-- <view class="tabs size-18">
     <view class="tab d-ib" wx:for="{{tabs}}" wx:for-item="tab" wx:key="*this">
       <view style="color: {{selectedTab === tab ? '#48A2C9' : '#000'}};" bindtap="selectTab" data-tab="{{tab}}">{{tab}}</view>
     </view>
-  </view>
+  </view> -->
   
   <scroll-view hidden="{{selectedTab !== '推荐'}}" scroll-y bindscrolltolower="loadMore" lower-threshold="800">
     <view class="loading text-center" hidden="{{!loading}}">
@@ -21,7 +21,7 @@
     </view>
   </scroll-view>
   
-  <scroll-view hidden="{{selectedTab !== '订阅'}}" scroll-y bindscrolltolower="loadMoreSubscribe" lower-threshold="800">
+  <!-- <scroll-view hidden="{{selectedTab !== '订阅'}}" scroll-y bindscrolltolower="loadMoreSubscribe" lower-threshold="800">
     <view class="loading text-center" hidden="{{!loadingSubscribe}}">
       <text>数据加载中...</text>
     </view>
@@ -32,5 +32,5 @@
     <view class="loading-more text-center" hidden="{{!subscribeNoMore}}">
       <text>没有更多了</text>
     </view>
-  </scroll-view>
+  </scroll-view> -->
 </view>
