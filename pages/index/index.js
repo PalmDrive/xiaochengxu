@@ -21,7 +21,7 @@ Page({
     selectedTab: tabs[0],
     needRead: false, //当推荐里未领取的文章领完时，needRead变成true
     lastInitedAt: + new Date(),
-    pageSize: 50,
+    pageSize: 8,
     recommendNoMore: false,
     api: {
       recommendUnread: '/media/feeds2',
@@ -41,6 +41,7 @@ Page({
   goToMedium: util.goToMedium,
   //加载更多推荐
   loadMore() {
+    const now = new Date();
     const that = this;
     if (!that.data.loadingMore && !that.data.recommendNoMore) {
       console.log('loadMore');
@@ -52,9 +53,11 @@ Page({
       } else {
         url = `${app.globalData.apiBase}/media/feeds2?mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`;
       }
+      console.log(`loadMore request begin used ${new Date() - now}ms`);
       wx.request({
         url,
         success(res) {
+          console.log(`loadMore request used ${new Date() - now}ms`);
           const media = res.data.data;
           console.log('loadMore media length:', media.length);
           media.forEach(util.formatMedium);
@@ -68,6 +71,7 @@ Page({
             pageNumber: that.data.pageNumber + 1,
             recommendNoMore
           });
+          console.log(`loadMore data set used ${new Date() - now}ms`);
         },
         fail(res) {
           console.log('request more recommended media fail');
@@ -109,6 +113,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function () {
+    const now = new Date();
     const that = this;
     that.setData({
       loading: true,
@@ -125,10 +130,12 @@ Page({
     }
 
     function init() {
+      console.log(`onLoad request begin used ${new Date() - now}ms`);
       //获取推荐文章
       wx.request({
         url: `${app.globalData.apiBase}/media/feeds2?mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`,
         success(res) {
+          console.log(`onLoad request used ${new Date() - now}ms`);
           const media = res.data.data;
           const len = media.length;
           console.log('onload recommend media length:', len);
@@ -140,6 +147,7 @@ Page({
             loading: false,
             needRead
           });
+          console.log(`onLoad data set used ${new Date() - now}ms`);
           wx.stopPullDownRefresh();
 
           if (needRead) {
