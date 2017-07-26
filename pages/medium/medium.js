@@ -161,6 +161,14 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-  
+    const medium = this.data.medium,
+      userInfo = Auth.getLocalUserInfo();
+    util.gaEvent({
+      cid: Auth.getLocalUserId(),
+      ec: `article_title:${medium.attributes.title}, article_id:${medium.id}`,
+      ea: 'share_article',
+      el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
+      ev: 4
+    });
   }
 })

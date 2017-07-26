@@ -71,7 +71,10 @@ function formatMedium(m) {
 }
 
 function goToMedium(event, gaOptions) {
-  gaEvent(gaOptions);
+  if (gaOptions) {
+    gaEvent(gaOptions);
+  }
+
   const mediumId = event.currentTarget.dataset.medium.id;
   wx.navigateTo({
     url: `../medium/medium?id=${mediumId}`
