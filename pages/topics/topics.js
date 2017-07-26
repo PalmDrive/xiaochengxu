@@ -102,6 +102,12 @@ Page({
           });
         }
       });
+
+      util.ga({
+        cid: Auth.getLocalUserId() || '555',
+        dp: '%2Ftopics',
+        dt: '专题tab页（小程序）'
+      });
     }
   },
 

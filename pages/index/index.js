@@ -159,6 +159,12 @@ Page({
         }
       });
 
+      util.ga({
+        cid: Auth.getLocalUserId() || '555',
+        dp: '%2Findex',
+        dt: '日读tab页（小程序）'
+      });
+
       // //获取订阅专题下的文章
       // wx.request({
       //   url: `${app.globalData.apiBase}/media/subscribed-timeline?userId=${Auth.getLocalUserId()}&page[size]=${that.data.pageSize}`,

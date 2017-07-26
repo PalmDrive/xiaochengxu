@@ -88,6 +88,16 @@ function closeHint(that) {
   that.setData({showHint: false});
 } 
 
+function ga(options) {
+  wx.request({
+    method: 'POST',
+    url: `http://www.google-analytics.com/collect?v=1&tid=UA-93993572-2&cid=${options.cid}&t=pageview&dh=xiaochengxu&dp=${options.dp}&dt=${options.dt}`,
+    success() {
+      console.log('ga sucess');
+    }
+  });
+}
+
 module.exports = {
   formatTime,
   convertDate,
@@ -95,5 +105,6 @@ module.exports = {
   formatMedium,
   goToMedium,
   goToTopic,
-  closeHint
+  closeHint,
+  ga
 }

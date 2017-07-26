@@ -43,6 +43,12 @@ Page({
           console.log('request /users/:id/favorite-topics fail');
         }
       });
+
+      Util.ga({
+        cid: Auth.getLocalUserId() || '555',
+        dp: '%2Fmy',
+        dt: '我的tab页（小程序）'
+      });
     }
   },
 

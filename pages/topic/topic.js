@@ -145,6 +145,12 @@ Page({
             loading: false
           });
 
+          util.ga({
+            cid: Auth.getLocalUserId() || '555',
+            dp: '%2Ftopic',
+            dt: `topic_name:${topic.attributes.name},topic_id:${topicId}`
+          });
+
           if (tabs.indexOf('子专题') > -1) {
             wx.request({
               url: `${app.globalData.apiBase}/topics/${topicId}/topics?include=media`,

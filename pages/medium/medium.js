@@ -75,6 +75,12 @@ Page({
             medium,
             loading: false
           });
+
+          util.ga({
+            cid: Auth.getLocalUserId() || '555',
+            dp: '%2Fmedium',
+            dt: `article_title:${medium.attributes.title},article_id:${mediumId}`
+          });
         },
         fail() {
           console.log('medium page request medium data fail');
