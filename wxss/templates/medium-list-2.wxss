@@ -10,5 +10,5 @@
 }
 
 .medium-list-2 .medium-topic-name {
-  padding-top: 2px;
+  padding-top: 0.5px;
 }
