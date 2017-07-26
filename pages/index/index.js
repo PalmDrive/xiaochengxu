@@ -56,7 +56,7 @@ Page({
     const now = new Date();
     const that = this;
     if (!that.data.loadingMore && !that.data.recommendNoMore) {
-      console.log('loadMore');
+      // console.log('loadMore');
       that.setData({loadingMore: true});
       //获取推荐文章
       let url;
@@ -65,13 +65,13 @@ Page({
       } else {
         url = `${app.globalData.apiBase}/media/feeds2?mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`;
       }
-      console.log(`loadMore request begin used ${new Date() - now}ms`);
+      // console.log(`loadMore request begin used ${new Date() - now}ms`);
       wx.request({
         url,
         success(res) {
-          console.log(`loadMore request used ${new Date() - now}ms`);
+          // console.log(`loadMore request used ${new Date() - now}ms`);
           const media = res.data.data;
-          console.log('loadMore media length:', media.length);
+          // console.log('loadMore media length:', media.length);
           media.forEach(util.formatMedium);
 
           const recommendNoMore = that.data.needRead && media.length < that.data.pageSize;
@@ -83,7 +83,7 @@ Page({
             pageNumber: that.data.pageNumber + 1,
             recommendNoMore
           });
-          console.log(`loadMore data set used ${new Date() - now}ms`);
+          // console.log(`loadMore data set used ${new Date() - now}ms`);
         },
         fail(res) {
           console.log('request more recommended media fail');

@@ -8,8 +8,6 @@
 
 .medium-container .title {
   line-height: 27px;
-  max-height: 54px;
-  overflow: hidden;
   margin-bottom: 20px;
 }
 

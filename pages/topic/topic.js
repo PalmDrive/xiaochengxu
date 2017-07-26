@@ -118,14 +118,15 @@ Page({
           const isFeatured = topic.attributes.type === 'featured';
 
           let media = res.data.included;
-          media = media.map(m => {
+          media.forEach(m => {
             // 格式化时间
             if (m.attributes.publishedAt) {
               m.attributes.publishedAt = util.convertDate(new Date(m.attributes.publishedAt));
             } else {
               m.attributes.publishedAt = '';
             }
-            return m;
+            //处理过长的文章标题
+            util.trimMediumTitle(m);
           });
 
           // Determin tabs

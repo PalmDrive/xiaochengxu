@@ -68,6 +68,8 @@ function formatMedium(m) {
   } else {
     m.attributes.topic = m.attributes.topics[Object.keys(m.attributes.topics)[0]];
   }
+
+  trimMediumTitle(m);
 }
 
 function goToMedium(event, gaOptions) {
@@ -123,6 +125,17 @@ function gaEvent(options) {
   });
 }
 
+//处理过长的文章标题
+function trimMediumTitle(m) {
+  const withPic = 20,
+    noPic = 34;
+  if (m.attributes.picurl) {
+    m.attributes.trimmedTitle = m.attributes.title.length > withPic ? (m.attributes.title.slice(0, withPic) + '…') : m.attributes.title;
+  } else {
+    m.attributes.trimmedTitle = m.attributes.title.length > noPic ? (m.attributes.title.slice(0, noPic) + '…') : m.attributes.title;
+  }
+}
+
 module.exports = {
   formatTime,
   convertDate,
@@ -132,5 +145,6 @@ module.exports = {
   goToTopic,
   closeHint,
   ga,
-  gaEvent
+  gaEvent,
+  trimMediumTitle
 }

@@ -9,7 +9,7 @@
     <text>数据加载中...</text>
   </view>
   <view class="medium-container">
-    <view class="title text-bold size-20">{{medium.attributes.title}}</view>
+    <view class="title size-20">{{medium.attributes.title}}</view>
     <view class="meta size-12">
       <view class="source-image img-cover d-ib" style="background-image: {{'url(' + medium.attributes.sourcePicUrl + ')'}}"></view>
       <view class="source text-dark-grey d-ib meta-text">{{medium.attributes.source ? medium.attributes.source : ''}}</view>
