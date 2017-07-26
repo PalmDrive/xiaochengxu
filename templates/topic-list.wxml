@@ -3,7 +3,7 @@
 -->
 <template name="topicList">
   <view class="topic-list">
-    <view class="topic-card" wx:for="{{topics}}" wx:for-item="topic" wx:key="id" bindtap="goToTopic" data-id="{{topic.id}}">
+    <view class="topic-card" wx:for="{{topics}}" wx:for-item="topic" wx:key="id" bindtap="goToTopic" data-topic="{{topic}}">
       <view class="topic-img img-cover d-ib" style="background-image: {{'url(' + topic.attributes.imgUrl + ')'}}">
         <image class="topic-featured" src="../../images/featured.png" wx:if="{{topic.attributes.type === 'featured'}}"></image>
       </view>

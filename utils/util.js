@@ -78,8 +78,12 @@ function goToMedium(event, gaOptions) {
   });
 }
 
-function goToTopic(event) {
-  const topicId = event.currentTarget.dataset.id;
+function goToTopic(event, gaOptions) {
+  if (gaOptions) {
+    gaEvent(gaOptions);
+  }
+
+  const topicId = event.currentTarget.dataset.topic.id;
   wx.navigateTo({
     url: `../topic/topic?id=${topicId}`
   });
@@ -94,7 +98,7 @@ function ga(options) {
     method: 'POST',
     url: `https://www.google-analytics.com/collect?v=1&tid=UA-93993572-2&cid=${options.cid}&t=pageview&dh=xiaochengxu&dp=${options.dp}&dt=${options.dt}`,
     success() {
-      // console.log('ga sucess');
+      // console.log('ga success');
     },
     fail() {
       console.log('ga pageview fail');
@@ -108,7 +112,10 @@ function gaEvent(options) {
     url: 'https://www.google-analytics.com/collect',
     data: encodeURI(`v=1&tid=UA-93993572-2&cid=${options.cid}&t=event&ec=${options.ec}&ea=${options.ea}&el=${options.el}&ev=${options.ev}`),
     success() {
-      console.log('gaEvent sucess');
+      // console.log('gaEvent success');
+    },
+    fail() {
+      console.log('ga event fail');
     }
   });
 }

@@ -3,7 +3,7 @@
 -->
 <template name="mediumList">
   <view class="medium-list">
-    <view class="medium" wx:for="{{media}}" wx:for-item="medium" wx:key="id" data-id="{{medium.id}}" bindtap="goToMedium">
+    <view class="medium" wx:for="{{media}}" wx:for-item="medium" wx:key="id" data-medium="{{medium}}" bindtap="goToMedium">
       <view class="break-line"></view>
       <view class="time text-grey size-12">{{medium.attributes.publishedAt}}</view>
       <view class="medium-container-without-image" wx:if="{{!medium.attributes.picurl}}">

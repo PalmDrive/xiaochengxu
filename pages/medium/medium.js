@@ -17,18 +17,8 @@ Page({
     showHint: false
   },
   //事件处理函数
-  goToTopic: function (event) {
-    const id = event.currentTarget.dataset.id;
-    wx.redirectTo({
-      url: `../topic/topic?id=${id}`
-    })
-  },
-  goToMedium(event) {
-    const mediumId = event.currentTarget.dataset.id;
-    wx.redirectTo({
-      url: `medium?id=${mediumId}`
-    })
-  },
+  goToTopic: util.goToTopic,
+  goToMedium: util.goToMedium,
   //关闭首次登陆弹窗
   closeHint: function () {
     util.closeHint(this);
