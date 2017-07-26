@@ -105,7 +105,7 @@ Page({
 
       util.ga({
         cid: Auth.getLocalUserId() || '555',
-        dp: '%2Ftopics',
+        dp: '%2FzhuantiTab_XiaoChengXu',
         dt: '专题tab页（小程序）'
       });
     }

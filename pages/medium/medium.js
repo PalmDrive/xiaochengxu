@@ -78,7 +78,7 @@ Page({
 
           util.ga({
             cid: Auth.getLocalUserId() || '555',
-            dp: '%2Fmedium',
+            dp: '%2FarticlePage_XiaoChengXu',
             dt: `article_title:${medium.attributes.title},article_id:${mediumId}`
           });
         },

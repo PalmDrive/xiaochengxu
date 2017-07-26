@@ -46,7 +46,7 @@ Page({
 
       Util.ga({
         cid: Auth.getLocalUserId() || '555',
-        dp: '%2Fmy',
+        dp: '%2FwodeTab_XiaoChengXu',
         dt: '我的tab页（小程序）'
       });
     }

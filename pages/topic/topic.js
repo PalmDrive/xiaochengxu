@@ -147,7 +147,7 @@ Page({
 
           util.ga({
             cid: Auth.getLocalUserId() || '555',
-            dp: '%2Ftopic',
+            dp: '%2FtopicPage_XiaoChengXu',
             dt: `topic_name:${topic.attributes.name},topic_id:${topicId}`
           });
 

@@ -161,7 +161,7 @@ Page({
 
       util.ga({
         cid: Auth.getLocalUserId() || '555',
-        dp: '%2Findex',
+        dp: '%2FriduTab_XiaoChengXu',
         dt: '日读tab页（小程序）'
       });
 
