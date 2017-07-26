@@ -11,5 +11,5 @@
 
   <view class="section-title size-17">我的订阅</view>
   <template is="topicList" data="{{topics: favoriteTopics}}"></template>
-  <view class="size-13 no-subscription text-center text-grey">暂无数据</view>
+  <view class="size-13 no-subscription text-center text-grey" hidden="{{favoriteTopics && favoriteTopics.length}}">暂无数据</view>
 </view>
