@@ -13,10 +13,14 @@ Page({
   //事件处理函数
   goToTopic: Util.goToTopic,
 
-  onLoad: function () {
+  onLoad: function (options) {
     // console.log('onLoad');
     const that = this;
-    that.setData({loading: true});
+
+    if (!options || !options.pullDown) {
+      that.setData({ loading: true });
+    }
+    
     //检查storage里是否有需要的数据，没有则请求
     if (Auth.getLocalUserId() && Auth.getLocalUserInfo()) {
       init();
@@ -40,6 +44,7 @@ Page({
             favoriteTopics: topics,
             loaded: true
           });
+
           wx.stopPullDownRefresh();
         },
         fail() {
@@ -108,7 +113,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    this.onLoad();
+    this.onLoad({pullDown: true});
   },
 
   /**
