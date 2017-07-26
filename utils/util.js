@@ -91,7 +91,7 @@ function closeHint(that) {
 function ga(options) {
   wx.request({
     method: 'POST',
-    url: `http://www.google-analytics.com/collect?v=1&tid=UA-93993572-2&cid=${options.cid}&t=pageview&dh=xiaochengxu&dp=${options.dp}&dt=${options.dt}`,
+    url: `https://www.google-analytics.com/collect?v=1&tid=UA-93993572-2&cid=${options.cid}&t=pageview&dh=xiaochengxu&dp=${options.dp}&dt=${options.dt}`,
     success() {
       console.log('ga sucess');
     }
