@@ -245,6 +245,14 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-  
+    const topic = this.data.topic,
+      userInfo = Auth.getLocalUserInfo();
+    util.gaEvent({
+      cid: Auth.getLocalUserId(),
+      ec: `topic_name:${topic.attributes.name}, topic_id:${topic.id}`,
+      ea: 'share_topic',
+      el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
+      ev: 5
+    });
   }
 })
