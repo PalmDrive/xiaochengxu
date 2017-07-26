@@ -93,7 +93,9 @@ Page({
   onLoad: function (options) {
     const that = this,
       topicId = options.id;
-
+    that.setData({
+      loading: true
+    });
     //检查storage里是否有userId，没有则请求
     if (Auth.getLocalUserId()) {
       init();
@@ -154,6 +156,7 @@ Page({
             mediumData,
             loading: false
           });
+          wx.stopPullDownRefresh();
 
           util.ga({
             cid: Auth.getLocalUserId() || '555',
@@ -232,7 +235,12 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-  
+    const id = this.data.topicId;
+    if (id) {
+      this.onLoad({ id });
+    } else {
+      wx.stopPullDownRefresh();
+    }
   },
 
   /**
