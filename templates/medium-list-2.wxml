@@ -6,7 +6,7 @@
 
 <template name="mediumList2">
   <view class="medium-list medium-list-2">
-    <view class="medium" wx:for="{{media}}" wx:for-item="medium" wx:key="id" data-id="{{medium.id}}" bindtap="goToMedium">
+    <view class="medium" wx:for="{{media}}" wx:for-item="medium" wx:key="id" data-medium="{{medium}}" bindtap="goToMedium">
       <view class="break-line"></view>
 
       <view class="medium-topic">

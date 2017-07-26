@@ -38,7 +38,19 @@ Page({
     });
   },
   //点击文章
-  goToMedium: util.goToMedium,
+  goToMedium: function(event) {
+    const medium = event.currentTarget.dataset.medium,
+      userInfo = Auth.getLocalUserInfo();
+    const gaOptions = {
+      cid: Auth.getLocalUserId(),
+      ec: `article_title:${medium.attributes.title}, article_id:${medium.id}`,
+      ea: 'click_article_in_riduTab',
+      el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
+      ev: 0
+    };
+    util.goToMedium(event, gaOptions);
+  },
+
   //加载更多推荐
   loadMore() {
     const now = new Date();
@@ -130,15 +142,15 @@ Page({
     }
 
     function init() {
-      console.log(`onLoad request begin used ${new Date() - now}ms`);
+      // console.log(`onLoad request begin used ${new Date() - now}ms`);
       //获取推荐文章
       wx.request({
         url: `${app.globalData.apiBase}/media/feeds2?mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`,
         success(res) {
-          console.log(`onLoad request used ${new Date() - now}ms`);
+          // console.log(`onLoad request used ${new Date() - now}ms`);
           const media = res.data.data;
           const len = media.length;
-          console.log('onload recommend media length:', len);
+          // console.log('onload recommend media length:', len);
           media.forEach(util.formatMedium);
 
           const needRead = len < that.data.pageSize;
@@ -147,7 +159,7 @@ Page({
             loading: false,
             needRead
           });
-          console.log(`onLoad data set used ${new Date() - now}ms`);
+          // console.log(`onLoad data set used ${new Date() - now}ms`);
           wx.stopPullDownRefresh();
 
           if (needRead) {

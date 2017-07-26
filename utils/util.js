@@ -70,8 +70,9 @@ function formatMedium(m) {
   }
 }
 
-function goToMedium(event) {
-  const mediumId = event.currentTarget.dataset.id;
+function goToMedium(event, gaOptions) {
+  gaEvent(gaOptions);
+  const mediumId = event.currentTarget.dataset.medium.id;
   wx.navigateTo({
     url: `../medium/medium?id=${mediumId}`
   });
@@ -93,7 +94,21 @@ function ga(options) {
     method: 'POST',
     url: `https://www.google-analytics.com/collect?v=1&tid=UA-93993572-2&cid=${options.cid}&t=pageview&dh=xiaochengxu&dp=${options.dp}&dt=${options.dt}`,
     success() {
-      console.log('ga sucess');
+      // console.log('ga sucess');
+    },
+    fail() {
+      console.log('ga pageview fail');
+    }
+  });
+}
+
+function gaEvent(options) {
+  wx.request({
+    method: 'POST',
+    url: 'https://www.google-analytics.com/collect',
+    data: encodeURI(`v=1&tid=UA-93993572-2&cid=${options.cid}&t=event&ec=${options.ec}&ea=${options.ea}&el=${options.el}&ev=${options.ev}`),
+    success() {
+      console.log('gaEvent sucess');
     }
   });
 }
@@ -106,5 +121,6 @@ module.exports = {
   goToMedium,
   goToTopic,
   closeHint,
-  ga
+  ga,
+  gaEvent
 }
