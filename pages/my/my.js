@@ -7,12 +7,14 @@ Page({
     userInfo: {},
     userId: null,
     loading: true,
-    favoriteTopics: []
+    favoriteTopics: [],
+    loaded: false
   },
   //事件处理函数
   goToTopic: Util.goToTopic,
 
   onLoad: function () {
+    // console.log('onLoad');
     const that = this;
     that.setData({loading: true});
     //检查storage里是否有需要的数据，没有则请求
@@ -35,7 +37,8 @@ Page({
             loading: false,
             userInfo: Auth.getLocalUserInfo(),
             userId,
-            favoriteTopics: topics
+            favoriteTopics: topics,
+            loaded: true
           });
           wx.stopPullDownRefresh();
         },
@@ -63,7 +66,28 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    const that = this;
+    // console.log('onShow');
+    if (that.data.loaded) {
+      // console.log('do stuff onShow');
+      //更新订阅列表
+      that.setData({loading: true});
+      wx.request({
+        url: `${app.globalData.apiBase}/users/${that.data.userId}/favorite-topics`,
+        success(res) {
+          const topics = res.data.data;
+          // const userTopics = res.data.included;
+          topics.forEach(Util.formatTopic);
+          that.setData({
+            loading: false,
+            favoriteTopics: topics
+          });
+        },
+        fail() {
+          console.log('request /users/:id/favorite-topics fail onShow');
+        }
+      });
+    }
   },
 
   /**
