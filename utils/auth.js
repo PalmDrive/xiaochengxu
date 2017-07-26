@@ -1,5 +1,6 @@
-const apiBase = 'https://ainterest-service-production.ailingual.cn/api/v1';
-const nameSpace = 'zdk_xiaochengxu';
+const app = getApp(),
+  apiBase = app.globalData.apiBase,
+  nameSpace = 'zdk_xiaochengxu';
 
 const getLocalUserInfo = () => {
   return wx.getStorageSync(`${nameSpace}:userInfo`);
