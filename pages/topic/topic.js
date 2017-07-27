@@ -105,7 +105,7 @@ Page({
 
     function init() {
       const userId = Auth.getLocalUserId(),
-        topicUrl = `${app.globalData.apiBase}/topics/${topicId}?fields[topics]=name,description,imgUrl,mediaCount,fields,tabs,type&include=media&fields[media]=id,title,summary,publishedAt,picUrl&userId=${userId}`;
+        topicUrl = `${app.globalData.apiBase}/topics/${topicId}?filterSource=true&fields[topics]=name,description,imgUrl,mediaCount,fields,tabs,type&include=media&fields[media]=id,title,summary,publishedAt,picUrl&userId=${userId}`;
       //获取专题数据
       wx.request({
         url: topicUrl,

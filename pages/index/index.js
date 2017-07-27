@@ -61,9 +61,9 @@ Page({
       //获取推荐文章
       let url;
       if (that.data.needRead) {
-        url = `${app.globalData.apiBase}/media/read?mediumType=article&userId=${Auth.getLocalUserId()}&lastInitedAt=${that.data.lastInitedAt}&page[number]=${that.data.pageNumber}&page[size]=${that.data.pageSize}`;
+        url = `${app.globalData.apiBase}/media/read?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&lastInitedAt=${that.data.lastInitedAt}&page[number]=${that.data.pageNumber}&page[size]=${that.data.pageSize}`;
       } else {
-        url = `${app.globalData.apiBase}/media/feeds2?mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`;
+        url = `${app.globalData.apiBase}/media/feeds2?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`;
       }
       // console.log(`loadMore request begin used ${new Date() - now}ms`);
       wx.request({
@@ -154,7 +154,7 @@ Page({
       // console.log(`onLoad request begin used ${new Date() - now}ms`);
       //获取推荐文章
       wx.request({
-        url: `${app.globalData.apiBase}/media/feeds2?mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`,
+        url: `${app.globalData.apiBase}/media/feeds2?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`,
         success(res) {
           // console.log(`onLoad request used ${new Date() - now}ms`);
           const media = res.data.data;
