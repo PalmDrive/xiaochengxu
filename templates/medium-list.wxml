@@ -7,12 +7,12 @@
       <view class="break-line"></view>
       <view class="time text-grey size-12">{{medium.attributes.publishedAt}}</view>
       <view class="medium-container-without-image" wx:if="{{!medium.attributes.picurl}}">
-        <view class="title size-18">{{medium.attributes.trimmedTitle}}</view>
+        <view class="title size-18">{{medium.attributes.title}}</view>
         <view class="summary size-14 text-dark-grey">{{medium.attributes.summary}}</view>
       </view>
       <view class="medium-container-with-image" wx:if="{{medium.attributes.picurl}}">
         <view class="medium-text-container d-ib">
-          <view class="title size-18">{{medium.attributes.trimmedTitle}}</view>
+          <view class="title size-18">{{medium.attributes.title}}</view>
           <view class="summary size-14 text-dark-grey">{{medium.attributes.summary}}</view>
         </view>
         <image class="medium-img" src="{{medium.attributes.picurl}}" mode="aspectFill"></image>

@@ -69,7 +69,7 @@ function formatMedium(m) {
     m.attributes.topic = m.attributes.topics[Object.keys(m.attributes.topics)[0]];
   }
 
-  trimMediumTitle(m);
+  // trimMediumTitle(m);
 }
 
 function goToMedium(event, gaOptions) {

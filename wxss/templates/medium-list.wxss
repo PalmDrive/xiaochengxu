@@ -28,6 +28,9 @@
 
 .medium-list .title, .medium-list .summary {
   width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; 
 }
 
 .medium-list .title {

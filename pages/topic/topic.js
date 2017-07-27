@@ -127,8 +127,8 @@ Page({
             } else {
               m.attributes.publishedAt = '';
             }
-            //处理过长的文章标题
-            util.trimMediumTitle(m);
+            // // 处理过长的文章标题
+            // util.trimMediumTitle(m);
           });
 
           // Determin tabs
