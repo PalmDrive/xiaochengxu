@@ -56,10 +56,10 @@ function formatTopic(t) {
   } else {
     t.attributes.lastMediumAddedAt = '';
   }
-  // trim 文章标题
-  if (t.attributes.lastMediumTitle) {
-    t.attributes.lastMediumTitle = t.attributes.lastMediumTitle.slice(0, 15) + '...';
-  }
+  // // trim 文章标题
+  // if (t.attributes.lastMediumTitle) {
+  //   t.attributes.lastMediumTitle = t.attributes.lastMediumTitle.slice(0, 15) + '...';
+  // }
 }
 
 function formatMedium(m) {
