@@ -9,12 +9,12 @@
       <view class="featured-title size-17">
         <view class="featured-title-left d-ib text-bold">精选专题</view>
       </view>
-      <scroll-view class="featured-slides" scroll-x>
+      <view class="scroll-x featured-slides">
         <view data-topic="{{topic}}" bindtap="goToTopic" class="featured-slide d-ib" wx:for="{{featuredTopics}}" wx:for-item="topic" wx:key="id">
           <view class="featured-slide-img img-cover" style="background-image: {{'url(' + topic.attributes.imgUrl + ')'}}"></view>
           <view class="featured-slide-title text-center size-15 text-bold">{{topic.attributes.name}}</view>
         </view>
-      </scroll-view>
+      </view>
     </view>
 
     <view wx:for="{{sections}}" wx:for-item="section" wx:key="sectionName">

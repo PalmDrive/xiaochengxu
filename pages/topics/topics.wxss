@@ -7,13 +7,9 @@
   height: 100%;
 } */
 
-.scroll-container {
+/* .scroll-container {
   height: 100%;
-}
-
-scroll-view {
-  white-space: nowrap;
-}
+} */
 
 .banner {
   background-image: url('/images/discovery/banner.jpg');
@@ -39,6 +35,8 @@ scroll-view {
 
 .featured-slides {
   padding-left: 15px;
+  height: 244px;
+  width: 100%;
 }
 
 .featured-slide {

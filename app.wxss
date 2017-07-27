@@ -5,6 +5,12 @@
 @import "wxss/templates/medium-list-2.wxss";
 @import "wxss/includes/hint.wxss";
 
+.scroll-x {
+  white-space: nowrap;
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
 .loading {
   margin-top: 50px;
   padding-bottom: 50px;
