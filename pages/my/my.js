@@ -73,10 +73,9 @@ Page({
   onShow: function () {
     const that = this;
     // console.log('onShow');
-    if (that.data.loaded) {
+    if (that.data.loaded && that.data.loading) {
       // console.log('do stuff onShow');
       //更新订阅列表
-      that.setData({loading: true});
       wx.request({
         url: `${app.globalData.apiBase}/users/${that.data.userId}/favorite-topics`,
         success(res) {
@@ -99,7 +98,9 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
+    if (this.data.loaded) {
+      this.setData({ loading: true });
+    }
   },
 
   /**
