@@ -124,16 +124,25 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function () {
+  onLoad: function (options) {
     const now = new Date();
     const that = this;
-    that.setData({
-      loading: true,
-      loadingSubscribe: true,
-      needRead: false,
-      lastInitedAt: + new Date(),
-      recommendNoMore: false
-    });
+    if (!options || !options.pullDown) {
+      that.setData({
+        loading: true,
+        loadingSubscribe: true,
+        needRead: false,
+        lastInitedAt: + new Date(),
+        recommendNoMore: false
+      });
+    } else {
+      that.setData({
+        needRead: false,
+        lastInitedAt: + new Date(),
+        recommendNoMore: false
+      });
+    }
+
     //检查storage里是否有userId，没有则请求
     if (Auth.getLocalUserId()) {
       init();
@@ -230,7 +239,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    this.onLoad();
+    this.onLoad({ pullDown: true });
   },
 
   /**
