@@ -6,6 +6,7 @@
 @import "wxss/includes/hint.wxss";
 
 .scroll-x {
+  width: 100%;
   white-space: nowrap;
   overflow-x: scroll;
   -webkit-overflow-scrolling: touch;
