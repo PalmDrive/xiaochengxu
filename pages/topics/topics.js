@@ -69,7 +69,7 @@ Page({
         userIdQuery = `?userId=` + userId;
       //获取精选专题
       wx.request({
-        url: `${app.globalData.apiBase}/topics/featured${userIdQuery}`,
+        url: `${app.globalData.apiBase}/topics/featured${userIdQuery}&page[size]=100`,
         success(res) {
           that.setData({
             featuredTopics: res.data.data
