@@ -132,13 +132,11 @@ Page({
         loading: true,
         loadingSubscribe: true,
         needRead: false,
-        lastInitedAt: + new Date(),
         recommendNoMore: false
       });
     } else {
       that.setData({
         needRead: false,
-        lastInitedAt: + new Date(),
         recommendNoMore: false
       });
     }
@@ -156,18 +154,24 @@ Page({
       wx.request({
         url: `${app.globalData.apiBase}/media/feeds2?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`,
         success(res) {
+          // console.log(res.data);
           // console.log(`onLoad request used ${new Date() - now}ms`);
           const media = res.data.data;
+          const lastInitedAt = res.data.meta && res.data.meta.now;
           const len = media.length;
+          const needRead = len < that.data.pageSize;
           // console.log('onload recommend media length:', len);
           media.forEach(util.formatMedium);
-
-          const needRead = len < that.data.pageSize;
-          that.setData({
+          
+          const data = {
             media,
             loading: false,
             needRead
-          });
+          };
+          if (lastInitedAt) {
+            data.lastInitedAt = lastInitedAt;
+          }
+          that.setData(data);
           // console.log(`onLoad data set used ${new Date() - now}ms`);
           wx.stopPullDownRefresh();
 
@@ -239,7 +243,27 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    this.onLoad({ pullDown: true });
+    // this.onLoad({ pullDown: true });
+    const that = this;
+    wx.request({
+      url: `${app.globalData.apiBase}/media/feeds2?from=miniProgram&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`,
+      success(res) {
+        // console.log('pull down refresh request success');
+        const media = res.data.data;
+        const len = media.length;
+        if (len) {
+          media.forEach(util.formatMedium);
+          that.setData({
+            media: that.data.media.concat(media)
+          });
+        }
+        wx.stopPullDownRefresh();
+      },
+      fail(res) {
+        wx.stopPullDownRefresh();
+        console.log('request recommended media fail');
+      }
+    });
   },
 
   /**
