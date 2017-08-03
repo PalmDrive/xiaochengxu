@@ -94,10 +94,20 @@ Page({
   onLoad: function (options) {
     const that = this,
       topicId = options.id;
-    that.setData({
+    let data = {
       loading: true,
       topicId
-    });
+    };
+    if (options.pullDown) {
+      data = {
+        topicId,
+        isFeatured: false,
+        selectedTab: '动态',
+        loading: true,
+        page: { number: 1, size: 8 }
+      };
+    }
+    that.setData(data);
     //检查storage里是否有userId，没有则请求
     if (Auth.getLocalUserId()) {
       init();
@@ -125,7 +135,7 @@ Page({
           const tabs = topic.attributes.newTabs;
           tabs.unshift('动态');
 
-          //获取其他标签下的文章
+          //获取其他标签下第一页的文章
           that.getOtherTabsData(tabs);
 
           //更新数据
@@ -233,7 +243,7 @@ Page({
   onPullDownRefresh: function () {
     const id = this.data.topicId;
     if (id && !this.data.loading) {
-      this.onLoad({ id });
+      this.onLoad({ id, pullDown: true });
     } else {
       wx.stopPullDownRefresh();
     }
@@ -244,28 +254,42 @@ Page({
    */
   onReachBottom: function () {
     const data = this.data,
-      that = this;
-    if (data.selectedTab === '动态' && !data.noMore && !data.loadingMore) {
-      const pageNumber = data.page.number + 1;
-      this.setData({
-        'page.number': pageNumber,
-        loadingMore: true
-      });
+      that = this,
+      tab = data.selectedTab,
+      page = data.page,
+      skipLoadMoreTabs = ['相关专题', '子专题'];
 
+    if (skipLoadMoreTabs.indexOf(tab) > -1) return;
+
+    if (!page[tab] || !page[tab].noMore && !page[tab].loadingMore) {
+      let pageNumber = page[tab] && page[tab].number || 1;
+      pageNumber++;
+      page.number = pageNumber;
+      page.loadingMore = true;
+      const key = `page.${tab}`;
+      that.setData({
+        [key]: page
+      });
       const cb = media => {
+        // console.log(media);
         const data = {};
         if (media.length) {
-          media.forEach(m => util.formatPublishedAt(m));
-          data['mediumData.动态'] = that.data.mediumData['动态'].concat(media);
+          media.forEach(util.formatPublishedAt);
+          data[`mediumData.${tab}`] = that.data.mediumData[tab].concat(media);
         }
+        data[key] = that.data.page[tab];
         if (media.length < that.data.page.size) {
-          data.noMore = true;
+          data[key].noMore = true;
         }
-        data.loadingMore = false;
+        data[key].loadingMore = false;
         that.setData(data);
       };
 
-      this.getMedia(pageNumber, cb);
+      if (tab === '动态') {
+        that.getMedia(pageNumber, cb);
+      } else {
+        that.getTabMedia(tab, pageNumber, cb);
+      }
     }
   },
 
@@ -294,20 +318,32 @@ Page({
     });
   },
 
+  //首次获取某个tab下文章
   getTabData: function(tab) {
     const that = this;
+
+    const cb = media => {
+      media.forEach(util.formatPublishedAt);
+      const key = `mediumData.${tab}`;
+      that.setData({
+        [key]: media
+      });
+    };
+
+    that.getTabMedia(tab, 1, cb);
+  },
+
+  //获取某个tab下文章
+  getTabMedia: function(tab, pageNumber, cb) {
+    const that = this;
     wx.request({
-      url: `${app.globalData.apiBase}/topics/${that.data.topicId}/media?page[number]=1&page[size]=100&filter[confirmed]=1&filter[contentTypes]=${tab}&sort=-publishedAt`,
+      url: `${app.globalData.apiBase}/topics/${that.data.topicId}/media?page[number]=${pageNumber}&page[size]=8&filter[confirmed]=1&filter[contentTypes]=${tab}&sort=-publishedAt`,
       success(res) {
         const media = res.data.data;
-        media.forEach(m => util.formatPublishedAt(m));
-        const key = `mediumData.${tab}`;
-        that.setData({
-          [key]: media
-        });
+        cb(media);
       },
       fail() {
-        console.log('topic page, getTabData function, request fail');
+        console.log('topic page, getTabMedia function, request fail');
       }
     });
   },

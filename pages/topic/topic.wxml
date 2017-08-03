@@ -39,8 +39,10 @@
       </view>
     </view>
 
-    <view class="loading text-center" hidden="{{selectedTab !== '动态'}}">
-      <text>{{noMore ? '没有更多了' : '更多数据加载中...'}}</text>
+    <view wx:for="{{tabs}}" wx:for-item="tab" wx:key="*this">
+      <view class="loading text-center" hidden="{{selectedTab !== tab || tab === '子专题' || tab === '相关专题'}}">
+        <text>{{page[tab].noMore ? '没有更多了' : '更多数据加载中...'}}</text>
+      </view>
     </view>
   </view>
 </view>
