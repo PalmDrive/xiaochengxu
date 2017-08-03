@@ -72,6 +72,14 @@ function formatMedium(m) {
   // trimMediumTitle(m);
 }
 
+function formatPublishedAt(m) {
+  if (m.attributes.publishedAt) {
+    m.attributes.publishedAt = convertDate(new Date(m.attributes.publishedAt));
+  } else {
+    m.attributes.publishedAt = '';
+  }
+}
+
 function goToMedium(event, gaOptions) {
   if (gaOptions) {
     gaEvent(gaOptions);
@@ -139,6 +147,7 @@ function trimMediumTitle(m) {
 module.exports = {
   formatTime,
   convertDate,
+  formatPublishedAt,
   formatTopic,
   formatMedium,
   goToMedium,
