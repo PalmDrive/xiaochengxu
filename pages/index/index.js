@@ -254,7 +254,7 @@ Page({
         if (len) {
           media.forEach(util.formatMedium);
           that.setData({
-            media: that.data.media.concat(media)
+            media: media.concat(that.data.media)
           });
         }
         wx.stopPullDownRefresh();
