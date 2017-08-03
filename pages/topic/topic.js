@@ -185,10 +185,15 @@ Page({
 
       //获取动态标签的文章
       const cb = media => {
-        if (media && media.length) {
+        const data = {};
+        if (media.length) {
           media.forEach(m => util.formatPublishedAt(m));
-          that.setData({ 'mediumData.动态': media });
+          data['mediumData.动态'] = media;
         }
+        if (media.length < that.data.page.size) {
+          data.noMore = true;
+        }
+        that.setData(data);
       };
       that.getMedia(1, cb);
     }
