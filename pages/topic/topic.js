@@ -117,7 +117,7 @@ Page({
 
     function init() {
       const userId = Auth.getLocalUserId(),
-        topicUrl = `${app.globalData.apiBase}/topics/${topicId}?filterSource=true&fields[topics]=name,description,imgUrl,mediaCount,fields,tabs,type&userId=${userId}`;
+        topicUrl = `${app.globalData.apiBase}/topics/${topicId}?from=miniProgram&fields[topics]=name,description,imgUrl,mediaCount,fields,tabs,type&userId=${userId}`;
       //获取专题数据
       wx.request({
         url: topicUrl,
@@ -158,7 +158,7 @@ Page({
 
           if (tabs.indexOf('子专题') > -1) {
             wx.request({
-              url: `${app.globalData.apiBase}/topics/${topicId}/topics?include=media`,
+              url: `${app.globalData.apiBase}/topics/${topicId}/topics?include=media&from=miniProgram`,
               success(result) {
                 const topics = result.data.data;
                 const media = result.data.included || [];
@@ -337,7 +337,7 @@ Page({
   getTabMedia: function(tab, pageNumber, cb) {
     const that = this;
     wx.request({
-      url: `${app.globalData.apiBase}/topics/${that.data.topicId}/media?page[number]=${pageNumber}&page[size]=8&filter[confirmed]=1&filter[contentTypes]=${tab}&sort=-publishedAt`,
+      url: `${app.globalData.apiBase}/topics/${that.data.topicId}/media?page[number]=${pageNumber}&page[size]=8&filter[confirmed]=1&filter[contentTypes]=${tab}&sort=-publishedAt&from=miniProgram`,
       success(res) {
         const media = res.data.data;
         cb(media);
@@ -351,7 +351,7 @@ Page({
   //获取动态标签下的文章
   getMedia: function(pageNumber, cb) {
     wx.request({
-      url: `${app.globalData.apiBase}/media/topic/${this.data.topicId}?page[number]=${pageNumber}&page[size]=${this.data.page.size}&sort=-publishedAt`,
+      url: `${app.globalData.apiBase}/media/topic/${this.data.topicId}?page[number]=${pageNumber}&page[size]=${this.data.page.size}&sort=-publishedAt&from=miniProgram`,
       success(res) {
         const media = res.data.data;
         cb(media);
