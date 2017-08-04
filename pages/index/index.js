@@ -251,13 +251,26 @@ Page({
         // console.log('pull down refresh request success');
         const media = res.data.data;
         const len = media.length;
+        const lastInitedAt = res.data.meta && res.data.meta.now;
+        let needRead;
         if (len) {
+          needRead = len < that.data.pageSize;
           media.forEach(util.formatMedium);
-          that.setData({
-            media: media.concat(that.data.media)
-          });
+          const data = {
+            media,
+            pageNumber: 1,
+            needRead,
+            recommendNoMore: false
+          };
+          if (lastInitedAt) {
+            data.lastInitedAt = lastInitedAt;
+          }
+          that.setData(data);
         }
         wx.stopPullDownRefresh();
+        if (needRead) {
+          that.loadMore();
+        }
       },
       fail(res) {
         wx.stopPullDownRefresh();
