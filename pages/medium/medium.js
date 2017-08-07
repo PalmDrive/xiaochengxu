@@ -10,6 +10,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    mediumId: '',
     medium: {},
     relatedMedia: [],
     relatedTopics: [],
@@ -29,6 +30,7 @@ Page({
   onLoad: function (options) {
     const that = this,
       mediumId = options.id;
+    that.setData({mediumId});
 
     //检查storage里是否有userId，没有则请求
     if (Auth.getLocalUserId()) {
@@ -126,7 +128,23 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+    // console.log('onShow');
+    const userId = Auth.getLocalUserId(),
+      mediumId = this.data.mediumId;
+    if (userId && mediumId) {
+      // console.log('记录足迹');
+      wx.request({
+        method: 'POST',
+        url: `${app.globalData.apiBase}/media/${mediumId}/views`,
+        data: {
+          data: {attributes: {userId}}
+        },
+        success(res) {},
+        fail() {
+          console.log('Medium page, onShow, record lastViewedAt fail');
+        }
+      });
+    }
   },
 
   /**
