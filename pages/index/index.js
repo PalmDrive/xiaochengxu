@@ -2,7 +2,7 @@
 const app = getApp(),
       util = require('../../utils/util'),
       Auth = require('../../utils/auth');
-
+      
 const tabs = ['推荐', '订阅'];
 
 Page({

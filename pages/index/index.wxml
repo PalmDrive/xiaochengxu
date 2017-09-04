@@ -8,6 +8,8 @@
       <view style="color: {{selectedTab === tab ? '#48A2C9' : '#000'}};" bindtap="selectTab" data-tab="{{tab}}">{{tab}}</view>
     </view>
   </view> -->
+
+  <navigator url="/pages/topics/select-topics" open-type="navigate">订阅话题</navigator>
   
   <view hidden="{{selectedTab !== '推荐'}}" scroll-y bindscrolltolower="loadMore" lower-threshold="800">
     <view class="loading text-center" hidden="{{!loading}}">

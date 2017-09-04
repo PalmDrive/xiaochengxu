@@ -1,7 +1,5 @@
-//app.js
 App({
   onLaunch: function() {
-    console.log('app on launch');
     // console.log(wx.getSystemInfoSync());
   },
 

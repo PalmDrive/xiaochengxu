@@ -1,0 +1,23 @@
+.tabs {
+  position: fixed;
+  z-index: 10;
+  top: -1px; /* 如果设置成0， 有时候会顶部还有一条缝隙 */
+  box-sizing: border-box;
+  background-color: white;
+  padding-bottom: 10px;
+  padding-top: 0px
+}
+
+.tabs text {
+  padding: 0 10px;
+  color: #B7B7B7;
+}
+
+.tabs text.active {
+  color: #606060;
+}
+
+.tab-content {
+  padding-top: 30px;
+  height: 100vh;
+}
