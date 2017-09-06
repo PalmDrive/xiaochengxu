@@ -8,7 +8,9 @@ Page({
     userId: null,
     loading: true,
     favoriteTopics: [],
-    loaded: false
+    loaded: false,
+    page: {number: 1, size: 8},
+    noMore: false
   },
   //事件处理函数
   goToTopic: Util.goToTopic,
@@ -17,8 +19,8 @@ Page({
     // console.log('onLoad');
     const that = this;
 
-    if (!options || !options.pullDown) {
-      that.setData({ loading: true });
+    if (options && options.pullDown) {
+      that.setData({ 'page.number': 1, noMore: false });
     }
     
     //检查storage里是否有需要的数据，没有则请求
@@ -30,27 +32,23 @@ Page({
 
     function init() {
       const userId = Auth.getLocalUserId();
+      const cb = topics => {
+        topics.forEach(Util.formatTopic);
 
-      wx.request({
-        url: `${app.globalData.apiBase}/users/${userId}/favorite-topics`,
-        success(res) {
-          const topics = res.data.data;
-          const userTopics = res.data.included;
-          topics.forEach(Util.formatTopic);
-          that.setData({
-            loading: false,
-            userInfo: Auth.getLocalUserInfo(),
-            userId,
-            favoriteTopics: topics,
-            loaded: true
-          });
-
-          wx.stopPullDownRefresh();
-        },
-        fail() {
-          console.log('request /users/:id/favorite-topics fail');
+        const data = {
+          loading: false,
+          userInfo: Auth.getLocalUserInfo(),
+          userId,
+          favoriteTopics: topics,
+          loaded: true
+        };
+        if (topics.length < that.data.page.size) {
+          data.noMore = true;
         }
-      });
+        that.setData(data);
+        wx.stopPullDownRefresh();
+      };
+      that.getTopics(1, cb);
 
       Util.ga({
         cid: Auth.getLocalUserId() || '555',
@@ -76,21 +74,19 @@ Page({
     if (that.data.loaded && that.data.loading) {
       // console.log('do stuff onShow');
       //更新订阅列表
-      wx.request({
-        url: `${app.globalData.apiBase}/users/${that.data.userId}/favorite-topics`,
-        success(res) {
-          const topics = res.data.data;
-          // const userTopics = res.data.included;
-          topics.forEach(Util.formatTopic);
-          that.setData({
-            loading: false,
-            favoriteTopics: topics
-          });
-        },
-        fail() {
-          console.log('request /users/:id/favorite-topics fail onShow');
+      const cb = topics => {
+        topics.forEach(Util.formatTopic);
+        const data = {
+          loading: false,
+          favoriteTopics: topics
+        };
+        if (topics.length < that.data.page.size) {
+          console.log('onShow no more');
+          data.noMore = true;
         }
-      });
+        that.setData(data);
+      };
+      that.getTopics(1, cb);
     }
   },
 
@@ -99,7 +95,7 @@ Page({
    */
   onHide: function () {
     if (this.data.loaded) {
-      this.setData({ loading: true });
+      this.setData({ loading: true, noMore: false, 'page.number': 1 });
     }
   },
 
@@ -121,7 +117,24 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
+    const that = this;
+    if (!this.data.loadingMore && !this.data.noMore) {
+      const pageNumber = this.data.page.number + 1;
+      that.setData({loadingMore: true, 'page.number': pageNumber});
+      const cb = topics => {
+        topics.forEach(Util.formatTopic);
 
+        const data = {
+          loadingMore: false,
+          favoriteTopics: that.data.favoriteTopics.concat(topics)
+        };
+        if (topics.length < that.data.page.size) {
+          data.noMore = true;
+        }
+        that.setData(data);
+      };
+      this.getTopics(pageNumber, cb);
+    }
   },
 
   /**
@@ -129,5 +142,19 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  getTopics: function(pageNumber, cb) {
+    const userId = Auth.getLocalUserId();
+    wx.request({
+      url: `${app.globalData.apiBase}/users/${userId}/favorite-topics?page[number]=${pageNumber}`,
+      success(res) {
+        const topics = res.data.data;
+        cb(topics);
+      },
+      fail() {
+        console.log('my page, getTopics request fail');
+      }
+    })
   }
 })

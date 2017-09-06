@@ -69,7 +69,7 @@ Page({
         userIdQuery = `?userId=` + userId;
       //获取精选专题
       wx.request({
-        url: `${app.globalData.apiBase}/topics/featured${userIdQuery}`,
+        url: `${app.globalData.apiBase}/topics/featured${userIdQuery}&page[size]=100`,
         success(res) {
           that.setData({
             featuredTopics: res.data.data
@@ -83,7 +83,7 @@ Page({
       });
       //获取首页分块专题
       wx.request({
-        url: `${app.globalData.apiBase}/topics/homepage${userIdQuery}`,
+        url: `${app.globalData.apiBase}/topics/homepage${userIdQuery}&from=miniProgram`,
         success(res) {
           const sections = res.data.data;
           sections.forEach(section => {
@@ -97,17 +97,17 @@ Page({
           console.log('request /topics/homepage fail');
         }
       });
-      //获取猜你喜欢
-      wx.request({
-        url: `${app.globalData.apiBase}/users/${userId}/suggested-topics?initedAt=${that.data.initedAt}`,
-        success(res) {
-          const topics = res.data.data;
-          topics.forEach(util.formatTopic);
-          that.setData({
-            guessTopics: topics
-          });
-        }
-      });
+      // //获取猜你喜欢
+      // wx.request({
+      //   url: `${app.globalData.apiBase}/users/${userId}/suggested-topics?initedAt=${that.data.initedAt}`,
+      //   success(res) {
+      //     const topics = res.data.data;
+      //     topics.forEach(util.formatTopic);
+      //     that.setData({
+      //       guessTopics: topics
+      //     });
+      //   }
+      // });
 
       util.ga({
         cid: Auth.getLocalUserId() || '555',
@@ -128,6 +128,6 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    this.loadMore();
+    // this.loadMore();
   }
 })

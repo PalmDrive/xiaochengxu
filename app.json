@@ -1,7 +1,9 @@
 {
   "pages":[
+    "pages/topics/select-topics",
     "pages/index/index",
     "pages/topics/topics",
+    
     "pages/topic/topic",
     "pages/medium/medium",
     "pages/my/my"
