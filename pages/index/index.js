@@ -1,7 +1,8 @@
 // pages/index/index.js
 const app = getApp(),
       util = require('../../utils/util'),
-      Auth = require('../../utils/auth');
+      Auth = require('../../utils/auth'),
+      {getSubscribedTopicIds} = require('../../utils/topic');
       
 const tabs = ['推荐', '订阅'];
 
@@ -142,6 +143,7 @@ Page({
     }
 
     //检查storage里是否有userId，没有则请求
+    // @TODO: 移到page.js
     if (Auth.getLocalUserId()) {
       init();
     } else {
@@ -178,6 +180,9 @@ Page({
           if (needRead) {
             that.loadMore();
           }
+
+          // Async fetch the user's subscribed topic ids
+          getSubscribedTopicIds(Auth.getLocalUserId(), true);
         },
         fail(res) {
           console.log('request recommended media fail');

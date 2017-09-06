@@ -1,6 +1,10 @@
+const {getSubscribedTopics} = 'utils/topic';
+
 App({
   onLaunch: function() {
-    // console.log(wx.getSystemInfoSync());
+    //console.log(wx.getSystemInfoSync());
+    console.log('app launched');
+    
   },
 
   getUserInfo: function(cb) {

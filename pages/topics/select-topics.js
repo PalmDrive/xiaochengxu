@@ -1,4 +1,7 @@
-const _ = require('../../vendors/underscore');
+const _ = require('../../vendors/underscore'),
+    Auth = require('../../utils/auth'),
+    util = require('../../utils/util'),
+    {getSubscribedTopicIds, subscribe, unsubscribe} = require('../../utils/topic');
 
 const app = getApp();
 
@@ -32,13 +35,24 @@ const _getTopicsByField = (fieldId, options) => {
     wx.request({
       url,
       success(res) {
-        resolve(res.data.data);
+        resolve(res.data.data);        
       },
       fail(res) {
         reject(res);
       }
     });
   });
+};
+
+// Add isSubscribed attribute in topic
+const _updateTopicsIsSubscribed = (topics) => {
+  return getSubscribedTopicIds(Auth.getLocalUserId())
+    .then(subscribedTopicIds => {
+      topics.forEach(d => {
+        d.attributes.isSubscribed = subscribedTopicIds.indexOf(d.id) !== -1;
+      });
+      return topics;
+    }); 
 };
 
 const pageSize = 8;
@@ -55,7 +69,8 @@ Page({
      * }]
      */
     fields: [],
-    selectedField: {},
+    selectedFieldId: '',
+    topics: [],
     loadingMore: false
   },
 
@@ -74,52 +89,64 @@ Page({
         const e = {
           currentTarget: {
             dataset: {
-              field: data[0]
+              fieldId: data[0].id
             }
           }
         };
         this.setData({fields: data});
-        return this.selectField(e);
+        return this.onSelectField(e);
       })
       .catch(console.log);
+  },
+
+  _getSelectedField(selectedFieldId) {
+    selectedFieldId = selectedFieldId || this.data.selectedFieldId;
+    //const defField = {topics: []};
+    return this.data.fields.filter(f => f.id === selectedFieldId)[0];
+  },
+
+  _getTopic(id) {
+    return this.data.topics.filter(t => t.id === id)[0];
   },
 
   goToTopic(e) {
     console.log('toToTopic called');
   },
 
-  selectField(e) {
-    const field = e.currentTarget.dataset.field,
-          fields = this.data.fields;
+  onSelectField(e) {
+    const selectedFieldId = e.currentTarget.dataset.fieldId,
+          fields = this.data.fields,
+          selectedField = this._getSelectedField(selectedFieldId);
 
-    if (!field.topics) {
-      return _getTopicsByField(field.id, {
-        size: field.page.size,
-        number: field.page.number
+    let promise = new Promise((resolve, reject) => resolve(true));
+
+    if (!selectedField.topics) {
+      promise = _getTopicsByField(selectedFieldId, {
+        size: selectedField.page.size,
+        number: selectedField.page.number
       })
-        .then(topics => {
-          field.topics = topics; // this will not change this.data.fields
-
-          fields.forEach(f => {
-            if (f.id === field.id) {
-              f.topics = topics;
-            }
-          });
-
-          return this.setData({
-            selectedField: field,
-            fields
-          });
-        });
+        // Lazy loading topic for field
+        // This changes this.data.fields too
+        .then(topics => selectedField.topics = topics);
     } else {
-      console.log('cached');
-      return new Promise((resolve, reject) => {
-        this.setData({
-          selectedField: field
-        });
-        resolve(true);
-      });
+      console.log('cached'); 
     }
+
+    return promise
+      /**
+       * 保证在订阅/取消订阅以后, 
+       * 其他fields底下的topic.isSubscribed能都sync上
+       * 否则如果订阅了一个topic, 而它还在不同的field下，
+       * 则另外的field下它的isSubscribed还是false
+       */
+      .then(() => _updateTopicsIsSubscribed(selectedField.topics))
+      .then(() => {
+        return this.setData({
+          selectedFieldId,
+          fields,
+          topics: selectedField.topics
+        });
+      });
   },
   
   /**
@@ -132,8 +159,9 @@ Page({
 
     //console.log('load more trigger');
 
-    const selectedField = this.data.selectedField,
-          fields = this.data.fields;
+    const selectedFieldId = this.data.selectedFieldId,
+          fields = this.data.fields,
+          selectedField = this._getSelectedField();
 
     if (selectedField.loadedAllTopics) {
       return console.log('all topics loaded');
@@ -149,22 +177,57 @@ Page({
       .then(topics => {
         if (!topics.length) {
           selectedField.loadedAllTopics = true;
+          return topics;
+        } else {
+          return _updateTopicsIsSubscribed(topics)
         }
-        let index;
-        fields.forEach((f, i) => {
-          if (f.id === selectedField.id) {
-            index = i;
-            return;
-          }
-        });
+      })
+      .then(topics => {
         selectedField.topics = selectedField.topics.concat(topics);
         selectedField.page.number = currentPageNumber;
-        fields[index] = selectedField; 
+        
         this.setData({
-          selectedField,
           loadingMore: false,
-          fields
+          fields,
+          topics: selectedField.topics
         });
       });
+  },
+
+  subscribeTopic(e) {
+    const topicId = e.currentTarget.dataset.topicId,
+          topic = this._getTopic(topicId),
+          userId = Auth.getLocalUserId(),
+          userInfo = Auth.getLocalUserInfo();
+
+    if (userId && !topic._processing) {
+      topic._processing = true;
+
+      if (!topic.attributes.isSubscribed) {
+        util.gaEvent({
+          cid: userId,
+          ec: `topic_name:${topic.attributes.name}, topic_id:${topicId}`,
+          ea: 'subscribe_topic',
+          el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
+          ev: 3
+        });
+        //this.setData({subscribeButton: '订阅中...'});
+        subscribe(userId, topicId)
+          .then(() => {
+            delete topic._processing;
+            topic.attributes.isSubscribed = true;
+            this.setData({topics: this.data.topics});
+            //this.setData({subscribeButton: '已订阅'});
+          }, () => delete topic._processing);
+      } else {
+        //this.setData({subscribeButton: '取消中...'});
+        unsubscribe(userId, topicId)
+          .then(() => {
+            delete topic._processing;
+            topic.attributes.isSubscribed = false;
+            this.setData({topics: this.data.topics});
+          }, () => delete topic._processing);
+      }
+    }
   }
 });
