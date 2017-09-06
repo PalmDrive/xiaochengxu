@@ -1,0 +1,30 @@
+<!--topics.wxml-->
+<import src="../../templates/topic-list.wxml"/>
+<import src="../../templates/homepage-topic-section.wxml"/>
+<import src="../../templates/loading.wxml"/>
+<include src="../../includes/hint.wxml"/>
+
+<view class="container" scroll-y bindscrolltolower="onReachBottom" lower-threshold="800">
+  <view wx:for="{{ dateList }}" wx:for-item="list" wx:key="">
+    <view class="line line-max"></view>
+    <view class="date-title">{{ list.date }}群刊</view>
+    <view class="topic" wx:for="{{ list.topics }}" wx:for-item="topic" wx:if="{{ topic.mediums.length > 0 }}" wx:key="">
+      <view class="line line-max"></view>
+      <view class="news-title">
+        <view class="medium-list">
+          <image src="{{ topic.imgUrl }}" class="logo"></image>
+          <text class="name">{{ topic.name }}</text>
+        </view>
+      </view>
+      <view class="medium" wx:for="{{ topic.mediums }}" wx:for-item="medium" data-medium="{{ medium }}" wx:key="" bindtap="goToMedium">
+        <view class="line line-min"></view>
+        <view class="medium-container medium-list">
+          <image class="medium-image" wx:if="{{ Boolean(topic.imgUrl) }}"></image>
+          <text class="medium-title">{{ medium.title }}</text>
+          <view class="medium-publishedAt">{{ medium.publishedAt }}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <template is="loading" data="{{loadingView}}"></template>
+</view>

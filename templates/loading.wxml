@@ -1,0 +1,14 @@
+<!-- 
+  加载页面 提示
+ -->
+<template name="loading">
+  <view class="loading text-center" hidden="{{!loadingView.loading}}">
+    <text>数据加载中...</text>
+  </view>
+  <view class="loading text-center" hidden="{{!loadingView.loadingMore}}">
+    <text>更多数据加载中...</text>
+  </view>
+  <view class="loading text-center" hidden="{{!loadingView.recommendNoMore}}">
+    <text>没有更多了</text>
+  </view>
+</template>

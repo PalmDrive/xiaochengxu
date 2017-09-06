@@ -4,7 +4,8 @@
     "pages/topics/topics",
     "pages/topic/topic",
     "pages/medium/medium",
-    "pages/my/my"
+    "pages/my/my",
+    "pages/groups/groups"
   ],
   "window":{
     "backgroundTextStyle":"dark",
@@ -19,6 +20,12 @@
     "borderStyle": "white",
     "position": "bottom",
     "list": [
+      {
+        "pagePath": "pages/groups/groups",
+        "text": "群日报",
+        "iconPath": "images/tabIcons/group.png",
+        "selectedIconPath": "images/tabIcons/group_selected.png"
+      },
       {
         "pagePath": "pages/index/index",
         "text": "日读",
