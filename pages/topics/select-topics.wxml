@@ -11,3 +11,6 @@
     <text>更多数据加载中...</text>
   </view>
 </scroll-view>
+
+<button class="btn-save">完成订阅</button>
+

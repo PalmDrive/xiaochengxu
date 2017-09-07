@@ -1,7 +1,7 @@
 const _ = require('../../vendors/underscore'),
     Auth = require('../../utils/auth'),
     util = require('../../utils/util'),
-    {getSubscribedTopicIds, subscribe, unsubscribe} = require('../../utils/topic');
+    {getSubscribedTopicIds, subscribe, unsubscribe, getGroupSubscribedTopicIds} = require('../../utils/topic');
 
 const app = getApp();
 
@@ -45,17 +45,17 @@ const _getTopicsByField = (fieldId, options) => {
 };
 
 // Add isSubscribed attribute in topic
-const _updateTopicsIsSubscribed = (topics) => {
-  return getSubscribedTopicIds(Auth.getLocalUserId())
-    .then(subscribedTopicIds => {
-      topics.forEach(d => {
-        d.attributes.isSubscribed = subscribedTopicIds.indexOf(d.id) !== -1;
-      });
-      return topics;
-    }); 
+const _updateTopicsIsSubscribed = (topics, subscribedTopicIds) => {
+  topics.forEach(d => {
+    d.attributes.isSubscribed = subscribedTopicIds.indexOf(d.id) !== -1;
+  });
+  return topics;
 };
 
 const pageSize = 8;
+
+let groupId,
+    groupSubscribedTopicIds = [];
 
 Page({
   data: {
@@ -75,8 +75,16 @@ Page({
   },
 
   onLoad(options) {
-    _getFields()
-      .then(data => {
+    groupId = options.groupId;
+
+    Promise.all([
+      _getFields(),
+      getGroupSubscribedTopicIds(groupId)
+    ])
+      .then(res => {
+        const data = res[0];
+        groupSubscribedTopicIds = res[1];
+
         data.forEach(d => {
           d.page = {
             size: pageSize,
@@ -133,14 +141,14 @@ Page({
     }
 
     return promise
+      .then(() => {
       /**
        * 保证在订阅/取消订阅以后, 
        * 其他fields底下的topic.isSubscribed能都sync上
        * 否则如果订阅了一个topic, 而它还在不同的field下，
        * 则另外的field下它的isSubscribed还是false
        */
-      .then(() => _updateTopicsIsSubscribed(selectedField.topics))
-      .then(() => {
+        _updateTopicsIsSubscribed(selectedField.topics, groupSubscribedTopicIds);
         return this.setData({
           selectedFieldId,
           fields,
@@ -179,7 +187,7 @@ Page({
           selectedField.loadedAllTopics = true;
           return topics;
         } else {
-          return _updateTopicsIsSubscribed(topics)
+          return _updateTopicsIsSubscribed(topics, groupSubscribedTopicIds);
         }
       })
       .then(topics => {
@@ -197,23 +205,16 @@ Page({
   subscribeTopic(e) {
     const topicId = e.currentTarget.dataset.topicId,
           topic = this._getTopic(topicId),
-          userId = Auth.getLocalUserId(),
-          userInfo = Auth.getLocalUserInfo();
+          isForGroup = true;
 
-    if (userId && !topic._processing) {
+    if (!topic._processing) {
       topic._processing = true;
 
       if (!topic.attributes.isSubscribed) {
-        util.gaEvent({
-          cid: userId,
-          ec: `topic_name:${topic.attributes.name}, topic_id:${topicId}`,
-          ea: 'subscribe_topic',
-          el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
-          ev: 3
-        });
         //this.setData({subscribeButton: '订阅中...'});
-        subscribe(userId, topicId)
+        subscribe(groupId, topicId, isForGroup)
           .then(() => {
+            groupSubscribedTopicIds.push(topicId);
             delete topic._processing;
             topic.attributes.isSubscribed = true;
             this.setData({topics: this.data.topics});
@@ -221,8 +222,9 @@ Page({
           }, () => delete topic._processing);
       } else {
         //this.setData({subscribeButton: '取消中...'});
-        unsubscribe(userId, topicId)
+        unsubscribe(groupId, topicId, isForGroup)
           .then(() => {
+            groupSubscribedTopicIds = groupSubscribedTopicIds.filter(id => id !== topicId);
             delete topic._processing;
             topic.attributes.isSubscribed = false;
             this.setData({topics: this.data.topics});

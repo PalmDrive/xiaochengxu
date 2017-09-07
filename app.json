@@ -1,5 +1,6 @@
 {
   "pages":[
+    "pages/groups/new-group",
     "pages/topics/select-topics",
     "pages/index/index",
     "pages/topics/topics",

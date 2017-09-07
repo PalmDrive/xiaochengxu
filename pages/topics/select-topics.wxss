@@ -19,5 +19,14 @@
 
 .tab-content {
   padding-top: 30px;
+  padding-bottom: 68px;
   height: 100vh;
+  box-sizing: border-box;
+}
+
+.btn-save {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
 }

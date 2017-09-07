@@ -3,7 +3,7 @@ const app = getApp();
 
 let _subscribedTopicIds = null;
 
-function subscribe(userId, topicId) {
+function subscribe(userId, topicId, isForGroup) {
   return new Promise((resolve, reject) => {
     wx.request({
       method: 'POST',
@@ -18,7 +18,10 @@ function subscribe(userId, topicId) {
       },
       success(res) {
         // Update _subscribedTopicIds
-        _subscribedTopicIds.push(topicId);
+        if (!isForGroup) {
+          _subscribedTopicIds.push(topicId);
+        }
+        
         resolve(res);
       },
       fail(res) {
@@ -29,7 +32,7 @@ function subscribe(userId, topicId) {
   })
 }
 
-function unsubscribe(userId, topicId) {
+function unsubscribe(userId, topicId, isForGroup) {
   return new Promise((resolve, reject) => {
     wx.request({
       method: 'POST',
@@ -43,12 +46,30 @@ function unsubscribe(userId, topicId) {
         }
       },
       success(res) {
-        // update _subscribedTopicIds
-        _subscribedTopicIds = _subscribedTopicIds.filter(id => id !== topicId);
+        if (!isForGroup) {
+          // update _subscribedTopicIds
+          _subscribedTopicIds = _subscribedTopicIds.filter(id => id !== topicId);
+        }
+        
         resolve(res);
       },
       fail(res) {
         console.log('Topic.unsubscribe fail');
+        reject(res);
+      }
+    });
+  });
+}
+
+function getGroupSubscribedTopicIds(groupId) {
+  const url = `${app.globalData.apiBase}/users/${groupId}/favorite-topic-ids`;
+  return new Promise((resolve, reject) => {
+    wx.request({
+      url,
+      success(res) {
+        resolve(res.data.data);
+      },
+      fail(res) {
         reject(res);
       }
     });
@@ -82,5 +103,6 @@ function getSubscribedTopicIds(userId, force) {
 module.exports = {
   subscribe,
   unsubscribe,
-  getSubscribedTopicIds
+  getSubscribedTopicIds,
+  getGroupSubscribedTopicIds
 };
