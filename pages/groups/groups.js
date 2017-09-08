@@ -37,7 +37,7 @@ Page({
   goGroups: function (event) {
     const userId = event.currentTarget.dataset.id;
     wx.navigateTo({
-      url: `../group/mediumListByDate?id=${ userId }`
+      url: `../groups/mediumListByDate?id=${ userId }`
     });
   },
 
