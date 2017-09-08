@@ -1,62 +1,22 @@
-/**/
+/**
+ * 页面的容器
+ */
 .container {}
-.date-title {
-  margin-top: 10px;
+
+/* title */
+.example-title {
+  display: block;
+  width: 100%;
   text-align: center;
-  height: 82px;
-  line-height: 82px;
-  color: #0090e7;
-  font-size: 22px;
+  color: #5994D0;
+  line-height: 24px;
 }
-
-.line {
-  background: #ededed;
-}
-.line-max {
-  height: 5px;
-}
-.line-min {
-  height: 1px;
-}
-
-/*
- * 新闻标题
-**/
-.news-title {
-  height: 46px;
-  line-height: 44px;
-}
-
-.news-title .logo {
-  width: 15px;
-  height: 15px;
-  vertical-align: middle;
-  border-radius: 50%;
-}
-.news-title .name {
-  margin-left: 10px;
-  /*margin-top: 16px;*/
-  font-size: 12px;
-}
-
-.medium-container {
-  padding: 15px 20px;
-  overflow: hidden;
-}
-/* 文章 */
-.medium-title {
-  font-size: 15px;
-}
-/* 文章发布日期 */
-.medium-publishedAt {
-  margin-top: 15px;
-  font-size: 12px;
-  color: #b0b0b9;
-}
-.medium-image {
-  margin-left: 10px;
-  float: right;
-  width: 115px;
-  height: 95px;
-  background: red;
+.group {
+  width: 80%;
+  margin-left: 10%;
+  margin-top: 20px;
+  border: 3px solid #85888D;
+  border-radius: 10px;
+  line-height: 50px;
+  text-align: center;
 }

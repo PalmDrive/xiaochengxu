@@ -1,11 +1,11 @@
 {
   "pages":[
+    "pages/groups/groups",
     "pages/index/index",
     "pages/topics/topics",
-    "pages/topic/topic",
     "pages/medium/medium",
     "pages/my/my",
-    "pages/groups/groups"
+    "pages/groups/mediumListByDate"
   ],
   "window":{
     "backgroundTextStyle":"dark",
@@ -22,21 +22,21 @@
     "list": [
       {
         "pagePath": "pages/groups/groups",
-        "text": "群日报",
-        "iconPath": "images/tabIcons/group.png",
-        "selectedIconPath": "images/tabIcons/group_selected.png"
-      },
-      {
-        "pagePath": "pages/index/index",
-        "text": "日读",
-        "iconPath": "images/tabIcons/index.png",
-        "selectedIconPath": "images/tabIcons/index_selected.png"
+        "text": "群头条",
+        "iconPath": "images/tabIcons/groups.png",
+        "selectedIconPath": "images/tabIcons/groups_selected.png"
       },
       {
         "pagePath": "pages/topics/topics",
         "text": "专题",
         "iconPath": "images/tabIcons/topics.png",
         "selectedIconPath": "images/tabIcons/topics_selected.png"
+      },
+      {
+        "pagePath": "pages/index/index",
+        "text": "日读",
+        "iconPath": "images/tabIcons/index.png",
+        "selectedIconPath": "images/tabIcons/index_selected.png"
       },
       {
         "pagePath": "pages/my/my",
