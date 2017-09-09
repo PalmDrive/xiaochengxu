@@ -25,5 +25,5 @@
     </view>
   </view>
   <template is="loading" data="{{loadingView}}"></template>
-  <view class="newMddiumCount" wx:if="{{ isShar }}">今日更新{{ newMddiumCount }}篇</view>
+  <view class="new-media-count text-white text-center size-14" hidden="{{!isShar}}">今日更新{{ newMddiumCount }}篇</view>
 </view>

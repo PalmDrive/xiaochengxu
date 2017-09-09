@@ -52,15 +52,13 @@
   color: #b0b0b9;
 }
 
-.newMddiumCount {
+.new-media-count {
   width: 40%;
   top: 0;
-  left: 30%;
-  color: #fff;
-  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
   position: fixed;
   line-height: 36px;
-  font-size: 14px;
   margin-top: 70%;
   border-radius: 5px;
   background: #1878de;
