@@ -11,7 +11,7 @@
     <view class="topic" wx:for="{{ list.topics }}" wx:for-item="topic" wx:if="{{ topic.relationships.media.data.length > 0 }}" wx:key="">
       <view class="line line-max"></view>
       <view class="news-title">
-        <view class="medium-list">
+        <view class="medium-list" bindtap="goToTopic" data-topic="{{topic}}">
           <image src="{{ topic.attributes.imgUrl }}" class="logo"></image>
           <text class="name">{{ topic.attributes.name }}</text>
         </view>
