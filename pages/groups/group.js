@@ -3,6 +3,7 @@ const app = getApp(),
     Auth = require('../../utils/auth');
 Page({
   data: {
+    isShar: false,
     loadingView: {
       loading: true
     },
@@ -74,6 +75,15 @@ Page({
       });
       return;
     }
+    if (!this.data.newMddiumCount) {
+      let newMddiumCount = 0;
+      res.data.data.forEach(group => {
+        newMddiumCount += group.relationships.media.data.length;
+      });
+      this.setData({
+        newMddiumCount: newMddiumCount
+      });
+    }
     this.data.dateList.push({
       date: util.formatDateToDay(new Date(res.data.meta.mediumLastDate)),
       topics: res.data.data
@@ -93,7 +103,6 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    console.log('页面上拉触底事件的处理函数');
     this.setData({
       loadingView: {
         loadingMore: true
@@ -106,8 +115,16 @@ Page({
    * 分享给好友 事件
    */
   onShareAppMessage: function () {
+    this.setData({
+      isShar: true
+    });
     return {
-      title: this.data.userName
+      title: this.data.userName,
+      complete: () => {
+        this.setData({
+          isShar: false
+        });
+      }
     }
   }
 })
