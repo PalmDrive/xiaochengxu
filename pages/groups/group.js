@@ -15,7 +15,7 @@ Page({
     this.load();
     wx.request({
       method: 'POST',
-      url: `${ app.globalData.apiBase }/user-groups`,
+      url: `${app.globalData.apiBase}/user-groups`,
       data: {
         data: {
           attributes: {
@@ -44,7 +44,7 @@ Page({
    */
   load: function (event) {
     wx.request({
-      url: `${ app.globalData.apiBase }/users/${ this.data.groupId }/group-topics-24hours?date=${ this.data.lastDate }`,
+      url: `${app.globalData.apiBase}/users/${this.data.groupId}/group-topics-24hours?date=${this.data.lastDate}`,
       success: this.loadOver
     });
   },
@@ -52,7 +52,7 @@ Page({
    * 数据加载 成功 回调
    */
   loadOver: function (res) {
-    // 格式化 medium 日期
+    // 没有数据 显示loading页的加载完毕
     if (!res.data.data) {
       this.setData({
         loadingView: {
@@ -61,15 +61,8 @@ Page({
       });
       return;
     }
-    for (let i = res.data.data.length - 1; i >= 0; i--) {
-      let topic = res.data.data[i];
-      for (let j = topic.relationships.media.data.length - 1; j >= 0; j--) {
-        let medium = topic.relationships.media.data[j]; 
-        medium.attributes.publishedAt = util.formatTime(new Date(medium.attributes.publishedAt));
-      }
-    }
     this.data.dateList.push({
-      date: formatDateToDay(new Date(res.data.meta.mediumLastDate)),
+      date: util.formatDateToDay(new Date(res.data.meta.mediumLastDate)),
       topics: res.data.data
     });
     this.setData({
@@ -97,15 +90,11 @@ Page({
   },
 
   /**
-   * 用户点击右上角分享
+   * 分享给好友 事件
    */
   onShareAppMessage: function () {
+    return {
+      title: this.data.userName
+    }
   }
 })
-// 
-function formatDateToDay(date) {
-  var year = date.getFullYear()
-  var month = date.getMonth() + 1
-  var day = date.getDate()
-  return year + '年' + month + '月' + day + '日'
-}

@@ -3,9 +3,10 @@
     "pages/groups/groups",
     "pages/index/index",
     "pages/topics/topics",
+    "pages/topic/topic",
     "pages/medium/medium",
     "pages/my/my",
-    "pages/groups/mediumListByDate"
+    "pages/groups/group"
   ],
   "window":{
     "backgroundTextStyle":"dark",

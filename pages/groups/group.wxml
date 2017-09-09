@@ -19,9 +19,7 @@
       <view class="medium" wx:for="{{ topic.relationships.media.data }}" wx:for-item="medium" data-medium="{{ medium }}" wx:key="" bindtap="goToMedium">
         <view class="line line-min"></view>
         <view class="medium-container medium-list">
-          <image class="medium-image" wx:if="{{ medium.attributes.picurl }}" src="{{ medium.attributes.picurl }}" mode="aspectFill"></image>
           <text class="medium-title">{{ medium.attributes.title }}</text>
-          <!-- <view class="medium-publishedAt">{{ medium.attributes.publishedAt }}</view> -->
         </view>
       </view>
     </view>

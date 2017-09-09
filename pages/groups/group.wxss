@@ -1,7 +1,6 @@
 /**/
 .container {}
 .date-title {
-  /*margin-top: 10px;*/
   text-align: center;
   height: 60px;
   line-height: 60px;
@@ -35,7 +34,6 @@
 }
 .news-title .name {
   margin-left: 10px;
-  /*margin-top: 16px;*/
   font-size: 12px;
 }
 
@@ -52,11 +50,4 @@
   margin-top: 15px;
   font-size: 12px;
   color: #b0b0b9;
-}
-.medium-image {
-  margin-left: 10px;
-  float: right;
-  width: 115px;
-  height: 95px;
-  /*background: red;*/
 }

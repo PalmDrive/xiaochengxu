@@ -16,7 +16,7 @@ Page({
    */
   load: function (event) {
     wx.request({
-      url: `${ app.globalData.apiBase }/users/${ Auth.getLocalUserId() }/relationships/groups`,
+      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups`,
       success: this.loadOver
     });
   },
@@ -37,7 +37,7 @@ Page({
   goGroups: function (event) {
     const userId = event.currentTarget.dataset.id;
     wx.navigateTo({
-      url: `../groups/mediumListByDate?id=${ userId }`
+      url: `../groups/group?id=${userId}`
     });
   },
 
