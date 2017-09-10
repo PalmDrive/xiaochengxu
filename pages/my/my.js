@@ -147,7 +147,7 @@ Page({
   getTopics: function(pageNumber, cb) {
     const userId = Auth.getLocalUserId();
     wx.request({
-      url: `${app.globalData.apiBase}/users/${userId}/favorite-topics?page[number]=${pageNumber}`,
+      url: `${app.globalData.apiBase}/users/${userId}/favorite-topics?page[number]=${pageNumber}&from=miniProgram`,
       success(res) {
         const topics = res.data.data;
         cb(topics);

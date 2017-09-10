@@ -7,23 +7,23 @@
 <view class="container" scroll-y bindscrolltolower="onReachBottom" lower-threshold="800">
   <view wx:for="{{ dateList }}" wx:for-item="list" wx:key="">
     <view class="line line-max"></view>
-    <view class="date-title">{{ list.date }}群头条</view>
+    <view class="date-title size-18">{{ list.date }}群头条</view>
     <view class="topic" wx:for="{{ list.topics }}" wx:for-item="topic" wx:if="{{ topic.relationships.media.data.length > 0 }}" wx:key="">
       <view class="line line-max"></view>
       <view class="news-title">
         <view class="medium-list" bindtap="goToTopic" data-topic="{{topic}}">
           <image src="{{ topic.attributes.imgUrl }}" class="logo"></image>
-          <text class="name">{{ topic.attributes.name }}</text>
+          <text class="name size-12">{{ topic.attributes.name }}</text>
         </view>
       </view>
       <view class="medium" wx:for="{{ topic.relationships.media.data }}" wx:for-item="medium" data-medium="{{ medium }}" wx:key="" bindtap="goToMedium">
         <view class="line line-min"></view>
         <view class="medium-container medium-list">
-          <text class="medium-title">{{ medium.attributes.title }}</text>
+          <text class="medium-title size-15">{{ medium.attributes.title }}</text>
         </view>
       </view>
     </view>
   </view>
   <template is="loading" data="{{loadingView}}"></template>
-  <view class="new-media-count text-white text-center size-14" hidden="{{!isShar}}">今日更新{{ newMddiumCount }}篇</view>
+  <!-- <view class="new-media-count text-white text-center size-14" hidden="{{!isShar}}">今日更新{{ newMddiumCount }}篇</view> -->
 </view>

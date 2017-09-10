@@ -16,7 +16,7 @@ Page({
    */
   load: function (event) {
     wx.request({
-      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups`,
+      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniapplet`,
       success: this.loadOver
     });
   },
@@ -46,11 +46,4 @@ Page({
    */
   onShareAppMessage: function () {
   }
-})
-// 
-function formatDateToDay(date) {
-  var year = date.getFullYear()
-  var month = date.getMonth() + 1
-  var day = date.getDate()
-  return year + '年' + month + '月' + day + '日'
-}
+});

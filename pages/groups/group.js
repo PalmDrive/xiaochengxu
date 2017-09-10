@@ -1,9 +1,9 @@
 const app = getApp(),
     util = require('../../utils/util'),
     Auth = require('../../utils/auth');
+
 Page({
   data: {
-    isShar: false,
     loadingView: {
       loading: true
     },
@@ -14,9 +14,10 @@ Page({
       groupId: options.id
     });
     this.load();
+
     wx.request({
       method: 'POST',
-      url: `${app.globalData.apiBase}/user-groups`,
+      url: `${app.globalData.apiBase}/user-groups?from=miniProgram`,
       data: {
         data: {
           attributes: {
@@ -58,7 +59,7 @@ Page({
    */
   load: function (event) {
     wx.request({
-      url: `${app.globalData.apiBase}/users/${this.data.groupId}/group-topics-24hours?date=${this.data.lastDate}`,
+      url: `${app.globalData.apiBase}/users/${this.data.groupId}/group-topics-24hours?date=${this.data.lastDate}&from=miniProgram`,
       success: this.loadOver
     });
   },
@@ -115,16 +116,8 @@ Page({
    * 分享给好友 事件
    */
   onShareAppMessage: function () {
-    this.setData({
-      isShar: true
-    });
     return {
-      title: this.data.userName,
-      complete: () => {
-        this.setData({
-          isShar: false
-        });
-      }
+      title: `今日更新${this.data.newMddiumCount}篇`
     }
   }
 })

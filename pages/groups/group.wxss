@@ -1,11 +1,12 @@
 /**/
-.container {}
+.container {
+  position: relative;
+}
+
 .date-title {
   text-align: center;
-  height: 60px;
-  line-height: 60px;
+  line-height: 45px;
   color: #0090e7;
-  font-size: 22px;
 }
 
 .line {
@@ -22,8 +23,7 @@
  * 新闻标题
 **/
 .news-title {
-  height: 46px;
-  line-height: 44px;
+  line-height: 36px;
 }
 
 .news-title .logo {
@@ -33,23 +33,12 @@
   border-radius: 50%;
 }
 .news-title .name {
-  margin-left: 10px;
-  font-size: 12px;
+  margin-left: 5px;
 }
 
 .medium-container {
   padding: 15px 20px;
   overflow: hidden;
-}
-/* 文章 */
-.medium-title {
-  font-size: 15px;
-}
-/* 文章发布日期 */
-.medium-publishedAt {
-  margin-top: 15px;
-  font-size: 12px;
-  color: #b0b0b9;
 }
 
 .new-media-count {
@@ -57,7 +46,7 @@
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  position: fixed;
+  position: absolute;
   line-height: 36px;
   margin-top: 70%;
   border-radius: 5px;
