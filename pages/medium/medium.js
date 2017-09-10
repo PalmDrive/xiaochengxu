@@ -188,5 +188,8 @@ Page({
       el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
       ev: 4
     });
+    return {
+      title: medium.attributes.title
+    };
   }
 })

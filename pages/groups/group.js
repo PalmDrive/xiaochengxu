@@ -117,7 +117,7 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      title: `今日更新${this.data.newMddiumCount}篇`
+      title: `你的群头条: 今日更新${this.data.newMddiumCount}篇`
     }
   }
 })
