@@ -141,13 +141,15 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    return {
+      title: '我的订阅'
+    };
   },
 
   getTopics: function(pageNumber, cb) {
     const userId = Auth.getLocalUserId();
     wx.request({
-      url: `${app.globalData.apiBase}/users/${userId}/favorite-topics?page[number]=${pageNumber}`,
+      url: `${app.globalData.apiBase}/users/${userId}/favorite-topics?page[number]=${pageNumber}&from=miniProgram`,
       success(res) {
         const topics = res.data.data;
         cb(topics);

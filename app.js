@@ -23,6 +23,8 @@ App({
 
   globalData: {
     userInfo: null,
-    apiBase: 'https://ainterest-service-production.ailingual.cn/api/v1'
+    apiBase: 'https://ainterest-service-production.ailingual.cn/api/v1',
+    // apiBase: 'https://ainterest-service-staging.ailingual.cn/api/v1',
+    // apiBase: 'http://localhost:5000/api/v1',
   }
 })
