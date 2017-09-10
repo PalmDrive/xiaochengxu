@@ -16,7 +16,7 @@ Page({
    */
   load: function (event) {
     wx.request({
-      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniapplet`,
+      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram`,
       success: this.loadOver
     });
   },
