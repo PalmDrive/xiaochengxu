@@ -34,8 +34,6 @@ Page({
    * 数据加载 成功 回调
    */
   loadOver: function (res) {
-    console.log(res.data);
-    console.log('----------')
     this.setData({
       loadingView: null,
       groups: res.data.data
@@ -46,13 +44,14 @@ Page({
    */
   gotoGroup: function (event) {
     const userId = event.currentTarget.dataset.id,
-          name = event.currentTarget.dataset.name;
+          name = event.currentTarget.dataset.name,
+          userInfo = Auth.getLocalUserInfo();
     util.gaEvent({
       cid: Auth.getLocalUserId(),
       ev: 0,
-      ea: 'click_topic_in_toutiaoTab',
+      ea: 'click_toutiao_in_toutiaoTab',
       ec: `toutiao_name:${name},toutiao_id:${userId}`,
-      el: `toutiao_name:${name},toutiao_id:${userId}`
+      el: `user_name:${userInfo.nickName},user_id:${userId}`
     });
     wx.navigateTo({
       url: `../groups/group?id=${userId}`

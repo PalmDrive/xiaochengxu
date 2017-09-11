@@ -18,7 +18,7 @@ function loadData(groupId, lastDate) {
 
 Page({
   data: {
-    userName: null,
+    userName: null, // group or toutiao name actually
     groupId: null,
     lastDate: null,
     loadingView: {
@@ -59,13 +59,12 @@ Page({
 
   //点击专题
   goToTopic: function(event) {
-    const topic = event.currentTarget.dataset.topic,
-          userInfo = Auth.getLocalUserInfo();
+    const topic = event.currentTarget.dataset.topic;
     const gaOptions = {
       cid: Auth.getLocalUserId(),
-      ec: `topic_name:${topic.attributes.name}, topic_id:${topic.id}`,
+      ec: `topic_name:${topic.attributes.name},topic_id:${topic.id}`,
       ea: 'click_topic_in_toutiaoPage',
-      el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
+      el: `toutiao_name:${this.data.userName},toutiao_id:${this.data.groupId}`,
       ev: 1
     };
     util.goToTopic(event, gaOptions);
@@ -76,9 +75,9 @@ Page({
           userInfo = Auth.getLocalUserInfo(),
           gaOptions = {
             cid: Auth.getLocalUserId(),
-            ec: `article_title:${medium.title}, article_id:${medium.id}`,
+            ec: `article_title:${medium.attributes.title},article_id:${medium.id}`,
             ea: 'click_article_in_toutiaoPage',
-            el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
+            el: `toutiao_name:${this.data.userName},toutiao_id:${this.data.groupId}`,
             ev: 0
           };
     util.goToMedium(event, gaOptions);
