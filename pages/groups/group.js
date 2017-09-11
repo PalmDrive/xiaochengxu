@@ -2,12 +2,28 @@ const app = getApp(),
     util = require('../../utils/util'),
     Auth = require('../../utils/auth');
 
+function loadData(groupId, lastDate) {
+  return new Promise((resolve, reject) => {
+    wx.request({
+      url: `${app.globalData.apiBase}/users/${groupId}/group-topics-24hours?date=${lastDate}&from=miniProgram`,
+      success(res) {
+        resolve(res.data);
+      },
+      fail(err) {
+        reject(err);
+      }
+    });
+  });
+}
+
 Page({
   data: {
     userName: null,
     groupId: null,
+    lastDate: null,
     loadingView: {
-      loading: true
+      loading: true,
+      recommendNoMore: false
     },
     dateList: []
   },
@@ -15,7 +31,7 @@ Page({
     this.setData({
       groupId: options.id
     });
-    this.load();
+    this._load();
 
     wx.request({
       method: 'POST',
@@ -70,47 +86,44 @@ Page({
   /**
    * 加载数据
    */
-  load: function (event) {
-    wx.request({
-      url: `${app.globalData.apiBase}/users/${this.data.groupId}/group-topics-24hours?date=${this.data.lastDate}&from=miniProgram`,
-      success: this.loadOver
-    });
+  _load() {
+    loadData(this.data.groupId, this.data.lastDate)
+      .then(this._onLoadSuccess);
   },
   /**
    * 数据加载 成功 回调
    */
-  loadOver: function (res) {
+  _onLoadSuccess: function (res) {
+    let updates = {},
+        dateList = this.data.dateList;
+    const loadingView = this.data.loadingView;
     // 没有数据 显示loading页的加载完毕
-    if (!res.data.data) {
-      this.setData({
-        loadingView: {
-          recommendNoMore: true
-        }
-      });
-      return;
+    if (!res.data || !res.data.length) {
+      loadingView.recommendNoMore = true;
+      return this.setData({loadingView});
     }
-    if (!this.data.newMddiumCount) {
-      let newMddiumCount = 0;
-      res.data.data.forEach(group => {
-        newMddiumCount += group.relationships.media.data.length;
-      });
-      this.setData({
-        newMddiumCount: newMddiumCount
-      });
+
+    dateList.push({
+      date: util.formatDateToDay(new Date(res.meta.mediumLastDate)),
+      topics: res.data
+    });
+    updates.dateList = dateList;
+    updates.userName = res.included[0].attributes.username;
+    updates.lastDate = res.meta.mediumLastDate;
+    loadingView.loadingMore = false;
+    updates.loadingView = loadingView;
+
+    const totalMediaCount = this._countMedia();
+
+    if (!this.data.newMediaCount) {
+      updates.newMediaCount = totalMediaCount;
     }
-    this.data.dateList.push({
-      date: util.formatDateToDay(new Date(res.data.meta.mediumLastDate)),
-      topics: res.data.data
-    });
-    this.setData({
-      userName: res.data.included[0].attributes.username,
-      loadingView: null,
-      lastDate: res.data.meta.mediumLastDate,
-      dateList: this.data.dateList,
-    });
+
+    this.setData(updates);
+
     // 设置标题
     wx.setNavigationBarTitle({
-      title: res.data.included[0].attributes.username
+      title: updates.userName
     });
 
     util.ga({
@@ -118,17 +131,35 @@ Page({
       dp: '%2FtoutiaoPage_XiaoChengXu',
       dt: `toutiao_name:${this.data.userName},toutiao_id:${this.data.groupId}`
     });
+
+    if (totalMediaCount < 8) {
+      this.onReachBottom();
+    }
   },
+
+  _countMedia() {
+    const dateList = this.data.dateList,
+          topics = dateList.reduce((memo, obj) => {
+            memo = memo.concat(obj.topics);
+            return memo;
+          }, []);
+
+    return topics.reduce((memo, topic) => {
+      memo += topic.relationships.media.data.length;
+      return memo;
+    }, 0);
+  },
+
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function () {
-    this.setData({
-      loadingView: {
-        loadingMore: true
-      }
-    });
-    this.load();
+  onReachBottom() {
+    const loadingView = this.data.loadingView;
+    if (!loadingView.recommendNoMore && !loadingView.loadingMore) {
+      loadingView.loadingMore = true;
+      this.setData(loadingView);
+      this._load();
+    }
   },
 
   /**
@@ -136,7 +167,7 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      title: `你的群头条: 今日更新${this.data.newMddiumCount}篇`
+      title: `你的群头条: 今日更新${this.data.newMediaCount}篇`
     }
   }
 })
