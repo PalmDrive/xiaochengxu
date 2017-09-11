@@ -58,7 +58,7 @@ const login = (cb, that) => {
                     }
                     wx.request({
                       method: 'POST',
-                      url: `${apiBase}/users/login`,
+                      url: `${apiBase}/users/login?from=miniProgram`,
                       data: {
                         data: {
                           attributes: {

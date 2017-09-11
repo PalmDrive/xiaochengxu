@@ -42,7 +42,7 @@ Page({
     function init() {
       //获取文章数据
       wx.request({
-        url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt`,
+        url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt&from=miniProgram`,
         success(result) {
           const medium = result.data.data,
             css = result.data.meta.css || '';
@@ -135,7 +135,7 @@ Page({
       // console.log('记录足迹');
       wx.request({
         method: 'POST',
-        url: `${app.globalData.apiBase}/media/${mediumId}/views`,
+        url: `${app.globalData.apiBase}/media/${mediumId}/views?from=miniProgram`,
         data: {
           data: {attributes: {userId}}
         },
@@ -188,5 +188,8 @@ Page({
       el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
       ev: 4
     });
+    return {
+      title: medium.attributes.title
+    };
   }
 })

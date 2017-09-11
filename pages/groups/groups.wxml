@@ -1,0 +1,8 @@
+<import src="../../templates/loading.wxml"/>
+
+<view class="container">
+  <view class="group" wx:for="{{ groups }}" wx:for-item="group" data-id="{{ group.id }}" bindtap="goGroups" wx:key>
+    {{ group.attributes.username }}
+  </view>
+  <template is="loading" data="{{loadingView}}"></template>
+</view>

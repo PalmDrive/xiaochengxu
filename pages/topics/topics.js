@@ -129,5 +129,14 @@ Page({
    */
   onReachBottom: function () {
     // this.loadMore();
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
+  onShareAppMessage: function () {
+    return {
+      title: '发现专题'
+    };
   }
 })

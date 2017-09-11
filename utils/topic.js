@@ -7,7 +7,7 @@ function subscribe(userId, topicId, isForGroup) {
   return new Promise((resolve, reject) => {
     wx.request({
       method: 'POST',
-      url: `${app.globalData.apiBase}/topics/${topicId}/subscribe`,
+      url: `${app.globalData.apiBase}/topics/${topicId}/subscribe?from=miniProgram`,
       data: {
         data: {
           attributes: { userId }
@@ -36,7 +36,7 @@ function unsubscribe(userId, topicId, isForGroup) {
   return new Promise((resolve, reject) => {
     wx.request({
       method: 'POST',
-      url: `${app.globalData.apiBase}/topics/${topicId}/unsubscribe`,
+      url: `${app.globalData.apiBase}/topics/${topicId}/unsubscribe?from=miniProgram`,
       data: {
         data: {
           attributes: { userId }

@@ -307,6 +307,9 @@ Page({
       el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
       ev: 5
     });
+    return {
+      title: topic.attributes.name
+    };
   },
 
   getOtherTabsData: function(tabs) {
