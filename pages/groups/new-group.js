@@ -1,7 +1,8 @@
-const app = getApp();
+const app = getApp(),
+      Auth = require('../../utils/auth');
 
-const _createGroup = (groupName) => {
-  const url = `${app.globalData.apiBase}/users`,
+const _createGroup = (groupName, creatorId) => {
+  const url = `${app.globalData.apiBase}/users?from=miniProgram`,
         data = {
           attributes: {
             username: groupName,
@@ -20,7 +21,29 @@ const _createGroup = (groupName) => {
         }
       },
       success(res) {
-        resolve(res.data.data);
+        const group = res.data.data,
+              data = {
+                data: {
+                  attributes: {
+                    groupId: group.id,
+                    userId: creatorId,
+                    role: 1
+                  }
+                }
+              };
+
+        // create userGroup
+        wx.request({
+          url: `${app.globalData.apiBase}/user-groups?from=miniProgram`,
+          method: 'POST',
+          data,
+          success(res2) {
+            resolve(group);
+          },
+          fail(res2) {
+            reject(res2);
+          }
+        });
       },
       fail(res) {
         reject(res);
@@ -45,7 +68,7 @@ Page({
     const name = this.data.groupName
     if (name && !this.data.processing) {
       this.setData({processing: true});
-      _createGroup(name)
+      _createGroup(name, Auth.getLocalUserId())
         .then(g => {
           this.setData({processing: false});
           wx.navigateTo({

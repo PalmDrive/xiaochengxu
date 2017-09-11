@@ -8,22 +8,25 @@ Page({
     },
     dateList: []
   },
-  onLoad: function (options) {
+
+  onLoad(options) {
     this.load();
   },
+
   /**
    * 加载数据
    */
-  load: function (event) {
+  load(event) {
     wx.request({
       url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram`,
       success: this.loadOver
     });
   },
+
   /**
    * 数据加载 成功 回调
    */
-  loadOver: function (res) {
+  loadOver(res) {
     console.log(res.data);
     console.log('----------')
     this.setData({
@@ -31,10 +34,17 @@ Page({
       groups: res.data.data
     });
   },
+
+  gotoNewGroup() {
+    wx.navigateTo({
+      url: '../groups/new-group'
+    });
+  },
+
   /**
    * 
    */
-  goGroups: function (event) {
+  goGroups(event) {
     const userId = event.currentTarget.dataset.id;
     wx.navigateTo({
       url: `../groups/group?id=${userId}`
@@ -44,7 +54,7 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  onShareAppMessage() {
     return {
       title: '我的群头条'
     };

@@ -6,7 +6,7 @@ const _ = require('../../vendors/underscore'),
 const app = getApp();
 
 const _getFields = () => {
-  const url = `${app.globalData.apiBase}/fields`;
+  const url = `${app.globalData.apiBase}/fields?from=miniProgram`;
 
   return new Promise((resolve, reject) => {
     wx.request({
@@ -29,7 +29,7 @@ const _getTopicsByField = (fieldId, options) => {
 
   _.extend(defaultOptions, options || {});
 
-  const url = `${app.globalData.apiBase}/fields/${fieldId}/topics?page[size]=${defaultOptions.size}&page[number]=${defaultOptions.number}&from=app`;
+  const url = `${app.globalData.apiBase}/fields/${fieldId}/topics?page[size]=${defaultOptions.size}&page[number]=${defaultOptions.number}&from=miniProgram`;
 
   return new Promise((resolve, reject) => {
     wx.request({

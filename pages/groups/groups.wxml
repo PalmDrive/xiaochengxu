@@ -4,5 +4,6 @@
   <view class="group" wx:for="{{ groups }}" wx:for-item="group" data-id="{{ group.id }}" bindtap="goGroups" wx:key>
     {{ group.attributes.username }}
   </view>
+  <button bindtap="gotoNewGroup">添加群头条</button>
   <template is="loading" data="{{loadingView}}"></template>
 </view>
