@@ -4,6 +4,8 @@ const app = getApp(),
 
 Page({
   data: {
+    userName: null,
+    groupId: null,
     loadingView: {
       loading: true
     },
@@ -28,14 +30,25 @@ Page({
       }
     });
   },
+
+  onShow() {
+    if (this.data.userName) {
+      util.ga({
+        cid: Auth.getLocalUserId(),
+        dp: '%2FtoutiaoPage_XiaoChengXu',
+        dt: `toutiao_name:${this.data.userName},toutiao_id:${this.data.groupId}`
+      });
+    }
+  },
+
   //点击专题
   goToTopic: function(event) {
     const topic = event.currentTarget.dataset.topic,
-    userInfo = Auth.getLocalUserInfo();
+          userInfo = Auth.getLocalUserInfo();
     const gaOptions = {
       cid: Auth.getLocalUserId(),
       ec: `topic_name:${topic.attributes.name}, topic_id:${topic.id}`,
-      ea: 'click_topic_in_group',
+      ea: 'click_topic_in_toutiaoPage',
       el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
       ev: 1
     };
@@ -44,14 +57,14 @@ Page({
   //点击文章
   goToMedium: function(event) {
     const medium = event.currentTarget.dataset.medium,
-      userInfo = Auth.getLocalUserInfo(),
-      gaOptions = {
-      cid: Auth.getLocalUserId(),
-      ec: `article_title:${medium.title}, article_id:${medium.id}`,
-      ea: 'click_article_in_riduTab',
-      el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
-      ev: 0
-    };
+          userInfo = Auth.getLocalUserInfo(),
+          gaOptions = {
+            cid: Auth.getLocalUserId(),
+            ec: `article_title:${medium.title}, article_id:${medium.id}`,
+            ea: 'click_article_in_toutiaoPage',
+            el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
+            ev: 0
+          };
     util.goToMedium(event, gaOptions);
   },
   /**
@@ -98,7 +111,13 @@ Page({
     // 设置标题
     wx.setNavigationBarTitle({
       title: res.data.included[0].attributes.username
-    })
+    });
+
+    util.ga({
+      cid: Auth.getLocalUserId(),
+      dp: '%2FtoutiaoPage_XiaoChengXu',
+      dt: `toutiao_name:${this.data.userName},toutiao_id:${this.data.groupId}`
+    });
   },
   /**
    * 页面上拉触底事件的处理函数

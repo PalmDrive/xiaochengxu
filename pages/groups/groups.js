@@ -8,9 +8,19 @@ Page({
     },
     dateList: []
   },
+
   onLoad: function (options) {
     this.load();
   },
+
+  onShow() {
+    util.ga({
+      cid: Auth.getLocalUserId(),
+      dp: '%2FtoutiaoTab_XiaoChengXu',
+      dt: '群头条tab页（小程序）'
+    });
+  },
+
   /**
    * 加载数据
    */
@@ -34,8 +44,16 @@ Page({
   /**
    * 
    */
-  goGroups: function (event) {
-    const userId = event.currentTarget.dataset.id;
+  gotoGroup: function (event) {
+    const userId = event.currentTarget.dataset.id,
+          name = event.currentTarget.dataset.name;
+    util.gaEvent({
+      cid: Auth.getLocalUserId(),
+      ev: 0,
+      ea: 'click_topic_in_toutiaoTab',
+      ec: `toutiao_name:${name},toutiao_id:${userId}`,
+      el: `toutiao_name:${name},toutiao_id:${userId}`
+    });
     wx.navigateTo({
       url: `../groups/group?id=${userId}`
     });

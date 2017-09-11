@@ -49,12 +49,6 @@ Page({
         wx.stopPullDownRefresh();
       };
       that.getTopics(1, cb);
-
-      Util.ga({
-        cid: Auth.getLocalUserId() || '555',
-        dp: '%2FwodeTab_XiaoChengXu',
-        dt: '我的tab页（小程序）'
-      });
     }
   },
 
@@ -70,7 +64,13 @@ Page({
    */
   onShow: function () {
     const that = this;
-    // console.log('onShow');
+    
+    Util.ga({
+      cid: Auth.getLocalUserId() || '555',
+      dp: '%2FwodeTab_XiaoChengXu',
+      dt: '我的tab页（小程序）'
+    });
+
     if (that.data.loaded && that.data.loading) {
       // console.log('do stuff onShow');
       //更新订阅列表

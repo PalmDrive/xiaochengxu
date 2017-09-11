@@ -151,7 +151,7 @@ Page({
           wx.stopPullDownRefresh();
 
           util.ga({
-            cid: Auth.getLocalUserId() || '555',
+            cid: Auth.getLocalUserId(),
             dp: '%2FtopicPage_XiaoChengXu',
             dt: `topic_name:${topic.attributes.name},topic_id:${topicId}`
           });
@@ -220,7 +220,14 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+    const topic = this.data.topic;
+    if (topic.attributes) {
+      util.ga({
+        cid: Auth.getLocalUserId(),
+        dp: '%2FtopicPage_XiaoChengXu',
+        dt: `topic_name:${topic.attributes.name},topic_id:${topicId}`
+      });
+    }
   },
 
   /**
