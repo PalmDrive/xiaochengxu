@@ -2,13 +2,13 @@
   加载页面 提示
  -->
 <template name="loading">
-  <view class="loading text-center" hidden="{{!loadingView.loading}}">
+  <view class="loading text-center" hidden="{{loadingView.loadingStatus !== 'LOADING'}}">
     <text>数据加载中...</text>
   </view>
-  <view class="loading text-center" hidden="{{!loadingView.loadingMore}}">
+  <view class="loading text-center" hidden="{{loadingView.loadingStatus !== 'LOADING_MORE'}}">
     <text>更多数据加载中...</text>
   </view>
-  <view class="loading text-center" hidden="{{!loadingView.recommendNoMore}}">
+  <view class="loading text-center" hidden="{{loadingView.loadingStatus !== 'LOADED_ALL'}}">
     <text>没有更多了</text>
   </view>
 </template>
