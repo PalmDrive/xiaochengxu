@@ -10,6 +10,15 @@ function formatTime(date) {
 
   return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':')
 }
+/**
+ * @return 'xxxx年x月x日'
+ */
+function formatDateToDay(date) {
+  const year = date.getFullYear(),
+        month = date.getMonth() + 1,
+        day = date.getDate();
+  return month + '月' + day + '日';
+}
 
 function formatNumber(n) {
   n = n.toString()
@@ -70,6 +79,14 @@ function formatMedium(m) {
   }
 
   // trimMediumTitle(m);
+}
+
+function formatPublishedAt(m) {
+  if (m.attributes.publishedAt) {
+    m.attributes.publishedAt = convertDate(new Date(m.attributes.publishedAt));
+  } else {
+    m.attributes.publishedAt = '';
+  }
 }
 
 function goToMedium(event, gaOptions) {
@@ -138,7 +155,9 @@ function trimMediumTitle(m) {
 
 module.exports = {
   formatTime,
+  formatDateToDay,
   convertDate,
+  formatPublishedAt,
   formatTopic,
   formatMedium,
   goToMedium,
@@ -147,4 +166,4 @@ module.exports = {
   ga,
   gaEvent,
   trimMediumTitle
-}
+};

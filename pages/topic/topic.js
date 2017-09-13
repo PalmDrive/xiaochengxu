@@ -32,7 +32,8 @@ Page({
     childTopics: [],
     subscribeButton: '订阅',
     showHint: false,
-    loading: true
+    loading: true,
+    page: {number: 1, size: 8}
   },
   //绑定事件
   selectTab(event) {
@@ -93,114 +94,23 @@ Page({
   onLoad: function (options) {
     const that = this,
       topicId = options.id;
-    that.setData({
-      loading: true
-    });
-    //检查storage里是否有userId，没有则请求
-    if (Auth.getLocalUserId()) {
-      init();
-    } else {
-      Auth.login(init, that);
+    let data = {
+      loading: true,
+      topicId
+    };
+    if (options.pullDown) {
+      data = {
+        topicId,
+        isFeatured: false,
+        selectedTab: '动态',
+        loading: true,
+        page: { number: 1, size: 8 }
+      };
     }
+    that.setData(data);
 
-    function init() {
-      const userId = Auth.getLocalUserId(),
-        topicUrl = `${app.globalData.apiBase}/topics/${topicId}?filterSource=true&fields[topics]=name,description,imgUrl,mediaCount,fields,tabs,type&include=media&fields[media]=id,title,summary,publishedAt,picUrl&userId=${userId}`;
-      //获取专题数据
-      wx.request({
-        url: topicUrl,
-        success(res) {
-          const topic = res.data.data;
-          let subscribeButton;
-          if (res.data.meta && res.data.meta.subscribe) {
-            subscribeButton = '已订阅';
-          } else {
-            subscribeButton = '订阅';
-          }
-          const isFeatured = topic.attributes.type === 'featured';
-
-          let media = res.data.included;
-          media.forEach(m => {
-            // 格式化时间
-            if (m.attributes.publishedAt) {
-              m.attributes.publishedAt = util.convertDate(new Date(m.attributes.publishedAt));
-            } else {
-              m.attributes.publishedAt = '';
-            }
-            // // 处理过长的文章标题
-            // util.trimMediumTitle(m);
-          });
-
-          // Determin tabs
-          const tabs = topic.attributes.newTabs;
-          tabs.unshift('动态');
-
-          const mediumData = that.data.mediumData;
-          // Push media into mediumData
-          mediumData['动态'] = media;
-          media.forEach(m => {
-            if (m.attributes.contentTypes && m.attributes.contentTypes.length) {
-              pushMedium(m, contentTypes, mediumData);
-            }
-          });
-
-          //更新数据
-          that.setData({
-            topicId,
-            topic,
-            isFeatured,
-            tabs,
-            subscribeButton
-          });
-          that.setData({
-            mediumData,
-            loading: false
-          });
-          wx.stopPullDownRefresh();
-
-          util.ga({
-            cid: Auth.getLocalUserId() || '555',
-            dp: '%2FtopicPage_XiaoChengXu',
-            dt: `topic_name:${topic.attributes.name},topic_id:${topicId}`
-          });
-
-          if (tabs.indexOf('子专题') > -1) {
-            wx.request({
-              url: `${app.globalData.apiBase}/topics/${topicId}/topics?include=media`,
-              success(result) {
-                const topics = result.data.data;
-                const media = result.data.included || [];
-                const mediumId2medium = media.reduce((acc, m) => {
-                  acc[m.id] = m;
-                  return acc;
-                }, {});
-                // Set topic.media
-                topics.forEach(t => {
-                  if (t.relationships && t.relationships.media && t.relationships.media.data) {
-                    t.media = t.relationships.media.data.reduce((acc, m) => {
-                      if (mediumId2medium[m.id]) {
-                        acc.push(mediumId2medium[m.id]);
-                      }
-                      return acc;
-                    }, []);
-                    t.media5 = t.media.slice(0, 5);
-                  }
-                });
-                that.setData({
-                  childTopics: topics
-                });
-              },
-              fail() {
-                console.log('topic page request child topics fail');
-              }
-            });
-          }
-        },
-        fail() {
-          console.log('topic page request topic data fail');
-        }
-      });
-    }
+    Auth.getLocalUserId() && this._load();
+    
   },
 
   /**
@@ -214,7 +124,15 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+    const topic = this.data.topic,
+          topicId = this.data.topicId;
+    if (topic.attributes) {
+      util.ga({
+        cid: Auth.getLocalUserId(),
+        dp: '%2FtopicPage_XiaoChengXu',
+        dt: `topic_name:${topic.attributes.name},topic_id:${topicId}`
+      });
+    }
   },
 
   /**
@@ -236,8 +154,8 @@ Page({
    */
   onPullDownRefresh: function () {
     const id = this.data.topicId;
-    if (id) {
-      this.onLoad({ id });
+    if (id && !this.data.loading) {
+      this.onLoad({ id, pullDown: true });
     } else {
       wx.stopPullDownRefresh();
     }
@@ -247,7 +165,44 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-  
+    const data = this.data,
+      that = this,
+      tab = data.selectedTab,
+      page = data.page,
+      skipLoadMoreTabs = ['相关专题', '子专题'];
+
+    if (skipLoadMoreTabs.indexOf(tab) > -1) return;
+
+    if (!page[tab] || !page[tab].noMore && !page[tab].loadingMore) {
+      let pageNumber = page[tab] && page[tab].number || 1;
+      pageNumber++;
+      page.number = pageNumber;
+      page.loadingMore = true;
+      const key = `page.${tab}`;
+      that.setData({
+        [key]: page
+      });
+      const cb = media => {
+        // console.log(media);
+        const data = {};
+        if (media.length) {
+          media.forEach(util.formatPublishedAt);
+          data[`mediumData.${tab}`] = that.data.mediumData[tab].concat(media);
+        }
+        data[key] = that.data.page[tab];
+        if (media.length < that.data.page.size) {
+          data[key].noMore = true;
+        }
+        data[key].loadingMore = false;
+        that.setData(data);
+      };
+
+      if (tab === '动态') {
+        that.getMedia(pageNumber, cb);
+      } else {
+        that.getTabMedia(tab, pageNumber, cb);
+      }
+    }
   },
 
   /**
@@ -263,5 +218,155 @@ Page({
       el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
       ev: 5
     });
+    return {
+      title: topic.attributes.name
+    };
+  },
+
+  getOtherTabsData: function(tabs) {
+    const that = this,
+      skipTabs = ['动态', '相关专题', '子专题'];
+    tabs.forEach(tab => {
+      if (skipTabs.indexOf(tab) === -1) {
+        that.getTabData(tab);
+      }
+    });
+  },
+
+  //首次获取某个tab下文章
+  getTabData: function(tab) {
+    const that = this;
+
+    const cb = media => {
+      media.forEach(util.formatPublishedAt);
+      const key = `mediumData.${tab}`;
+      that.setData({
+        [key]: media
+      });
+    };
+
+    that.getTabMedia(tab, 1, cb);
+  },
+
+  //获取某个tab下文章
+  getTabMedia: function(tab, pageNumber, cb) {
+    const that = this;
+    wx.request({
+      url: `${app.globalData.apiBase}/topics/${that.data.topicId}/media?page[number]=${pageNumber}&page[size]=8&filter[confirmed]=1&filter[contentTypes]=${tab}&sort=-publishedAt&from=miniProgram`,
+      success(res) {
+        const media = res.data.data;
+        cb(media);
+      },
+      fail() {
+        console.log('topic page, getTabMedia function, request fail');
+      }
+    });
+  },
+
+  //获取动态标签下的文章
+  getMedia: function(pageNumber, cb) {
+    wx.request({
+      url: `${app.globalData.apiBase}/media/topic/${this.data.topicId}?page[number]=${pageNumber}&page[size]=${this.data.page.size}&sort=-publishedAt&from=miniProgram`,
+      success(res) {
+        const media = res.data.data;
+        cb(media);
+      },
+      fail() {
+        console.log('topic page, getMedia request fail');
+      }
+    });
+  },
+
+  _load() {
+    const userId = Auth.getLocalUserId(),
+      topicId = this.data.topicId,
+      topicUrl = `${app.globalData.apiBase}/topics/${topicId}?from=miniProgram&fields[topics]=name,description,imgUrl,mediaCount,fields,tabs,type&userId=${userId}`;
+    //获取专题数据
+    wx.request({
+      url: topicUrl,
+      success: (res) => {
+        const topic = res.data.data;
+        let subscribeButton;
+        if (res.data.meta && res.data.meta.subscribe) {
+          subscribeButton = '已订阅';
+        } else {
+          subscribeButton = '订阅';
+        }
+        const isFeatured = topic.attributes.type === 'featured';
+
+        // Determin tabs
+        const tabs = topic.attributes.newTabs;
+        tabs.unshift('动态');
+
+        //获取其他标签下第一页的文章
+        this.getOtherTabsData(tabs);
+
+        //更新数据
+        this.setData({
+          topic,
+          isFeatured,
+          tabs,
+          subscribeButton,
+          loading: false
+        });
+
+        wx.stopPullDownRefresh();
+
+        util.ga({
+          cid: Auth.getLocalUserId(),
+          dp: '%2FtopicPage_XiaoChengXu',
+          dt: `topic_name:${topic.attributes.name},topic_id:${topicId}`
+        });
+
+        if (tabs.indexOf('子专题') > -1) {
+          wx.request({
+            url: `${app.globalData.apiBase}/topics/${topicId}/topics?include=media&from=miniProgram`,
+            success: (result) => {
+              const topics = result.data.data;
+              const media = result.data.included || [];
+              const mediumId2medium = media.reduce((acc, m) => {
+                acc[m.id] = m;
+                return acc;
+              }, {});
+              // Set topic.media
+              topics.forEach(t => {
+                if (t.relationships && t.relationships.media && t.relationships.media.data) {
+                  t.media = t.relationships.media.data.reduce((acc, m) => {
+                    if (mediumId2medium[m.id]) {
+                      acc.push(mediumId2medium[m.id]);
+                    }
+                    return acc;
+                  }, []);
+                  t.media5 = t.media.slice(0, 5);
+                }
+              });
+              this.setData({
+                childTopics: topics
+              });
+            },
+            fail: () => {
+              console.log('topic page request child topics fail');
+            }
+          });
+        }
+      },
+      fail: () => {
+        console.log('topic page request topic data fail');
+      }
+    });
+
+    //获取动态标签的文章
+    const cb = media => {
+      const data = {};
+      if (media.length) {
+        media.forEach(m => util.formatPublishedAt(m));
+        data['mediumData.动态'] = media;
+      }
+      if (media.length < this.data.page.size) {
+        data.noMore = true;
+      }
+      this.setData(data);
+    };
+    this.getMedia(1, cb);
   }
 })

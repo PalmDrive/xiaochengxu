@@ -4,7 +4,7 @@ const app = getApp();
 function subscribe(userId, topicId, cb) {
   wx.request({
     method: 'POST',
-    url: `${app.globalData.apiBase}/topics/${topicId}/subscribe`,
+    url: `${app.globalData.apiBase}/topics/${topicId}/subscribe?from=miniProgram`,
     data: {
       data: {
         attributes: { userId }
@@ -25,7 +25,7 @@ function subscribe(userId, topicId, cb) {
 function unsubscribe(userId, topicId, cb) {
   wx.request({
     method: 'POST',
-    url: `${app.globalData.apiBase}/topics/${topicId}/unsubscribe`,
+    url: `${app.globalData.apiBase}/topics/${topicId}/unsubscribe?from=miniProgram`,
     data: {
       data: {
         attributes: { userId }

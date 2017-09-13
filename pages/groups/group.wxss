@@ -1,0 +1,55 @@
+/**/
+.container {
+  position: relative;
+  height: 100vh;
+}
+
+.date-title {
+  text-align: center;
+  line-height: 45px;
+  color: #0090e7;
+}
+
+.line {
+  background: #ededed;
+}
+.line-max {
+  height: 5px;
+}
+.line-min {
+  height: 1px;
+}
+
+/*
+ * 新闻标题
+**/
+.news-title {
+  line-height: 36px;
+}
+
+.news-title .logo {
+  width: 15px;
+  height: 15px;
+  vertical-align: middle;
+  border-radius: 50%;
+}
+.news-title .name {
+  margin-left: 5px;
+}
+
+.medium-container {
+  padding: 15px 20px;
+  overflow: hidden;
+}
+
+.new-media-count {
+  width: 40%;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+  line-height: 36px;
+  margin-top: 70%;
+  border-radius: 5px;
+  background: #1878de;
+}
