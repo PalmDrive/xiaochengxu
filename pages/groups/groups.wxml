@@ -4,5 +4,5 @@
   <view class="group" wx:for="{{groups}}" wx:for-item="group" data-id="{{group.id}}" data-name="{{group.attributes.username}}" bindtap="gotoGroup" wx:key>
     {{group.attributes.username}}
   </view>
-  <template is="loading" data="{{loadingView}}"></template>
+  <template is="loading" data="{{loadingStatus}}"></template>
 </view>

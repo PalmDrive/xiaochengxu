@@ -24,6 +24,6 @@
       </view>
     </view>
   </view>
-  <template is="loading" data="{{loadingView}}"></template>
+  <template is="loading" data="{{loadingStatus}}"></template>
   <!-- <view class="new-media-count text-white text-center size-14" hidden="{{!isShar}}">今日更新{{ newMddiumCount }}篇</view> -->
 </scroll-view>

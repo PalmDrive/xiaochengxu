@@ -3,13 +3,14 @@ const app = getApp(),
     Auth = require('../../utils/auth');
 Page({
   data: {
-    loadingView: {
-      loading: true,
-    },
+    loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
     dateList: []
   },
 
   onLoad: function (options) {
+    this.setData({
+      loadingStatus: 'LOADING'
+    });
     this.load();
   },
 
@@ -35,7 +36,7 @@ Page({
    */
   loadOver: function (res) {
     this.setData({
-      loadingView: null,
+      loadingStatus: null,
       groups: res.data.data
     });
   },

@@ -21,15 +21,13 @@ Page({
     userName: null, // group or toutiao name actually
     groupId: null,
     lastDate: null,
-    loadingView: {
-      loading: true,
-      recommendNoMore: false
-    },
+    loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
     dateList: []
   },
   onLoad: function (options) {
     this.setData({
-      groupId: options.id
+      groupId: options.id,
+      loadingStatus: 'LOADING'
     });
     this._load();
 
@@ -95,11 +93,10 @@ Page({
   _onLoadSuccess: function (res) {
     let updates = {},
         dateList = this.data.dateList;
-    const loadingView = this.data.loadingView;
+
     // 没有数据 显示loading页的加载完毕
     if (!res.data || !res.data.length) {
-      loadingView.recommendNoMore = true;
-      return this.setData({loadingView});
+      return this.setData({loadingStatus: 'LOADED_ALL'});
     }
 
     dateList.push({
@@ -109,8 +106,7 @@ Page({
     updates.dateList = dateList;
     updates.userName = res.included[0].attributes.username;
     updates.lastDate = res.meta.mediumLastDate;
-    loadingView.loadingMore = false;
-    updates.loadingView = loadingView;
+    updates.loadingStatus = null;
 
     const totalMediaCount = this._countMedia();
 
@@ -131,7 +127,7 @@ Page({
       dt: `toutiao_name:${this.data.userName},toutiao_id:${this.data.groupId}`
     });
 
-    if (totalMediaCount < 8) {
+    if (totalMediaCount <= 10) {
       this.onReachBottom();
     }
   },
@@ -153,10 +149,8 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom() {
-    const loadingView = this.data.loadingView;
-    if (!loadingView.recommendNoMore && !loadingView.loadingMore) {
-      loadingView.loadingMore = true;
-      this.setData(loadingView);
+    if (!this.data.loadingStatus) {
+      this.setData({loadingStatus: 'LOADING_MORE'});
       this._load();
     }
   },
