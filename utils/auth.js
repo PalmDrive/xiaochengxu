@@ -70,7 +70,7 @@ const login = (cb, page, app = getApp()) => {
               },
               fail() {
                 loginRequest(apiBase, {
-                  wxUnionId: res.data['unionid']
+                  wxUnionId: res.data.unionid
                 }, cb, page);
               }
             });
