@@ -1,5 +1,6 @@
 {
   "pages":[
+    "pages/groups/index",
     "pages/groups/groups",
     "pages/index/index",
     "pages/topics/topics",
@@ -22,7 +23,7 @@
     "position": "bottom",
     "list": [
       {
-        "pagePath": "pages/groups/groups",
+        "pagePath": "pages/groups/index",
         "text": "群头条",
         "iconPath": "images/tabIcons/groups.png",
         "selectedIconPath": "images/tabIcons/groups_selected.png"

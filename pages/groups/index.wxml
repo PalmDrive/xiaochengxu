@@ -1,0 +1,4 @@
+<view class="create">
+  <view class="text">为你的群创建一个群头条吧，你可以为他们订阅相关的热门资讯和行业观点</view>
+  <view class="createGroup">创建群头条</view>
+</view>
