@@ -167,5 +167,16 @@ Page({
     return {
       title: `你的群头条: 今日更新${this.data.newMediaCount}篇`
     }
+  },
+  /**
+   * 下拉刷新
+   */
+  onPullDownRefresh: function () {
+    loadData(this.data.groupId, null)
+      .then(res => {
+        wx.stopPullDownRefresh();
+        this.data.dateList = new Array();
+        this._onLoadSuccess(res)
+      });
   }
 })

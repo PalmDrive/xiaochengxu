@@ -15,7 +15,7 @@ Page({
     this.setData({
       loadingStatus: 'LOADING'
     });
-    Auth.getLocalUserId() && this._load();
+    Auth.getLocalUserId() && this._load().then(this._loadOver);
   },
 
   onShow() {
@@ -30,9 +30,12 @@ Page({
    * 加载数据
    */
   _load() {
-    wx.request({
-      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram`,
-      success: this._loadOver
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram`,
+        success: resolve,
+        fail: reject
+      });
     });
   },
   /**
@@ -70,5 +73,14 @@ Page({
     return {
       title: '我的群头条'
     };
+  },
+  /**
+   * 下拉刷新
+   */
+  onPullDownRefresh: function () {
+    this._load().then(res => {
+      wx.stopPullDownRefresh();
+      this._loadOver(res);
+    });
   }
 });
