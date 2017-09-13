@@ -4,7 +4,7 @@
 <import src="../../templates/loading.wxml"/>
 <include src="../../includes/hint.wxml"/>
 
-<view class="container" scroll-y bindscrolltolower="loadMore" lower-threshold="800">
+<view class="container" scroll-y bindscrolltolower="loadMore" lower-threshold="200">
   <view wx:for="{{ dateList }}" wx:for-item="list" wx:key="">
     <view class="line line-max"></view>
     <view class="date-title size-18">{{ list.date }}群头条</view>
