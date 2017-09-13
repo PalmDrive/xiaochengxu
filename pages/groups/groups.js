@@ -4,14 +4,18 @@ const app = getApp(),
 Page({
   data: {
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
-    dateList: []
+    dateList: [],
+    showHint: false
   },
-
+  //关闭首次登陆弹窗
+  closeHint: function () {
+    util.closeHint(this);
+  },
   onLoad: function (options) {
     this.setData({
       loadingStatus: 'LOADING'
     });
-    this.load();
+    Auth.getLocalUserId() && this._load();
   },
 
   onShow() {
@@ -25,16 +29,16 @@ Page({
   /**
    * 加载数据
    */
-  load: function (event) {
+  _load() {
     wx.request({
       url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram`,
-      success: this.loadOver
+      success: this._loadOver
     });
   },
   /**
    * 数据加载 成功 回调
    */
-  loadOver: function (res) {
+  _loadOver: function (res) {
     this.setData({
       loadingStatus: null,
       groups: res.data.data

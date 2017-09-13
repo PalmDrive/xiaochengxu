@@ -23,33 +23,8 @@ Page({
       that.setData({ 'page.number': 1, noMore: false });
     }
     
-    //检查storage里是否有需要的数据，没有则请求
-    if (Auth.getLocalUserId() && Auth.getLocalUserInfo()) {
-      init();
-    } else {
-      Auth.login(init);
-    }
+    Auth.getLocalUserId() && this._load();
 
-    function init() {
-      const userId = Auth.getLocalUserId();
-      const cb = topics => {
-        topics.forEach(Util.formatTopic);
-
-        const data = {
-          loading: false,
-          userInfo: Auth.getLocalUserInfo(),
-          userId,
-          favoriteTopics: topics,
-          loaded: true
-        };
-        if (topics.length < that.data.page.size) {
-          data.noMore = true;
-        }
-        that.setData(data);
-        wx.stopPullDownRefresh();
-      };
-      that.getTopics(1, cb);
-    }
   },
 
   /**
@@ -158,5 +133,25 @@ Page({
         console.log('my page, getTopics request fail');
       }
     })
+  },
+  _load() {
+    const userId = Auth.getLocalUserId();
+    const cb = topics => {
+      topics.forEach(Util.formatTopic);
+
+      const data = {
+        loading: false,
+        userInfo: Auth.getLocalUserInfo(),
+        userId,
+        favoriteTopics: topics,
+        loaded: true
+      };
+      if (topics.length < this.data.page.size) {
+        data.noMore = true;
+      }
+      this.setData(data);
+      wx.stopPullDownRefresh();
+    };
+    this.getTopics(1, cb);
   }
 })
