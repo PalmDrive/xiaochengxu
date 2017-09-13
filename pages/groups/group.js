@@ -22,7 +22,9 @@ Page({
     groupId: null,
     lastDate: null,
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
-    dateList: []
+    dateList: [],
+    newMediaCount: null, // 今日更新数量
+    viewsCount: null
   },
   onLoad: function (options) {
     this.setData({
@@ -41,6 +43,11 @@ Page({
             groupId: options.id
           }
         },
+      },
+      success: res => {
+        this.setData({
+          viewsCount: res.data.data.attributes.viewsCount
+        });
       }
     });
   },

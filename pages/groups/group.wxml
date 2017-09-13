@@ -5,22 +5,26 @@
 <include src="../../includes/hint.wxml"/>
 
 <scroll-view class="container" scroll-y bindscrolltolower="onReachBottom" lower-threshold="200">
+  <view class="head" wx:if="{{loadingStatus !== 'LOADING'}}">
+    <text class="group-name size-18">{{userName}}</text>
+    <view class="top-15 text-container">
+      <text class="group-pageviews size-12">点击：{{viewsCount}}</text>
+      <text class="update-count size-12">今日更新{{newMediaCount}}篇</text>
+    </view>
+    <text class="creator size-12 top-15">欢迎加入本群群每日更新，群主微信号为：xxxx</text>
+    <view class="join-button size-12 top-25">添加</view>
+  </view>
   <view wx:for="{{ dateList }}" wx:for-item="list" wx:key="">
-    <view class="line line-max"></view>
-    <view class="date-title size-18">{{ list.date }}群头条</view>
+    <view class="date-title size-12">{{ list.date }}</view>
     <view class="topic" wx:for="{{ list.topics }}" wx:for-item="topic" wx:if="{{ topic.relationships.media.data.length > 0 }}" wx:key="">
-      <view class="line line-max"></view>
       <view class="news-title">
         <view class="medium-list" bindtap="goToTopic" data-topic="{{topic}}">
           <image src="{{ topic.attributes.imgUrl }}" class="logo"></image>
           <text class="name size-12">{{ topic.attributes.name }}</text>
         </view>
       </view>
-      <view class="medium" wx:for="{{ topic.relationships.media.data }}" wx:for-item="medium" data-medium="{{ medium }}" wx:key="" bindtap="goToMedium">
-        <view class="line line-min"></view>
-        <view class="medium-container medium-list">
-          <text class="medium-title size-15">{{ medium.attributes.title }}</text>
-        </view>
+      <view class="medium-container medium-list" wx:for="{{ topic.relationships.media.data }}" wx:for-item="medium" data-medium="{{ medium }}" wx:key="" bindtap="goToMedium">
+        <text class="medium-title size-15">{{ medium.attributes.title }}</text>
       </view>
     </view>
   </view>
