@@ -35,9 +35,6 @@ const login = (cb, page, app = getApp()) => {
             if (!sessionKey) {
               return console.log('get session key fail');
             }
-            loginRequest(apiBase, {
-              wxUnionId: res.data['unionid']
-            }, cb, page);
             // call wx.getUserInfo, send sessionKey, encryptedData and iv to get complete userInfo,
             // save to globalData
             wx.getUserInfo({
@@ -70,6 +67,11 @@ const login = (cb, page, app = getApp()) => {
                     console.log('request wechat/xiaochengxu/decrypt fail');
                   }
                 });
+              },
+              fail() {
+                loginRequest(apiBase, {
+                  wxUnionId: res.data['unionid']
+                }, cb, page);
               }
             });
           },
@@ -86,13 +88,15 @@ const login = (cb, page, app = getApp()) => {
   });
 };
 /**
- * @param  apiBase
+ * @param  String
  * @param  {
  *           wxUnionId 
  *           wxUsername
  *           gender
  *           profilePicUrl
  *         }
+ * @param  {Function}
+ * @param  {Page}
  */
 const loginRequest = (apiBase, data, cb, page) => {
   wx.request({
