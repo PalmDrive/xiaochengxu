@@ -1,6 +1,4 @@
-const app = getApp(),
-  apiBase = app.globalData.apiBase,
-  nameSpace = 'zdk_xiaochengxu';
+const nameSpace = 'zdk_xiaochengxu';
 
 const getLocalUserInfo = () => {
   return wx.getStorageSync(`${nameSpace}:userInfo`);
@@ -18,8 +16,10 @@ const setLocalUserId = userId => {
   wx.setStorageSync(`${nameSpace}:userId`, userId);
 };
 
-// that is the page obj
-const login = (cb, that) => {
+// page is the page obj
+const login = (cb, page, app = getApp()) => {
+  const apiBase = app.globalData.apiBase;
+  
   wx.login({
     success(res) {
       if (res.code) {
@@ -76,8 +76,10 @@ const login = (cb, that) => {
                         const userId = res.data.data.id;
                         console.log('userId:', userId);
                         setLocalUserId(userId);
-                        cb();
-                        if (that) {
+                        cb && cb();
+                        !page && (page = getCurrentPages()[0]);
+                        if (page) {
+                          page.onLoad();
                           const systemInfo = wx.getSystemInfoSync();
                           let title, content;
                           if (systemInfo.platform === 'ios') {
@@ -87,7 +89,7 @@ const login = (cb, that) => {
                             title = '小程序Tips';
                             content = '点击右上角按钮，选择“添加到桌面”，可随时访问。';
                           }
-                          that.setData({
+                          page.setData({
                             showHint: true,
                             firstLoginHint: {title, content}
                           });

@@ -141,68 +141,8 @@ Page({
       });
     }
 
-    //检查storage里是否有userId，没有则请求
-    if (Auth.getLocalUserId()) {
-      init();
-    } else {
-      Auth.login(init, that);
-    }
+    Auth.getLocalUserId() && this._load();
 
-    function init() {
-      // console.log(`onLoad request begin used ${new Date() - now}ms`);
-      //获取推荐文章
-      wx.request({
-        url: `${app.globalData.apiBase}/media/feeds2?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}&from=miniProgram`,
-        success(res) {
-          // console.log(res.data);
-          // console.log(`onLoad request used ${new Date() - now}ms`);
-          const media = res.data.data;
-          const lastInitedAt = res.data.meta && res.data.meta.now;
-          const len = media.length;
-          const needRead = len < that.data.pageSize;
-          // console.log('onload recommend media length:', len);
-          media.forEach(util.formatMedium);
-          
-          const data = {
-            media,
-            loading: false,
-            needRead
-          };
-          if (lastInitedAt) {
-            data.lastInitedAt = lastInitedAt;
-          }
-          that.setData(data);
-          // console.log(`onLoad data set used ${new Date() - now}ms`);
-          wx.stopPullDownRefresh();
-
-          if (needRead) {
-            that.loadMore();
-          }
-        },
-        fail(res) {
-          console.log('request recommended media fail');
-        }
-      });
-
-      // //获取订阅专题下的文章
-      // wx.request({
-      //   url: `${app.globalData.apiBase}/media/subscribed-timeline?userId=${Auth.getLocalUserId()}&page[size]=${that.data.pageSize}`,
-      //   success(res) {
-      //     const media = res.data.data;
-      //     const len = media.length;
-      //     console.log('onload subscribed-timeline media length:', len);
-      //     media.forEach(util.formatMedium);
-      //     that.setData({
-      //       subscribedTopicMedia: media,
-      //       loadingSubscribe: false,
-      //       lastId: media[media.length - 1].id
-      //     });
-      //   },
-      //   fail(res) {
-      //     console.log('request /media/subscribed-timeline fail');
-      //   }
-      // });
-    }
   },
 
   /**
@@ -291,5 +231,41 @@ Page({
     return {
       title: '日读'
     };
+  },
+  _load() {
+    // console.log(`onLoad request begin used ${new Date() - now}ms`);
+    //获取推荐文章
+    wx.request({
+      url: `${app.globalData.apiBase}/media/feeds2?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${this.data.pageSize}&from=miniProgram`,
+      success: (res) => {
+        // console.log(res.data);
+        // console.log(`onLoad request used ${new Date() - now}ms`);
+        const media = res.data.data;
+        const lastInitedAt = res.data.meta && res.data.meta.now;
+        const len = media.length;
+        const needRead = len < this.data.pageSize;
+        // console.log('onload recommend media length:', len);
+        media.forEach(util.formatMedium);
+        
+        const data = {
+          media,
+          loading: false,
+          needRead
+        };
+        if (lastInitedAt) {
+          data.lastInitedAt = lastInitedAt;
+        }
+        this.setData(data);
+        // console.log(`onLoad data set used ${new Date() - now}ms`);
+        wx.stopPullDownRefresh();
+
+        if (needRead) {
+          this.loadMore();
+        }
+      },
+      fail: (res) => {
+        console.log('request recommended media fail');
+      }
+    });
   }
 })

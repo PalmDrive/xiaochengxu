@@ -1,4 +1,5 @@
 <import src="../../templates/loading.wxml"/>
+<include src="../../includes/hint.wxml"/>
 
 <view class="container">
   <view class="group" wx:for="{{groups}}" wx:for-item="group" data-id="{{group.id}}" data-name="{{group.attributes.username}}" bindtap="gotoGroup" wx:key>

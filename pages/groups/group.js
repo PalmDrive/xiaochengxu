@@ -22,14 +22,19 @@ Page({
     groupId: null,
     lastDate: null,
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
-    dateList: []
+    dateList: [],
+    showHint: false
+  },
+  //关闭首次登陆弹窗
+  closeHint: function () {
+    util.closeHint(this);
   },
   onLoad: function (options) {
     this.setData({
       groupId: options.id,
       loadingStatus: 'LOADING'
     });
-    this._load();
+    Auth.getLocalUserId() && this._load();
 
     wx.request({
       method: 'POST',

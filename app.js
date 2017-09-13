@@ -1,8 +1,9 @@
+const Auth = require('utils/auth');
 //app.js
 App({
   onLaunch: function() {
-    console.log('app on launch');
-    // console.log(wx.getSystemInfoSync());
+    //检查storage里是否有userId，没有则请求
+    if (!Auth.getLocalUserId()) Auth.login(null, null, this);
   },
 
   getUserInfo: function(cb) {
