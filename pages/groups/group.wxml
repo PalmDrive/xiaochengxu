@@ -4,7 +4,7 @@
 <import src="../../templates/loading.wxml"/>
 <include src="../../includes/hint.wxml"/>
 
-<scroll-view class="container" scroll-y bindscrolltolower="onReachBottom" lower-threshold="200">
+<view class="container" scroll-y bindscrolltolower="loadMore" lower-threshold="200">
   <view wx:for="{{ dateList }}" wx:for-item="list" wx:key="">
     <view class="line line-max"></view>
     <view class="date-title size-18">{{ list.date }}群头条</view>
@@ -26,4 +26,4 @@
   </view>
   <template is="loading" data="{{loadingStatus}}"></template>
   <!-- <view class="new-media-count text-white text-center size-14" hidden="{{!isShar}}">今日更新{{ newMddiumCount }}篇</view> -->
-</scroll-view>
+</view>
