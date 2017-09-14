@@ -1,7 +1,6 @@
 {
   "pages":[
     "pages/groups/groups",
-    "pages/groups/index",
     "pages/index/index",
     "pages/topics/topics",
     "pages/topic/topic",
