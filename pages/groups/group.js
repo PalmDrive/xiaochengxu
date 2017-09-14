@@ -25,7 +25,7 @@ Page({
     dateList: [],
     newMediaCount: 0, // 今日更新数量
     viewsCount: 0,
-    wxCode: null // 群主微信号
+    wxCode: null, // 群主微信号
     showHint: false
   },
   //关闭首次登陆弹窗
