@@ -26,13 +26,18 @@ Page({
     newMediaCount: 0, // 今日更新数量
     viewsCount: 0,
     wxCode: null // 群主微信号
+    showHint: false
+  },
+  //关闭首次登陆弹窗
+  closeHint: function () {
+    util.closeHint(this);
   },
   onLoad: function (options) {
     this.setData({
       groupId: options.id,
       loadingStatus: 'LOADING'
     });
-    this._load();
+    Auth.getLocalUserId() && this._load();
 
     wx.request({
       method: 'POST',
@@ -172,5 +177,16 @@ Page({
     return {
       title: `你的群头条: 今日更新${this.data.newMediaCount}篇`
     }
+  },
+  /**
+   * 下拉刷新
+   */
+  onPullDownRefresh: function () {
+    loadData(this.data.groupId, null)
+      .then(res => {
+        wx.stopPullDownRefresh();
+        this.data.dateList = new Array();
+        this._onLoadSuccess(res)
+      });
   }
 })

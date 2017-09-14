@@ -4,14 +4,18 @@ const app = getApp(),
 Page({
   data: {
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
-    dateList: []
+    dateList: [],
+    showHint: false
   },
-
+  //关闭首次登陆弹窗
+  closeHint: function () {
+    util.closeHint(this);
+  },
   onLoad: function (options) {
     this.setData({
       loadingStatus: 'LOADING'
     });
-    this.load();
+    Auth.getLocalUserId() && this._load().then(this._loadOver);
   },
 
   onShow() {
@@ -25,16 +29,19 @@ Page({
   /**
    * 加载数据
    */
-  load: function (event) {
-    wx.request({
-      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram`,
-      success: this.loadOver
+  _load() {
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram`,
+        success: resolve,
+        fail: reject
+      });
     });
   },
   /**
    * 数据加载 成功 回调
    */
-  loadOver: function (res) {
+  _loadOver: function (res) {
     this.setData({
       loadingStatus: null,
       groups: res.data.data
@@ -66,5 +73,14 @@ Page({
     return {
       title: '我的群头条'
     };
+  },
+  /**
+   * 下拉刷新
+   */
+  onPullDownRefresh: function () {
+    this._load().then(res => {
+      wx.stopPullDownRefresh();
+      this._loadOver(res);
+    });
   }
 });
