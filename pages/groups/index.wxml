@@ -2,3 +2,22 @@
   <view class="text">为你的群创建一个群头条吧，你可以为他们订阅相关的热门资讯和行业观点</view>
   <view class="createGroup">创建群头条</view>
 </view>
+
+<view class="groups">
+  <view class="group">
+    <view class="group-title">
+      <text class="group-name"></text>
+      <text class="group-pageview"></text>
+      <text class="group-update-count"></text>
+    </view>
+    <view class="media">
+      <view class="medium"></view>
+    </view>
+    <view class="group-bottom">
+      <view class="like-count"></view>
+      <view class="shar-count"></view>
+      <view class="update-count"></view>
+    </view>
+  </view>
+  
+</view>
