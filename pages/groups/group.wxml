@@ -9,9 +9,9 @@
     <text class="group-name size-18">{{userName}}</text>
     <view class="top-15 text-container">
       <text class="group-pageviews size-12">点击：{{viewsCount}}</text>
-      <text class="update-count size-12">今日更新{{newMediaCount}}篇</text>
+      <text class="update-count size-12">今日更新 {{newMediaCount}} 篇</text>
     </view>
-    <text class="creator size-12 top-15">欢迎加入本群群每日更新，群主微信号为：xxxx</text>
+    <text class="creator size-12 top-15">欢迎加入本群群每日更新<text wx:if="{{wxCode}}">，群主微信号为：{{wxCode}}</text></text>
     <view class="join-button size-12 top-25">添加</view>
   </view>
   <view wx:for="{{ dateList }}" wx:for-item="list" wx:key="">
@@ -24,7 +24,8 @@
         </view>
       </view>
       <view class="medium-container medium-list" wx:for="{{ topic.relationships.media.data }}" wx:for-item="medium" data-medium="{{ medium }}" wx:key="" bindtap="goToMedium">
-        <text class="medium-title size-15">{{ medium.attributes.title }}</text>
+        <text class="medium-title size-15" style="{{ medium.attributes.picUrl ? 'width: 74%;' : '' }}">{{ medium.attributes.title }}</text>
+        <image class="medium-image" wx:if="{{ medium.attributes.picUrl }}" src="{{ medium.attributes.picUrl }}"></image>
       </view>
     </view>
   </view>

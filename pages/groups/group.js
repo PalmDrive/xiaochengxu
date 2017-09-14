@@ -23,8 +23,9 @@ Page({
     lastDate: null,
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
     dateList: [],
-    newMediaCount: null, // 今日更新数量
-    viewsCount: null
+    newMediaCount: 0, // 今日更新数量
+    viewsCount: 0,
+    wxCode: null // 群主微信号
   },
   onLoad: function (options) {
     this.setData({
@@ -105,13 +106,15 @@ Page({
     if (!res.data || !res.data.length) {
       return this.setData({loadingStatus: 'LOADED_ALL'});
     }
-
+    const today = new Date(res.meta.mediumLastDate);
     dateList.push({
-      date: util.formatDateToDay(new Date(res.meta.mediumLastDate)),
+      date: '· ' + util.formatDateToDay(today) + ' 周' + '日一二三四五六'[today.getDay()],
       topics: res.data
     });
+    const groupInfo = res.included[0].attributes.groupInfo && JSON.parse(res.included[0].attributes.groupInfo);
     updates.dateList = dateList;
     updates.userName = res.included[0].attributes.username;
+    updates.wxCode = groupInfo && groupInfo.wxCode;
     updates.lastDate = res.meta.mediumLastDate;
     updates.loadingStatus = null;
 

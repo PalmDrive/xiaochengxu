@@ -17,9 +17,8 @@ function formatDateToDay(date) {
   const year = date.getFullYear(),
         month = date.getMonth() + 1,
         day = date.getDate();
-  return month + '月' + day + '日';
+  return year + '年' + month + '月' + day + '日';
 }
-
 function formatNumber(n) {
   n = n.toString()
   return n[1] ? n : '0' + n
