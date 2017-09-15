@@ -1,8 +1,9 @@
 // pages/index/index.js
 const app = getApp(),
       util = require('../../utils/util'),
-      Auth = require('../../utils/auth');
-
+      Auth = require('../../utils/auth'),
+      {getSubscribedTopicIds} = require('../../utils/topic');
+      
 const tabs = ['推荐', '订阅'];
 
 Page({
@@ -142,7 +143,6 @@ Page({
     }
 
     Auth.getLocalUserId() && this._load();
-
   },
 
   /**

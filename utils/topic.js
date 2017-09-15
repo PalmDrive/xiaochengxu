@@ -1,49 +1,108 @@
 // utils/topic.js
 const app = getApp();
 
-function subscribe(userId, topicId, cb) {
-  wx.request({
-    method: 'POST',
-    url: `${app.globalData.apiBase}/topics/${topicId}/subscribe?from=miniProgram`,
-    data: {
+let _subscribedTopicIds = null;
+
+function subscribe(userId, topicId, isForGroup) {
+  return new Promise((resolve, reject) => {
+    wx.request({
+      method: 'POST',
+      url: `${app.globalData.apiBase}/topics/${topicId}/subscribe?from=miniProgram`,
       data: {
-        attributes: { userId }
+        data: {
+          attributes: { userId }
+        },
+        meta: {
+          action: 'subscribeTopic'
+        }
       },
-      meta: {
-        action: 'subscribeTopic'
+      success(res) {
+        // Update _subscribedTopicIds
+        if (!isForGroup) {
+          _subscribedTopicIds.push(topicId);
+        }
+        
+        resolve(res);
+      },
+      fail(res) {
+        console.log('Topic.subscribe fail');
+        reject(res);
       }
-    },
-    success(res) {
-      cb(res);
-    },
-    fail() {
-      console.log('Topic.subscribe fail');
-    }
+    });
+  })
+}
+
+function unsubscribe(userId, topicId, isForGroup) {
+  return new Promise((resolve, reject) => {
+    wx.request({
+      method: 'POST',
+      url: `${app.globalData.apiBase}/topics/${topicId}/unsubscribe?from=miniProgram`,
+      data: {
+        data: {
+          attributes: { userId }
+        },
+        meta: {
+          action: 'unsubscribeTopic'
+        }
+      },
+      success(res) {
+        if (!isForGroup) {
+          // update _subscribedTopicIds
+          _subscribedTopicIds = _subscribedTopicIds.filter(id => id !== topicId);
+        }
+        
+        resolve(res);
+      },
+      fail(res) {
+        console.log('Topic.unsubscribe fail');
+        reject(res);
+      }
+    });
   });
 }
 
-function unsubscribe(userId, topicId, cb) {
-  wx.request({
-    method: 'POST',
-    url: `${app.globalData.apiBase}/topics/${topicId}/unsubscribe?from=miniProgram`,
-    data: {
-      data: {
-        attributes: { userId }
+function getGroupSubscribedTopicIds(groupId) {
+  const url = `${app.globalData.apiBase}/users/${groupId}/favorite-topic-ids`;
+  return new Promise((resolve, reject) => {
+    wx.request({
+      url,
+      success(res) {
+        resolve(res.data.data);
       },
-      meta: {
-        action: 'unsubscribeTopic'
+      fail(res) {
+        reject(res);
       }
-    },
-    success(res) {
-      cb(res);
-    },
-    fail() {
-      console.log('Topic.unsubscribe fail');
-    }
+    });
   });
 }
+
+function getSubscribedTopicIds(userId, force) {
+  if (force || !_subscribedTopicIds) {
+    const url = `${app.globalData.apiBase}/users/${userId}/favorite-topic-ids`;
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url,
+        success(res) {
+          _subscribedTopicIds = res.data.data || [];
+          resolve(_subscribedTopicIds);
+        },
+        fail(res) {
+          reject(res);
+        }
+      });
+    });
+  } else {
+    // return data from the cache
+    return new Promise((resolve, reject) => {
+      resolve(_subscribedTopicIds);
+    });
+  }
+}
+
 
 module.exports = {
   subscribe,
-  unsubscribe
+  unsubscribe,
+  getSubscribedTopicIds,
+  getGroupSubscribedTopicIds
 };

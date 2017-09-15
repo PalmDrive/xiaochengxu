@@ -11,6 +11,7 @@ Page({
   closeHint: function () {
     util.closeHint(this);
   },
+
   onLoad: function (options) {
     this.setData({
       loadingStatus: 'LOADING'
@@ -38,6 +39,7 @@ Page({
       });
     });
   },
+
   /**
    * 数据加载 成功 回调
    */
@@ -47,6 +49,13 @@ Page({
       groups: res.data.data
     });
   },
+
+  gotoNewGroup() {
+    wx.navigateTo({
+      url: '../groups/new-group'
+    });
+  },
+
   /**
    * 
    */
@@ -69,7 +78,7 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  onShareAppMessage() {
     return {
       title: '我的群头条'
     };

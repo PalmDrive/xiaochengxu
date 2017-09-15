@@ -17,7 +17,8 @@ const setLocalUserId = userId => {
 };
 
 // page is the page obj
-const login = (cb, page, app = getApp()) => {
+const login = (cb, page, app) => {
+  if (!app) app = getApp();
   const apiBase = app.globalData.apiBase;
   
   wx.login({
@@ -79,9 +80,9 @@ const login = (cb, page, app = getApp()) => {
             console.log('request "wechat/xiaochengxu/on-login" fail');
             console.log(e);
           }
-        })
+        });
       } else {
-        console.log('获取用户登录态失败！' + res.errMsg)
+        console.log('获取用户登录态失败！' + res.errMsg);
       }
     },
     fail() { console.log('wx.login fail'); }

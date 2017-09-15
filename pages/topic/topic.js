@@ -58,13 +58,12 @@ Page({
     }
   },
   clickSubscribe(event) {
-    const that = this,
-      topic = that.data.topic,
+    const topic = that.data.topic,
       topicId = that.data.topicId,
       userId = Auth.getLocalUserId(),
       userInfo = Auth.getLocalUserInfo();
     if (userId) {
-      if (that.data.subscribeButton === '订阅') {
+      if (this.data.subscribeButton === '订阅') {
         util.gaEvent({
           cid: userId,
           ec: `topic_name:${topic.attributes.name}, topic_id:${topicId}`,
@@ -72,15 +71,17 @@ Page({
           el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
           ev: 3
         });
-        that.setData({subscribeButton: '订阅中...'});
-        Topic.subscribe(userId, topicId, () => {
-          that.setData({subscribeButton: '已订阅'});
-        });
-      } else if (that.data.subscribeButton === '已订阅') {
-        that.setData({subscribeButton: '取消中...'});
-        Topic.unsubscribe(userId, topicId, () => {
-          that.setData({subscribeButton: '订阅'});
-        });
+        this.setData({subscribeButton: '订阅中...'});
+        Topic.subscribe(userId, topicId)
+          .then(() => {
+            this.setData({subscribeButton: '已订阅'});
+          });
+      } else if (this.data.subscribeButton === '已订阅') {
+        this.setData({subscribeButton: '取消中...'});
+        Topic.unsubscribe(userId, topicId)
+          .then(() => {
+            this.setData({subscribeButton: '订阅'});
+          });
       }
     }
   },

@@ -6,7 +6,9 @@
     "pages/topic/topic",
     "pages/medium/medium",
     "pages/my/my",
-    "pages/groups/group"
+    "pages/groups/group",
+    "pages/groups/new-group",
+    "pages/topics/select-topics"
   ],
   "window":{
     "backgroundTextStyle":"dark",
