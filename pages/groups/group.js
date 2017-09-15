@@ -5,7 +5,7 @@ const app = getApp(),
 function loadData(groupId, lastDate) {
   return new Promise((resolve, reject) => {
     wx.request({
-      url: `${app.globalData.apiBase}/users/${groupId}/group-topics-24hours?date=${lastDate}&from=miniProgram`,
+      url: `${app.globalData.apiBase}/groups/${groupId}/topics-24hours?date=${lastDate}&from=miniProgram`,
       success(res) {
         resolve(res.data);
       },
@@ -38,24 +38,6 @@ Page({
       loadingStatus: 'LOADING'
     });
     Auth.getLocalUserId() && this._load();
-
-    wx.request({
-      method: 'POST',
-      url: `${app.globalData.apiBase}/user-groups?from=miniProgram`,
-      data: {
-        data: {
-          attributes: {
-            userId: Auth.getLocalUserId(),
-            groupId: options.id
-          }
-        },
-      },
-      success: res => {
-        this.setData({
-          viewsCount: res.data.data.attributes.viewsCount
-        });
-      }
-    });
   },
 
   onShow() {
