@@ -1,5 +1,15 @@
 const nameSpace = 'zdk_xiaochengxu';
 
+const {request} = require('request');
+
+const getLocalJWT = () => {
+  return wx.getStorageSync(`${nameSpace}:jwt`);
+};
+
+const setLocalJWT = jwt => {
+  wx.setStorageSync(`${nameSpace}:jwt`, jwt);
+};
+
 const getLocalUserInfo = () => {
   return wx.getStorageSync(`${nameSpace}:userInfo`);
 };
@@ -14,6 +24,23 @@ const getLocalUserId = () => {
 
 const setLocalUserId = userId => {
   wx.setStorageSync(`${nameSpace}:userId`, userId);
+};
+
+const _initPage = page => {
+  page.onLoad();
+  const systemInfo = wx.getSystemInfoSync();
+  let title, content;
+  if (systemInfo.platform === 'ios') {
+    title = 'iOS用户福利';
+    content = 'App Store中下载“职得看”，获得更好体验。';
+  } else {
+    title = '小程序Tips';
+    content = '点击右上角按钮，选择“添加到桌面”，可随时访问。';
+  }
+  page.setData({
+    showHint: true,
+    firstLoginHint: {title, content}
+  });
 };
 
 // page is the page obj
@@ -62,7 +89,8 @@ const login = (cb, page, app) => {
                       wxUsername: userInfo.nickName,
                       gender: userInfo.gender,
                       profilePicUrl: userInfo.avatarUrl
-                    }, cb, page);
+                    }, page)
+                      .then(cb);
                   },
                   fail() {
                     console.log('request wechat/xiaochengxu/decrypt fail');
@@ -99,8 +127,8 @@ const login = (cb, page, app) => {
  * @param  {Function}
  * @param  {Page}
  */
-const loginRequest = (apiBase, data, cb, page) => {
-  wx.request({
+const loginRequest = (apiBase, data, page) => {
+  return request({
     method: 'POST',
     url: `${apiBase}/users/login?from=miniProgram`,
     data: {
@@ -110,34 +138,21 @@ const loginRequest = (apiBase, data, cb, page) => {
       meta: {
         loginType: 'wxUnionId'
       }
-    },
-    success(res) {
-      const userId = res.data.data.id;
+    }
+  })
+    .then(data => {
+      const userId = data.data.id,
+            jwt = data.data.accessToken;
       console.log('userId:', userId);
+      console.log('jwt:', jwt);
       setLocalUserId(userId);
-      cb && cb();
+      setLocalJWT(jwt);
       !page && (page = getCurrentPages()[0]);
       if (page) {
-        page.onLoad();
-        const systemInfo = wx.getSystemInfoSync();
-        let title, content;
-        if (systemInfo.platform === 'ios') {
-          title = 'iOS用户福利';
-          content = 'App Store中下载“职得看”，获得更好体验。';
-        } else {
-          title = '小程序Tips';
-          content = '点击右上角按钮，选择“添加到桌面”，可随时访问。';
-        }
-        page.setData({
-          showHint: true,
-          firstLoginHint: {title, content}
-        });
+        _initPage(page);
       }
-    },
-    fail() {
-      console.log('request /users/login fail');
-    }
-  });
+      return data.data;
+    }, () => console.log('request /users/login fail'));
 }
 
 module.exports = {
@@ -145,5 +160,7 @@ module.exports = {
   getLocalUserInfo,
   setLocalUserInfo,
   getLocalUserId,
-  setLocalUserId
+  setLocalUserId,
+  getLocalJWT,
+  setLocalJWT
 };
