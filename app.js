@@ -1,16 +1,16 @@
 //app.js
 App({
   onLaunch: function() {
-    const Auth = require('utils/auth'),
-          {getSubscribedTopicIds} = require('utils/topic');
+    const Auth = require('utils/auth');
 
     const _afterLogin = () => {
+      const {getSubscribedTopicIds} = require('utils/topic');
       // Async fetch the user's subscribed topic ids
       getSubscribedTopicIds(Auth.getLocalUserId(), true);
     };
 
     //检查storage里是否有userId，没有则请求
-    if (!Auth.getLocalUserId()) Auth.login(_afterLogin, null, this);
+    if (!Auth.getLocalUserId() || true) Auth.login(_afterLogin, null, this);
   },
 
   getUserInfo: function(cb) {
