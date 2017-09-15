@@ -7,7 +7,7 @@
   </view>
 
   <view hidden="{{loading}}">
-    <view class="userinfo">
+    <view class="userinfo" wx:if="{{userInfo}}">
       <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
       <text class="userinfo-nickname text-bold size-20">{{userInfo.nickName}}</text>
     </view>

@@ -3,34 +3,49 @@ const app = getApp(),
     Auth = require('../../utils/auth');
 Page({
   data: {
-    loadingView: {
-      loading: true,
-    },
-    dateList: []
+    loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
+    dateList: [],
+    showHint: false
+  },
+  //关闭首次登陆弹窗
+  closeHint: function () {
+    util.closeHint(this);
   },
 
-  onLoad(options) {
-    this.load();
+  onLoad: function (options) {
+    this.setData({
+      loadingStatus: 'LOADING'
+    });
+    Auth.getLocalUserId() && this._load().then(this._loadOver);
+  },
+
+  onShow() {
+    util.ga({
+      cid: Auth.getLocalUserId(),
+      dp: '%2FtoutiaoTab_XiaoChengXu',
+      dt: '群头条tab页（小程序）'
+    });
   },
 
   /**
    * 加载数据
    */
-  load(event) {
-    wx.request({
-      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram`,
-      success: this.loadOver
+  _load() {
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram`,
+        success: resolve,
+        fail: reject
+      });
     });
   },
 
   /**
    * 数据加载 成功 回调
    */
-  loadOver(res) {
-    console.log(res.data);
-    console.log('----------')
+  _loadOver: function (res) {
     this.setData({
-      loadingView: null,
+      loadingStatus: null,
       groups: res.data.data
     });
   },
@@ -44,8 +59,17 @@ Page({
   /**
    * 
    */
-  goGroups(event) {
-    const userId = event.currentTarget.dataset.id;
+  gotoGroup: function (event) {
+    const userId = event.currentTarget.dataset.id,
+          name = event.currentTarget.dataset.name,
+          userInfo = Auth.getLocalUserInfo();
+    util.gaEvent({
+      cid: Auth.getLocalUserId(),
+      ev: 0,
+      ea: 'click_toutiao_in_toutiaoTab',
+      ec: `toutiao_name:${name},toutiao_id:${userId}`,
+      el: `user_name:${userInfo.nickName},user_id:${userId}`
+    });
     wx.navigateTo({
       url: `../groups/group?id=${userId}`
     });
@@ -58,5 +82,14 @@ Page({
     return {
       title: '我的群头条'
     };
+  },
+  /**
+   * 下拉刷新
+   */
+  onPullDownRefresh: function () {
+    this._load().then(res => {
+      wx.stopPullDownRefresh();
+      this._loadOver(res);
+    });
   }
 });
