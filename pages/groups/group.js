@@ -1,20 +1,16 @@
 const app = getApp(),
     util = require('../../utils/util'),
-    Auth = require('../../utils/auth');
+    Auth = require('../../utils/auth'),
+    {request} = require('../../utils/request');
 
 function loadData(groupId, lastDate) {
-  return new Promise((resolve, reject) => {
-    wx.request({
-      url: `${app.globalData.apiBase}/groups/${groupId}/topics-24hours?date=${lastDate}&from=miniProgram`,
-      success(res) {
-        resolve(res.data);
-      },
-      fail(err) {
-        reject(err);
-      }
-    });
+  return request({
+    url: `${app.globalData.apiBase}/groups/${groupId}/topics-24hours?date=${lastDate}&from=miniProgram`,
   });
 }
+
+let didUserPay = false;
+const PAID_USER_ROLE = 2;
 
 Page({
   data: {
@@ -25,19 +21,36 @@ Page({
     dateList: [],
     newMediaCount: 0, // 今日更新数量
     viewsCount: 0,
-    wxCode: null, // 群主微信号
-    showHint: false
+    groupInfo: {},
+    showHint: false,
+    isPaidGroup: false,
+    bannerImage: {}
   },
+
   //关闭首次登陆弹窗
   closeHint: function () {
     util.closeHint(this);
   },
-  onLoad: function (options) {
-    this.setData({
-      groupId: options.id,
-      loadingStatus: 'LOADING'
+
+  onLoad(options) {
+    const bannerImageRatio = 375 / 400, // width / height
+          updates = {
+            groupId: options.id,
+            loadingStatus: 'LOADING'
+          },
+          that = this;
+    
+    wx.getSystemInfo({
+      success(res) {
+        updates.bannerImage = {height: res.windowWidth / bannerImageRatio};
+        that.setData(updates);
+        Auth.getLocalUserId() && that._load();
+      },
+      fail() {
+        updates.bannerImage = {height: 400};
+        that.setData(updates);
+      }
     });
-    Auth.getLocalUserId() && this._load();
   },
 
   onShow() {
@@ -73,7 +86,9 @@ Page({
             el: `toutiao_name:${this.data.userName},toutiao_id:${this.data.groupId}`,
             ev: 0
           };
-    util.goToMedium(event, gaOptions);
+    if (!this.data.isPaidGroup || didUserPay) {
+      util.goToMedium(event, gaOptions);
+    }
   },
   /**
    * 加载数据
@@ -93,19 +108,22 @@ Page({
     if (!res.data || !res.data.length) {
       return this.setData({loadingStatus: 'LOADED_ALL'});
     }
-    const today = new Date(res.meta.mediumLastDate);
+    const today = new Date(res.meta ? res.meta.mediumLastDate : new Date());
     dateList.push({
       date: '· ' + util.formatDateToDay(today) + ' 周' + '日一二三四五六'[today.getDay()],
       topics: res.data
     });
-    const groupInfo = res.included[0].attributes.groupInfo && JSON.parse(res.included[0].attributes.groupInfo);
+    const group = res.included[0], 
+          groupInfo = group.attributes.groupInfo;
     updates.dateList = dateList;
     updates.userName = res.included[0].attributes.username;
-    updates.wxCode = groupInfo && groupInfo.wxCode;
-    updates.lastDate = res.meta.mediumLastDate;
+    updates.groupInfo = groupInfo;
+    updates.lastDate = res.meta ? res.meta.mediumLastDate : null;
     updates.loadingStatus = null;
+    updates.isPaidGroup = res.data[0].type === 'morningPosts';
 
     const totalMediaCount = this._countMedia();
+    didUserPay = group.relationships && group.relationships.userGroup.data.attributes.role === PAID_USER_ROLE;
 
     if (!this.data.newMediaCount) {
       updates.newMediaCount = totalMediaCount;
@@ -146,7 +164,7 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom() {
-    if (!this.data.loadingStatus) {
+    if (!this.data.loadingStatus && !this.data.isPaidGroup) {
       this.setData({loadingStatus: 'LOADING_MORE'});
       this._load();
     }
