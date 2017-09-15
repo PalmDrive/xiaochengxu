@@ -1,9 +1,16 @@
-const Auth = require('utils/auth');
+const Auth = require('utils/auth'),
+      {getSubscribedTopicIds} = require('utils/topic');
+
+const _afterLogin = () => {
+  // Async fetch the user's subscribed topic ids
+  getSubscribedTopicIds(Auth.getLocalUserId(), true);
+};
+
 //app.js
 App({
   onLaunch: function() {
     //检查storage里是否有userId，没有则请求
-    if (!Auth.getLocalUserId()) Auth.login(null, null, this);
+    if (!Auth.getLocalUserId()) Auth.login(_afterLogin, null, this);
   },
 
   getUserInfo: function(cb) {
