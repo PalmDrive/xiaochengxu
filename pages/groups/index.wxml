@@ -1,0 +1,31 @@
+<view class="create">
+  <view class="text">为你的群创建一个群头条吧，你可以为他们订阅相关的热门资讯和行业观点</view>
+  <view class="createGroup">创建群头条</view>
+</view>
+
+<view class="groups">
+  <view class="group">
+    <view class="group-title">
+      <text class="group-name">设计师白人白天2群-马力</text>
+      <text class="group-pageview">点击：333</text>
+      <text class="group-update-count">8月9日更新34篇</text>
+    </view>
+    <view class="media">
+      <view class="medium">李开复：我反对马斯克“AI末日论”，科幻跟</view>
+      <view class="medium">李开复：我反对马斯克“AI末日论”，科幻跟</view>
+      <view class="medium">李开复：我反对马斯克“AI末日论”，科幻跟</view>
+    </view>
+    <view class="group-bottom">
+      <view class="like-count">
+        <image class="icon" src="../../images/like.png"></image>
+        <text>23</text>
+      </view>
+      <view class="shar-count">
+        <image class="icon" src="../../images/shar.png"></image>
+        <text>23</text>
+      </view>
+      <view class="update-count">| 查看全部12篇 ></view>
+    </view>
+  </view>
+  
+</view>

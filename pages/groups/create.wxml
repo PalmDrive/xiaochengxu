@@ -1,0 +1,14 @@
+<view class="container">
+  <view class="form container">
+    <input name="name" type="text" class="name" placeholder="群标题"></input>
+    <textarea name="detail" id="" cols="30" rows="10" class="detail" placeholder="填写一下入群福利吧 \n 1. 群头条的每日更新提醒2. 其他群福利（如线下活动&群内红包）3. 群主微信号（如果有群拉新需求）"></textarea>
+    <view class="detail">
+      填写一下入群福利吧
+      1. 群头条的每日更新提醒
+      2. 其他群福利（如线下活动&群内红包）
+      3. 群主微信号（如果有群拉新需求）
+    </view>
+  </view>
+  <view class="text-number">3/40</view>
+  <button>创建群头条</button>
+</view>
