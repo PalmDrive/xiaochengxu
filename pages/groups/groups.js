@@ -8,11 +8,11 @@ Page({
     showHint: false
   },
   //关闭首次登陆弹窗
-  closeHint: function () {
+  closeHint() {
     util.closeHint(this);
   },
 
-  onLoad: function (options) {
+  onLoad(options) {
     this.setData({
       loadingStatus: 'LOADING'
     });
@@ -43,7 +43,7 @@ Page({
   /**
    * 数据加载 成功 回调
    */
-  _loadOver: function (res) {
+  _loadOver(res) {
     this.setData({
       loadingStatus: null,
       groups: res.data.data
@@ -59,7 +59,7 @@ Page({
   /**
    * 
    */
-  gotoGroup: function (event) {
+  gotoGroup(event) {
     const userId = event.currentTarget.dataset.id,
           name = event.currentTarget.dataset.name,
           userInfo = Auth.getLocalUserInfo();
@@ -86,7 +86,7 @@ Page({
   /**
    * 下拉刷新
    */
-  onPullDownRefresh: function () {
+  onPullDownRefresh() {
     this._load().then(res => {
       wx.stopPullDownRefresh();
       this._loadOver(res);

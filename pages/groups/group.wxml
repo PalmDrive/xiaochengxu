@@ -4,10 +4,20 @@
 <import src="../../templates/loading.wxml"/>
 <include src="../../includes/hint.wxml"/>
 
+<view class="modal-container" hidden="{{!modalShown}}">
+  <view class="modal">
+    <image src="../../images/paid-group/产品经理@3x.png" class="modal-bg"></image>
+    <button class="size-14 text-white" bindtap="copyWechatId">一键复制微信号</button>
+    <image src="../../images/paid-group/close.png" class="btn-close" bindtap="toggleModalShown"></image>
+  </view>
+  <view class="modal-drop"></view>
+</view>
+
 <view class="container" scroll-y bindscrolltolower="loadMore" lower-threshold="200">
   <view wx:if="{{loadingStatus !== 'LOADING'}}">
     <view wx:if="{{isPaidGroup}}">
       <image src="{{groupInfo.picurl}}" mode="aspectFill" class="head-banner-image" style="height: {{bannerImage.height}}px"></image>
+       <!-- <image src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/morningpost/0607/%E8%81%8C%E5%B0%8F%E5%85%B5.jpeg" mode="aspectFit" bindlongpress="scanCode"></image> -->
     </view>
     <view wx:if="{{!isPaidGroup}}" class="head">
       <text class="group-name size-18">{{userName}}</text>

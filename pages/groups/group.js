@@ -23,6 +23,7 @@ Page({
     viewsCount: 0,
     groupInfo: {},
     showHint: false,
+    modalShown: false,
     isPaidGroup: false,
     bannerImage: {}
   },
@@ -88,6 +89,8 @@ Page({
           };
     if (!this.data.isPaidGroup || didUserPay) {
       util.goToMedium(event, gaOptions);
+    } else {
+      this.toggleModalShown();
     }
   },
   /**
@@ -188,5 +191,27 @@ Page({
         this.data.dateList = new Array();
         this._onLoadSuccess(res)
       });
+  },
+
+  copyWechatId() {
+    const wechatId = 'zhixiaobin123';
+    wx.setClipboardData({
+      data: wechatId,
+      success() {
+        wx.showToast({
+          title: '复制成功'
+        });
+      },
+      fail() {
+        wx.showToast({
+          title: '哎呀，复制失败了。麻烦手动复制吧。'
+        });
+      }
+    })
+  },
+
+  toggleModalShown() {
+    const modalShown = !this.data.modalShown;
+    this.setData({modalShown});
   }
 })
