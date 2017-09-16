@@ -1,4 +1,13 @@
 //app.js
+const env = 'production';
+//const env = 'dev';
+
+const API_BASES = {
+  production: 'https://ainterest-service-production.ailingual.cn/api/v1',
+  staging: 'https://ainterest-service-staging.ailingual.cn/api/v1',
+  dev: 'http://localhost:5000/api/v1'
+};
+
 App({
   onLaunch: function() {
     const Auth = require('utils/auth');
@@ -10,7 +19,7 @@ App({
     };
 
     //检查storage里是否有userId，没有则请求
-    if (!Auth.getLocalUserId() || true) Auth.login(_afterLogin, null, this);
+    if (!Auth.getLocalUserId() || !Auth.getLocalJWT()) Auth.login(_afterLogin, null, this);
   },
 
   getUserInfo: function(cb) {
@@ -31,8 +40,6 @@ App({
 
   globalData: {
     userInfo: null,
-    apiBase: 'https://ainterest-service-production.ailingual.cn/api/v1',
-    // apiBase: 'https://ainterest-service-staging.ailingual.cn/api/v1',
-    // apiBase: 'http://localhost:5000/api/v1',
+    apiBase: API_BASES[env],
   }
 })
