@@ -13,10 +13,16 @@ Page({
   },
 
   onLoad(options) {
+    const userId = Auth.getLocalUserId();
+    //console.log('groups page on load called. userId:', userId);
     this.setData({
       loadingStatus: 'LOADING'
     });
-    Auth.getLocalUserId() && this._load().then(this._loadOver);
+    if (userId) {
+      //console.log('calling _load');
+      this._load()
+        .then(this._loadOver);
+    }
   },
 
   onShow() {

@@ -177,8 +177,9 @@ Page({
    * 分享给好友 事件
    */
   onShareAppMessage: function () {
+    const title = this.data.isPaidGroup ? this.data.userName : `你的群头条: 今日更新${this.data.newMediaCount}篇`;
     return {
-      title: `你的群头条: 今日更新${this.data.newMediaCount}篇`
+      title
     }
   },
   /**

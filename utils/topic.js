@@ -62,7 +62,7 @@ function unsubscribe(userId, topicId, isForGroup) {
 }
 
 function getGroupSubscribedTopicIds(groupId) {
-  const url = `${app.globalData.apiBase}/users/${groupId}/favorite-topic-ids`;
+  const url = `${app.globalData.apiBase}/users/${groupId}/favorite-topic-ids?from=miniProgram`;
   return new Promise((resolve, reject) => {
     wx.request({
       url,
@@ -78,7 +78,7 @@ function getGroupSubscribedTopicIds(groupId) {
 
 function getSubscribedTopicIds(userId, force) {
   if (force || !_subscribedTopicIds) {
-    const url = `${app.globalData.apiBase}/users/${userId}/favorite-topic-ids`;
+    const url = `${app.globalData.apiBase}/users/${userId}/favorite-topic-ids?from=miniProgram`;
     return new Promise((resolve, reject) => {
       wx.request({
         url,
