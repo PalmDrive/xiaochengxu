@@ -68,13 +68,13 @@ Page({
   gotoGroup(event) {
     const userId = event.currentTarget.dataset.id,
           name = event.currentTarget.dataset.name,
-          userInfo = Auth.getLocalUserInfo();
+          userInfo = Auth.getLocalUserInfo().attributes || {};
     util.gaEvent({
       cid: Auth.getLocalUserId(),
       ev: 0,
       ea: 'click_toutiao_in_toutiaoTab',
       ec: `toutiao_name:${name},toutiao_id:${userId}`,
-      el: `user_name:${userInfo.nickName},user_id:${userId}`
+      el: `user_name:${userInfo.wxUsername},user_id:${userId}`
     });
     wx.navigateTo({
       url: `../groups/group?id=${userId}`

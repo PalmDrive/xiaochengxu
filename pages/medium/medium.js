@@ -99,12 +99,12 @@ Page({
    */
   onShareAppMessage: function () {
     const medium = this.data.medium,
-      userInfo = Auth.getLocalUserInfo();
+      userInfo = Auth.getLocalUserInfo().attributes || {};
     util.gaEvent({
       cid: Auth.getLocalUserId(),
       ec: `article_title:${medium.attributes.title}, article_id:${medium.id}`,
       ea: 'share_article',
-      el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
+      el: `user_name:${userInfo.wxUsername}, user_id:${userInfo.openId}`,
       ev: 4
     });
     return {

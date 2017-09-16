@@ -41,12 +41,12 @@ Page({
   //点击文章
   goToMedium: function(event) {
     const medium = event.currentTarget.dataset.medium,
-      userInfo = Auth.getLocalUserInfo();
+      userInfo = Auth.getLocalUserInfo().attributes || {};
     const gaOptions = {
       cid: Auth.getLocalUserId(),
       ec: `article_title:${medium.attributes.title}, article_id:${medium.id}`,
       ea: 'click_article_in_riduTab',
-      el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
+      el: `user_name:${userInfo.wxUsername}, user_id:${userInfo.openId}`,
       ev: 0
     };
     util.goToMedium(event, gaOptions);
