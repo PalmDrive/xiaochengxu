@@ -22,23 +22,6 @@ const getLocalUserId = () => {
   return getLocalUserInfo().id;
 };
 
-const _initPage = page => {
-  page.onLoad();
-  const systemInfo = wx.getSystemInfoSync();
-  let title, content;
-  if (systemInfo.platform === 'ios') {
-    title = 'iOS用户福利';
-    content = 'App Store中下载“职得看”，获得更好体验。';
-  } else {
-    title = '小程序Tips';
-    content = '点击右上角按钮，选择“添加到桌面”，可随时访问。';
-  }
-  page.setData({
-    showHint: true,
-    firstLoginHint: {title, content}
-  });
-};
-
 /**
  * Get code and send to the server 
  * The server uses the code to get the basic info
@@ -90,7 +73,7 @@ const _getWechatBaseUserInfo = function() {
  *
  * @notes: DO NOT use es6 =>, because the context 'this' needs to be passed
  */
-const login = function(page) {
+const login = function() {
   const userInfo = {};
   return _getWechatBaseUserInfo.call(this)
     .then(data => {
@@ -110,7 +93,7 @@ const login = function(page) {
           },
           complete() {
             console.log('getUserInfo complete called');
-            _loginRequest.call(this, userInfo, page)
+            _loginRequest.call(this, userInfo)
               .then(resolve, reject);
           }
         })
@@ -125,13 +108,11 @@ const login = function(page) {
  *           gender
  *           profilePicUrl
  *         }
- * @param  {Function}
- * @param  {Page}
  * @return {Promise} The resolved data is the data from the server
  * 
  * @notes: DO NOT use es6 =>, because the context 'this' needs to be passed
  */
-const _loginRequest = function(userInfo, page) {
+const _loginRequest = function(userInfo) {
   const app = getApp() || this,
         apiBase = app.globalData.apiBase;
   return request({
@@ -151,16 +132,11 @@ const _loginRequest = function(userInfo, page) {
             jwt = data.data.accessToken;
       console.log('userId:', userId);
       console.log('jwt:', jwt);
-      //setLocalUserId(userId);
       setLocalJWT(jwt);
       setLocalUserInfo({
         id: userId,
         attributes: userInfo
       });
-      !page && (page = getCurrentPages()[0]);
-      if (page) {
-        _initPage(page);
-      }
       return data.data;
     }, () => console.log('request /users/login fail'));
 }
