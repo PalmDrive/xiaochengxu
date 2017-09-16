@@ -11,7 +11,7 @@ const setLocalJWT = jwt => {
 };
 
 const getLocalUserInfo = () => {
-  return wx.getStorageSync(`${nameSpace}:userInfo`);
+  return wx.getStorageSync(`${nameSpace}:userInfo`) || {};
 };
 
 const setLocalUserInfo = userInfo => {
@@ -19,11 +19,7 @@ const setLocalUserInfo = userInfo => {
 };
 
 const getLocalUserId = () => {
-  return wx.getStorageSync(`${nameSpace}:userId`);
-};
-
-const setLocalUserId = userId => {
-  wx.setStorageSync(`${nameSpace}:userId`, userId);
+  return getLocalUserInfo().id;
 };
 
 const _initPage = page => {
@@ -43,78 +39,83 @@ const _initPage = page => {
   });
 };
 
-// page is the page obj
-const login = (cb, page, app) => {
-  if (!app) app = getApp();
-  const apiBase = app.globalData.apiBase;
-  
-  wx.login({
-    success(res) {
-      if (res.code) {
-        //发起网络请求
-        wx.request({
-          url: `${apiBase}/wechat/xiaochengxu/on-login`,
-          data: {
-            code: res.code
-          },
-          success(res) {
-            const sessionKey = res.data['session_key'];
-
-            if (!sessionKey) {
-              return console.log('get session key fail');
+/**
+ * Get code and send to the server 
+ * The server uses the code to get the basic info
+ * @return {Promise}
+ * {
+ *   openid <string> 用户唯一标识
+ *   session_key<string> 会话密钥
+ *   unionid 用户在开放平台的唯一标识符。本字段在满足一定条件的情况下才返回。
+ * }
+ *
+ * @notes: DO NOT use es6 =>, because the context 'this' needs to be passed
+ */
+const _getWechatBaseUserInfo = function() {
+  const app = getApp() || this,
+        apiBase = app.globalData.apiBase;
+  return new Promise((resolve, reject) => {
+    // 获取登陆凭证code
+    wx.login({ 
+      success(res) { 
+        if (res.code) {
+           //用code, 通过服务器获取session_key
+          wx.request({
+            url: `${apiBase}/wechat/xiaochengxu/on-login?from=miniProgram`,
+            data: {
+              code: res.code
+            },
+            success(res) {
+              resolve(res.data);
+            },
+            fail(err) {
+              reject(err);
             }
-            // call wx.getUserInfo, send sessionKey, encryptedData and iv to get complete userInfo,
-            // save to globalData
-            wx.getUserInfo({
-              withCredentials: true,
-              success(res) {
-                wx.request({
-                  url: `${apiBase}/wechat/xiaochengxu/decrypt`,
-                  data: {
-                    encryptedData: res.encryptedData,
-                    iv: res.iv,
-                    sessionKey
-                  },
-                  success(res) {
-                    const userInfo = res.data.userInfo;
-                    setLocalUserInfo(userInfo);
-                    console.log('get userInfo success');
-                    console.log(userInfo);
-                    //获取userId
-                    if (!userInfo.unionId) {
-                      return console.log('userInfo does not have unionId');
-                    }
-                    loginRequest(apiBase, {
-                      wxUnionId: userInfo.unionId,
-                      wxUsername: userInfo.nickName,
-                      gender: userInfo.gender,
-                      profilePicUrl: userInfo.avatarUrl
-                    }, page)
-                      .then(cb);
-                  },
-                  fail() {
-                    console.log('request wechat/xiaochengxu/decrypt fail');
-                  }
-                });
-              },
-              fail() {
-                loginRequest(apiBase, {
-                  wxUnionId: res.data.unionid
-                }, cb, page);
-              }
-            });
-          },
-          fail(e) {
-            console.log('request "wechat/xiaochengxu/on-login" fail');
-            console.log(e);
-          }
-        });
-      } else {
-        console.log('获取用户登录态失败！' + res.errMsg);
+          })
+        } else {
+          console.log('获取用户登录态失败: ', res.errMsg);
+          reject(res.errMsg);
+        }
+      },
+      fail(err) {
+        reject(err);
       }
-    },
-    fail() { console.log('wx.login fail'); }
+    });
   });
+};
+
+/**
+ * @return {Promise} The resolved data is the data 
+ * from _loginRequest, which is the data from the login endpoint
+ *
+ * @notes: DO NOT use es6 =>, because the context 'this' needs to be passed
+ */
+const login = function(page) {
+  const userInfo = {};
+  return _getWechatBaseUserInfo.call(this)
+    .then(data => {
+      userInfo.wxUnionId = data.unionid;
+      return new Promise((resolve, reject) => {
+        // Ask user info
+        wx.getUserInfo({
+          success(res) {
+            const fetchedUserInfo = res.userInfo;
+            userInfo.wxUsername = fetchedUserInfo.nickName;
+            userInfo.gender = fetchedUserInfo.gender;
+            userInfo.profilePicUrl = fetchedUserInfo.avatarUrl;
+          },
+          fail(err) { // 用户没有授权获取用户信息
+            console.log('用户没有授权获取用户信息');
+            reject(err);
+          },
+          complete() {
+            console.log('getUserInfo complete called');
+            _loginRequest.call(this, userInfo, page)
+              .then(resolve, reject);
+          }
+        })
+      });
+    });
 };
 /**
  * @param  String
@@ -126,14 +127,19 @@ const login = (cb, page, app) => {
  *         }
  * @param  {Function}
  * @param  {Page}
+ * @return {Promise} The resolved data is the data from the server
+ * 
+ * @notes: DO NOT use es6 =>, because the context 'this' needs to be passed
  */
-const loginRequest = (apiBase, data, page) => {
+const _loginRequest = function(userInfo, page) {
+  const app = getApp() || this,
+        apiBase = app.globalData.apiBase;
   return request({
     method: 'POST',
     url: `${apiBase}/users/login?from=miniProgram`,
     data: {
       data: {
-        attributes: data
+        attributes: userInfo
       },
       meta: {
         loginType: 'wxUnionId'
@@ -145,8 +151,12 @@ const loginRequest = (apiBase, data, page) => {
             jwt = data.data.accessToken;
       console.log('userId:', userId);
       console.log('jwt:', jwt);
-      setLocalUserId(userId);
+      //setLocalUserId(userId);
       setLocalJWT(jwt);
+      setLocalUserInfo({
+        id: userId,
+        attributes: userInfo
+      });
       !page && (page = getCurrentPages()[0]);
       if (page) {
         _initPage(page);
@@ -160,7 +170,6 @@ module.exports = {
   getLocalUserInfo,
   setLocalUserInfo,
   getLocalUserId,
-  setLocalUserId,
   getLocalJWT,
   setLocalJWT
 };
