@@ -1,6 +1,7 @@
 //app.js
 const env = 'production';
 //const env = 'dev';
+const {reloadPage, showHint} = require('utils/util');
 
 const API_BASES = {
   production: 'https://ainterest-service-production.ailingual.cn/api/v1',
@@ -25,28 +26,11 @@ const getPage = () => {
   });
 };
 
-const _initPage = page => {
-  page.onLoad();
-  const systemInfo = wx.getSystemInfoSync();
-  let title, content;
-  if (systemInfo.platform === 'ios') {
-    title = 'iOS用户福利';
-    content = 'App Store中下载“职得看”，获得更好体验。';
-  } else {
-    title = '小程序Tips';
-    content = '点击右上角按钮，选择“添加到桌面”，可随时访问。';
-  }
-  page.setData({
-    showHint: true,
-    firstLoginHint: {title, content}
-  });
-};
-
 App({
   onShow() {
     const Auth = require('utils/auth');
 
-    //console.log('app on show');
+    console.log('app on show');
     // Auth.setLocalJWT(null);
     // Auth.setLocalUserInfo(null);
 
@@ -55,7 +39,17 @@ App({
       // Async fetch the user's subscribed topic ids
       getSubscribedTopicIds(Auth.getLocalUserId(), true);
       getPage()
-        .then(_initPage);     
+        //page.onLoad() do not work in the ios and android device
+        //while working in the simulator
+        //page.onLoad();
+        .then(page => {
+          reloadPage(page);
+          setTimeout(() => { // wait a bit for reloading
+            showHint();
+          }, 1500);
+        });
+
+      wx.showToast({title: '登陆成功'});     
     };
 
     //检查storage里是否有userId，没有则请求

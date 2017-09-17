@@ -13,7 +13,7 @@
   <view class="modal-drop"></view>
 </view>
 
-<view class="container" scroll-y bindscrolltolower="loadMore" lower-threshold="200">
+<view class="container" scroll-y bindscrolltolower="onReachBottom" lower-threshold="200">
   <view wx:if="{{loadingStatus !== 'LOADING'}}">
     <view wx:if="{{isPaidGroup}}">
       <image src="{{groupInfo.picurl}}" mode="aspectFill" class="head-banner-image" style="height: {{bannerImage.height}}px"></image>
@@ -31,7 +31,7 @@
   </view>
   <view class="list-container" wx:for="{{ dateList }}" wx:for-item="list" wx:key="">
     <view class="date-title size-12" wx:if="{{!isPaidGroup}}">{{ list.date }}</view>
-    <view class="topic" wx:for="{{ list.topics }}" wx:for-item="topic" wx:if="{{ topic.relationships.media.data.length > 0 }}" wx:key="">
+    <view class="topic" wx:for="{{ list.topics }}" wx:for-item="topic" wx:if="{{ topic.relationships.media.data.length > 0 || isPaidGroup}}" wx:key="">
       <view class="news-title">
         <!-- 正常的群头条 -->
         <view class="medium-list" bindtap="goToTopic" data-topic="{{topic}}" wx:if="{{!isPaidGroup}}">

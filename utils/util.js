@@ -152,6 +152,38 @@ function trimMediumTitle(m) {
   }
 }
 
+function reloadPage(page) {
+  const options = page.options || {};
+  let params = [],
+      url = '/' + page.route;
+  if (Object.keys(options).length) {
+    for (let key in options) {
+      params.push(`${key}=${options[key]}`);
+    }
+    params.join('&')
+    url += `?${params}`;
+  }
+  wx.reLaunch({url});
+}
+
+function showHint(page) {
+  page = page || getCurrentPages()[0];
+  const systemInfo = wx.getSystemInfoSync();
+  let title, content;
+  console.log('sys platform:', systemInfo.platform);
+  if (systemInfo.platform === 'ios') {
+    title = 'iOS用户福利';
+    content = 'App Store中下载“职得看”，获得更好体验。';
+  } else {
+    title = '小程序Tips';
+    content = '点击右上角按钮，选择“添加到桌面”，可随时访问。';
+  }
+  page.setData({
+    showHint: true,
+    firstLoginHint: {title, content}
+  });
+};
+
 module.exports = {
   formatTime,
   formatDateToDay,
@@ -161,8 +193,10 @@ module.exports = {
   formatMedium,
   goToMedium,
   goToTopic,
-  closeHint,
   ga,
   gaEvent,
-  trimMediumTitle
+  trimMediumTitle,
+  reloadPage,
+  showHint,
+  closeHint,
 };

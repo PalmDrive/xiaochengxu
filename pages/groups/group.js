@@ -34,6 +34,7 @@ Page({
   },
 
   onLoad(options) {
+    //console.log(getCurrentPages()[1]);
     const bannerImageRatio = 375 / 400, // width / height
           updates = {
             groupId: options.id,
