@@ -14,12 +14,12 @@ Page({
   //点击专题
   goToTopic: function(event) {
     const topic = event.currentTarget.dataset.topic,
-      userInfo = Auth.getLocalUserInfo();
+      userInfo = Auth.getLocalUserInfo().attributes || {};
     const gaOptions = {
       cid: Auth.getLocalUserId(),
       ec: `topic_name:${topic.attributes.name}, topic_id:${topic.id}`,
       ea: 'click_topic_in_zhuantiTab',
-      el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
+      el: `user_name:${userInfo.wxUsername}, user_id:${userInfo.openId}`,
       ev: 1
     };
     util.goToTopic(event, gaOptions);

@@ -61,14 +61,14 @@ Page({
     const topic = that.data.topic,
       topicId = that.data.topicId,
       userId = Auth.getLocalUserId(),
-      userInfo = Auth.getLocalUserInfo();
+      userInfo = Auth.getLocalUserInfo().attributes || {};
     if (userId) {
       if (this.data.subscribeButton === '订阅') {
         util.gaEvent({
           cid: userId,
           ec: `topic_name:${topic.attributes.name}, topic_id:${topicId}`,
           ea: 'subscribe_topic',
-          el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
+          el: `user_name:${userInfo.wxUsername}, user_id:${userInfo.openId}`,
           ev: 3
         });
         this.setData({subscribeButton: '订阅中...'});
@@ -211,12 +211,12 @@ Page({
    */
   onShareAppMessage: function () {
     const topic = this.data.topic,
-      userInfo = Auth.getLocalUserInfo();
+      userInfo = Auth.getLocalUserInfo().attributes || {};
     util.gaEvent({
       cid: Auth.getLocalUserId(),
       ec: `topic_name:${topic.attributes.name}, topic_id:${topic.id}`,
       ea: 'share_topic',
-      el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
+      el: `user_name:${userInfo.wxUsername}, user_id:${userInfo.openId}`,
       ev: 5
     });
     return {

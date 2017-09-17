@@ -1,6 +1,7 @@
 const app = getApp(),
     util = require('../../utils/util'),
-    Auth = require('../../utils/auth');
+    Auth = require('../../utils/auth'),
+    {request} = require('../../utils/request');
 Page({
   data: {
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
@@ -13,10 +14,16 @@ Page({
   },
 
   onLoad(options) {
+    const userId = Auth.getLocalUserId();
+    //console.log('groups page on load called. userId:', userId);
     this.setData({
       loadingStatus: 'LOADING'
     });
-    Auth.getLocalUserId() && this._load().then(this._loadOver);
+    if (userId) {
+      //console.log('calling _load');
+      this._load()
+        .then(this._loadOver);
+    }
   },
 
   onShow() {
@@ -31,12 +38,8 @@ Page({
    * 加载数据
    */
   _load() {
-    return new Promise((resolve, reject) => {
-      wx.request({
-        url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram`,
-        success: resolve,
-        fail: reject
-      });
+    return request({
+      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram`,
     });
   },
 
@@ -46,7 +49,7 @@ Page({
   _loadOver(res) {
     this.setData({
       loadingStatus: null,
-      groups: res.data.data
+      groups: res.data
     });
   },
 
@@ -62,13 +65,13 @@ Page({
   gotoGroup(event) {
     const userId = event.currentTarget.dataset.id,
           name = event.currentTarget.dataset.name,
-          userInfo = Auth.getLocalUserInfo();
+          userInfo = Auth.getLocalUserInfo().attributes || {};
     util.gaEvent({
       cid: Auth.getLocalUserId(),
       ev: 0,
       ea: 'click_toutiao_in_toutiaoTab',
       ec: `toutiao_name:${name},toutiao_id:${userId}`,
-      el: `user_name:${userInfo.nickName},user_id:${userId}`
+      el: `user_name:${userInfo.wxUsername},user_id:${userId}`
     });
     wx.navigateTo({
       url: `../groups/group?id=${userId}`

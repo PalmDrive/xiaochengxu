@@ -8,8 +8,8 @@
 
   <view hidden="{{loading}}">
     <view class="userinfo" wx:if="{{userInfo}}">
-      <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
-      <text class="userinfo-nickname text-bold size-20">{{userInfo.nickName}}</text>
+      <image class="userinfo-avatar" src="{{userInfo.profilePicUrl}}" background-size="cover"></image>
+      <text class="userinfo-nickname text-bold size-20">{{userInfo.wxUsername}}</text>
     </view>
 
     <view class="section-break"></view>

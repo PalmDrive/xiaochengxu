@@ -141,7 +141,7 @@ Page({
 
       const data = {
         loading: false,
-        userInfo: Auth.getLocalUserInfo(),
+        userInfo: Auth.getLocalUserInfo().attributes,
         userId,
         favoriteTopics: topics,
         loaded: true
