@@ -1,6 +1,7 @@
 const app = getApp(),
     util = require('../../utils/util'),
-    Auth = require('../../utils/auth');
+    Auth = require('../../utils/auth'),
+    {request} = require('../../utils/request');
 Page({
   data: {
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
@@ -37,12 +38,8 @@ Page({
    * 加载数据
    */
   _load() {
-    return new Promise((resolve, reject) => {
-      wx.request({
-        url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram`,
-        success: resolve,
-        fail: reject
-      });
+    return request({
+      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram`,
     });
   },
 
@@ -52,7 +49,7 @@ Page({
   _loadOver(res) {
     this.setData({
       loadingStatus: null,
-      groups: res.data.data
+      groups: res.data
     });
   },
 

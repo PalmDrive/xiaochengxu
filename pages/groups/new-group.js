@@ -1,4 +1,5 @@
 const app = getApp(),
+      {request} = require('../../utils/request'),
       Auth = require('../../utils/auth');
 
 const _createGroup = (groupName, creatorId) => {
@@ -9,47 +10,35 @@ const _createGroup = (groupName, creatorId) => {
             role: 'group'
           }
         };
-
-  return new Promise((resolve, reject) => {
-    wx.request({
-      url,
-      method: 'POST',
-      data: {
-        data,
-        meta: {
-          action: 'create_app_user'
-        }
-      },
-      success(res) {
-        const group = res.data.data,
-              data = {
-                data: {
-                  attributes: {
-                    groupId: group.id,
-                    userId: creatorId,
-                    role: 1
-                  }
-                }
-              };
-
-        // create userGroup
-        wx.request({
-          url: `${app.globalData.apiBase}/user-groups?from=miniProgram`,
-          method: 'POST',
-          data,
-          success(res2) {
-            resolve(group);
-          },
-          fail(res2) {
-            reject(res2);
-          }
-        });
-      },
-      fail(res) {
-        reject(res);
+  return request({
+    url,
+    method: 'POST',
+    data: {
+      data,
+      meta: {
+        action: 'create_app_user'
       }
+    }
+  })
+    .then(res => {
+      const group = res.data,
+            data = {
+              data: {
+                attributes: {
+                  groupId: group.id,
+                  userId: creatorId,
+                  role: 1
+                }
+              }
+            };
+      // create userGroup
+      return request({
+        url: `${app.globalData.apiBase}/user-groups?from=miniProgram`,
+        method: 'POST',
+        data
+      })
+        .then(() => group);
     });
-  });
 };
 
 Page({
