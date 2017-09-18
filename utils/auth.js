@@ -49,7 +49,12 @@ const _getWechatBaseUserInfo = function() {
               code: res.code
             },
             success(res) {
-              resolve(res.data);
+              if (res.statusCode.toString()[0] !== '2') {
+                console.log('Error in get base user info');
+                reject(res.data);
+              } else {
+                resolve(res.data);
+              }              
             },
             fail(err) {
               reject(err);
@@ -115,6 +120,11 @@ const login = function() {
 const _loginRequest = function(userInfo) {
   const app = getApp() || this,
         apiBase = app.globalData.apiBase;
+
+  if (!userInfo.wxUnionId) {
+    return new Promise((resolve, reject) => reject('wxUnionId missing'));
+  }
+
   return request({
     method: 'POST',
     url: `${apiBase}/users/login?from=miniProgram`,
