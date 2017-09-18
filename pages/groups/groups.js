@@ -39,7 +39,7 @@ Page({
    */
   _load() {
     return request({
-      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram`,
+      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram&include=media`,
     });
   },
 
@@ -47,6 +47,10 @@ Page({
    * 数据加载 成功 回调
    */
   _loadOver(res) {
+    res.data.forEach(group => {
+      group.lastPublishedAt = group.relationships.lastPublishedMedia[0]&&convertDate(new Date(group.relationships.lastPublishedMedia[0].attributes.publishedAt));
+      console.log(group.lastPublishedAt);
+    });
     this.setData({
       loadingStatus: null,
       groups: res.data
@@ -63,8 +67,8 @@ Page({
    * 
    */
   gotoGroup(event) {
-    const userId = event.currentTarget.dataset.id,
-          name = event.currentTarget.dataset.name,
+    const userId = event.currentTarget.dataset.group.id,
+          name = event.currentTarget.dataset.group.attributes.username,
           userInfo = Auth.getLocalUserInfo().attributes || {};
     util.gaEvent({
       cid: Auth.getLocalUserId(),
@@ -94,5 +98,40 @@ Page({
       wx.stopPullDownRefresh();
       this._loadOver(res);
     });
-  }
+  },
+  //点击文章
+  goToMedium: function(event) {
+    const medium = event.currentTarget.dataset.medium,
+          userInfo = Auth.getLocalUserInfo(),
+          gaOptions = {
+            cid: Auth.getLocalUserId(),
+            ec: `article_title:${medium.attributes.title},article_id:${medium.id}`,
+            ea: 'click_article_in_groupListPage',
+            el: `toutiao_name:${this.data.userName},toutiao_id:${this.data.groupId}`,
+            ev: 0
+          };
+    util.goToMedium(event, gaOptions);
+  },
 });
+
+function convertDate(date) {
+  const paramDate = date.getTime();
+  //获取js 时间戳
+  let time = new Date().getTime();
+  //去掉 js 时间戳后三位，与php 时间戳保持一致
+  time = parseInt((time - paramDate) / 1000);
+
+  //存储转换值
+  let s;
+  if (time < 60 * 60 * 24) {
+    //少于24小时
+    return '今日';
+  } else if ((time < 60 * 60 * 24 * 3) && (time >= 60 * 60 * 24)) {
+    //超过1天少于3天内
+    s = Math.floor(time / 60 / 60 / 24);
+    return s + '天前';
+  } else {
+    //超过3天
+    return (date.getMonth() + 1) + '月' + date.getDate() + '日';
+  }
+}
