@@ -1,11 +1,11 @@
 <import src="../../templates/loading.wxml"/>
 <include src="../../includes/hint.wxml"/>
-
+<!-- 
 <view class="create">
   <view class="text">为你的群创建一个群头条吧，你可以为他们订阅相关的热门资讯和行业观点</view>
   <view class="createGroup" bindtap="gotoNewGroup">创建群头条</view>
 </view>
-
+ -->
 <view class="groups">
   <view class="group" wx:for="{{groups}}" wx:for-item="group" wx:key>
     <view class="group-title" data-group="{{ group }}" bindtap="gotoGroup">
