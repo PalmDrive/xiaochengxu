@@ -48,7 +48,7 @@ Page({
    */
   _loadOver(res) {
     res.data.forEach(group => {
-      group.lastPublishedAt = group.relationships.lastPublishedMedia[0]&&convertDate(new Date(group.relationships.lastPublishedMedia[0].attributes.publishedAt));
+      group.lastPublishedAt = group.relationships.media.data&&convertDate(new Date(group.relationships.media.data[0].attributes.publishedAt));
       console.log(group.lastPublishedAt);
     });
     this.setData({

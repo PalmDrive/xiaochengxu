@@ -11,10 +11,10 @@
     <view class="group-title" data-group="{{ group }}" bindtap="gotoGroup">
       <text class="group-name">{{group.attributes.username}}</text>
       <text class="group-pageview">点击：333</text>
-      <text class="group-update-count">{{group.lastPublishedAt}}更新{{group.relationships.lastPublishedMedia.length}}篇</text>
+      <text class="group-update-count">{{group.lastPublishedAt}}更新{{group.relationships.media.data.length}}篇</text>
     </view>
     <view class="media">
-      <view class="medium" wx:for="{{group.relationships.lastPublishedMedia}}" wx:for-item="medium" wx:key data-medium="{{ medium }}" bindtap="goToMedium">{{medium.attributes.title}}</view>
+      <view class="medium" wx:for="{{group.relationships.media.data}}" wx:for-item="medium" wx:key data-medium="{{ medium }}" bindtap="goToMedium">{{medium.attributes.title}}</view>
     </view>
     <view class="group-bottom">
       <view class="like-count">
@@ -25,7 +25,7 @@
         <image class="icon" src="../../images/shar.png"></image>
         <text>23</text>
       </view>
-      <view class="update-count" data-group="{{ group }}" bindtap="gotoGroup">| 查看全部{{group.relationships.lastPublishedMedia.length}}篇 ></view>
+      <view class="update-count" data-group="{{ group }}" bindtap="gotoGroup">| 查看全部{{group.relationships.media.data.length}}篇 ></view>
     </view>
   </view>
 </view>
