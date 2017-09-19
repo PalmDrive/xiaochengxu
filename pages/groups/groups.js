@@ -54,8 +54,8 @@ Page({
       loadingStatus = 'LOADED_ALL';
     }
     res.data.forEach(group => {
-      const media = group.relationships.media.data;
-      group.lastPublishedAt = media&&convertDate(new Date(media[0].attributes.publishedAt));
+      const media = group.relationships.media;
+      group.lastPublishedAt = media&&convertDate(new Date(media.include.publishedAt));
     });
     this.data.page.number ++;
     this.setData({
