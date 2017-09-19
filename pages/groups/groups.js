@@ -56,7 +56,7 @@ Page({
     res.data.forEach(group => {
       if (group.attributes.role === 'group') {
         const media = group.relationships.media;
-        group.lastPublishedAt = media&&media.meta&&convertDate(new Date(media.meta.publishedAt));
+        group.lastPublishedAt = media && media.meta && convertDate(new Date(media.meta.publishedAt));
       }
     });
     this.data.page.number ++;

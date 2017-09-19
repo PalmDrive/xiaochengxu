@@ -25,7 +25,7 @@
         <text class="group-pageviews size-12">阅读：{{groupInfo.pageviews}}</text>
         <text class="update-count size-12">今日更新 {{newMediaCount}} 篇</text>
       </view>
-      <text class="creator size-12 top-15" wx:if="{{wxCode}}">{{groupInfo.groupOwnerMessage}}</text>
+      <text class="creator size-12 top-15" wx:if="{{groupInfo.groupOwnerMessage}}">{{groupInfo.groupOwnerMessage}}</text>
       <!-- <view class="join-button size-12 top-25">添加</view> -->
     </view>
   </view>
