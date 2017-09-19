@@ -56,7 +56,7 @@ Page({
     res.data.forEach(group => {
       if (group.attributes.role === 'group') {
         const media = group.relationships.media;
-        group.lastPublishedAt = media&&convertDate(new Date(media.meta.publishedAt));
+        group.lastPublishedAt = media && media.meta && convertDate(new Date(media.meta.publishedAt));
       }
     });
     this.data.page.number ++;
@@ -115,6 +115,10 @@ Page({
    */
   onReachBottom() {
     if (this.data.loadingStatus === null) {
+      this.setData({
+        loadingStatus: 'LOADING_MORE'
+      })
+      console.log('LOADING_MORE');
       this._load().then(this._loadOver);
     }
   },

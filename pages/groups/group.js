@@ -19,8 +19,8 @@ Page({
     lastDate: null,
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
     dateList: [],
+
     newMediaCount: 0, // 今日更新数量
-    viewsCount: 0,
     groupInfo: {},
     showHint: false,
     modalShown: false,
@@ -79,9 +79,8 @@ Page({
   },
   //点击文章
   goToMedium: function(event) {
-    const medium = event.currentTarget.dataset.medium;
-        medium.id = 'aef0e9b0-99d4-11e7-b81d-f3e9f712edc9';
-        const  userInfo = Auth.getLocalUserInfo(),
+    const medium = event.currentTarget.dataset.medium,
+          userInfo = Auth.getLocalUserInfo(),
           gaOptions = {
             cid: Auth.getLocalUserId(),
             ec: `article_title:${medium.attributes.title},article_id:${medium.id}`,
