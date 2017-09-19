@@ -19,8 +19,8 @@ Page({
     lastDate: null,
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
     dateList: [],
+
     newMediaCount: 0, // 今日更新数量
-    viewsCount: 0,
     groupInfo: {},
     showHint: false,
     modalShown: false,

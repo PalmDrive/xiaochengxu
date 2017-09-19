@@ -2,7 +2,8 @@
 const app = getApp(),
       util = require('../../utils/util'),
       Auth = require('../../utils/auth'),
-      {getSubscribedTopicIds} = require('../../utils/topic');
+      {getSubscribedTopicIds} = require('../../utils/topic'),
+      {request} = require('../../utils/request');
       
 const tabs = ['推荐', '订阅'];
 
@@ -67,28 +68,26 @@ Page({
         url = `${app.globalData.apiBase}/media/feeds2?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}&from=miniProgram`;
       }
       // console.log(`loadMore request begin used ${new Date() - now}ms`);
-      wx.request({
-        url,
-        success(res) {
-          // console.log(`loadMore request used ${new Date() - now}ms`);
-          const media = res.data.data;
-          // console.log('loadMore media length:', media.length);
-          media.forEach(util.formatMedium);
+      request({
+        url
+      }).then(res => {
+        // console.log(`loadMore request used ${new Date() - now}ms`);
+        const media = res.data.data;
+        // console.log('loadMore media length:', media.length);
+        media.forEach(util.formatMedium);
 
-          const recommendNoMore = that.data.needRead && media.length < that.data.pageSize;
-          if (recommendNoMore) console.log('recommend no more');
+        const recommendNoMore = that.data.needRead && media.length < that.data.pageSize;
+        if (recommendNoMore) console.log('recommend no more');
 
-          that.setData({
-            media: that.data.media.concat(media),
-            loadingMore: false,
-            pageNumber: that.data.pageNumber + 1,
-            recommendNoMore
-          });
-          // console.log(`loadMore data set used ${new Date() - now}ms`);
-        },
-        fail(res) {
-          console.log('request more recommended media fail');
-        }
+        that.setData({
+          media: that.data.media.concat(media),
+          loadingMore: false,
+          pageNumber: that.data.pageNumber + 1,
+          recommendNoMore
+        });
+        // console.log(`loadMore data set used ${new Date() - now}ms`);
+      },res => {
+        console.log('request more recommended media fail');
       });
     }
   },
@@ -100,21 +99,19 @@ Page({
       that.setData({ loadingMoreSubscribe: true });
       const lastId = that.data.lastId;
       const url = `${app.globalData.apiBase}/media/subscribed-timeline?userId=${Auth.getLocalUserId()}&page[size]=${that.data.pageSize}&lastId=${lastId}`;
-      wx.request({
+      request({
         url,
-        success(res) {
-          const media = res.data.data;
-          media.forEach(util.formatMedium);
+      }).then(res => {
+        const media = res.data.data;
+        media.forEach(util.formatMedium);
 
-          that.setData({
-            subscribedTopicMedia: that.data.subscribedTopicMedia.concat(media),
-            loadingMoreSubscribe: false,
-            lastId: media[media.length - 1].id
-          });
-        },
-        fail(res) {
-          console.log('request more subscribed media fail');
-        }
+        that.setData({
+          subscribedTopicMedia: that.data.subscribedTopicMedia.concat(media),
+          loadingMoreSubscribe: false,
+          lastId: media[media.length - 1].id
+        });
+      },res => {
+        console.log('request more subscribed media fail');
       });
     }
   },
@@ -183,37 +180,35 @@ Page({
   onPullDownRefresh: function () {
     // this.onLoad({ pullDown: true });
     const that = this;
-    wx.request({
+    request({
       url: `${app.globalData.apiBase}/media/feeds2?from=miniProgram&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`,
-      success(res) {
-        // console.log('pull down refresh request success');
-        const media = res.data.data;
-        const len = media.length;
-        const lastInitedAt = res.data.meta && res.data.meta.now;
-        let needRead;
-        if (len) {
-          needRead = len < that.data.pageSize;
-          media.forEach(util.formatMedium);
-          const data = {
-            media,
-            pageNumber: 1,
-            needRead,
-            recommendNoMore: false
-          };
-          if (lastInitedAt) {
-            data.lastInitedAt = lastInitedAt;
-          }
-          that.setData(data);
+    }).then(res => {
+      // console.log('pull down refresh request success');
+      const media = res.data.data;
+      const len = media.length;
+      const lastInitedAt = res.data.meta && res.data.meta.now;
+      let needRead;
+      if (len) {
+        needRead = len < that.data.pageSize;
+        media.forEach(util.formatMedium);
+        const data = {
+          media,
+          pageNumber: 1,
+          needRead,
+          recommendNoMore: false
+        };
+        if (lastInitedAt) {
+          data.lastInitedAt = lastInitedAt;
         }
-        wx.stopPullDownRefresh();
-        if (needRead) {
-          that.loadMore();
-        }
-      },
-      fail(res) {
-        wx.stopPullDownRefresh();
-        console.log('request recommended media fail');
+        that.setData(data);
       }
+      wx.stopPullDownRefresh();
+      if (needRead) {
+        that.loadMore();
+      }
+    },res => {
+      wx.stopPullDownRefresh();
+      console.log('request recommended media fail');
     });
   },
 
@@ -235,37 +230,35 @@ Page({
   _load() {
     // console.log(`onLoad request begin used ${new Date() - now}ms`);
     //获取推荐文章
-    wx.request({
+    request({
       url: `${app.globalData.apiBase}/media/feeds2?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${this.data.pageSize}&from=miniProgram`,
-      success: (res) => {
-        // console.log(res.data);
-        // console.log(`onLoad request used ${new Date() - now}ms`);
-        const media = res.data.data;
-        const lastInitedAt = res.data.meta && res.data.meta.now;
-        const len = media.length;
-        const needRead = len < this.data.pageSize;
-        // console.log('onload recommend media length:', len);
-        media.forEach(util.formatMedium);
-        
-        const data = {
-          media,
-          loading: false,
-          needRead
-        };
-        if (lastInitedAt) {
-          data.lastInitedAt = lastInitedAt;
-        }
-        this.setData(data);
-        // console.log(`onLoad data set used ${new Date() - now}ms`);
-        wx.stopPullDownRefresh();
-
-        if (needRead) {
-          this.loadMore();
-        }
-      },
-      fail: (res) => {
-        console.log('request recommended media fail');
+    }).then(res => {
+      // console.log(res.data);
+      // console.log(`onLoad request used ${new Date() - now}ms`);
+      const media = res.data;
+      const lastInitedAt = res.meta && res.meta.now;
+      const len = media.length;
+      const needRead = len < this.data.pageSize;
+      // console.log('onload recommend media length:', len);
+      media.forEach(util.formatMedium);
+      
+      const data = {
+        media,
+        loading: false,
+        needRead
+      };
+      if (lastInitedAt) {
+        data.lastInitedAt = lastInitedAt;
       }
+      this.setData(data);
+      // console.log(`onLoad data set used ${new Date() - now}ms`);
+      wx.stopPullDownRefresh();
+
+      if (needRead) {
+        this.loadMore();
+      }
+    },res => {
+      console.log('request recommended media fail');
     });
   }
 })
