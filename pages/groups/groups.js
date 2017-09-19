@@ -7,7 +7,7 @@ Page({
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
     dateList: [],
     showHint: false,
-    page: {number: 1, size: 3},
+    page: {number: 1, size: 5},
     groups: []
   },
   //关闭首次登陆弹窗
