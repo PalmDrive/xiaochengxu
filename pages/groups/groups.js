@@ -6,7 +6,9 @@ Page({
   data: {
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
     dateList: [],
-    showHint: false
+    showHint: false,
+    page: {number: 1, size: 5},
+    groups: []
   },
   //关闭首次登陆弹窗
   closeHint() {
@@ -39,7 +41,7 @@ Page({
    */
   _load() {
     return request({
-      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram&include=media`,
+      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram&include=media&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}`,
     });
   },
 
@@ -47,13 +49,20 @@ Page({
    * 数据加载 成功 回调
    */
   _loadOver(res) {
+    let loadingStatus = null;
+    if (!res.data.length) {
+      loadingStatus = 'LOADED_ALL';
+    }
     res.data.forEach(group => {
-      const media = group.relationships.media.data;
-      group.lastPublishedAt = media&&convertDate(new Date(media[0].attributes.publishedAt));
+      if (group.attributes.role === 'group') {
+        const media = group.relationships.media;
+        group.lastPublishedAt = media&&convertDate(new Date(media.meta.publishedAt));
+      }
     });
+    this.data.page.number ++;
     this.setData({
-      loadingStatus: null,
-      groups: res.data
+      loadingStatus: loadingStatus,
+      groups: this.data.groups.concat(res.data)
     });
   },
 
@@ -94,10 +103,20 @@ Page({
    * 下拉刷新
    */
   onPullDownRefresh() {
+    this.data.page.number = 1;
+    this.data.groups = [];
     this._load().then(res => {
       wx.stopPullDownRefresh();
       this._loadOver(res);
     });
+  },
+  /**
+   * 上拉加载
+   */
+  onReachBottom() {
+    if (this.data.loadingStatus === null) {
+      this._load().then(this._loadOver);
+    }
   },
   //点击文章
   goToMedium: function(event) {
