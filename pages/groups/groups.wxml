@@ -8,15 +8,15 @@
  -->
 <view class="groups" scroll-y bindscrolltolower="onReachBottom" lower-threshold="200">
   <view class="group" wx:for="{{groups}}" wx:for-item="group" wx:key>
-    <view class="group-title" data-group="{{ group }}" bindtap="gotoGroup">
+    <view class="group-title" data-group="{{ group }}" bindtap="gotoGroup" style="background-color: {{['#212121','#727272','#B6B6B6','#795548','#607D8B','#FFC107','#CDDC39','#8BC34A','#505050'][index]}}">
       <text class="group-name">{{group.attributes.username}}</text>
-      <text class="group-pageview">点击：333</text>
-      <text class="group-update-count">{{group.lastPublishedAt}}更新{{group.relationships.media.include.count}}篇</text>
+      <!-- <text class="group-pageview">点击：333</text> -->
+      <text class="group-update-count" wx:if="{{group.lastPublishedAt}}">{{group.lastPublishedAt}}更新{{group.relationships.media.meta.count}}篇</text>
     </view>
     <view class="media">
       <view class="medium" wx:for="{{group.relationships.media.data}}" wx:for-item="medium" wx:key data-medium="{{ medium }}" bindtap="goToMedium">{{medium.attributes.title}}</view>
     </view>
-    <view class="group-bottom">
+    <view class="group-bottom" wx:if="{{group.relationships.media.meta.count}}">
       <view class="like-count">
         <image class="icon" src="../../images/like.png"></image>
         <text>23</text>
@@ -25,7 +25,7 @@
         <image class="icon" src="../../images/shar.png"></image>
         <text>23</text>
       </view>
-      <view class="update-count" data-group="{{ group }}" bindtap="gotoGroup">| 查看全部{{group.relationships.media.include.count}}篇 ></view>
+      <view class="update-count" data-group="{{ group }}" bindtap="gotoGroup">| 查看全部{{group.relationships.media.meta.count}}篇 ></view>
     </view>
   </view>
 </view>

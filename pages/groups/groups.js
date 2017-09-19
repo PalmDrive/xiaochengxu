@@ -54,8 +54,10 @@ Page({
       loadingStatus = 'LOADED_ALL';
     }
     res.data.forEach(group => {
-      const media = group.relationships.media;
-      group.lastPublishedAt = media&&convertDate(new Date(media.include.publishedAt));
+      if (group.attributes.role === 'group') {
+        const media = group.relationships.media;
+        group.lastPublishedAt = media&&convertDate(new Date(media.meta.publishedAt));
+      }
     });
     this.data.page.number ++;
     this.setData({
