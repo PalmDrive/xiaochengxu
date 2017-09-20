@@ -53,6 +53,7 @@ const _getWechatBaseUserInfo = function() {
                 console.log('Error in get base user info');
                 reject(res.data);
               } else {
+                console.log('base user data:', res.data);
                 resolve(res.data);
               }              
             },
@@ -83,6 +84,8 @@ const login = function() {
   return _getWechatBaseUserInfo.call(this)
     .then(data => {
       userInfo.wxUnionId = data.unionid;
+      userInfo.wxOpenId = data.openid;
+      userInfo.clientPlatform = 'wechatMiniApplet';
       return new Promise((resolve, reject) => {
         // Ask user info
         wx.getUserInfo({
