@@ -72,7 +72,7 @@ Page({
         url
       }).then(res => {
         // console.log(`loadMore request used ${new Date() - now}ms`);
-        const media = res.data.data;
+        const media = res.data;
         // console.log('loadMore media length:', media.length);
         media.forEach(util.formatMedium);
 
@@ -102,7 +102,7 @@ Page({
       request({
         url,
       }).then(res => {
-        const media = res.data.data;
+        const media = res.data;
         media.forEach(util.formatMedium);
 
         that.setData({
@@ -184,7 +184,7 @@ Page({
       url: `${app.globalData.apiBase}/media/feeds2?from=miniProgram&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`,
     }).then(res => {
       // console.log('pull down refresh request success');
-      const media = res.data.data;
+      const media = res.data;
       const len = media.length;
       const lastInitedAt = res.data.meta && res.data.meta.now;
       let needRead;
