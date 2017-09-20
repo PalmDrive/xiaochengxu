@@ -53,10 +53,18 @@ App({
     };
 
     //检查storage里是否有userId，没有则请求
-    if (!Auth.getLocalUserId() || !Auth.getLocalJWT()) {
+    const userInfo = Auth.getLocalUserInfo(),
+          userAttrs = userInfo.attributes || {};
+    if (!Auth.getLocalUserId() || !Auth.getLocalJWT() || !userAttrs.wxOpenId) {
       Auth.login.call(this)
-        .then(_afterLogin, err => {
-          console.log('auth.login err:', err);
+        .then(_afterLogin)
+        .catch(err => {
+          wx.showToast({
+            title: '微信登陆出错了, 请稍后再试',
+            duration: 3000,
+            icon: 'loading'
+          });
+          console.log('Auth.log err:', err);
         });
     }
   },
