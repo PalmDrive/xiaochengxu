@@ -83,7 +83,7 @@ const login = function() {
   const userInfo = {};
   return _getWechatBaseUserInfo.call(this)
     .then(data => {
-      userInfo.wxUnionId = data.unionid;
+      userInfo.wxUnionId = data.unionid; // 不是所有用户都有
       userInfo.wxOpenId = data.openid;
       userInfo.clientPlatform = 'wechatMiniApplet';
       return new Promise((resolve, reject) => {
@@ -124,7 +124,7 @@ const _loginRequest = function(userInfo) {
   const app = getApp() || this,
         apiBase = app.globalData.apiBase;
 
-  if (!userInfo.wxUnionId) {
+  if (!userInfo.wxUnionId && !userInfo.wxOpenId) {
     return new Promise((resolve, reject) => reject('wxUnionId missing'));
   }
 

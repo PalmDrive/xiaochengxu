@@ -53,7 +53,9 @@ App({
     };
 
     //检查storage里是否有userId，没有则请求
-    if (!Auth.getLocalUserId() || !Auth.getLocalJWT()) {
+    const userInfo = Auth.getLocalUserInfo(),
+          userAttrs = userInfo.attributes || {};
+    if (!Auth.getLocalUserId() || !Auth.getLocalJWT() || !userAttrs.wxOpenId) {
       Auth.login.call(this)
         .then(_afterLogin)
         .catch(err => {
