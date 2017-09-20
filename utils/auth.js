@@ -40,20 +40,18 @@ const _getWechatBaseUserInfo = function() {
   return new Promise((resolve, reject) => {
     // 获取登陆凭证code
     wx.login({ 
-      success(res) { 
+      success(res) {
         if (res.code) {
            //用code, 通过服务器获取session_key
-          wx.request({
+          request({
             url: `${apiBase}/wechat/xiaochengxu/on-login?from=miniProgram`,
             data: {
               code: res.code
-            },
-            success(res) {
-              resolve(res.data);
-            },
-            fail(err) {
-              reject(err);
             }
+          }).then((res) => {
+            resolve(res);
+          }, (err) => {
+            reject(err);
           })
         } else {
           console.log('获取用户登录态失败: ', res.errMsg);

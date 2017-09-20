@@ -3,7 +3,8 @@ const app = getApp(),
       util = require('../../utils/util.js'),
       Auth = require('../../utils/auth.js'),
       WxParse = require('../../utils/wxParse/wxParse.js'),
-      he = require('../../utils/he.js');
+      he = require('../../utils/he.js'),
+      {request} = require('../../utils/request');
 
 Page({
   /**
@@ -52,16 +53,14 @@ Page({
       mediumId = this.data.mediumId;
     if (userId && mediumId) {
       // console.log('记录足迹');
-      wx.request({
+      request({
         method: 'POST',
         url: `${app.globalData.apiBase}/media/${mediumId}/views?from=miniProgram`,
         data: {
           data: {attributes: {userId}}
-        },
-        success(res) {},
-        fail() {
-          console.log('Medium page, onShow, record lastViewedAt fail');
         }
+      }).then(null, err => {
+        console.log('Medium page, onShow, record lastViewedAt fail');
       });
     }
   },
@@ -114,42 +113,40 @@ Page({
 
   _load() {
     const mediumId = this.data.mediumId;
-    wx.request({
-      url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt&from=miniProgram`,
-      success: (result) => {
-        const medium = result.data.data,
-          css = result.data.meta.css || '';
+    request({
+      url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt&from=miniProgram`
+    }).then((result) => {
+      const medium = result.data,
+        css = result.meta.css || '';
 
-        if (Object.keys(medium.attributes.topics).length === 0) {
-          delete medium.attributes.topics;
-        } else {
-          medium.attributes.topic = medium.attributes.topics[Object.keys(medium.attributes.topics)[0]];
-        }
-
-        if (medium.attributes.publishedAt) {
-          medium.attributes.publishedAt = util.convertDate(new Date(medium.attributes.publishedAt));
-        } else {
-          medium.attributes.publishedAt = '';
-        }
-
-        const html = medium.attributes.htmlContent,
-          decoded = he.decode(html);
-        WxParse.wxParse('htmlContent', 'html', decoded, this, 0);
-
-        this.setData({
-          medium,
-          loading: false
-        });
-
-        util.ga({
-          cid: Auth.getLocalUserId() || '555',
-          dp: '%2FarticlePage_XiaoChengXu',
-          dt: `article_title:${medium.attributes.title},article_id:${mediumId}`
-        });
-      },
-      fail: () => {
-        console.log('medium page request medium data fail');
+      if (Object.keys(medium.attributes.topics).length === 0) {
+        delete medium.attributes.topics;
+      } else {
+        medium.attributes.topic = medium.attributes.topics[Object.keys(medium.attributes.topics)[0]];
       }
+
+      if (medium.attributes.publishedAt) {
+        medium.attributes.publishedAt = util.convertDate(new Date(medium.attributes.publishedAt));
+      } else {
+        medium.attributes.publishedAt = '';
+      }
+
+      const html = medium.attributes.htmlContent,
+        decoded = he.decode(html);
+      WxParse.wxParse('htmlContent', 'html', decoded, this, 0);
+
+      this.setData({
+        medium,
+        loading: false
+      });
+
+      util.ga({
+        cid: Auth.getLocalUserId() || '555',
+        dp: '%2FarticlePage_XiaoChengXu',
+        dt: `article_title:${medium.attributes.title},article_id:${mediumId}`
+      });
+    }, () => {
+      console.log('medium page request medium data fail');
     });
   }
 })
