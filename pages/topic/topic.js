@@ -2,7 +2,8 @@
 const app = getApp(),
       util = require('../../utils/util.js'),
       Auth = require('../../utils/auth'),
-      Topic = require('../../utils/topic');
+      Topic = require('../../utils/topic'),
+      {request} = require('../../utils/request');
 
 const contentTypes = ['观点', '推荐书籍', '资讯', '案例'];
 
@@ -252,29 +253,25 @@ Page({
   //获取某个tab下文章
   getTabMedia: function(tab, pageNumber, cb) {
     const that = this;
-    wx.request({
-      url: `${app.globalData.apiBase}/topics/${that.data.topicId}/media?page[number]=${pageNumber}&page[size]=8&filter[confirmed]=1&filter[contentTypes]=${tab}&sort=-publishedAt&from=miniProgram`,
-      success(res) {
-        const media = res.data.data;
-        cb(media);
-      },
-      fail() {
-        console.log('topic page, getTabMedia function, request fail');
-      }
+    request({
+      url: `${app.globalData.apiBase}/topics/${that.data.topicId}/media?page[number]=${pageNumber}&page[size]=8&filter[confirmed]=1&filter[contentTypes]=${tab}&sort=-publishedAt&from=miniProgram`
+    }).then((res) => {
+      const media = res.data;
+      cb(media);
+    },() => {
+      console.log('topic page, getTabMedia function, request fail');
     });
   },
 
   //获取动态标签下的文章
   getMedia: function(pageNumber, cb) {
-    wx.request({
-      url: `${app.globalData.apiBase}/media/topic/${this.data.topicId}?page[number]=${pageNumber}&page[size]=${this.data.page.size}&sort=-publishedAt&from=miniProgram`,
-      success(res) {
-        const media = res.data.data;
-        cb(media);
-      },
-      fail() {
-        console.log('topic page, getMedia request fail');
-      }
+    request({
+      url: `${app.globalData.apiBase}/media/topic/${this.data.topicId}?page[number]=${pageNumber}&page[size]=${this.data.page.size}&sort=-publishedAt&from=miniProgram`
+    }).then((res) => {
+      const media = res.data;
+      cb(media);
+    },() => {
+      console.log('topic page, getMedia request fail');
     });
   },
 
@@ -283,79 +280,74 @@ Page({
       topicId = this.data.topicId,
       topicUrl = `${app.globalData.apiBase}/topics/${topicId}?from=miniProgram&fields[topics]=name,description,imgUrl,mediaCount,fields,tabs,type&userId=${userId}`;
     //获取专题数据
-    wx.request({
-      url: topicUrl,
-      success: (res) => {
-        const topic = res.data.data;
-        let subscribeButton;
-        if (res.data.meta && res.data.meta.subscribe) {
-          subscribeButton = '已订阅';
-        } else {
-          subscribeButton = '订阅';
-        }
-        const isFeatured = topic.attributes.type === 'featured';
+    request({
+      url: topicUrl
+    }).then((res) => {
+      const topic = res.data;
+      let subscribeButton;
+      if (res.data.meta && res.data.meta.subscribe) {
+        subscribeButton = '已订阅';
+      } else {
+        subscribeButton = '订阅';
+      }
+      const isFeatured = topic.attributes.type === 'featured';
 
-        // Determin tabs
-        const tabs = topic.attributes.newTabs;
-        tabs.unshift('动态');
+      // Determin tabs
+      const tabs = topic.attributes.newTabs;
+      tabs.unshift('动态');
 
-        //获取其他标签下第一页的文章
-        this.getOtherTabsData(tabs);
+      //获取其他标签下第一页的文章
+      this.getOtherTabsData(tabs);
 
-        //更新数据
-        this.setData({
-          topic,
-          isFeatured,
-          tabs,
-          subscribeButton,
-          loading: false
-        });
+      //更新数据
+      this.setData({
+        topic,
+        isFeatured,
+        tabs,
+        subscribeButton,
+        loading: false
+      });
 
-        wx.stopPullDownRefresh();
+      wx.stopPullDownRefresh();
 
-        util.ga({
-          cid: Auth.getLocalUserId(),
-          dp: '%2FtopicPage_XiaoChengXu',
-          dt: `topic_name:${topic.attributes.name},topic_id:${topicId}`
-        });
+      util.ga({
+        cid: Auth.getLocalUserId(),
+        dp: '%2FtopicPage_XiaoChengXu',
+        dt: `topic_name:${topic.attributes.name},topic_id:${topicId}`
+      });
 
-        if (tabs.indexOf('子专题') > -1) {
-          wx.request({
-            url: `${app.globalData.apiBase}/topics/${topicId}/topics?include=media&from=miniProgram`,
-            success: (result) => {
-              const topics = result.data.data;
-              const media = result.data.included || [];
-              const mediumId2medium = media.reduce((acc, m) => {
-                acc[m.id] = m;
-                return acc;
-              }, {});
-              // Set topic.media
-              topics.forEach(t => {
-                if (t.relationships && t.relationships.media && t.relationships.media.data) {
-                  t.media = t.relationships.media.data.reduce((acc, m) => {
-                    if (mediumId2medium[m.id]) {
-                      acc.push(mediumId2medium[m.id]);
-                    }
-                    return acc;
-                  }, []);
-                  t.media5 = t.media.slice(0, 5);
+      if (tabs.indexOf('子专题') > -1) {
+        request({
+          url: `${app.globalData.apiBase}/topics/${topicId}/topics?include=media&from=miniProgram`
+        }).then((result) => {
+          const topics = result.data.data;
+          const media = result.data.included || [];
+          const mediumId2medium = media.reduce((acc, m) => {
+            acc[m.id] = m;
+            return acc;
+          }, {});
+          // Set topic.media
+          topics.forEach(t => {
+            if (t.relationships && t.relationships.media && t.relationships.media.data) {
+              t.media = t.relationships.media.data.reduce((acc, m) => {
+                if (mediumId2medium[m.id]) {
+                  acc.push(mediumId2medium[m.id]);
                 }
-              });
-              this.setData({
-                childTopics: topics
-              });
-            },
-            fail: () => {
-              console.log('topic page request child topics fail');
+                return acc;
+              }, []);
+              t.media5 = t.media.slice(0, 5);
             }
           });
-        }
-      },
-      fail: () => {
-        console.log('topic page request topic data fail');
+          this.setData({
+            childTopics: topics
+          });
+        }, () => {
+          console.log('topic page request child topics fail');
+        });
       }
+    }, () => {
+      console.log('topic page request topic data fail');
     });
-
     //获取动态标签的文章
     const cb = media => {
       const data = {};

@@ -1,24 +1,15 @@
 const _ = require('../../vendors/underscore'),
     Auth = require('../../utils/auth'),
     util = require('../../utils/util'),
-    {getSubscribedTopicIds, subscribe, unsubscribe, getGroupSubscribedTopicIds} = require('../../utils/topic');
+    {getSubscribedTopicIds, subscribe, unsubscribe, getGroupSubscribedTopicIds} = require('../../utils/topic'),
+    {request} = require('../../utils/request');
 
 const app = getApp();
 
 const _getFields = () => {
   const url = `${app.globalData.apiBase}/fields?from=miniProgram`;
 
-  return new Promise((resolve, reject) => {
-    wx.request({
-      url, 
-      success(res) {
-        resolve(res.data.data);
-      },
-      fail(res) {
-        reject(res);
-      }
-    });
-  });
+  return request({url})
 };
 
 const _getTopicsByField = (fieldId, options) => {
@@ -31,17 +22,7 @@ const _getTopicsByField = (fieldId, options) => {
 
   const url = `${app.globalData.apiBase}/fields/${fieldId}/topics?page[size]=${defaultOptions.size}&page[number]=${defaultOptions.number}&from=miniProgram`;
 
-  return new Promise((resolve, reject) => {
-    wx.request({
-      url,
-      success(res) {
-        resolve(res.data.data);        
-      },
-      fail(res) {
-        reject(res);
-      }
-    });
-  });
+  return request({url});
 };
 
 // Add isSubscribed attribute in topic
@@ -82,7 +63,7 @@ Page({
       getGroupSubscribedTopicIds(groupId)
     ])
       .then(res => {
-        const data = res[0];
+        const data = res[0] && res[0].data;
         groupSubscribedTopicIds = res[1];
 
         data.forEach(d => {
@@ -135,7 +116,7 @@ Page({
       })
         // Lazy loading topic for field
         // This changes this.data.fields too
-        .then(topics => selectedField.topics = topics);
+        .then(topics => selectedField.topics = topics && topics.data);
     } else {
       console.log('cached'); 
     }
