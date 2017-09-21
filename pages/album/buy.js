@@ -18,8 +18,9 @@ Page({
         const album = data.data.attributes.groupInfo;
         album.id = data.data.id;
         album.name = data.data.attributes.username;
+        this.data.album = album;
         this.setData({
-          album
+          album: this.data.album
         });
       });
   },
@@ -61,6 +62,7 @@ Page({
         params.success = (res) => {
           console.log('wx requestPayment success');
           console.log(res);
+          this.gotoGroup()
         };
         params.fail = (err) => {
           console.log('wx requestPayment fail');
@@ -77,5 +79,12 @@ Page({
         console.log(err);
         this.setData({processing: false});
       });
-  }
+  },
+
+  gotoGroup() {
+    const userId = this.data.album.id;
+    wx.redirectTo({
+      url: `../groups/group?id=${userId}`
+    });
+  },
 });
