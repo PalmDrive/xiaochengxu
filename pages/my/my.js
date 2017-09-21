@@ -1,7 +1,8 @@
 //my.js
 const app = getApp(),
   Util = require('../../utils/util'),
-  Auth = require('../../utils/auth');
+  Auth = require('../../utils/auth'),
+  {request} = require('../../utils/request');
 Page({
   data: {
     userInfo: {},
@@ -123,16 +124,14 @@ Page({
 
   getTopics: function(pageNumber, cb) {
     const userId = Auth.getLocalUserId();
-    wx.request({
-      url: `${app.globalData.apiBase}/users/${userId}/favorite-topics?page[number]=${pageNumber}&from=miniProgram`,
-      success(res) {
-        const topics = res.data.data;
-        cb(topics);
-      },
-      fail() {
-        console.log('my page, getTopics request fail');
-      }
-    })
+    request({
+      url: `${app.globalData.apiBase}/users/${userId}/favorite-topics?page[number]=${pageNumber}&from=miniProgram`
+    }).then((res) => {
+      const topics = res.data;
+      cb(topics);
+    }, () => {
+      console.log('my page, getTopics request fail');
+    });
   },
   _load() {
     const userId = Auth.getLocalUserId();

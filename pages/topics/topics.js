@@ -2,7 +2,8 @@
 //获取应用实例
 var app = getApp(),
     util = require('../../utils/util'),
-    Auth = require('../../utils/auth');
+    Auth = require('../../utils/auth'),
+    {request} = require('../../utils/request');
 Page({
   data: {
     featuredTopics: [],
@@ -31,19 +32,17 @@ Page({
       console.log('load more guess-you-like');
       that.setData({ loadingMore: true });
       const url = `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/suggested-topics?initedAt=${that.data.initedAt}`;
-      wx.request({
-        url,
-        success(res) {
-          const topics = res.data.data;
-          topics.forEach(util.formatTopic);
-          that.setData({
-            guessTopics: that.data.guessTopics.concat(topics),
-            loadingMore: false
-          });
-        },
-        fail(res) {
-          console.log('request more guess-you-like topics fail');
-        }
+      request({
+        url
+      }).then((res) => {
+        const topics = res.data;
+        topics.forEach(util.formatTopic);
+        that.setData({
+          guessTopics: that.data.guessTopics.concat(topics),
+          loadingMore: false
+        });
+      },(res) => {
+        console.log('request more guess-you-like topics fail');
       });
     }
   },
@@ -96,34 +95,30 @@ Page({
     const userId = Auth.getLocalUserId(),
       userIdQuery = `?userId=` + userId;
     //获取精选专题
-    wx.request({
-      url: `${app.globalData.apiBase}/topics/featured${userIdQuery}&page[size]=100`,
-      success: (res) => {
-        this.setData({
-          featuredTopics: res.data.data
-        });
+    request({
+      url: `${app.globalData.apiBase}/topics/featured${userIdQuery}&page[size]=100`
+    }).then((res) => {
+      this.setData({
+        featuredTopics: res.data
+      });
 
-        wx.stopPullDownRefresh();
-      },
-      fail: (res) => {
-        console.log('request featured topics fail');
-      }
+      wx.stopPullDownRefresh();
+    }, (res) => {
+      console.log('request featured topics fail');
     });
     //获取首页分块专题
-    wx.request({
-      url: `${app.globalData.apiBase}/topics/homepage${userIdQuery}&from=miniProgram`,
-      success: (res) => {
-        const sections = res.data.data;
-        sections.forEach(section => {
-          section.topics.forEach(util.formatTopic);
-        });
-        this.setData({
-          sections
-        });
-      },
-      fail: () => {
-        console.log('request /topics/homepage fail');
-      }
+    request({
+      url: `${app.globalData.apiBase}/topics/homepage${userIdQuery}&from=miniProgram`
+    }).then((res) => {
+      const sections = res.data;
+      sections.forEach(section => {
+        section.topics.forEach(util.formatTopic);
+      });
+      this.setData({
+        sections
+      });
+    }, () => {
+      console.log('request /topics/homepage fail');
     });
   }
 })

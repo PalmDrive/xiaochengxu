@@ -89,7 +89,7 @@ Page({
   },
 
   /**
-   * 
+   * 进入Group
    */
   gotoGroup(event) {
     const userId = event.currentTarget.dataset.group.id,
@@ -105,6 +105,32 @@ Page({
     wx.navigateTo({
       url: `../groups/group?id=${userId}`
     });
+  },
+
+  /**
+   * 进入七日辑
+   */
+  gotoPaidGroup(event) {
+    const userId = event.currentTarget.dataset.group.id,
+          name = event.currentTarget.dataset.group.attributes.username,
+          role = event.currentTarget.dataset.group.relationships.data.attributes.role,
+          userInfo = Auth.getLocalUserInfo().attributes || {};
+    util.gaEvent({
+      cid: Auth.getLocalUserId(),
+      ev: 0,
+      ea: 'click_qiriji_in_toutiaoTab',
+      ec: `qiriji_name:${name},toutiao_id:${userId}`,
+      el: `user_name:${userInfo.wxUsername},user_id:${userId}`
+    });
+    if (role) {
+      wx.navigateTo({
+        url: `../groups/group?id=${userId}`
+      });
+    } else {
+      wx.navigateTo({
+        url: `../album/buy?id=${userId}`
+      });
+    }
   },
 
   /**

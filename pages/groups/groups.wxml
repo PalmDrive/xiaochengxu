@@ -8,11 +8,14 @@
  -->
 <view class="groups" scroll-y bindscrolltolower="onReachBottom" lower-threshold="20">
   <view class="group" wx:for="{{groups}}" wx:for-item="group" wx:key>
-    <view class="group-title" data-group="{{ group }}" bindtap="gotoGroup" style="background-color: {{['#3e2723','#212121','#263238'][index%3]}}">
+    <!-- group -->
+    <view class="group-title" data-group="{{ group }}" bindtap="gotoGroup" style="background-color: {{['#3e2723','#212121','#263238'][index%3]}}" wx:if="{{group.attributes.role === 'group'}}">
       <text class="group-name">{{group.attributes.username}}</text>
       <!-- <text class="group-pageview">点击：333</text> -->
       <text class="group-update-count" wx:if="{{group.lastPublishedAt}}">{{group.lastPublishedAt}}更新{{group.relationships.media.meta.count}}篇</text>
     </view>
+    <!-- paid_group -->
+    <image src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%94%A8/%E5%88%97%E8%A1%A8%E5%B0%8F%E5%9B%BE/{{group.attributes.groupInfo.modalImage}}" wx:else mode="widthFix"  data-group="{{ group }}" bindtap="gotoPaidGroup" class="paid-group-pic"></image>
     <view class="media">
       <view class="medium" wx:for="{{group.relationships.media.data}}" wx:for-item="medium" wx:key data-medium="{{ medium }}" bindtap="goToMedium">{{medium.attributes.title}}</view>
     </view>
