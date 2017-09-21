@@ -23,8 +23,8 @@ Page({
     });
     if (userId) {
       //console.log('calling _load');
-      this._load()
-        .then(this._loadOver);
+      this._load('paid_group')
+        .then(this._loadPaidGroupOver);
     }
   },
 
@@ -39,16 +39,16 @@ Page({
   /**
    * 加载数据
    */
-  _load() {
+  _load(type) {
     return request({
-      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram&include=media&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}`,
+      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram&include=media&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&role=${type}`,
     });
   },
 
   /**
-   * 数据加载 成功 回调
+   * Group 数据加载 成功 回调
    */
-  _loadOver(res) {
+  _loadGroupOver(res) {
     let loadingStatus = null;
     if (!res.data.length) {
       loadingStatus = 'LOADED_ALL';
@@ -64,6 +64,22 @@ Page({
       loadingStatus: loadingStatus,
       groups: this.data.groups.concat(res.data)
     });
+  },
+
+  /**
+   * paidGroup 数据加载 成功 回调
+   */
+  _loadPaidGroupOver(res) {
+    this.data.page.number ++;
+    this.setData({
+      groups: this.data.groups.concat(res.data)
+    });
+    if (res.data.length === this.data.page.size) {
+      this._load('paid_group').then(this._loadPaidGroupOver);
+    } else {
+      this.data.page.number = 1;
+      this._load('group').then(this._loadGroupOver);
+    }
   },
 
   gotoNewGroup() {
@@ -105,9 +121,9 @@ Page({
   onPullDownRefresh() {
     this.data.page.number = 1;
     this.data.groups = [];
-    this._load().then(res => {
+    this._load('paid_group').then(res => {
       wx.stopPullDownRefresh();
-      this._loadOver(res);
+      return this._loadPaidGroupOver(res);
     });
   },
   /**
@@ -119,7 +135,7 @@ Page({
         loadingStatus: 'LOADING_MORE'
       })
       console.log('LOADING_MORE');
-      this._load().then(this._loadOver);
+      this._load('group').then(this._loadGroupOver);
     }
   },
   //点击文章
