@@ -119,6 +119,7 @@ Page({
     });
     const group = res.included[0], 
           groupInfo = group.attributes.groupInfo;
+    groupInfo.pageviews = util.shortNumber(1000);
     updates.dateList = dateList;
     updates.userName = res.included[0].attributes.username;
     updates.groupInfo = groupInfo;

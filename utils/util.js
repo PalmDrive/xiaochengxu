@@ -26,6 +26,25 @@ function formatNumber(n) {
   return n[1] ? n : '0' + n
 }
 
+/**
+ * [将数字变短]
+ * @param  {[number]} n [description]
+ * @return {[number & string]}   [description]
+ */
+function shortNumber(n) {
+  if (n < 1000) {
+    return n;
+  } else if (n >= 1000 && n < 10000) {
+    let s = (n / 1000).toString();
+    if (s.indexOf('.') > 0) s = s.toFixed(1);
+    return s + 'k';
+  } else {
+    let s = (n / 1000).toString();
+    if (s.indexOf('.') > 0) s = s.toFixed(1);
+    return s + 'w';
+  }
+}
+
 /*
 Convert a date to a string for display
 Example string: '刚刚', '20分钟前'
@@ -185,6 +204,7 @@ function showHint(page) {
 module.exports = {
   formatTime,
   formatDateToDay,
+  shortNumber,
   convertDate,
   formatPublishedAt,
   formatTopic,
