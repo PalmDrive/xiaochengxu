@@ -113,7 +113,7 @@ Page({
   gotoPaidGroup(event) {
     const userId = event.currentTarget.dataset.group.id,
           name = event.currentTarget.dataset.group.attributes.username,
-          role = event.currentTarget.dataset.group.relationships.data.attributes.role,
+          role = event.currentTarget.dataset.group.relationships.userGroup.data.attributes.role,
           userInfo = Auth.getLocalUserInfo().attributes || {};
     util.gaEvent({
       cid: Auth.getLocalUserId(),

@@ -133,28 +133,32 @@ function goToTopic(event, gaOptions) {
 
 function closeHint(that) {
   that.setData({showHint: false});
-} 
+}
 
 function ga(options) {
-  request({
+  wx.request({
     method: 'POST',
-    url: `https://www.google-analytics.com/collect?v=1&tid=UA-93993572-2&cid=${options.cid}&t=pageview&dh=xiaochengxu&dp=${options.dp}&dt=${options.dt}`
-  }).then(() => {
-    // console.log('ga success');
-  }, () => {
-    console.log('ga pageview fail');
+    url: `https://www.google-analytics.com/collect?v=1&tid=UA-93993572-2&cid=${options.cid}&t=pageview&dh=xiaochengxu&dp=${options.dp}&dt=${options.dt}`,
+    success() {
+      // console.log('ga success');
+    },
+    fail() {
+      console.log('ga pageview fail');
+    }
   });
 }
 
 function gaEvent(options) {
-  request({
+  wx.request({
     method: 'POST',
     url: 'https://www.google-analytics.com/collect',
-    data: encodeURI(`v=1&tid=UA-93993572-2&cid=${options.cid}&t=event&ec=${options.ec}&ea=${options.ea}&el=${options.el}&ev=${options.ev}`)
-  }).then(() => {
-    // console.log('gaEvent success');
-  }, () => {
-    console.log('ga event fail');
+    data: encodeURI(`v=1&tid=UA-93993572-2&cid=${options.cid}&t=event&ec=${options.ec}&ea=${options.ea}&el=${options.el}&ev=${options.ev}`),
+    success() {
+      // console.log('gaEvent success');
+    },
+    fail() {
+      console.log('ga event fail');
+    }
   });
 }
 

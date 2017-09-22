@@ -126,10 +126,6 @@ page {
   display: none;
 }
 
-.group {
-  font-size: 0;
-}
-
 .paid-group-pic {
   width: 100%;
 }
