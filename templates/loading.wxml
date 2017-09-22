@@ -1,4 +1,4 @@
-<!-- 
+<!--
   加载页面 提示
  -->
 <template name="loading">
@@ -9,6 +9,6 @@
     <text>更多数据加载中...</text>
   </view>
   <view class="loading text-center" hidden="{{loadingStatus !== 'LOADED_ALL'}}">
-    <text>没有更多了</text>
+    <text>-END-</text>
   </view>
 </template>

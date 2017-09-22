@@ -127,4 +127,5 @@ page {
 .price-now {
   color: #0090E7;
   letter-spacing: 1.25px;
+  margin-left: 25px;
 }

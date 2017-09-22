@@ -46,27 +46,6 @@ Page({
   },
 
   /**
-   * Group 数据加载 成功 回调
-   */
-  _loadGroupOver(res) {
-    let loadingStatus = null;
-    if (!res.data.length) {
-      loadingStatus = 'LOADED_ALL';
-    }
-    res.data.forEach(group => {
-      if (group.attributes.role === 'group') {
-        const media = group.relationships.media;
-        group.lastPublishedAt = media && media.meta && convertDate(new Date(media.meta.publishedAt));
-      }
-    });
-    this.data.page.number ++;
-    this.setData({
-      loadingStatus: loadingStatus,
-      groups: this.data.groups.concat(res.data)
-    });
-  },
-
-  /**
    * paidGroup 数据加载 成功 回调
    */
   _loadPaidGroupOver(res) {
@@ -74,15 +53,16 @@ Page({
     console.log('=============')
     console.log(res.data);
     console.log('=============')
-    this.setData({
-      groups: this.data.groups.concat(res.data)
-    });
-    if (res.data.length === this.data.page.size) {
-      this._load('paid_group').then(this._loadPaidGroupOver);
+    let loadingStatus;
+    if (!res.data.length) {
+      loadingStatus = 'LOADED_ALL';
     } else {
-      this.data.page.number = 1;
-      this._load('group').then(this._loadGroupOver);
+      loadingStatus = null;
     }
+    this.setData({
+      groups: this.data.groups.concat(res.data),
+      loadingStatus: loadingStatus
+    });
   },
 
   gotoNewGroup() {
@@ -165,7 +145,7 @@ Page({
         loadingStatus: 'LOADING_MORE'
       })
       console.log('LOADING_MORE');
-      this._load('group').then(this._loadGroupOver);
+      this._load('paid_group').then(this._loadPaidGroupOver);
     }
   },
   //点击文章
