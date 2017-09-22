@@ -1,6 +1,6 @@
 .btn-buy {
   position: fixed;
-  bottom: 0;
+  bottom: 0px;
   background: #0090E7;
   width: 100%;
   text-align: center;

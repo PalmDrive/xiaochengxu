@@ -44,7 +44,7 @@ Page({
           totalFee: this.data.album.price,
           name: this.data.album.name,
           openid: attrs.wxOpenId,
-          productId: this.data.id,
+          productId: this.data.album.id,
           productType: 'Album'
         }
       }
