@@ -18,9 +18,8 @@ Page({
         const album = data.data.attributes.groupInfo;
         album.id = data.data.id;
         album.name = data.data.attributes.username;
-        this.data.album = album;
         this.setData({
-          album: this.data.album
+          album
         });
       });
   },
