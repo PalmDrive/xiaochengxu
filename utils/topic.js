@@ -1,5 +1,6 @@
 // utils/topic.js
-const app = getApp();
+const app = getApp(),
+      {request} = require('./request');
 
 let _subscribedTopicIds = null;
 
