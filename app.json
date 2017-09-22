@@ -1,12 +1,14 @@
 {
   "pages":[
     "pages/groups/groups",
+    "pages/album/buy",
     "pages/topics/topics",
     "pages/topic/topic",
     "pages/medium/medium",
     "pages/my/my",
     "pages/groups/group",
     "pages/groups/new-group",
+    "pages/index/index",
     "pages/topics/select-topics"
   ],
   "window":{

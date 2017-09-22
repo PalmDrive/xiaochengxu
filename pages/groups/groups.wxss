@@ -125,3 +125,7 @@ page {
 .create {
   display: none;
 }
+
+.paid-group-pic {
+  width: 100%;
+}

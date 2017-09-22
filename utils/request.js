@@ -12,6 +12,10 @@ const _getDefaultHeader = () => {
   }
   return header;
 };
+
+const _isErrResp = (resp) => {
+  return ['4', '5'].indexOf(resp.statusCode.toString()[0]) !== -1;
+};
 /**
  * {
  *   url<string>
@@ -36,6 +40,10 @@ const request = opts => {
       method: opts.method,
       dataType: opts.dataType,
       success(res) {
+        if (_isErrResp(res)) {
+          reject(res.data);
+        }
+
         resolve(res.data);
       },
       fail(err) {

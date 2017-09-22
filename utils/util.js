@@ -1,3 +1,5 @@
+const {request} = require('request');
+
 function formatTime(date) {
   var year = date.getFullYear()
   var month = date.getMonth() + 1
@@ -22,6 +24,25 @@ function formatDateToDay(date) {
 function formatNumber(n) {
   n = n.toString()
   return n[1] ? n : '0' + n
+}
+
+/**
+ * [将数字变短]
+ * @param  {[number]} n [description]
+ * @return {[number & string]}   [description]
+ */
+function shortNumber(n) {
+  if (n < 1000) {
+    return n;
+  } else if (n >= 1000 && n < 10000) {
+    let s = (n / 1000).toString();
+    if (s.indexOf('.') > 0) s = s.toFixed(1);
+    return s + 'k';
+  } else {
+    let s = (n / 1000).toString();
+    if (s.indexOf('.') > 0) s = s.toFixed(1);
+    return s + 'w';
+  }
 }
 
 /*
@@ -112,7 +133,7 @@ function goToTopic(event, gaOptions) {
 
 function closeHint(that) {
   that.setData({showHint: false});
-} 
+}
 
 function ga(options) {
   wx.request({
@@ -187,6 +208,7 @@ function showHint(page) {
 module.exports = {
   formatTime,
   formatDateToDay,
+  shortNumber,
   convertDate,
   formatPublishedAt,
   formatTopic,
