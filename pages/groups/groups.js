@@ -111,9 +111,10 @@ Page({
    * 进入七日辑
    */
   gotoPaidGroup(event) {
-    const userId = event.currentTarget.dataset.group.id,
-          name = event.currentTarget.dataset.group.attributes.username,
-          role = event.currentTarget.dataset.group.relationships.userGroup.data.attributes.role,
+    const group = event.currentTarget.dataset.group,
+          userId = group.id,
+          name = group.username,
+          role = group.relationships && group.relationships.userGroup.data.attributes.role || null,
           userInfo = Auth.getLocalUserInfo().attributes || {};
     util.gaEvent({
       cid: Auth.getLocalUserId(),
