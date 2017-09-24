@@ -205,6 +205,26 @@ function showHint(page) {
   });
 };
 
+function toPromise(fn) {
+  return function(params) { // CANNOT USE =>, because need bind context
+    const that = this;
+    let p = new Promise((resolve, reject) => {
+      params = params || {};
+      params.success = resolve;
+      params.fail = reject;
+      fn.call(that, params);
+    });
+    if (params.complete) {
+      p = p.then(params.complete);
+    }
+    return p;
+  };
+};
+
+function genRandomStr() {
+  return Math.random().toString(36).slice(2);
+}
+
 module.exports = {
   formatTime,
   formatDateToDay,
@@ -221,4 +241,6 @@ module.exports = {
   reloadPage,
   showHint,
   closeHint,
+  toPromise,
+  genRandomStr
 };
