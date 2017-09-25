@@ -2,10 +2,13 @@ const {toPromise, genRandomStr} = require('util');
 
 class Marker {
   constructor(options) {
-    this.id = genRandomStr(); //options.id;
+    this.id = options.id || genRandomStr();
     this.longitude = options.longitude;
     this.latitude = options.latitude;
-    //this.title = options.title;
+
+    this.title = options.title;
+    this.iconPath = options.iconPath || '/images/icon.png';
+    this.picurl = options.picurl;
     
     this.clusteredMarkers = options.clusteredMarkers || [];
 
@@ -24,13 +27,13 @@ class Marker {
   }
 
   get mapAttrs() {
-    const title = this.clusteredCount.toString();
+    const title = `${this.title}: ${this.clusteredCount}`;
     return {
       id: this.id,
       longitude: this.longitude, 
       latitude: this.latitude,
       title: title, //this.title,
-      iconPath: '/images/icon.png',
+      iconPath: this.iconPath,
       width: this.markerSize.width,
       height: this.markerSize.height,
       //iconPath: userInfo.profilePicUrl,
@@ -83,11 +86,11 @@ class Marker {
   }
 
   static getRatio(mapCtx) {
-    if (!this.windowWidth) throw 'windowWidth is not defined';
-    if (!this.windowHeight) throw 'windowHeight is not defined';
+    if (!Marker.windowWidth) throw 'windowWidth is not defined';
+    if (!Marker.windowHeight) throw 'windowHeight is not defined';
 
-    const windowWidth = this.windowWidth,
-          windowHeight = this.windowHeight;
+    const windowWidth = Marker.windowWidth,
+          windowHeight = Marker.windowHeight;
     let ratioW, ratioH;
     return toPromise(mapCtx.getRegion).call(mapCtx)
       .then(res => {

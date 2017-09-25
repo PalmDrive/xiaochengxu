@@ -26,6 +26,12 @@ const getPage = () => {
   });
 };
 
+const AV = require('utils/av-weapp-min.js');
+AV.init({ 
+  appId: 'l7Ffw76ym9wuEsz4mUEJNcbS-gzGzoHsz', 
+  appKey: 'bp8ie0RFdBG9nHkGHpOknCMQ', 
+});
+
 App({
   onShow() {
     const Auth = require('utils/auth');

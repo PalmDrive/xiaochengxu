@@ -1,10 +1,16 @@
 const Auth = require('../../utils/auth'),
       {toPromise} = require('../../utils/util'),
-      Marker = require('../../utils/Marker');
+      Marker = require('../../utils/Marker'),
+      AV = require('../../utils/av-weapp-min'),
+      LeanCloud = require('../../utils/leancloud');
 
 let mapCtx,
     zdkMarkers,
     clusteredMarkers;
+
+const tmpImagesHash = {};
+
+console.log('init tmpImagesHash');
 
 Page({
   data: {
@@ -40,9 +46,8 @@ Page({
       }
     ]
   },
-  onReady() {
-    mapCtx = wx.createMapContext('theMap');
 
+  _test() {
     const user = Auth.getLocalUserInfo(),
           userInfo = user.attributes || {},
           that = this;
@@ -155,8 +160,173 @@ Page({
       .catch(console.log);
   },
 
-  onLoad() {
+  onReady(options) {
+    mapCtx = wx.createMapContext('theMap');
+
+    this._onLoad(options || {});
+  },
+
+  onLoad(options) {
+    //this._onLoad(options);
+  },
+
+  _onLoad(options) {
+    const id = options.id || '59c7298d7565710044c06a24',
+          user = Auth.getLocalUserInfo(),
+          userInfo = user.attributes || {},
+          UserMapSession = AV.Object.extend('UserMapSession');
+    let userMapSession, currLocation;
     
+    let _t = +new Date();
+
+    zdkMarkers = [];
+
+    Marker.getWindowSize();
+
+    toPromise(wx.getLocation)({
+      type: 'gcj02'
+    })
+    .then(res => {
+      currLocation = new AV.GeoPoint({
+        longitude: res.longitude,
+        latitude: res.latitude
+      });
+      return new AV.Query('UserMapSession')
+        .equalTo('mapSessionId', id) // 所有的
+        .find();
+    })
+    .then(data => {
+      const _t2 = +new Date();
+      console.log(`${_t2 - _t}ms for UserMapSession query`);
+      _t = _t2;
+
+      let isNew = false;
+      userMapSession = data.filter(d => d.get('userId') === user.id)[0];
+      if (!userMapSession) {
+        isNew = true;
+        userMapSession = new UserMapSession();
+      }
+      const viewLog = userMapSession.get('viewLog') || {};
+      viewLog[(new Date()).toString()] = [currLocation.longitude, currLocation.latitude];
+      userMapSession.set('currLocation', currLocation);
+      //userMapSession.set('viewLog', viewLog);
+      if (isNew) {
+        userMapSession.set('userInfo', {
+          wxUsername: userInfo.wxUsername,
+          profilePicUrl: userInfo.profilePicUrl
+        });
+      }
+
+      return userMapSession.save()
+        .then(res => {
+          const _t2 = +new Date();
+          console.log(`${_t2 - _t}ms for updating userMapSession`);
+          _t = _t2;
+
+          userMapSession = res;
+          if (isNew) {
+            data.push(userMapSession);
+          }
+
+          // Rendering markers
+          zdkMarkers = data.map(d => new Marker({
+            title: d.get('userInfo').wxUsername,
+            longitude: d.get('currLocation').longitude,
+            latitude: d.get('currLocation').latitude,
+            id: d.id,
+            picurl: d.get('userInfo').profilePicUrl
+          }));
+          
+          // This scale the map
+          mapCtx.includePoints({
+            points: zdkMarkers.map(marker => {
+              const attrs = marker.mapAttrs;
+              console.log(attrs);
+              return attrs;
+            })
+          });
+
+          return new Promise(resolve => {
+            setTimeout(() => {
+              Promise.all([
+                Marker.cluster(zdkMarkers, mapCtx),
+                toPromise(mapCtx.getScale).call(mapCtx)
+              ])
+                .then(resolve);
+            }, 1500); // await a while for the resizing done
+          });
+        });
+    })
+    .then(res => {
+      wx.showToast({title: 'include points done', duration: 1000});
+
+      clusteredMarkers = res[0];
+      
+      // Download the image and get the temp file path
+      const singleMarkers = clusteredMarkers.filter(m => {
+        return m.clusteredCount === 0 && !tmpImagesHash[m.id];
+      });
+
+      return Promise.all(singleMarkers.map(m => {
+        return toPromise(wx.downloadFile)({url: m.picurl})
+      })) 
+      .then(results => {
+        wx.showToast({title: 'downloaded user profile image', duration: 1000});
+
+        for (let i = 0; results[i]; i++) {
+          tmpImagesHash[singleMarkers[i].id] = results[i].tempFilePath;
+        }
+
+        // Add iconPath to marker
+        clusteredMarkers.forEach(m => {
+          if (tmpImagesHash[m.id]) {
+            m.iconPath = tmpImagesHash[m.id];
+          }
+        });
+
+        return;
+      }, err => {
+        wx.showModal({
+          title: '错误',
+          content: err.message || err
+        });
+        console.log(err);
+      });
+    })
+    .then(res => {
+      wx.showToast({title: 'bind data to map', duration: 1000});
+
+      console.log(`scale: `, this.data.scale);
+
+      this.setData({
+        markers: clusteredMarkers.map(m => m.mapAttrs),
+      }); 
+    })
+    .catch(err => {
+      wx.showModal({
+        title: '错误',
+        content: err.message || err
+      });
+      console.log(err);
+    });
+  },
+
+  _setMarkers() {
+    this.setData({
+      markers: [
+        {
+          longitude: 116.407526,
+          latitude: 39.90403,
+          iconPath: '/images/icon.png',
+          id: '59c873431b69e6004032bc71',
+          width: 50,
+          height: 50,
+          title: 'Yujun: 0',
+          label: {x: 0, y: 0, fontSize: 12, content: 'Yujun: 0'}
+        }
+      ],
+      scale: 18
+    }); 
   },
 
   onMarkerTap(e) {
@@ -176,15 +346,17 @@ Page({
   },
 
   _renderMarkers() {
-    setTimeout(() => {
-      Marker.cluster(zdkMarkers, mapCtx)
-        .then(res => {
-          clusteredMarkers = res;
-          this.setData({
-            markers: clusteredMarkers.map(m => m.mapAttrs)
-          });
+    const wait = 600;
+    return new Promise(resolve => {
+      setTimeout(resolve, wait);
+    })
+      .then(() => Marker.cluster(zdkMarkers, mapCtx))
+      .then(res => {
+        clusteredMarkers = res;
+        this.setData({
+          markers: clusteredMarkers.map(m => m.mapAttrs)
         });
-    }, 1000);
+      });
   },
 
   onRegionChange(e) {
@@ -193,16 +365,18 @@ Page({
   },
 
   onControlTap(e) {
-    let scale = this.data.scale;
-    if (e.controlId === 'zoomIn') {
-      scale = Math.min(scale + 1, 18);
-    } else if (e.controlId === 'zoomOut') {
-      scale = Math.max(scale - 1, 5);
-    }
-
-    this.setData({scale});
-    console.log(`set scale ${scale}`);
-
-    this._renderMarkers();
+    let scale; 
+    toPromise(mapCtx.getScale).call(mapCtx)
+      .then(res => {
+        scale = this.data.scale;
+        if (e.controlId === 'zoomIn') {
+          scale = Math.min(scale + 1, 18);
+        } else if (e.controlId === 'zoomOut') {
+          scale = Math.max(scale - 1, 5);
+        }
+        this.setData({scale});
+        console.log(`set scale ${scale}`);
+        this._renderMarkers();
+      });
   }
 });
