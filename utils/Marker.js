@@ -27,7 +27,13 @@ class Marker {
   }
 
   get mapAttrs() {
-    const title = `${this.title}: ${this.clusteredCount}`;
+    let title;
+    if (this.clusteredCount) {
+      title = this.clusteredMarkers.map(m => m.title).join(', ');
+    } else {
+      title = this.title;
+    }
+    
     return {
       id: this.id,
       longitude: this.longitude, 

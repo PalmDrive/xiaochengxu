@@ -1,1 +1,3 @@
-<map markers="{{markers}}" style="width: 100%;height: 100vh" scale="{{scale}}" id="theMap" bindregionchange="onRegionChange" controls="{{controls}}" bindcontroltap="onControlTap" bindmarkertap="onMarkerTap" longitude="{{center.longitude}}" latitude="{{center.latitude}}"></map>
+<view style="padding-bottom: 200px;height: 100vh">
+  <map markers="{{markers}}" style="width: 100%;height: 100%" scale="{{scale}}" id="theMap" bindregionchange="onRegionChange" controls="{{controls}}" bindcontroltap="onControlTap" bindmarkertap="onMarkerTap" longitude="{{center.longitude}}" latitude="{{center.latitude}}"></map>
+</view>

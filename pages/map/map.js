@@ -176,6 +176,11 @@ Page({
           userInfo = user.attributes || {},
           UserMapSession = AV.Object.extend('UserMapSession');
     let userMapSession, currLocation;
+
+    if (!Auth.getLocalUserId()) {
+      console.log('not user found');
+      return;
+    }
     
     let _t = +new Date();
 
@@ -205,6 +210,8 @@ Page({
       if (!userMapSession) {
         isNew = true;
         userMapSession = new UserMapSession();
+        userMapSession.set('userId', user.id);
+        userMapSession.set('mapSessionId', id);
       }
       const viewLog = userMapSession.get('viewLog') || {};
       viewLog[(new Date()).toString()] = [currLocation.longitude, currLocation.latitude];
@@ -241,9 +248,9 @@ Page({
           mapCtx.includePoints({
             points: zdkMarkers.map(marker => {
               const attrs = marker.mapAttrs;
-              console.log(attrs);
               return attrs;
-            })
+            }),
+            padding: [30, 30, 30, 30]
           });
 
           return new Promise(resolve => {
@@ -258,45 +265,17 @@ Page({
         });
     })
     .then(res => {
-      wx.showToast({title: 'include points done', duration: 1000});
+      //wx.showToast({title: 'include points done', duration: 1000});
 
       clusteredMarkers = res[0];
       
       // Download the image and get the temp file path
-      const singleMarkers = clusteredMarkers.filter(m => {
-        return m.clusteredCount === 0 && !tmpImagesHash[m.id];
-      });
-
-      return Promise.all(singleMarkers.map(m => {
-        return toPromise(wx.downloadFile)({url: m.picurl})
-      })) 
-      .then(results => {
-        wx.showToast({title: 'downloaded user profile image', duration: 1000});
-
-        for (let i = 0; results[i]; i++) {
-          tmpImagesHash[singleMarkers[i].id] = results[i].tempFilePath;
-        }
-
-        // Add iconPath to marker
-        clusteredMarkers.forEach(m => {
-          if (tmpImagesHash[m.id]) {
-            m.iconPath = tmpImagesHash[m.id];
-          }
-        });
-
-        return;
-      }, err => {
-        wx.showModal({
-          title: '错误',
-          content: err.message || err
-        });
-        console.log(err);
-      });
+      return this._updateMarkerIconPath();
     })
     .then(res => {
-      wx.showToast({title: 'bind data to map', duration: 1000});
+      //wx.showToast({title: 'bind data to map', duration: 1000});
 
-      console.log(`scale: `, this.data.scale);
+      //console.log(`scale: `, this.data.scale);
 
       this.setData({
         markers: clusteredMarkers.map(m => m.mapAttrs),
@@ -337,12 +316,47 @@ Page({
       latitude: marker.latitude
     };
 
-    this.setData({
-      scale: Math.min(this.data.scale + 1, 18),
-      center
+    toPromise(mapCtx.getScale).call(mapCtx)
+      .then(res => {
+        this.setData({
+          scale: Math.min(res.scale + 1, 18),
+          center
+        });
+
+        this._renderMarkers();
+      });
+  },
+
+  _updateMarkerIconPath() {
+    const singleMarkers = clusteredMarkers.filter(m => {
+      return m.clusteredCount === 0 && !tmpImagesHash[m.id];
     });
 
-    this._renderMarkers();
+    return Promise.all(singleMarkers.map(m => {
+      return toPromise(wx.downloadFile)({url: m.picurl});
+    })) 
+      .then(results => {
+        //wx.showToast({title: 'downloaded user profile image', duration: 1000});
+
+        for (let i = 0; results[i]; i++) {
+          tmpImagesHash[singleMarkers[i].id] = results[i].tempFilePath;
+        }
+
+        // Add iconPath to marker
+        clusteredMarkers.forEach(m => {
+          if (tmpImagesHash[m.id]) {
+            m.iconPath = tmpImagesHash[m.id];
+          }
+        });
+
+        return
+      }, err => {
+        wx.showModal({
+          title: '错误',
+          content: err.message || err
+        });
+        console.log(err);
+      });
   },
 
   _renderMarkers() {
@@ -353,10 +367,17 @@ Page({
       .then(() => Marker.cluster(zdkMarkers, mapCtx))
       .then(res => {
         clusteredMarkers = res;
+        return this._updateMarkerIconPath();
+      })
+      .then(() => {
         this.setData({
           markers: clusteredMarkers.map(m => m.mapAttrs)
         });
       });
+  },
+
+  onShareAppMessage() {
+
   },
 
   onRegionChange(e) {
