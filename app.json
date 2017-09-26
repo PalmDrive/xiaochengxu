@@ -26,7 +26,7 @@
     "list": [
       {
         "pagePath": "pages/groups/groups",
-        "text": "群头条",
+        "text": "七日辑",
         "iconPath": "images/tabIcons/groups.png",
         "selectedIconPath": "images/tabIcons/groups_selected.png"
       },
