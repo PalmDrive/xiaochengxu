@@ -1,0 +1,13 @@
+.map-page {
+  height: 100vh;
+  padding-bottom: 70px;
+}
+
+.btn-start {
+  position: absolute;
+  z-index: 10;
+  bottom: 10px;
+  width: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+}

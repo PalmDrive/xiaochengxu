@@ -211,7 +211,13 @@ function toPromise(fn) {
     let p = new Promise((resolve, reject) => {
       params = params || {};
       params.success = resolve;
+      // params.fail = (res) => {
+      //   console.log('fail:');
+      //   console.log(res);
+      //   reject(res);
+      // };
       params.fail = reject;
+
       fn.call(that, params);
     });
     if (params.complete) {
@@ -223,6 +229,22 @@ function toPromise(fn) {
 
 function genRandomStr() {
   return Math.random().toString(36).slice(2);
+}
+
+/**
+ * objects in collection are unique with id
+ */
+function uniqPush(collection, object) {
+  const map = {};
+  for (let el of collection) {
+    map[el.id] = el;
+  }
+  map[object.id] = object;
+  const res = [];
+  for (let key in map) {
+    res.push(map[key]);
+  }
+  return res;
 }
 
 module.exports = {
@@ -242,5 +264,6 @@ module.exports = {
   showHint,
   closeHint,
   toPromise,
-  genRandomStr
+  genRandomStr,
+  uniqPush
 };

@@ -1,16 +1,25 @@
 const Auth = require('../../utils/auth'),
-      {toPromise} = require('../../utils/util'),
+      {toPromise, uniqPush} = require('../../utils/util'),
       Marker = require('../../utils/Marker'),
       AV = require('../../utils/av-weapp-min'),
       LeanCloud = require('../../utils/leancloud');
 
 let mapCtx,
     zdkMarkers,
-    clusteredMarkers;
+    clusteredMarkers,
+    mapSessionId;
 
 const tmpImagesHash = {};
 
 console.log('init tmpImagesHash');
+
+function onError(err) {
+  wx.showModal({
+    title: '错误',
+    content: err.message || err
+  });
+  console.log(err);
+}
 
 Page({
   data: {
@@ -157,7 +166,7 @@ Page({
           scale: res[1].scale
         });
       })
-      .catch(console.log);
+      .catch(onError);
   },
 
   onReady(options) {
@@ -174,11 +183,10 @@ Page({
 
   _onLoad(options) {
     const id = options.id || '59c7298d7565710044c06a24',
-          user = Auth.getLocalUserInfo(),
-          userInfo = user.attributes || {},
           userId = Auth.getLocalUserId(),
           UserMapSession = AV.Object.extend('UserMapSession');
-    let userMapSession, currLocation, lcUser;
+
+    mapSessionId = id;
 
     if (!userId) {
       console.log('not user found');
@@ -191,36 +199,14 @@ Page({
 
     Marker.getWindowSize();
 
-    LeanCloud.findOrCreate('WechatCampaignUser', {
-      zdkId: userId
-    }, {
-      profileImage: userInfo.profilePicUrl,
-      name: userInfo.wxUsername
-    })
-    .then(res => {
-      lcUser = res[0];
-    });
-
-    // toPromise(wx.getLocation)({
-    //   type: 'gcj02'
-    // })
-    // .then(res => {
-    //   currLocation = new AV.GeoPoint({
-    //     longitude: res.longitude,
-    //     latitude: res.latitude
-    //   });
-    //   return new AV.Query('UserMapSession')
-    //     .equalTo('mapSessionId', id) // 所有的
-    //     .find();
-    // })
     new AV.Query('UserMapSession')
       .include(['user'])
       .equalTo('mapSessionId', id) // 所有的
       .find()
     .then(data => {
-      // const _t2 = +new Date();
-      // console.log(`${_t2 - _t}ms for UserMapSession query`);
-      // _t = _t2;
+      const _t2 = +new Date();
+      console.log(`${_t2 - _t}ms for UserMapSession query`);
+      _t = _t2;
 
       // let isNew = false;
       // userMapSession = data.filter(d => d.get('userId') === user.id)[0];
@@ -244,58 +230,12 @@ Page({
       // Rendering markers
       zdkMarkers = data.map(d => {
         const user = d.get('user');
-        return new Marker({
-                    title: user.get('name'),
-                    longitude: user.get('currLocation').longitude,
-                    latitude: user.get('currLocation').latitude,
-                    id: user.id,
-                    picurl: user.get('profileImage')
-                  });
+        return this._newMarkerFromUser(user);
       });
 
-      // This scale the map
-      mapCtx.includePoints({
-        points: zdkMarkers.map(marker => {
-          const attrs = marker.mapAttrs;
-          return attrs;
-        }),
-        padding: [30, 30, 30, 30]
-      });
-
-      return new Promise(resolve => {
-        setTimeout(() => {
-          Promise.all([
-            Marker.cluster(zdkMarkers, mapCtx),
-            toPromise(mapCtx.getScale).call(mapCtx)
-          ])
-            .then(resolve);
-        }, 1500); // await a while for the resizing done
-      });
+      return this._renderMarkers(true);
     })
-    .then(res => {
-      //wx.showToast({title: 'include points done', duration: 1000});
-
-      clusteredMarkers = res[0];
-      
-      // Download the image and get the temp file path
-      return this._updateMarkerIconPath();
-    })
-    .then(res => {
-      //wx.showToast({title: 'bind data to map', duration: 1000});
-
-      //console.log(`scale: `, this.data.scale);
-
-      this.setData({
-        markers: clusteredMarkers.map(m => m.mapAttrs),
-      }); 
-    })
-    .catch(err => {
-      wx.showModal({
-        title: '错误',
-        content: err.message || err
-      });
-      console.log(err);
-    });
+    .catch(onError);
   },
 
   _setMarkers() {
@@ -336,39 +276,31 @@ Page({
   },
 
   _updateMarkerIconPath() {
+    const defaultIconPath = '/images/icon.png';
     const singleMarkers = clusteredMarkers.filter(m => {
-      return m.clusteredCount === 0 && !tmpImagesHash[m.id];
+      return m.clusteredCount === 0 && (!m.iconPath || m.iconPath === defaultIconPath); //!tmpImagesHash[m.id];
     });
 
     return Promise.all(singleMarkers.map(m => {
-      return toPromise(wx.downloadFile)({url: m.picurl});
-    })) 
-      .then(results => {
-        //wx.showToast({title: 'downloaded user profile image', duration: 1000});
-
-        for (let i = 0; results[i]; i++) {
-          tmpImagesHash[singleMarkers[i].id] = results[i].tempFilePath;
-        }
-
-        // Add iconPath to marker
-        clusteredMarkers.forEach(m => {
-          if (tmpImagesHash[m.id]) {
-            m.iconPath = tmpImagesHash[m.id];
-          }
-        });
-
-        return
-      }, err => {
-        wx.showModal({
-          title: '错误',
-          content: err.message || err
-        });
-        console.log(err);
-      });
+      return toPromise(wx.downloadFile)({url: m.picurl})
+        .then(res => {
+          //tmpImagesHash[m.id] = res.tempFilePath;
+          m.iconPath = res.tempFilePath;
+          return;
+        }, onError);
+    }));
   },
 
-  _renderMarkers() {
-    const wait = 600;
+  _renderMarkers(includePoints, wait) {
+    wait = wait || 600;
+
+    if (includePoints) {
+      mapCtx.includePoints({
+        points: zdkMarkers.map(marker => marker.mapAttrs),
+        padding: [10, 10, 10, 10]
+      });
+    }
+
     return new Promise(resolve => {
       setTimeout(resolve, wait);
     })
@@ -409,6 +341,66 @@ Page({
       });
   },
 
+  start(e) {
+    const userId = Auth.getLocalUserId(),
+          user = Auth.getLocalUserInfo(),
+          userInfo = user.attributes || {};
+
+    if (!userId) {
+      return onError('用户id不存在');
+    }
+    let lcUser;
+    LeanCloud.findOrCreate('WechatCampaignUser', {
+      zdkId: userId
+    }, {
+      profileImage: userInfo.profilePicUrl,
+      name: userInfo.wxUsername
+    })
+    .then(res => {
+      lcUser = res[0];
+      return toPromise(wx.getLocation)({
+        type: 'gcj02'
+      })
+    })
+    .then(res => {
+      const currLocation = new AV.GeoPoint({
+        longitude: res.longitude,
+        latitude: res.latitude
+      });
+
+      // async
+      lcUser.set('currLocation', currLocation);
+      
+      return LeanCloud.findOrCreate('UserMapSession', {
+        user: lcUser,
+        mapSessionId
+      })
+    })
+    .then(res => {
+      const [userMapSession, created] = res;
+
+      // update viewLog
+      const viewLog = userMapSession.viewLog || {};
+      viewLog[(new Date().toString())] = [lcUser.get('currLocation').longitude, lcUser.get('currLocation').latitude];
+      userMapSession.set('viewLog', viewLog);
+      
+      zdkMarkers = uniqPush(zdkMarkers, this._newMarkerFromUser(lcUser));
+
+      return this._renderMarkers(true);
+    })
+    .catch(onError);
+  },
+
+  _newMarkerFromUser(user) {
+    return new Marker({
+      title: user.get('name'),
+      longitude: user.get('currLocation').longitude,
+      latitude: user.get('currLocation').latitude,
+      id: user.id,
+      picurl: user.get('profileImage')
+    });
+  },
+
   _migrate() {
     new AV.Query('UserMapSession')
       .find()
@@ -427,6 +419,6 @@ Page({
           }, console.log);
         }));
       })
-      .catch(console.log);
+      .catch(onError);
   }
 });
