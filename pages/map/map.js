@@ -163,6 +163,8 @@ Page({
   onReady(options) {
     mapCtx = wx.createMapContext('theMap');
 
+    //this._migrate();
+
     this._onLoad(options || {});
   },
 
@@ -174,10 +176,11 @@ Page({
     const id = options.id || '59c7298d7565710044c06a24',
           user = Auth.getLocalUserInfo(),
           userInfo = user.attributes || {},
+          userId = Auth.getLocalUserId(),
           UserMapSession = AV.Object.extend('UserMapSession');
-    let userMapSession, currLocation;
+    let userMapSession, currLocation, lcUser;
 
-    if (!Auth.getLocalUserId()) {
+    if (!userId) {
       console.log('not user found');
       return;
     }
@@ -188,81 +191,86 @@ Page({
 
     Marker.getWindowSize();
 
-    toPromise(wx.getLocation)({
-      type: 'gcj02'
+    LeanCloud.findOrCreate('WechatCampaignUser', {
+      zdkId: userId
+    }, {
+      profileImage: userInfo.profilePicUrl,
+      name: userInfo.wxUsername
     })
     .then(res => {
-      currLocation = new AV.GeoPoint({
-        longitude: res.longitude,
-        latitude: res.latitude
-      });
-      return new AV.Query('UserMapSession')
-        .equalTo('mapSessionId', id) // 所有的
-        .find();
-    })
+      lcUser = res[0];
+    });
+
+    // toPromise(wx.getLocation)({
+    //   type: 'gcj02'
+    // })
+    // .then(res => {
+    //   currLocation = new AV.GeoPoint({
+    //     longitude: res.longitude,
+    //     latitude: res.latitude
+    //   });
+    //   return new AV.Query('UserMapSession')
+    //     .equalTo('mapSessionId', id) // 所有的
+    //     .find();
+    // })
+    new AV.Query('UserMapSession')
+      .include(['user'])
+      .equalTo('mapSessionId', id) // 所有的
+      .find()
     .then(data => {
-      const _t2 = +new Date();
-      console.log(`${_t2 - _t}ms for UserMapSession query`);
-      _t = _t2;
+      // const _t2 = +new Date();
+      // console.log(`${_t2 - _t}ms for UserMapSession query`);
+      // _t = _t2;
 
-      let isNew = false;
-      userMapSession = data.filter(d => d.get('userId') === user.id)[0];
-      if (!userMapSession) {
-        isNew = true;
-        userMapSession = new UserMapSession();
-        userMapSession.set('userId', user.id);
-        userMapSession.set('mapSessionId', id);
-      }
-      const viewLog = userMapSession.get('viewLog') || {};
-      viewLog[(new Date()).toString()] = [currLocation.longitude, currLocation.latitude];
-      userMapSession.set('currLocation', currLocation);
-      //userMapSession.set('viewLog', viewLog);
-      if (isNew) {
-        userMapSession.set('userInfo', {
-          wxUsername: userInfo.wxUsername,
-          profilePicUrl: userInfo.profilePicUrl
-        });
-      }
+      // let isNew = false;
+      // userMapSession = data.filter(d => d.get('userId') === user.id)[0];
+      // if (!userMapSession) {
+      //   isNew = true;
+      //   userMapSession = new UserMapSession();
+      //   userMapSession.set('userId', user.id);
+      //   userMapSession.set('mapSessionId', id);
+      // }
+      // const viewLog = userMapSession.get('viewLog') || {};
+      // viewLog[(new Date()).toString()] = [currLocation.longitude, currLocation.latitude];
+      // userMapSession.set('currLocation', currLocation);
+      // //userMapSession.set('viewLog', viewLog);
+      // if (isNew) {
+      //   userMapSession.set('userInfo', {
+      //     wxUsername: userInfo.wxUsername,
+      //     profilePicUrl: userInfo.profilePicUrl
+      //   });
+      // }
+      
+      // Rendering markers
+      zdkMarkers = data.map(d => {
+        const user = d.get('user');
+        return new Marker({
+                    title: user.get('name'),
+                    longitude: user.get('currLocation').longitude,
+                    latitude: user.get('currLocation').latitude,
+                    id: user.id,
+                    picurl: user.get('profileImage')
+                  });
+      });
 
-      return userMapSession.save()
-        .then(res => {
-          const _t2 = +new Date();
-          console.log(`${_t2 - _t}ms for updating userMapSession`);
-          _t = _t2;
+      // This scale the map
+      mapCtx.includePoints({
+        points: zdkMarkers.map(marker => {
+          const attrs = marker.mapAttrs;
+          return attrs;
+        }),
+        padding: [30, 30, 30, 30]
+      });
 
-          userMapSession = res;
-          if (isNew) {
-            data.push(userMapSession);
-          }
-
-          // Rendering markers
-          zdkMarkers = data.map(d => new Marker({
-            title: d.get('userInfo').wxUsername,
-            longitude: d.get('currLocation').longitude,
-            latitude: d.get('currLocation').latitude,
-            id: d.id,
-            picurl: d.get('userInfo').profilePicUrl
-          }));
-          
-          // This scale the map
-          mapCtx.includePoints({
-            points: zdkMarkers.map(marker => {
-              const attrs = marker.mapAttrs;
-              return attrs;
-            }),
-            padding: [30, 30, 30, 30]
-          });
-
-          return new Promise(resolve => {
-            setTimeout(() => {
-              Promise.all([
-                Marker.cluster(zdkMarkers, mapCtx),
-                toPromise(mapCtx.getScale).call(mapCtx)
-              ])
-                .then(resolve);
-            }, 1500); // await a while for the resizing done
-          });
-        });
+      return new Promise(resolve => {
+        setTimeout(() => {
+          Promise.all([
+            Marker.cluster(zdkMarkers, mapCtx),
+            toPromise(mapCtx.getScale).call(mapCtx)
+          ])
+            .then(resolve);
+        }, 1500); // await a while for the resizing done
+      });
     })
     .then(res => {
       //wx.showToast({title: 'include points done', duration: 1000});
@@ -399,5 +407,26 @@ Page({
         console.log(`set scale ${scale}`);
         this._renderMarkers();
       });
+  },
+
+  _migrate() {
+    new AV.Query('UserMapSession')
+      .find()
+      .then(data => {
+        return Promise.all(data.map(d => {
+          return LeanCloud.findOrCreate('WechatCampaignUser', {
+            zdkId: d.get('userId')
+          }, {
+            name: d.get('userInfo').wxUsername,
+            profileImage: d.get('userInfo').profilePicUrl,
+            currLocation: d.get('currLocation')
+          })
+          .then(res => {
+            d.set('user', res[0]);
+            return d.save();
+          }, console.log);
+        }));
+      })
+      .catch(console.log);
   }
 });

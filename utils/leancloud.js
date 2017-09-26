@@ -8,20 +8,21 @@ function findOrCreate(Cls, where, defaults) {
   return query.first()
     .then(data => {
       if (data) {
-        return data;
+        return [data, false];
       } else {
         const Klass = AV.Object.extend(Cls),
               obj = new Klass();
-        for (let key in where) {
-          obj.set(key, where[key]);
+        for (let key1 in where) {
+          obj.set(key1, where[key1]);
         }
         if (defaults) {
-          for (let key in defaults) {
-            obj.set(key, where[key]);
+          for (let key2 in defaults) {
+            obj.set(key2, defaults[key2]);
           }
         }
         
-        return obj.save();
+        return obj.save()
+          .then(data => [data, true]);
       }
     });
 };
