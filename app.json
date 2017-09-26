@@ -1,5 +1,6 @@
 {
   "pages":[
+    "pages/album/mine",
     "pages/album/index",
     "pages/album/detail",
     "pages/groups/groups",
