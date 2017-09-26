@@ -1,0 +1,59 @@
+<!--topics.wxml-->
+<import src="../../templates/topic-list.wxml"/>
+<import src="../../templates/homepage-topic-section.wxml"/>
+<import src="../../templates/loading.wxml"/>
+<include src="../../includes/hint.wxml"/>
+
+<view class="modal-container" hidden="{{!modalShown}}">
+  <view class="modal">
+    <image src="../../images/paid-group/{{groupInfo.modalImage}}" class="modal-bg"></image>
+    <button class="size-14 text-white" bindtap="copyWechatId">一键复制微信号</button>
+    <image src="../../images/paid-group/close.png" class="btn-close" bindtap="toggleModalShown"></image>
+  </view>
+  <view class="modal-drop"></view>
+</view>
+
+<view class="container" lower-threshold="200">
+  <view wx:if="{{loadingStatus !== 'LOADING'}}" class="top-view column">
+    <text class="font-size-26 text-color1 FZRUIZH_CUJW--GB1-0 top-titlle">{{ userName }}</text>
+    <text class="font-size-12 text-color3 FZRUIZH_CUJW--GB1-0 top-tip">还未解锁，一天解锁一课哦</text>
+  </view>
+
+  <swiper current="0" bindchange="listenSwiper" class="list-container" wx:key="">
+    <swiper-item id="id-{{topic.id}}" wx:for="{{ dateList[0].topics }}" wx:for-item="topic"  wx:key="">
+      <view class="topic">
+        <view class="topic-info">
+          <view class="medium-banner" style="background-image: url('{{topic.attributes.picUrl}}')">
+            <view class="medium-banner-mask"></view>
+            <view class="row bottom-view">
+              <image src="{{topic.attributes.picUrl}}" class="head-img"></image>
+              <view class="right-view column top-text" >
+                <text class="font-size-10 ji-zhu-text">辑主</text>
+                <text class="font-size-12 ji-zhu-name">宋颂颂🐳 </text>
+              </view>
+            </view>
+            <text class="font-size-12 text-white top-text">{{topic.attributes.title}}</text>
+          </view>
+        </view>
+
+        <view class="mediums">
+          <view class="medium {{topic.relationships.media.data.length > 2 ? 'medium-50' : 'medium-100'}} {{index === 1 || index === 2 ? 'medium-gray' : ''}}" wx:for="{{ topic.relationships.media.data }}" wx:for-item="medium" data-medium="{{ medium }}" wx:key="" bindtap="goToMedium">
+            <text class="medium-title font-size-16">{{ medium.attributes.title }}</text>
+          </view>
+        </view>
+      </view>
+    </swiper-item>
+  </swiper>
+  <view class="count-view row">
+    <text class="font-size-10 text-color2 bottom-tip">123人与你共同观看</text>
+    <view class="row" style="justify-content: flex-end; align-items: flex-end;">
+      <text class="font-size-22 pingfang-medium text-color1">{{current + 1}}</text>
+      <text class="font-size-12 pingfang-medium text-color1">/{{dateList[0].topics.length}}</text>
+    </view>
+  </view>
+
+  <view class="tip-line">
+    <view class="line {{index === current ? 'line-blue' : 'line-gray'}}" wx:for="{{ dateList[0].topics }}" wx:for-item="topic"  wx:key=""></view>
+  </view>
+  <template is="loading" data="{{loadingStatus}}"></template>
+</view>

@@ -19,8 +19,8 @@
       <view class="bottom-view row">
           <image src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%94%A8/%E5%88%97%E8%A1%A8%E5%B0%8F%E5%9B%BE/{{group.attributes.groupInfo.modalImage}}" class="head-img"></image>
           <view class="bottom-left-view column" >
-            <text class="ji-zhu-text">辑主</text>
-            <text class="ji-zhu-name">宋颂颂🐳 </text>
+            <text class="ji-zhu-text font-size-10">辑主</text>
+            <text class="ji-zhu-name font-size-12">宋颂颂🐳 </text>
           </view>
           <view class="bottom-right-view">
             <text class="price-tip font-size-12">售价</text>

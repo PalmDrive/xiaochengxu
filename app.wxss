@@ -153,6 +153,14 @@ view {
   font-family: PingFangSC-Regular;
 }
 
+.pingfang-medium {
+  font-family: PingFangSC-Medium;
+}
+
+.FZRUIZH_CUJW--GB1-0 {
+  font-family: FZRUIZH_CUJW--GB1-0;
+}
+
 .font-size-10 {
   font-size: 10px;
 }
@@ -161,10 +169,50 @@ view {
   font-size: 12px;
 }
 
+.font-size-15 {
+  font-size: 15px;
+}
+
+.font-size-16 {
+  font-size: 16px;
+}
+
 .font-size-20 {
   font-size: 20px;
 }
 
+.font-size-22 {
+  font-size: 22px;
+}
+
 .font-size-26 {
   font-size: 26px;
+}
+
+.text-color1 {
+  color: #1A1A1A
+}
+
+.text-color2 {
+  color: #606060
+}
+
+.text-color3 {
+  color: #B7B7B7
+}
+
+.text-color4 {
+  color: #D5D5D5
+}
+
+.text-color5 {
+  color: #EDEDED
+}
+
+.text-color6 {
+  color: #383838
+}
+
+.main-color {
+  color: #0090E7
 }

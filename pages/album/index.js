@@ -106,15 +106,15 @@ Page({
       ec: `qiriji_name:${name},toutiao_id:${userId}`,
       el: `user_name:${userInfo.wxUsername},user_id:${userId}`
     });
-    if (role) {
+    // if (role) {
       wx.navigateTo({
-        url: `../groups/group?id=${userId}`
+        url: `../album/detail?id=${userId}`
       });
-    } else {
-      wx.navigateTo({
-        url: `../album/buy?id=${userId}`
-      });
-    }
+    // } else {
+    //   wx.navigateTo({
+    //     url: `../album/buy?id=${userId}`
+    //   });
+    // }
   },
 
   /**
