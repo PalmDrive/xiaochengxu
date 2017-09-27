@@ -235,6 +235,19 @@ function genRandomStr() {
  * objects in collection are unique with id
  */
 function uniqPush(collection, object) {
+  if (!collection.length) {
+    return [object];
+  }
+
+  let flag = false;
+  if (typeof collection[0] !== 'object') {
+    flag = true;
+    collection = collection.map(el => {
+      return {id: el};
+    });
+    object = {id: object};
+  }
+
   const map = {};
   for (let el of collection) {
     map[el.id] = el;
@@ -242,8 +255,9 @@ function uniqPush(collection, object) {
   map[object.id] = object;
   const res = [];
   for (let key in map) {
-    res.push(map[key]);
+    res.push(flag ? map[key].id : map[key]);
   }
+
   return res;
 }
 

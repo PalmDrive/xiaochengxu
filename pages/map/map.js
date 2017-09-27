@@ -2,16 +2,19 @@ const Auth = require('../../utils/auth'),
       {toPromise, uniqPush} = require('../../utils/util'),
       Marker = require('../../utils/Marker'),
       AV = require('../../utils/av-weapp-min'),
+      Logger = require('../../utils/Logger'),
       LeanCloud = require('../../utils/leancloud');
 
 let mapCtx,
     zdkMarkers,
     clusteredMarkers,
-    mapSessionId;
+    mapSessionId,
+    lcUser,
+    lcUsers;
 
-const tmpImagesHash = {};
-
-console.log('init tmpImagesHash');
+const logger = new Logger();
+console.log('init logger');
+//logger.disabled(); 
 
 function onError(err) {
   wx.showModal({
@@ -23,6 +26,8 @@ function onError(err) {
 
 Page({
   data: {
+    barrages: [],
+    usersCount: null,
     markers: [],
     size: {},
     center: {
@@ -30,6 +35,8 @@ Page({
       latitude: 39.5
     },
     scale: 16,
+    state: 0, // 0, 1, 2
+    mode: 'group', // group, all
     controls: [
       {
         clickable: true,
@@ -184,7 +191,8 @@ Page({
   _onLoad(options) {
     const id = options.id || '59c7298d7565710044c06a24',
           userId = Auth.getLocalUserId(),
-          UserMapSession = AV.Object.extend('UserMapSession');
+          user = Auth.getLocalUserInfo(),
+          userInfo = user.attributes || {};
 
     mapSessionId = id;
 
@@ -199,43 +207,33 @@ Page({
 
     Marker.getWindowSize();
 
-    new AV.Query('UserMapSession')
-      .include(['user'])
-      .equalTo('mapSessionId', id) // 所有的
-      .find()
-    .then(data => {
-      const _t2 = +new Date();
-      console.log(`${_t2 - _t}ms for UserMapSession query`);
-      _t = _t2;
+    // 从LeanCloud上找到当前用户
+    LeanCloud.findOrCreate('WechatCampaignUser', {
+      zdkId: userId
+    }, {
+      profileImage: userInfo.profilePicUrl,
+      name: userInfo.wxUsername
+    })
+      .then(res => {
+        lcUser = res[0];
 
-      // let isNew = false;
-      // userMapSession = data.filter(d => d.get('userId') === user.id)[0];
-      // if (!userMapSession) {
-      //   isNew = true;
-      //   userMapSession = new UserMapSession();
-      //   userMapSession.set('userId', user.id);
-      //   userMapSession.set('mapSessionId', id);
-      // }
-      // const viewLog = userMapSession.get('viewLog') || {};
-      // viewLog[(new Date()).toString()] = [currLocation.longitude, currLocation.latitude];
-      // userMapSession.set('currLocation', currLocation);
-      // //userMapSession.set('viewLog', viewLog);
-      // if (isNew) {
-      //   userMapSession.set('userInfo', {
-      //     wxUsername: userInfo.wxUsername,
-      //     profilePicUrl: userInfo.profilePicUrl
-      //   });
-      // }
-      
-      // Rendering markers
-      zdkMarkers = data.map(d => {
-        const user = d.get('user');
-        return this._newMarkerFromUser(user);
+        return this._didUserMapSessionExist(mapSessionId, lcUser.id);
+      })
+      .then(didExist => {
+        if (didExist) {
+          return this._init()
+            .then(usersCount => {
+              this.setData({
+                state: 2,
+                usersCount
+              });
+            }, onError);
+        } else {
+          return true;
+        }
       });
 
-      return this._renderMarkers(true);
-    })
-    .catch(onError);
+    return this._fetchAndShowUsers(this._fetchUsersFromMap, id);
   },
 
   _setMarkers() {
@@ -307,9 +305,14 @@ Page({
       .then(() => Marker.cluster(zdkMarkers, mapCtx))
       .then(res => {
         clusteredMarkers = res;
+
+        logger.log('start downloading user profile images');
+
         return this._updateMarkerIconPath();
       })
       .then(() => {
+        logger.log('Downloaded all user profile images');
+
         this.setData({
           markers: clusteredMarkers.map(m => m.mapAttrs)
         });
@@ -340,55 +343,138 @@ Page({
         this._renderMarkers();
       });
   },
-
-  start(e) {
-    const userId = Auth.getLocalUserId(),
-          user = Auth.getLocalUserInfo(),
-          userInfo = user.attributes || {};
-
-    if (!userId) {
-      return onError('用户id不存在');
-    }
-    let lcUser;
-    LeanCloud.findOrCreate('WechatCampaignUser', {
-      zdkId: userId
-    }, {
-      profileImage: userInfo.profilePicUrl,
-      name: userInfo.wxUsername
-    })
-    .then(res => {
-      lcUser = res[0];
-      return toPromise(wx.getLocation)({
-        type: 'gcj02'
-      })
+  
+  _init() {
+    return toPromise(wx.getLocation)({
+      type: 'gcj02'
     })
     .then(res => {
       const currLocation = new AV.GeoPoint({
         longitude: res.longitude,
         latitude: res.latitude
-      });
+      }),
+           mapSessionIds = uniqPush(lcUser.get('mapSessionIds') || [], mapSessionId);
 
       // async
       lcUser.set('currLocation', currLocation);
-      
-      return LeanCloud.findOrCreate('UserMapSession', {
-        user: lcUser,
-        mapSessionId
-      })
-    })
-    .then(res => {
-      const [userMapSession, created] = res;
+      lcUser.set('mapSessionIds', mapSessionIds);
 
-      // update viewLog
-      const viewLog = userMapSession.viewLog || {};
-      viewLog[(new Date().toString())] = [lcUser.get('currLocation').longitude, lcUser.get('currLocation').latitude];
-      userMapSession.set('viewLog', viewLog);
+      lcUser.save();
+      this._updateUserMapSession();
       
+      return this._countUsers();
+    });
+  },
+
+  start(e) {
+    this.setData({state: 1});
+    const userId = Auth.getLocalUserId();
+
+    if (!userId) {
+      return onError('用户id不存在');
+    }
+
+    return this._init()
+    .then(usersCount => {
+      const currLocation = lcUser.get('currLocation');
       zdkMarkers = uniqPush(zdkMarkers, this._newMarkerFromUser(lcUser));
+      this.setData({
+        usersCount,
+        center: {
+          longitude: currLocation.longitude,
+          latitude: currLocation.latitude
+        }
+      });
 
-      return this._renderMarkers(true);
+      return this._renderMarkers();
     })
     .catch(onError);
+  },
+  
+  // TODO: validation
+  sendNotes(e) {
+    const msg = e.detail.value;
+    if (!msg) {
+      onError('输入不能为空');
+    }
+    const notes = lcUser.get('notes') || {};
+    notes[(new Date()).toString()] = msg;
+    lcUser.set('notes', notes);
+    lcUser.save();
+
+    lcUsers = uniqPush(lcUsers, lcUser);
+
+    this.setData({
+      state: 2,
+      barrages: this._getBarrageMessages(lcUsers)
+    });
+  },
+
+  toggleShowAllUsers() {
+    const toggleMap = {
+      group: {
+        mode: 'all',
+        method: '_fetchAllUsers'
+      },
+      all: {
+        mode: 'group',
+        method: '_fetchUsersFromMap',
+        args: mapSessionId
+      }
+    },
+        toggled = toggleMap[this.data.mode];
+    this.setData({mode: toggled.mode});
+    return this._fetchAndShowUsers(this[toggled.method], toggled.args);    
+  },
+
+  _fetchAndShowUsers(fn) {
+    let args = [null];
+    if (arguments.length > 1) {
+      args = [].slice.call(arguments);
+      args.shift();
+    }
+    fn.apply(this, args)
+      .then(data => {
+        lcUsers = data;
+        this.setData({
+          barrages: this._getBarrageMessages(lcUsers)
+        });
+        // Rendering markers
+        zdkMarkers = data.map(d => this._newMarkerFromUser(d));
+        return this._renderMarkers(true);
+      })
+      .catch(onError);
+  },
+
+  _getBarrageMessages(users) {
+    const usersWithNotes = users.filter(u => {
+      const notes = u.get('notes');
+      return notes && Object.keys(notes).length;
+    });
+    const arr = usersWithNotes.map(this._getBarrageMessage);
+
+    arr.sort((a, b) => b[1] - a[1]);
+
+    // if arr[0].length === 0, barrage is empty
+
+    return arr.map(el => el[0]);
+  },
+  
+  // @return {array} [message<string>, <timestamp>]
+  _getBarrageMessage(user) {
+    const notes = user.get('notes') || {},
+          notesArr = [];
+    for (let key in notes) {
+      notesArr.push([+new Date(key), notes[key]]);
+    }
+
+    notesArr.sort((a, b) => b[0] - a[0]);
+
+    if (notesArr.length) {
+      return [`${user.get('name')}: ${notesArr[0][1]}`, notesArr[0][0]];
+    } else {
+      return [];
+    }
   },
 
   _newMarkerFromUser(user) {
@@ -399,6 +485,80 @@ Page({
       id: user.id,
       picurl: user.get('profileImage')
     });
+  },
+
+  _fetchUsersFromMap(id) {
+    return new AV.Query('UserMapSession')
+      .include(['user'])
+      .equalTo('mapSessionId', id)
+      .limit(500)
+      .find()
+      .then(data => data.map(d => d.get('user')));
+  },
+
+  _fetchAllUsers() {
+    const ids = lcUser.get('mapSessionIds'),
+          cql = `
+            select include user, * from UserMapSession where
+            mapSessionId in ?
+            limit 1000
+          `;
+    return AV.Query.doCloudQuery(cql, [ids])
+      .then(res => {
+        const users = res.results.map(d => d.get('user')),
+              map = {},
+              distinctUers = []
+        // distict users
+        users.forEach(u => {
+          if (!map[u.id]) {
+            map[u.id] = true;
+            distinctUers.push(u);
+          }
+        });
+        
+        return distinctUers;
+      });
+  },
+
+  _countUsers() {
+    const cql = `
+    select count(*) from UserMapSession where
+    user != pointer('WechatCampaignUser', ?) and
+    mapSessionId in ?
+    `;
+    return AV.Query.doCloudQuery(cql, [lcUser.id, lcUser.get('mapSessionIds')])
+      .then(data => data.count, onError);
+  },
+
+  _updateUserMapSession() {
+    const currLocation = lcUser.get('currLocation');
+    return LeanCloud.findOrCreate('UserMapSession', {
+      user: lcUser,
+      mapSessionId
+    })
+    .then(res => {
+      const [userMapSession, created] = res;
+            
+      // Async update viewLog
+      const viewLog = userMapSession.get('viewLog') || {},
+            userInfo = userMapSession.get('userInfo') || {};
+      viewLog[(new Date().toString())] = [currLocation.longitude, currLocation.latitude];
+      userInfo.wxUsername = lcUser.get('name');
+      userMapSession.set('viewLog', viewLog);
+      userMapSession.set('userInfo', userInfo);
+      
+      return userMapSession.save();
+    });
+  },
+
+  _didUserMapSessionExist(mapSessionId, userId) {
+    const cql = `
+      select count(*) from UserMapSession where 
+      mapSessionId = ? and 
+      user = pointer('WechatCampaignUser', ?)
+    `
+    return AV.Query.doCloudQuery(cql, [mapSessionId, userId])
+      .then(res => res.count > 0);
   },
 
   _migrate() {

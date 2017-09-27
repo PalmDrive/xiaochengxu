@@ -1,4 +1,22 @@
 <view class="map-page">
+  <view class="banner">
+    <text class="size-9" wx:if="{{usersCount !== null}}">已收集{{usersCount}}个吃货</text>
+    <view class="barrage-container">
+      <text wx:for="{{barrages}}" wx:key="" class="size-9">{{item}}</text>
+    </view>
+  </view>
+
   <map markers="{{markers}}" style="width: 100%;height: 100%" scale="{{scale}}" id="theMap" bindregionchange="onRegionChange" controls="{{controls}}" bindcontroltap="onControlTap" bindmarkertap="onMarkerTap" longitude="{{center.longitude}}" latitude="{{center.latitude}}"></map>
-  <button class="btn-start" bindtap="start">点击开始收集吃货们</button>
+
+  <view class="toolbar">
+    <button class="btn-start action-btn" bindtap="start" wx:if="{{state === 0}}">点击开始收集吃货们</button>
+    <input value="我在北京吃炸酱面" focus="true" confirm-type="send" class="action-btn" wx:if="{{state === 1}}" bindconfirm="sendNotes"></input>
+    <view class="btns" wx:if="{{state === 2}}">
+      <button bindtap="toggleShowAllUsers" class="size-12" hidden="{{mode === 'all'}}">查看所有吃货</button>
+      <button bindtap="toggleShowAllUsers" class="size-12" hidden="{{mode === 'group'}}">查看群里吃货</button>
+      <button class="size-12">分享到群</button>
+      <button class="size-12">分享朋友圈</button>
+    </view>
+  </view>
+  
 </view>
