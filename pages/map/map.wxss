@@ -1,7 +1,7 @@
 .map-page {
   height: 100vh;
-  padding-bottom: 70px;
-  padding-top: 50px;
+  padding-bottom: 300px;
+  padding-top: 0px;
   background-color: #FAF8FE;
 }
 
@@ -34,4 +34,31 @@ input {
 .btns button {
   display: inline-block;
   margin: 5px;
+}
+
+.collected-users-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.collected-users-container image {
+  width: 40px;
+  height: 40px;
+  margin: 5px;
+}
+
+.btns {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.toolbar button {
+  background-color: #157EFB;
+  padding: 7px 10px;
+  color: white;
+}
+
+.toolbar-msg {
+  text-align: center;
 }

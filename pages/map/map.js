@@ -9,8 +9,10 @@ let mapCtx,
     zdkMarkers,
     clusteredMarkers,
     mapSessionId,
-    lcUser,
-    lcUsers;
+    lcUser;
+
+const MIN_USERS_COLLECTED_COUNT = 20,
+      USER_PLACEHOLDER_IMG = '/images/map/user-placeholder.png';
 
 const logger = new Logger();
 console.log('init logger');
@@ -26,7 +28,11 @@ function onError(err) {
 
 Page({
   data: {
+    MIN_USERS_COLLECTED_COUNT,
     barrages: [],
+    collectedUsers: [],
+    lcUsers: [],
+    collectedUsersContainerWidth: 0,
     usersCount: null,
     markers: [],
     size: {},
@@ -63,119 +69,6 @@ Page({
     ]
   },
 
-  _test() {
-    const user = Auth.getLocalUserInfo(),
-          userInfo = user.attributes || {},
-          that = this;
-
-    Marker.getWindowSize();
-
-    let scale, region, centerLocation;
-
-    const users = [
-      {
-        longitude: 116,
-        latitude: 39,
-        title: 'a:116,39',
-        id: 'a'
-      },
-      {
-        longitude: 116.5,
-        latitude: 39.5,
-        title: 'a:116.5,39.5',
-        id: 'b'
-      },
-      {
-        longitude: 116.55,
-        latitude: 39.55,
-        title: 'a:116.55,39.55',
-        id: 'c'
-      },
-      {
-        longitude: 116.7,
-        latitude: 39.7,
-        title: 'a:116.7,39.7',
-        id: 'd'
-      },
-      {
-        longitude: 117,
-        latitude: 40,
-        title: 'e:117,40',
-        id: 'e'
-      },
-      {
-        longitude: 115,
-        latitude: 38,
-        title: 'f:115,38',
-        id: 'f'
-      },
-      {
-        longitude: 114,
-        latitude: 37,
-        title: 'g:114,37',
-        id: 'g'
-      }
-    ];
-
-    toPromise(wx.getLocation)({
-      type: 'gcj02'
-    })
-      .then(res => {
-        users.push({
-          longitude: res.longitude,
-          latitude: res.latitude,
-          title: `${userInfo.wxUsername}:${res.longitude},${res.latitude}`,
-          id: 'h'
-        });
-
-        zdkMarkers = users.map(user => new Marker(user));
-
-        console.log('longitude:', res.longitude);
-        console.log('latitude:', res.latitude);
-
-        // that.setData({
-        //   markers: markers.map(marker => marker.mapAttrs)
-        // });
-        
-        // This scale the map
-        mapCtx.includePoints({
-          points: zdkMarkers.map(marker => marker.mapAttrs)
-        });
-
-        return new Promise(resolve => {
-          setTimeout(() => {
-            Promise.all([
-              Marker.cluster(zdkMarkers, mapCtx),
-              toPromise(mapCtx.getScale).call(mapCtx)
-            ])
-            // Promise.all([
-            //   toPromise(mapCtx.getScale).call(mapCtx),
-            //   toPromise(mapCtx.getRegion).call(mapCtx),
-            //   toPromise(mapCtx.getCenterLocation).call(mapCtx)
-            // ])
-              .then(resolve);
-          }, 1500); // await a while for the resizing done
-        });
-      })
-      .then(res => {
-        // [scale, region, centerLocation] = res;
-        // console.log('scale:', scale);
-        // console.log('region:', region);
-        // console.log('region:', centerLocation);
-        // const calCenterLocation = {
-        //   longitude: (region.northeast.longitude + region.southwest.longitude) / 2,
-        //   latitude: (region.northeast.latitude + region.southwest.latitude) / 2,
-        // };
-        // console.log('calCenterLocation:', calCenterLocation);
-        clusteredMarkers = res[0];
-        this.setData({
-          markers: clusteredMarkers.map(m => m.mapAttrs),
-          scale: res[1].scale
-        });
-      })
-      .catch(onError);
-  },
-
   onReady(options) {
     mapCtx = wx.createMapContext('theMap');
 
@@ -188,7 +81,138 @@ Page({
     //this._onLoad(options);
   },
 
+  onMarkerTap(e) {
+    const step = 1;
+    const marker = clusteredMarkers.filter(m => m.id === e.markerId)[0];
+
+    const center = {
+      longitude: marker.longitude,
+      latitude: marker.latitude
+    };
+
+    toPromise(mapCtx.getScale).call(mapCtx)
+      .then(res => {
+        this.setData({
+          scale: Math.min(res.scale + step, 18),
+          center
+        });
+
+        this._renderMarkers();
+      });
+  },
+
+  onShareAppMessage() {
+
+  },
+
+  onRegionChange(e) {
+    const that = this;
+    if (e.type === 'end') {
+      toPromise(mapCtx.getScale).call(mapCtx)
+        .then(res => {
+          console.log('current scale:', res.scale);
+          if (res.scale !== that.data.scale) {
+            this.data.scale = res.scale;
+
+            this._renderMarkers();
+          }
+        });
+    }
+  },
+
+  onControlTap(e) {
+    let scale; 
+    const step = 1;
+    toPromise(mapCtx.getScale).call(mapCtx)
+      .then(res => {
+        scale = this.data.scale;
+        if (e.controlId === 'zoomIn') {
+          scale = Math.min(scale + step, 18);
+        } else if (e.controlId === 'zoomOut') {
+          scale = Math.max(scale - step, 5);
+        }
+        this.setData({scale});
+        console.log(`set scale ${scale}`);
+        this._renderMarkers();
+      });
+  },
+
+  start(e) {
+    this.setData({state: 1});
+    const userId = Auth.getLocalUserId();
+
+    if (!userId) {
+      return onError('用户id不存在');
+    }
+
+    return this._init()
+    .then(res => {
+      const currLocation = lcUser.get('currLocation');
+      zdkMarkers = uniqPush(zdkMarkers, this._newMarkerFromUser(lcUser));
+      this.setData({
+        usersCount: res[0],
+        center: {
+          longitude: currLocation.longitude,
+          latitude: currLocation.latitude
+        }
+      });
+
+      return this._renderMarkers();
+    })
+    .catch(onError);
+  },
+  
+  // TODO: validation
+  sendNotes(e) {
+    let lcUsers = this.data.lcUsers;
+    const msg = e.detail.value;
+    if (!msg) {
+      onError('输入不能为空');
+    }
+    const notes = lcUser.get('notes') || {};
+    notes[(new Date()).toString()] = msg;
+    lcUser.set('notes', notes);
+    lcUser.save();
+
+    lcUsers = uniqPush(lcUsers, lcUser);
+
+    this.setData({
+      state: 2,
+      barrages: this._getBarrageMessages(lcUsers),
+      lcUsers
+    });
+  },
+
+  toggleShowAllUsers() {
+    // const toggleMap = {
+    //   group: {
+    //     mode: 'all',
+    //     method: '_fetchAllUsers'
+    //   },
+    //   all: {
+    //     mode: 'group',
+    //     method: '_fetchUsersFromMap',
+    //     args: mapSessionId
+    //   }
+    // },
+    //     toggled = toggleMap[this.data.mode];
+    // this.setData({mode: toggled.mode});
+    // return this._fetchAndShowUsers(this[toggled.method], toggled.args);    
+  },
+
+  onTapCollectedUser(e) {
+    const item = e.target.dataset.item;
+    this.setData({
+      center: {
+        longitude: item.longitude,
+        latitude: item.latitude
+      }
+    });
+  },
+
   _onLoad(options) {
+    logger.log('_onload started');
+
     const id = options.id || '59c7298d7565710044c06a24',
           userId = Auth.getLocalUserId(),
           user = Auth.getLocalUserInfo(),
@@ -200,8 +224,6 @@ Page({
       console.log('not user found');
       return;
     }
-    
-    let _t = +new Date();
 
     zdkMarkers = [];
 
@@ -220,57 +242,67 @@ Page({
         return this._didUserMapSessionExist(mapSessionId, lcUser.id);
       })
       .then(didExist => {
+        logger.log('got current user from lc and checked if userMapSession exist');
+
         if (didExist) {
           return this._init()
-            .then(usersCount => {
+            .then(res => {
+              logger.log('_init finished');
+
               this.setData({
                 state: 2,
-                usersCount
+                usersCount: res[0]
               });
+              return this._fetchAndShowUsers({
+                method: '_fetchAllUsers',
+                filter: Marker.select,
+                initCollectedUsers: true
+              })
             }, onError);
         } else {
-          return true;
+          return this._fetchAndShowUsers({
+                    method: '_fetchAllUsers',
+                    filter: Marker.select,
+                    initCollectedUsers: true
+                  });
         }
       });
-
-    return this._fetchAndShowUsers(this._fetchUsersFromMap, id);
   },
 
-  _setMarkers() {
-    this.setData({
-      markers: [
-        {
-          longitude: 116.407526,
-          latitude: 39.90403,
-          iconPath: '/images/icon.png',
-          id: '59c873431b69e6004032bc71',
-          width: 50,
-          height: 50,
-          title: 'Yujun: 0',
-          label: {x: 0, y: 0, fontSize: 12, content: 'Yujun: 0'}
+  _initCollectedUsers(lcUsers) {
+    const imageSize = 40,
+          margin = 5;
+
+    function newCollectedUser(user) {
+      return {
+        profileImage: user.get('profileImage'),
+        id: user.id,
+        longitude: user.get('currLocation').longitude,
+        latitude: user.get('currLocation').latitude
+      };
+    }
+    let collectedUsers = [];
+    if (this.data.state === 2) {
+      lcUsers = lcUsers.filter(u => u.id !== lcUser.id);
+      if (lcUsers.length < MIN_USERS_COLLECTED_COUNT) {
+        for (let i = 0; i < MIN_USERS_COLLECTED_COUNT; i++) {
+          let el = lcUsers[i];
+          el = el ? newCollectedUser(el) : {profileImage: USER_PLACEHOLDER_IMG};
+          collectedUsers.push(el);
         }
-      ],
-      scale: 18
-    }); 
-  },
-
-  onMarkerTap(e) {
-    const marker = clusteredMarkers.filter(m => m.id === e.markerId)[0];
-
-    const center = {
-      longitude: marker.longitude,
-      latitude: marker.latitude
+      } else {
+        collectedUsers = lcUsers.map(newCollectedUser);
+      }
+    } else {
+      for (let i = 0; i < MIN_USERS_COLLECTED_COUNT; i++) {
+        collectedUsers.push({profileImage: USER_PLACEHOLDER_IMG});
+      }
+    }
+   
+    return {
+      collectedUsers,
+      width: Math.ceil(collectedUsers.length / 2) * (margin * 2 + imageSize)
     };
-
-    toPromise(mapCtx.getScale).call(mapCtx)
-      .then(res => {
-        this.setData({
-          scale: Math.min(res.scale + 1, 18),
-          center
-        });
-
-        this._renderMarkers();
-      });
   },
 
   _updateMarkerIconPath() {
@@ -294,7 +326,7 @@ Page({
 
     if (includePoints) {
       mapCtx.includePoints({
-        points: zdkMarkers.map(marker => marker.mapAttrs),
+        points: includePoints.map(marker => marker.mapAttrs),
         padding: [10, 10, 10, 10]
       });
     }
@@ -311,39 +343,22 @@ Page({
         return this._updateMarkerIconPath();
       })
       .then(() => {
+        return toPromise(mapCtx.getScale).call(mapCtx);
+      })
+      .then(res => {
         logger.log('Downloaded all user profile images');
+        this.data.scale = res.scale;
 
         this.setData({
-          markers: clusteredMarkers.map(m => m.mapAttrs)
+          markers: clusteredMarkers.map(m => m.mapAttrs),
+          //scale: res.scale Do not set scale here
         });
       });
   },
-
-  onShareAppMessage() {
-
-  },
-
-  onRegionChange(e) {
-    console.log('on region change');
-    console.log(e);
-  },
-
-  onControlTap(e) {
-    let scale; 
-    toPromise(mapCtx.getScale).call(mapCtx)
-      .then(res => {
-        scale = this.data.scale;
-        if (e.controlId === 'zoomIn') {
-          scale = Math.min(scale + 1, 18);
-        } else if (e.controlId === 'zoomOut') {
-          scale = Math.max(scale - 1, 5);
-        }
-        this.setData({scale});
-        console.log(`set scale ${scale}`);
-        this._renderMarkers();
-      });
-  },
   
+  /**
+   * get users count; update lcUser and userMapSession
+   */
   _init() {
     return toPromise(wx.getLocation)({
       type: 'gcj02'
@@ -359,91 +374,48 @@ Page({
       lcUser.set('currLocation', currLocation);
       lcUser.set('mapSessionIds', mapSessionIds);
 
-      lcUser.save();
-      this._updateUserMapSession();
-      
-      return this._countUsers();
+      return Promise.all([
+        this._countUsers(),
+        lcUser.save(),
+        this._updateUserMapSession()
+      ]);
     });
   },
 
-  start(e) {
-    this.setData({state: 1});
-    const userId = Auth.getLocalUserId();
-
-    if (!userId) {
-      return onError('用户id不存在');
-    }
-
-    return this._init()
-    .then(usersCount => {
-      const currLocation = lcUser.get('currLocation');
-      zdkMarkers = uniqPush(zdkMarkers, this._newMarkerFromUser(lcUser));
-      this.setData({
-        usersCount,
-        center: {
-          longitude: currLocation.longitude,
-          latitude: currLocation.latitude
-        }
-      });
-
-      return this._renderMarkers();
-    })
-    .catch(onError);
-  },
-  
-  // TODO: validation
-  sendNotes(e) {
-    const msg = e.detail.value;
-    if (!msg) {
-      onError('输入不能为空');
-    }
-    const notes = lcUser.get('notes') || {};
-    notes[(new Date()).toString()] = msg;
-    lcUser.set('notes', notes);
-    lcUser.save();
-
-    lcUsers = uniqPush(lcUsers, lcUser);
-
-    this.setData({
-      state: 2,
-      barrages: this._getBarrageMessages(lcUsers)
-    });
-  },
-
-  toggleShowAllUsers() {
-    const toggleMap = {
-      group: {
-        mode: 'all',
-        method: '_fetchAllUsers'
-      },
-      all: {
-        mode: 'group',
-        method: '_fetchUsersFromMap',
-        args: mapSessionId
-      }
-    },
-        toggled = toggleMap[this.data.mode];
-    this.setData({mode: toggled.mode});
-    return this._fetchAndShowUsers(this[toggled.method], toggled.args);    
-  },
-
-  _fetchAndShowUsers(fn) {
-    let args = [null];
-    if (arguments.length > 1) {
-      args = [].slice.call(arguments);
-      args.shift();
-    }
-    fn.apply(this, args)
+  /**
+   * [_fetchAndShowUsers description]
+   * @param  {Dict} options
+   * @param {String} options.method
+   * @param {String} [options.params]
+   * @param {Function} [options.filter]
+   * @param {Boolean} [options.needIncludePoints]
+   * @param {Boolean} [options.initCollectedUsers]
+   */
+  _fetchAndShowUsers(options) {
+    this[options.method](options.params)
       .then(data => {
-        lcUsers = data;
-        this.setData({
-          barrages: this._getBarrageMessages(lcUsers)
-        });
+        const dataUpdates = {
+          barrages: this._getBarrageMessages(data),
+          lcUsers: data
+        }
+        if (options.initCollectedUsers) {
+          const {collectedUsers, width} = this._initCollectedUsers(data);
+          dataUpdates.collectedUsers = collectedUsers;
+          dataUpdates.collectedUsersContainerWidth = width;
+        }
+
+        this.setData(dataUpdates);
+
         // Rendering markers
         zdkMarkers = data.map(d => this._newMarkerFromUser(d));
-        return this._renderMarkers(true);
-      })
-      .catch(onError);
+
+        if (options.filter) {
+          const filteredMarkers = options.filter(zdkMarkers);
+          return this._renderMarkers(filteredMarkers);
+        } else {
+          return this._renderMarkers(options.needIncludePoints ? zdkMarkers : null);
+        }
+      });
   },
 
   _getBarrageMessages(users) {
@@ -493,7 +465,15 @@ Page({
       .equalTo('mapSessionId', id)
       .limit(500)
       .find()
-      .then(data => data.map(d => d.get('user')));
+      .then(data => {
+        const users = data.map(d => d.get('user'));
+
+        // return users.filter(u => {
+        //   return u.get('currLocation').longitude > 0;
+        // });
+
+        return users;
+      });
   },
 
   _fetchAllUsers() {

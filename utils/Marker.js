@@ -1,5 +1,16 @@
 const {toPromise, genRandomStr} = require('util');
 
+const China = {
+  northeast: {
+    longitude: 135.03,
+    latitude: 53.55
+  },
+  southwest: {
+    longitude: 73.667,
+    latitude: 3.867
+  }
+};
+
 class Marker {
   constructor(options) {
     this.id = options.id || genRandomStr();
@@ -69,6 +80,15 @@ class Marker {
     } else {
       this.clusteredMarkers.push(marker);
     }
+  }
+
+  static select(markers) {
+    return markers.filter(m => {
+      return m.longitude <= China.northeast.longitude &&
+             m.longitude >= China.southwest.longitude &&
+             m.latitude <= China.northeast.latitude &&
+             m.latitude >= China.southwest.latitude;
+    });
   }
 
   static merge(marker1, marker2) {
@@ -153,6 +173,11 @@ class Marker {
         return markers;
       }
     }
+
+    if (!markers.length) {
+      return new Promise(resolve => resolve(markers));
+    }
+
     return this.getRatio(mapCtx)
       .then(() => _cluster(markers));
   }
