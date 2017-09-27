@@ -16,7 +16,7 @@ page {
 }
 
 .list-container {
-  height: 417px;
+  height: 457px;
   width: 100%;
 }
 
@@ -25,6 +25,8 @@ page {
   border-radius: 3px;
   margin-left: 20px;
   margin-right: 20px;
+  background-size: cover;
+  background-position: center;
 }
 
 .topic-info {

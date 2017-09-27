@@ -118,7 +118,15 @@ Page({
       topics: res.data
     });
     // dateList[0].topics[0].relationships.media.data.push(dateList[0].topics[0].relationships.media.data[0])
-    console.log("dateList: ---" + res.data)
+    // console.log("dateList: ---" + res.data)
+    // 找到已解锁到第几天
+    for (let i = 0; i < res.data.length; i++) {
+      if (res.data[i].relationships.media.data.length === 0) {
+        this.setData({current: i - 1 < 0 ? 0 : i - 1});
+        break;
+      }
+    }
+
     const group = res.included[0],
           groupInfo = group.attributes.groupInfo;
     groupInfo.pageviews = util.shortNumber(groupInfo.pageviews);

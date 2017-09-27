@@ -1,8 +1,8 @@
 {
   "pages":[
-    "pages/album/mine",
     "pages/album/index",
     "pages/album/detail",
+    "pages/album/mine",
     "pages/groups/groups",
     "pages/album/buy",
     "pages/topics/topics",
