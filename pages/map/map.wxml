@@ -1,27 +1,31 @@
 <view class="map-page">
-  <!-- <view class="banner">
-    <text class="size-9" wx:if="{{usersCount !== null}}">已收集{{usersCount}}个吃货</text>
+  <view class="banner">
+    <text wx:if="{{lcUsers.length - 1 < MIN_USERS_COLLECTED_COUNT}}" class="size-12">聚齐{{MIN_USERS_COLLECTED_COUNT}}个吃货免费领取《七日辑 - 在家也能免费做美食》</text>
+    <text wx:if="{{lcUsers.length - 1 >= MIN_USERS_COLLECTED_COUNT}}" class="size-12 success">点击领取《七日辑 - 在家也能免费做美食》</text>
+    <!-- <text class="size-9" wx:if="{{usersCount !== null}}">已收集{{usersCount}}个吃货</text>
     <view class="barrage-container">
       <text wx:for="{{barrages}}" wx:key="" class="size-9">{{item}}</text>
-    </view>
-  </view> -->
+    </view> -->
+  </view>
 
   <map markers="{{markers}}" style="width: 100%;height: 100%" scale="{{scale}}" id="theMap" bindregionchange="onRegionChange" controls="{{controls}}" bindcontroltap="onControlTap" bindmarkertap="onMarkerTap" longitude="{{center.longitude}}" latitude="{{center.latitude}}"></map>
 
   <view class="toolbar">
-    <view class="toolbar-msg">
-      <text class="size-14" wx:if="{{lcUsers.length - 1 < MIN_USERS_COLLECTED_COUNT}}">已收集到{{lcUsers.length - 1}}个吃货, 还差{{MIN_USERS_COLLECTED_COUNT - lcUsers.length + 1}}</text>
-      <text wx:if="{{lcUsers.length - 1 >= MIN_USERS_COLLECTED_COUNT}}" class="size-14">已收集到{{lcUsers.length - 1}}个吃货, 真👍</text>
+    <view hidden="{{state === 1}}">
+      <view class="toolbar-msg">
+        <text class="size-14" wx:if="{{lcUsers.length - 1 < MIN_USERS_COLLECTED_COUNT}}">已收集到{{lcUsers.length - 1}}个吃货, 还差{{MIN_USERS_COLLECTED_COUNT - lcUsers.length + 1}}</text>
+        <text wx:if="{{lcUsers.length - 1 >= MIN_USERS_COLLECTED_COUNT}}" class="size-14">已收集到{{lcUsers.length - 1}}个吃货, 真👍</text>
+      </view>
+
+      <scroll-view style="width: 100%" scroll-x>
+        <view class="collected-users-container" style="width: {{collectedUsersContainerWidth}}px">
+          <image wx:for="{{collectedUsers}}" wx:key="" src="{{item.profileImage}}" bindtap="onTapCollectedUser" data-item="{{item}}"></image>
+        </view>
+      </scroll-view>
     </view>
 
-    <scroll-view style="width: 100%" scroll-x>
-      <view class="collected-users-container" style="width: {{collectedUsersContainerWidth}}px">
-        <image wx:for="{{collectedUsers}}" wx:key="" src="{{item.profileImage}}" bindtap="onTapCollectedUser" data-item="{{item}}"></image>
-      </view>
-    </scroll-view>
-
-    <button class="btn-start action-btn" bindtap="start" wx:if="{{state === 0}}">点击开始收集吃货们</button>
-    <input value="我在北京吃炸酱面" focus="true" confirm-type="send" class="action-btn" wx:if="{{state === 1}}" bindconfirm="sendNotes"></input>
+    <button class="btn-start action-btn size-14" bindtap="start" wx:if="{{state === 0}}">点击开始收集吃货们</button>
+    <input value="{{message}}" focus="true" confirm-type="send" class="action-btn barrage-input" wx:if="{{state === 1}}" bindconfirm="sendNotes"></input>
     <view class="btns" wx:if="{{state === 2}}">
       <!--<button bindtap="toggleShowAllUsers" class="size-12" hidden="{{mode === 'all'}}">查看所有吃货</button> -->
       <!-- <button bindtap="toggleShowAllUsers" class="size-12" hidden="{{mode === 'group'}}">查看群里吃货</button> -->

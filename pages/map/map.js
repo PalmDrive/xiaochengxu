@@ -12,7 +12,7 @@ let mapCtx,
     lcUser;
 
 const MIN_USERS_COLLECTED_COUNT = 20,
-      USER_PLACEHOLDER_IMG = '/images/map/user-placeholder.png';
+      USER_PLACEHOLDER_IMG = '/images/map/user-placeholder.jpg';
 
 const logger = new Logger();
 console.log('init logger');
@@ -31,6 +31,7 @@ Page({
     MIN_USERS_COLLECTED_COUNT,
     barrages: [],
     collectedUsers: [],
+    message: '',
     lcUsers: [],
     collectedUsersContainerWidth: 0,
     usersCount: null,
@@ -84,6 +85,8 @@ Page({
   onMarkerTap(e) {
     const step = 1;
     const marker = clusteredMarkers.filter(m => m.id === e.markerId)[0];
+
+    if (!marker.clusteredCount) return;
 
     const center = {
       longitude: marker.longitude,
@@ -140,23 +143,28 @@ Page({
   start(e) {
     this.setData({state: 1});
     const userId = Auth.getLocalUserId();
+    let usersCount, currLocation;
 
     if (!userId) {
       return onError('用户id不存在');
     }
 
+    const food = '烤鸭';
+
     return this._init()
     .then(res => {
-      const currLocation = lcUser.get('currLocation');
+      usersCount = res[0];
       zdkMarkers = uniqPush(zdkMarkers, this._newMarkerFromUser(lcUser));
+      currLocation = lcUser.get('currLocation');
+
       this.setData({
-        usersCount: res[0],
+        usersCount,
         center: {
           longitude: currLocation.longitude,
           latitude: currLocation.latitude
-        }
+        },
+        message: `我在吃${food}`
       });
-
       return this._renderMarkers();
     })
     .catch(onError);
@@ -169,18 +177,24 @@ Page({
     if (!msg) {
       onError('输入不能为空');
     }
-    const notes = lcUser.get('notes') || {};
+    const notes = lcUser.get('notes') || {},
+          marker = zdkMarkers.filter(m => m.id === lcUser.id)[0];
+    marker.title = msg;
     notes[(new Date()).toString()] = msg;
     lcUser.set('notes', notes);
     lcUser.save();
 
     lcUsers = uniqPush(lcUsers, lcUser);
 
+    const {width, collectedUsers} = this._initCollectedUsers(lcUsers);
     this.setData({
+      collectedUsers,
+      collectedUsersContainerWidth: width,
       state: 2,
       barrages: this._getBarrageMessages(lcUsers),
-      lcUsers
+      lcUsers,
     });
+    this._renderMarkers();
   },
 
   toggleShowAllUsers() {
@@ -270,8 +284,9 @@ Page({
   },
 
   _initCollectedUsers(lcUsers) {
-    const imageSize = 40,
-          margin = 5;
+    const imageSize = 35,
+          margin = 7, // 和.collected-users-container image的一致
+          containerPadding = 7; // 和.collected-users-container一致
 
     function newCollectedUser(user) {
       return {
@@ -282,7 +297,7 @@ Page({
       };
     }
     let collectedUsers = [];
-    if (this.data.state === 2) {
+    if (this.data.state !== 0) {
       lcUsers = lcUsers.filter(u => u.id !== lcUser.id);
       if (lcUsers.length < MIN_USERS_COLLECTED_COUNT) {
         for (let i = 0; i < MIN_USERS_COLLECTED_COUNT; i++) {
@@ -301,14 +316,13 @@ Page({
    
     return {
       collectedUsers,
-      width: Math.ceil(collectedUsers.length / 2) * (margin * 2 + imageSize)
+      width: Math.ceil(collectedUsers.length / 2) * (margin * 2 + imageSize) + 2 * containerPadding
     };
   },
 
   _updateMarkerIconPath() {
-    const defaultIconPath = '/images/icon.png';
     const singleMarkers = clusteredMarkers.filter(m => {
-      return m.clusteredCount === 0 && (!m.iconPath || m.iconPath === defaultIconPath); //!tmpImagesHash[m.id];
+      return m.clusteredCount === 0 && (!m.iconPath || m.iconPath === Marker.defaultIconPath); //!tmpImagesHash[m.id];
     });
 
     return Promise.all(singleMarkers.map(m => {
@@ -443,15 +457,17 @@ Page({
     notesArr.sort((a, b) => b[0] - a[0]);
 
     if (notesArr.length) {
-      return [`${user.get('name')}: ${notesArr[0][1]}`, notesArr[0][0]];
+      //return [`${user.get('name')}: ${notesArr[0][1]}`, notesArr[0][0]];
+      return [`${notesArr[0][1]}`, notesArr[0][0]];
     } else {
       return [];
     }
   },
 
   _newMarkerFromUser(user) {
+    const [msg, timestamp] = this._getBarrageMessage(user);
     return new Marker({
-      title: user.get('name'),
+      title: msg,
       longitude: user.get('currLocation').longitude,
       latitude: user.get('currLocation').latitude,
       id: user.id,

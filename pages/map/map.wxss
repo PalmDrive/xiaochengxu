@@ -1,12 +1,13 @@
 .map-page {
   height: 100vh;
-  padding-bottom: 300px;
-  padding-top: 0px;
+  padding-bottom: 250px;
+  padding-top: 47px;
   background-color: #FAF8FE;
 }
 
 .btn-start {
   width: 80%;
+  margin-top: 14px;
 }
 
 .toolbar {
@@ -14,10 +15,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-}
-
-.action-btn {
-
+  padding: 14px 0;
 }
 
 .banner {
@@ -25,6 +23,19 @@
   width: 100%;
   top: 0;
   left: 0;
+  text-align: center;
+  padding-top: 8px;
+}
+
+.banner text {
+  color: white;
+  padding: 10px 20px;
+  background-color: #505050;
+  border-radius: 19px;
+}
+
+.banner text.success {
+  background-color: #09BB07;
 }
 
 input {
@@ -40,25 +51,35 @@ input {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
+  background-color: #EAEAEA;
+  padding: 7px;
 }
 
 .collected-users-container image {
-  width: 40px;
-  height: 40px;
-  margin: 5px;
+  width: 35px;
+  height: 35px;
+  margin: 7px;
 }
 
 .btns {
   display: flex;
   justify-content: space-evenly;
+  padding-top: 14px;
 }
 
 .toolbar button {
-  background-color: #157EFB;
+  background-color: #09BB07;
   padding: 7px 10px;
   color: white;
 }
 
 .toolbar-msg {
   text-align: center;
+  padding-bottom: 14px;
+}
+
+.barrage-input {
+  width: 90%;
+  margin: 0 auto;
+  padding: 8px 5px;
 }

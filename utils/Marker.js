@@ -18,20 +18,35 @@ class Marker {
     this.latitude = options.latitude;
 
     this.title = options.title;
-    this.iconPath = options.iconPath || '/images/icon.png';
+    this.iconPath = options.iconPath || Marker.defaultIconPath;
     this.picurl = options.picurl;
     
     this.clusteredMarkers = options.clusteredMarkers || [];
 
     //this.title = this.clusteredCount.toString();
-
     this.markerSize = {
-      width: 50,
-      height: 50
+      width: 27,
+      height: 27
     };
 
     return this;
   }
+
+  // get markerSize() {
+  //   let size;
+  //   if (this.iconPath === Marker.defaultIconPath) {
+  //     size = {
+  //       width: 14,
+  //       height: 19
+  //     };
+  //   } else {
+  //     size = {
+  //       width: 27,
+  //       height: 27
+  //     }
+  //   }
+  //   return size;
+  // }
 
   get clusteredCount() {
     return this.clusteredMarkers.length;
@@ -39,39 +54,41 @@ class Marker {
 
   get mapAttrs() {
     let title;
-    if (this.clusteredCount) {
-      title = this.clusteredMarkers.map(m => m.title).join(', ');
-    } else {
-      title = this.title;
-    }
-    
-    return {
+
+    const attrs = {
       id: this.id,
       longitude: this.longitude, 
       latitude: this.latitude,
-      title: title, //this.title,
+      //title: title, //this.title,
       iconPath: this.iconPath,
       width: this.markerSize.width,
       height: this.markerSize.height,
       //iconPath: userInfo.profilePicUrl,
-      label: {
-        x: 0,
-        y: 0,
-        fontSize: 12,
-        content: title
-      },
+      // label: {
+      //   x: 0,
+      //   y: 0,
+      //   fontSize: 12,
+      //   content: title
+      // },
       callout: {
-        content: title, 
-        color: '#FC635D', 
+        content: this.title, 
+        color: '#FFFFFF', 
         fontSize: 12, 
         borderRadius: 5, 
-        bgColor: '#449DF9', 
-        padding: 10, 
+        bgColor: '#157EFB', 
+        padding: 10,
         //boxShadow: , 
-        display: 'BYCLICK', //'ALWAYS'
+        display: 'BYCLICK',
       },
       //anchor: {x: 0.5, y: 0.5}
     };
+
+    if (this.clusteredCount) {
+      attrs.callout.content = `${this.clusteredCount}个吃货`;
+      attrs.callout.display = 'ALWAYS';
+    }
+    
+    return attrs;
   }
 
   add(marker) {
@@ -182,5 +199,7 @@ class Marker {
       .then(() => _cluster(markers));
   }
 }
+
+Marker.defaultIconPath = '/images/map/marker.png';
 
 module.exports = Marker;
