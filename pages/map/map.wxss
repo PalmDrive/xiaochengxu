@@ -49,6 +49,8 @@ input {
 
 .collected-users-container {
   display: flex;
+  flex-direction: column;
+  height: 112px;
   flex-wrap: wrap;
   justify-content: space-evenly;
   background-color: #EAEAEA;
@@ -59,6 +61,12 @@ input {
   width: 35px;
   height: 35px;
   margin: 7px;
+}
+
+.collected-users-container image.active {
+  border: 2px solid #157EFB;
+  width: 31px;
+  height: 31px;
 }
 
 .btns {
@@ -82,4 +90,9 @@ input {
   width: 90%;
   margin: 0 auto;
   padding: 8px 5px;
+}
+
+.text-for-message {
+  padding: 10px 20px;
+  display: block;
 }

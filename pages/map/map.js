@@ -9,10 +9,13 @@ let mapCtx,
     zdkMarkers,
     clusteredMarkers,
     mapSessionId,
-    lcUser;
+    friendId,
+    lcUser,
+    pageFrom;
 
 const MIN_USERS_COLLECTED_COUNT = 20,
-      USER_PLACEHOLDER_IMG = '/images/map/user-placeholder.jpg';
+      USER_PLACEHOLDER_IMG = '/images/map/user-placeholder.jpg',
+      UserMapSession = AV.Object.extend('UserMapSession');
 
 const logger = new Logger();
 console.log('init logger');
@@ -42,7 +45,7 @@ Page({
       latitude: 39.5
     },
     scale: 16,
-    state: 0, // 0, 1, 2
+    state: -1, // -1, 0, 1, 2
     mode: 'group', // group, all
     controls: [
       {
@@ -70,16 +73,44 @@ Page({
     ]
   },
 
-  onReady(options) {
+  onReady() {
     mapCtx = wx.createMapContext('theMap');
 
     //this._migrate();
 
-    this._onLoad(options || {});
+    //this._onLoad({});
   },
 
   onLoad(options) {
-    //this._onLoad(options);
+    const app = getApp();
+
+    const defaultMapSessionId = '59c7298d7565710044c06a24',
+          defaultFriendId = '59ca154a7565710044d8de00';
+
+    console.log('map onLoad options:', options);
+
+    wx.showLoading({
+      title: '加载中',
+      mask: true
+    });
+
+    //return this._onLoad({mapSessionId: defaultMapSessionId});
+    //return this._onLoad({friendId: defaultFriendId});
+
+    if (options.from === 'mapsession') {
+      if (app.globalData.shareTicket) {
+        this._getMapSessionIdFromShareInfo(app.globalData.shareTicket)
+          .then(id => this._onLoad({mapSessionId: id}));
+      } else {
+        this._onLoad({friendId: options.friendId});
+      }
+    } else {
+      this._onLoad({friendId: options.friendId});
+    }
+
+    wx.showShareMenu({
+      withShareTicket: true
+    });
   },
 
   onMarkerTap(e) {
@@ -104,8 +135,44 @@ Page({
       });
   },
 
-  onShareAppMessage() {
+  onShareAppMessage(options) {
+    const that = this;
+    return {
+      title: '吃货都去哪儿了？',
+      path: `/pages/map/map?from=mapsession&friendId=${lcUser.id}`,
+      success(res) {
+        if (!res.shareTickets) {
+          return console.log('no shareTicket generated');
+        }
 
+        const shareTicket = res.shareTickets[0];
+
+        that._getMapSessionIdFromShareInfo(shareTicket)
+        .then(sharedMapSessionId => {
+          console.log('get shared map session id:', sharedMapSessionId);
+
+          // create userMapSession and add mapSessionId to users.mapSessionIds
+          const userMapSession = new UserMapSession();
+          let mSessIds = lcUser.get('mapSessionIds') || [];
+          userMapSession.set('mapSessionId', sharedMapSessionId);
+          userMapSession.set('user', lcUser);
+          userMapSession.set('userInfo', {wxUsername: lcUser.get('name')});
+          userMapSession.save();
+          
+          mSessIds = uniqPush(mSessIds, sharedMapSessionId);
+          lcUser.set('mapSessionIds', mSessIds);
+          lcUser.save();
+        })
+        .catch(err => {
+          logger.sendException(err, {
+            userId: lcUser ? lcUser.id : 'n/a',
+            wxUsername: lcUser ? lcUser.get('name') : 'n/a',
+            context: 'creating mapSessionId onShareAppMessage'
+          });
+          onError(err);
+        });
+      }
+    }
   },
 
   onRegionChange(e) {
@@ -215,24 +282,35 @@ Page({
   },
 
   onTapCollectedUser(e) {
-    const item = e.target.dataset.item;
+    const item = e.target.dataset.item,
+          collectedUsers = this.data.collectedUsers;
+
+    collectedUsers.forEach(u => {
+      u.selected = item.id === u.id;
+    });
+
     this.setData({
+      collectedUsers,
       center: {
         longitude: item.longitude,
         latitude: item.latitude
       }
     });
   },
-
+  
+  /**
+   * options.mapSessionId
+   * options.friendId
+   */
   _onLoad(options) {
     logger.log('_onload started');
 
-    const id = options.id || '59c7298d7565710044c06a24',
-          userId = Auth.getLocalUserId(),
+    const userId = Auth.getLocalUserId(),
           user = Auth.getLocalUserInfo(),
           userInfo = user.attributes || {};
 
-    mapSessionId = id;
+    mapSessionId = options.mapSessionId;
+    friendId = options.friendId;
 
     if (!userId) {
       console.log('not user found');
@@ -253,12 +331,9 @@ Page({
       .then(res => {
         lcUser = res[0];
 
-        return this._didUserMapSessionExist(mapSessionId, lcUser.id);
-      })
-      .then(didExist => {
-        logger.log('got current user from lc and checked if userMapSession exist');
+        wx.hideLoading();
 
-        if (didExist) {
+        if (lcUser.get('currLocation')) {
           return this._init()
             .then(res => {
               logger.log('_init finished');
@@ -274,6 +349,7 @@ Page({
               })
             }, onError);
         } else {
+          this.set({state: 0});
           return this._fetchAndShowUsers({
                     method: '_fetchAllUsers',
                     filter: Marker.select,
@@ -293,12 +369,13 @@ Page({
         profileImage: user.get('profileImage'),
         id: user.id,
         longitude: user.get('currLocation').longitude,
-        latitude: user.get('currLocation').latitude
+        latitude: user.get('currLocation').latitude,
+        selected: user.id === lcUser.id
       };
     }
     let collectedUsers = [];
     if (this.data.state !== 0) {
-      lcUsers = lcUsers.filter(u => u.id !== lcUser.id);
+      //lcUsers = lcUsers.filter(u => u.id !== lcUser.id);
       if (lcUsers.length < MIN_USERS_COLLECTED_COUNT) {
         for (let i = 0; i < MIN_USERS_COLLECTED_COUNT; i++) {
           let el = lcUsers[i];
@@ -315,9 +392,52 @@ Page({
     }
    
     return {
-      collectedUsers,
+      collectedUsers: this._sortCollectedUsers(collectedUsers),
       width: Math.ceil(collectedUsers.length / 2) * (margin * 2 + imageSize) + 2 * containerPadding
     };
+  },
+  
+  /**
+   * 自己排在第一个；
+   * 先把friends按照joinedAt desc排序
+   * 再把users from userMapSession按照createdAt desc排序
+   */
+  _sortCollectedUsers(collectedUsers) {
+    const friends = lcUser.get('friends'),
+          sortedFriends = [],
+          res = [];
+    let sorted = [], theUser;
+          
+    if (friends && friends.length) {
+      const friendsMap = {};
+      friends.forEach(user => {
+        friendsMap[user.id] = true;
+      });
+      collectedUsers.forEach(user => {
+        if (friendsMap[user.id]) {
+          friendsMap[user.id] = user;
+        } else {
+          sorted.push(user);
+        }
+      });
+      friends.sort((a, b) => b.joinedAt - a.joinedAt);
+      friends.forEach(user => {
+        sortedFriends.push(friendsMap[user.id]);
+      });
+      sorted = sortedFriends.concat(sorted);
+    } else {
+      sorted = collectedUsers;
+    }
+    sorted.forEach(user => {
+      if (user.id !== lcUser.id) {
+        res.push(user);
+      } else {
+        theUser = user;
+      }
+    });
+    res.unshift(theUser);
+
+    return res;
   },
 
   _updateMarkerIconPath() {
@@ -336,7 +456,7 @@ Page({
   },
 
   _renderMarkers(includePoints, wait) {
-    wait = wait || 600;
+    wait = wait || 800;
 
     if (includePoints) {
       mapCtx.includePoints({
@@ -381,12 +501,25 @@ Page({
       const currLocation = new AV.GeoPoint({
         longitude: res.longitude,
         latitude: res.latitude
-      }),
-           mapSessionIds = uniqPush(lcUser.get('mapSessionIds') || [], mapSessionId);
+      });
+      let arr, key;
+
+      if (friendId) {
+        key = 'friends';
+        arr = uniqPush(lcUser.get(key) || [], {
+          id: friendId,
+          joinedAt: +new Date()
+        });
+      } else if (mapSessionId) {
+        key = 'mapSessionIds';
+        arr = uniqPush(lcUser.get(key) || [], mapSessionId);
+      }
 
       // async
       lcUser.set('currLocation', currLocation);
-      lcUser.set('mapSessionIds', mapSessionIds);
+      if (key) {
+        lcUser.set(key, arr);
+      }
 
       return Promise.all([
         this._countUsers(),
@@ -493,20 +626,43 @@ Page({
   },
 
   _fetchAllUsers() {
-    const ids = lcUser.get('mapSessionIds'),
+    const ids = lcUser.get('mapSessionIds') || [],
+          friends = lcUser.get('friends') || [],
           cql = `
             select include user, * from UserMapSession where
             mapSessionId in ?
+            order by -createdAt
+            limit 1000
+          `,
+          cql2 = `
+            select * from WechatCampaignUser where objectId in ?
             limit 1000
           `;
-    return AV.Query.doCloudQuery(cql, [ids])
+
+    if (!this.data.state) {
+      if (friendId) {
+        friends.push({
+          id: friendId,
+          joinedAt: +new Date()
+        });
+      } else if (mapSessionId) {
+        ids.push(mapSessionId);
+      }
+    }
+
+    return Promise.all([
+      AV.Query.doCloudQuery(cql, [ids]),
+      AV.Query.doCloudQuery(cql2, [friends.map(o => o.id)]),
+    ])
       .then(res => {
-        const users = res.results.map(d => d.get('user')),
+        let users = res[0].results.map(d => d.get('user'));
+        const users2 = res[1].results,
               map = {},
               distinctUers = []
+        users = users.concat(users2);
         // distict users
         users.forEach(u => {
-          if (!map[u.id]) {
+          if (u && !map[u.id]) {
             map[u.id] = true;
             distinctUers.push(u);
           }
@@ -527,6 +683,9 @@ Page({
   },
 
   _updateUserMapSession() {
+    if (!mapSessionId) {
+      return new Promise(resolve => resolve());
+    }
     const currLocation = lcUser.get('currLocation');
     return LeanCloud.findOrCreate('UserMapSession', {
       user: lcUser,
@@ -547,14 +706,12 @@ Page({
     });
   },
 
-  _didUserMapSessionExist(mapSessionId, userId) {
-    const cql = `
-      select count(*) from UserMapSession where 
-      mapSessionId = ? and 
-      user = pointer('WechatCampaignUser', ?)
-    `
-    return AV.Query.doCloudQuery(cql, [mapSessionId, userId])
-      .then(res => res.count > 0);
+  _getMapSessionIdFromShareInfo(shareTicket) {
+    return toPromise(wx.getShareInfo)({
+      shareTicket
+    })
+    .then(res => Auth.decryptData(res.encryptedData, res.iv, Auth.getLocalSessionKey()))
+    .then(res => res.data.openGId);
   },
 
   _migrate() {

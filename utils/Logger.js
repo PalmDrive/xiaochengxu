@@ -1,6 +1,8 @@
 /**
  * A logger that logs duration
  */
+const AV = require('av-weapp-min'),
+      Exception = AV.Object.extend('Exception');
 
 class Logger {
   constructor () {
@@ -23,6 +25,13 @@ class Logger {
 
   disabled() {
     this.enabled = false;
+  }
+
+  sendException(err, options) {
+    const exp = new Exception();
+    exp.set('message', JSON.stringify(err));
+    exp.set('options', JSON.stringify(options));
+    exp.save();
   }
 }
 
