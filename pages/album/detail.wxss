@@ -120,10 +120,17 @@ page {
   padding-top: 8px;
 }
 
+.other-user-img {
+  border-radius: 9px;
+  height: 18px;
+  width: 18px;
+  margin-left:-9px;
+}
+
 .bottom-tip {
   letter-spacing: 0.34px;
   display: inline-block;
-  width: 70%;
+  margin-left: 60px;
 }
 
 .line {

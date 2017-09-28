@@ -148,15 +148,3 @@ view {
   display: -webkit-flex;
   flex-direction: column;
 }
-
-.pingfang-regular {
-  font-family: PingFangSC-Regular;
-}
-
-.pingfang-medium {
-  font-family: PingFangSC-Medium;
-}
-
-.FZRUIZH_CUJW--GB1-0 {
-  font-family: FZRUIZH_CUJW--GB1-0;
-}

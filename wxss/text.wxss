@@ -97,3 +97,15 @@
 .size-26 {
   font-size: 26px;
 }
+
+.pingfang-regular {
+  font-family: PingFangSC-Regular;
+}
+
+.pingfang-medium {
+  font-family: PingFangSC-Medium;
+}
+
+.FZRUIZH_CUJW--GB1-0 {
+  font-family: FZRUIZH_CUJW--GB1-0;
+}

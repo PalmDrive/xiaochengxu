@@ -24,6 +24,7 @@ Page({
     groupInfo: {},
     showHint: false,
     modalShown: false,
+    qrcodeModalShown: false,
     bannerImage: {},
     current: 0
   },
@@ -200,6 +201,11 @@ Page({
   toggleModalShown() {
     const modalShown = !this.data.modalShown;
     this.setData({modalShown});
+  },
+
+  toggleQrcodeModalShown() {
+    const qrcodeModalShown = !this.data.qrcodeModalShown;
+    this.setData({qrcodeModalShown});
   },
 
   listenSwiper:function(e) {
