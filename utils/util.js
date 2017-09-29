@@ -175,13 +175,19 @@ function trimMediumTitle(m) {
 
 function reloadPage(page) {
   const options = page.options || {};
+
+  // wx.showModal({
+  //   title: 'page',
+  //   content: JSON.stringify(page)
+  // });
+
   let params = [],
       url = '/' + page.route;
   if (Object.keys(options).length) {
     for (let key in options) {
       params.push(`${key}=${options[key]}`);
     }
-    params.join('&')
+    params = params.join('&')
     url += `?${params}`;
   }
   wx.reLaunch({url});

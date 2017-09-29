@@ -71,7 +71,7 @@ input {
 
 .btns {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
   padding-top: 14px;
 }
 
@@ -88,7 +88,7 @@ input {
 
 .barrage-input {
   width: 90%;
-  margin: 0 auto;
+  margin: 0 auto 140px;
   padding: 8px 5px;
 }
 

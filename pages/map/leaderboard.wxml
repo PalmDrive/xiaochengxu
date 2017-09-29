@@ -1,5 +1,6 @@
 <view class="map-leaderboard">
-  <text class="size-12 alert" hidden="{{!alert}}">{{alert}}</text>
+  <text class="size-12 alert" wx:if="{{alert}}">{{alert}}</text>
+  
   <text class="size-18 title">吃货地图前十名</text>
 
   <view wx:for="{{users}}" wx:for-item="user" wx:key="" class="size-14 leaderboard-row">

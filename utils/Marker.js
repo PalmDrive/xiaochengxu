@@ -78,7 +78,7 @@ class Marker {
         bgColor: '#157EFB', 
         padding: 10,
         //boxShadow: , 
-        display: 'BYCLICK',
+        display: 'ALWAYS',
       },
       //anchor: {x: 0.5, y: 0.5}
     };

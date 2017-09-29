@@ -15,7 +15,10 @@ let mapCtx,
 
 const MIN_USERS_COLLECTED_COUNT = 20,
       USER_PLACEHOLDER_IMG = '/images/map/user-placeholder.jpg',
-      UserMapSession = AV.Object.extend('UserMapSession');
+      UserMapSession = AV.Object.extend('UserMapSession'),
+      MAX_SCALE = 18,
+      MIN_SCALE = 5,
+      DEFAULT_SCALE = 12;
 
 const logger = new Logger();
 console.log('init logger');
@@ -84,7 +87,12 @@ Page({
     const app = getApp();
 
     const defaultMapSessionId = '59c7298d7565710044c06a24',
-          defaultFriendId = '59ca154a7565710044d8de00';
+          defaultFriendId = '59ce3d20a22b9d0061312243';
+
+    // for dev
+    if (!options.friendId) {
+      options.friendId = defaultFriendId;
+    }
 
     console.log('map onLoad options:', options);
 
@@ -93,19 +101,30 @@ Page({
       mask: true
     });
 
-    //return this._onLoad({mapSessionId: defaultMapSessionId});
-    //return this._onLoad({friendId: defaultFriendId});
+    if (!Auth.getLocalUserId()) {
+      return;
+    }
 
-    if (options.from === 'mapsession') {
-      if (app.globalData.shareTicket) {
-        this._getMapSessionIdFromShareInfo(app.globalData.shareTicket)
-          .then(id => this._onLoad({mapSessionId: id}));
-      } else {
-        this._onLoad({friendId: options.friendId});
-      }
-    } else {
+    // if (options.from !== 'mapsession') {
+    //   return onError(JSON.stringify(options));
+    // }
+
+    if (app.globalData.shareTicket) {
+      this._getMapSessionIdFromShareInfo(app.globalData.shareTicket)
+          .then(id => {
+            console.log('get map session id from shareTicket:', id);
+            this._onLoad({
+              mapSessionId: id,
+              friendId: options.friendId
+            });
+          });
+    } else { // 从单人聊天或者朋友圈进入
+      //return onError('Forbidden: 必须从聊天群进入');
       this._onLoad({friendId: options.friendId});
     }
+
+    //return this._onLoad({mapSessionId: defaultMapSessionId});
+    //return this._onLoad({friendId: defaultFriendId});
 
     wx.showShareMenu({
       withShareTicket: true
@@ -123,15 +142,13 @@ Page({
       latitude: marker.latitude
     };
 
-    toPromise(mapCtx.getScale).call(mapCtx)
-      .then(res => {
-        this.setData({
-          scale: Math.min(res.scale + step, 18),
-          center
-        });
+    this.setData({
+      scale: DEFAULT_SCALE,
+      //scale: Math.min(res.scale + step, 18),
+      center
+    });
 
-        this._renderMarkers();
-      });
+    this._renderMarkers();
   },
 
   onShareAppMessage(options) {
@@ -209,7 +226,6 @@ Page({
   },
 
   start(e) {
-    this.setData({state: 1});
     const userId = Auth.getLocalUserId();
     let currLocation;
 
@@ -221,17 +237,19 @@ Page({
 
     return this._init()
     .then(res => {
+      this.setData({
+        state: 1,
+        message: `我在吃${food}`
+      });
       zdkMarkers = uniqPush(zdkMarkers, this._newMarkerFromUser(lcUser));
       currLocation = lcUser.get('currLocation');
-
-      this.setData({
+      return this._renderMarkers({
+        scale:  DEFAULT_SCALE,
         center: {
           longitude: currLocation.longitude,
           latitude: currLocation.latitude
-        },
-        message: `我在吃${food}`
+        }
       });
-      return this._renderMarkers();
     })
     .catch(onError);
   },
@@ -284,17 +302,22 @@ Page({
     const item = e.target.dataset.item,
           collectedUsers = this.data.collectedUsers;
 
-    collectedUsers.forEach(u => {
-      u.selected = item.id === u.id;
-    });
+    if (item.id) {
+      collectedUsers.forEach(u => {
+        u.selected = item.id === u.id;
+      });
 
-    this.setData({
-      collectedUsers,
-      center: {
-        longitude: item.longitude,
-        latitude: item.latitude
-      }
-    });
+      this.setData({
+        collectedUsers,
+        center: {
+          longitude: item.longitude,
+          latitude: item.latitude
+        },
+        scale: DEFAULT_SCALE
+      });
+
+      this._renderMarkers();
+    }
   },
 
   gotoLeaderboard() {
@@ -321,22 +344,43 @@ Page({
       console.log('not user found');
       return;
     }
+    if (!friendId) {
+      return onError('未获取到分享用户id');
+    }
 
     zdkMarkers = [];
 
     Marker.getWindowSize();
 
     // 从LeanCloud上找到当前用户
-    LeanCloud.findOrCreate('WechatCampaignUser', {
-      zdkId: userId
-    }, {
-      profileImage: userInfo.profilePicUrl,
-      name: userInfo.wxUsername
-    })
+    Promise.all([
+      LeanCloud.findOrCreate('WechatCampaignUser', {
+        zdkId: userId
+      }, {
+        profileImage: userInfo.profilePicUrl,
+        name: userInfo.wxUsername
+      }),
+      new AV.Query('WechatCampaignUser').get(friendId)
+        .then(data => data, console.log)
+    ])
       .then(res => {
-        lcUser = res[0];
+        lcUser = res[0][0];
+        const friend = res[1],
+              fetchParams = {
+                method: '_fetchAllUsers',
+                initCollectedUsers: true
+              };
 
         wx.hideLoading();
+
+        if (friend) {
+          const fLocation = friend.get('currLocation') || {};
+          fetchParams.center = {
+            longitude: fLocation.longitude,
+            latitude: fLocation.latitude
+          };
+          fetchParams.scale = DEFAULT_SCALE;
+        }
 
         if (lcUser.get('currLocation')) {
           return this._init()
@@ -346,21 +390,17 @@ Page({
               this.setData({
                 state: 2,
               });
-              return this._fetchAndShowUsers({
-                method: '_fetchAllUsers',
-                filter: Marker.select,
-                initCollectedUsers: true
-              })
+              return this._fetchAndShowUsers(fetchParams);
             }, onError);
         } else {
-          this.set({state: 0});
-          return this._fetchAndShowUsers({
-                    method: '_fetchAllUsers',
-                    filter: Marker.select,
-                    initCollectedUsers: true
-                  });
+          this.setData({state: 0});
+          this._collectUser(true)
+            .then(() => {
+              return this._fetchAndShowUsers(fetchParams);
+            });
         }
-      });
+      })
+      .catch(console.log);
   },
 
   _initCollectedUsers(lcUsers) {
@@ -429,14 +469,22 @@ Page({
           sorted.push(user);
         }
       });
+
       friends.sort((a, b) => b.joinedAt - a.joinedAt);
-      friends.forEach(user => {
-        sortedFriends.push(friendsMap[user.id]);
+
+      friends.forEach(f => {
+        let user = friendsMap[f.id];
+        if (typeof user === 'object') {
+          sortedFriends.push(user);
+        }
       });
+
       sorted = sortedFriends.concat(sorted);
     } else {
       sorted = collectedUsers;
     }
+
+    // Place theUser in the front
     sorted.forEach(user => {
       if (user.id !== lcUser.id) {
         res.push(user);
@@ -444,8 +492,10 @@ Page({
         theUser = user;
       }
     });
-    res.unshift(theUser);
-
+    if (this.data.state > 0) {
+      res.unshift(theUser);
+    }
+    
     return res;
   },
 
@@ -463,14 +513,20 @@ Page({
         }, onError);
     }));
   },
+  
+  /**
+   * options.scale  <Number>
+   * options.center <Dict>
+   * options.wait   <Number>
+   */
+  _renderMarkers(options) {
+    options = options || {};
+    const wait = options.wait || 800;
 
-  _renderMarkers(includePoints, wait) {
-    wait = wait || 800;
-
-    if (includePoints) {
+    if (options.includePoints) {
       mapCtx.includePoints({
-        points: includePoints.map(marker => marker.mapAttrs),
-        padding: [10, 10, 10, 10]
+        points: options.includePoints.map(marker => marker.mapAttrs),
+        padding: [40, 40, 40, 40]
       });
     }
 
@@ -492,10 +548,20 @@ Page({
         logger.log('Downloaded all user profile images');
         this.data.scale = res.scale;
 
-        this.setData({
+        console.log('current scale:',res.scale);
+        const data = {
           markers: clusteredMarkers.map(m => m.mapAttrs),
           //scale: res.scale Do not set scale here
-        });
+        };
+
+        if (options.scale) {
+          data.scale = options.scale;
+        }
+        if (options.center) {
+          data.center = options.center;
+        }
+
+        this.setData(data);
       });
   },
   
@@ -503,38 +569,57 @@ Page({
    * update lcUser and userMapSession
    */
   _init() {
+    logger.log('asking for location...');
+    wx.showLoading({
+      title: '加载中'
+    });
     return toPromise(wx.getLocation)({
       type: 'gcj02'
     })
     .then(res => {
+      logger.log('location gotten');
+      wx.hideLoading();
+
       const currLocation = new AV.GeoPoint({
         longitude: res.longitude,
         latitude: res.latitude
       });
-      let arr, key;
 
-      if (friendId) {
-        key = 'friends';
-        arr = uniqPush(lcUser.get(key) || [], {
-          id: friendId,
-          joinedAt: +new Date()
+      return this._collectUser()
+        .then(() => {
+          lcUser.set('currLocation', currLocation);
+          return Promise.all([
+            lcUser.save(),
+            this._updateUserMapSession()
+          ]);
         });
-      } else if (mapSessionId) {
-        key = 'mapSessionIds';
-        arr = uniqPush(lcUser.get(key) || [], mapSessionId);
-      }
-
-      // async
-      lcUser.set('currLocation', currLocation);
-      if (key) {
-        lcUser.set(key, arr);
-      }
-
-      return Promise.all([
-        lcUser.save(),
-        this._updateUserMapSession()
-      ]);
     });
+  },
+  
+  // Add 
+  _collectUser(save) {
+    let arr, key, res;
+    if (mapSessionId) {
+      key = 'mapSessionIds';
+      arr = uniqPush(lcUser.get(key) || [], mapSessionId);
+    } else if (friendId) {
+      key = 'friends';
+      arr = uniqPush(lcUser.get(key) || [], {
+        id: friendId,
+        joinedAt: +new Date()
+      });
+    }
+    if (key) {
+      lcUser.set(key, arr);
+      if (save) {
+        res = lcUser.save();
+      } else {
+        res = new Promise(resolve => resolve(lcUser));
+      }
+    } else {
+      res = new Promise(resolve => resolve());
+    }
+    return res;
   },
 
   /**
@@ -545,8 +630,11 @@ Page({
    * @param {Function} [options.filter]
    * @param {Boolean} [options.needIncludePoints]
    * @param {Boolean} [options.initCollectedUsers]
+   * @param {Number} [options.scale]
+   * @param {Dict} [options.center]
    */
   _fetchAndShowUsers(options) {
+    options = options || {};
     this[options.method](options.params)
       .then(data => {
         const dataUpdates = {
@@ -566,9 +654,15 @@ Page({
 
         if (options.filter) {
           const filteredMarkers = options.filter(zdkMarkers);
-          return this._renderMarkers(filteredMarkers);
+          return this._renderMarkers({
+            includePoints: filteredMarkers
+          });
         } else {
-          return this._renderMarkers(options.needIncludePoints ? zdkMarkers : null);
+          return this._renderMarkers({
+            includePoints: options.needIncludePoints ? zdkMarkers : null,
+            scale: options.scale,
+            center: options.center
+          });
         }
       });
   },
