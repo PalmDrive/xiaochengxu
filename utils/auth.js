@@ -19,6 +19,7 @@ const setLocalUserInfo = userInfo => {
 };
 
 const getLocalUserId = () => {
+  //return 'a16bf0b0-65f8-11e7-8bad-1f67fd9ef4e8';
   return getLocalUserInfo().id;
 };
 

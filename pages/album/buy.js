@@ -88,4 +88,9 @@ Page({
       url: `../groups/group?id=${userId}`
     });
   },
+
+  /**
+   * 分享给好友 事件
+   */
+  onShareAppMessage: function () {}
 });

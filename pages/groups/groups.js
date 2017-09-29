@@ -125,7 +125,7 @@ Page({
     });
     if (role) {
       wx.navigateTo({
-        url: `../groups/group?id=${userId}`
+        url: `../album/show?id=${userId}`
       });
     } else {
       wx.navigateTo({
@@ -139,7 +139,7 @@ Page({
    */
   onShareAppMessage() {
     return {
-      title: '我的群头条'
+      title: '七日辑'
     };
   },
   /**

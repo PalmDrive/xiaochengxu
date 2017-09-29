@@ -28,7 +28,7 @@ const alertMapping = [
 Page({
   data: {
     users: [],
-    alert: ''
+    alert: null
   },
 
   onLoad(options) {
@@ -37,10 +37,12 @@ Page({
 
     new AV.Query('WechatCampaignUser').get(lcUserId)
       .then(lcUser => {
-        return this._getAlert(lcUser);
-      })
-      .then(alert => {
-        this.setData({alert})
+        if (lcUser.get('currLocation')) {
+          this._getAlert(lcUser)
+            .then(alert => {
+              this.setData({alert})
+            });
+        }
       });
   },
 
