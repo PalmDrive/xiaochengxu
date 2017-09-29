@@ -2,6 +2,7 @@
   "pages":[
     "pages/groups/groups",
     "pages/album/buy",
+    "pages/album/show",
     "pages/topics/topics",
     "pages/topic/topic",
     "pages/medium/medium",
