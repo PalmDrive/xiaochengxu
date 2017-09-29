@@ -1,0 +1,15 @@
+<view class="map-leaderboard">
+  <text class="size-12 alert" hidden="{{!alert}}">{{alert}}</text>
+  <text class="size-18 title">吃货地图前十名</text>
+
+  <view wx:for="{{users}}" wx:for-item="user" wx:key="" class="size-14 leaderboard-row">
+    <view class="left">
+      <text>{{index+1}}</text>
+      <image src="{{user.profileImage}}" class="profile-image"></image>
+    </view>
+    <view class="right">
+      <text>{{user.name}}</text>
+      <text>{{user.collectedUsersCount || 0}}个吃货</text>
+    </view>
+  </view>
+</view>

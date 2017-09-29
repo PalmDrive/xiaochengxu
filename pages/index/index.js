@@ -1,8 +1,10 @@
 // pages/index/index.js
 const app = getApp(),
       util = require('../../utils/util'),
-      Auth = require('../../utils/auth');
-
+      Auth = require('../../utils/auth'),
+      {getSubscribedTopicIds} = require('../../utils/topic'),
+      {request} = require('../../utils/request');
+      
 const tabs = ['推荐', '订阅'];
 
 Page({
@@ -40,12 +42,12 @@ Page({
   //点击文章
   goToMedium: function(event) {
     const medium = event.currentTarget.dataset.medium,
-      userInfo = Auth.getLocalUserInfo();
+      userInfo = Auth.getLocalUserInfo().attributes || {};
     const gaOptions = {
       cid: Auth.getLocalUserId(),
       ec: `article_title:${medium.attributes.title}, article_id:${medium.id}`,
       ea: 'click_article_in_riduTab',
-      el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
+      el: `user_name:${userInfo.wxUsername}, user_id:${userInfo.openId}`,
       ev: 0
     };
     util.goToMedium(event, gaOptions);
@@ -61,33 +63,31 @@ Page({
       //获取推荐文章
       let url;
       if (that.data.needRead) {
-        url = `${app.globalData.apiBase}/media/read?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&lastInitedAt=${that.data.lastInitedAt}&page[number]=${that.data.pageNumber}&page[size]=${that.data.pageSize}`;
+        url = `${app.globalData.apiBase}/media/read?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&lastInitedAt=${that.data.lastInitedAt}&page[number]=${that.data.pageNumber}&page[size]=${that.data.pageSize}&from=miniProgram`;
       } else {
-        url = `${app.globalData.apiBase}/media/feeds2?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`;
+        url = `${app.globalData.apiBase}/media/feeds2?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}&from=miniProgram`;
       }
       // console.log(`loadMore request begin used ${new Date() - now}ms`);
-      wx.request({
-        url,
-        success(res) {
-          // console.log(`loadMore request used ${new Date() - now}ms`);
-          const media = res.data.data;
-          // console.log('loadMore media length:', media.length);
-          media.forEach(util.formatMedium);
+      request({
+        url
+      }).then(res => {
+        // console.log(`loadMore request used ${new Date() - now}ms`);
+        const media = res.data;
+        // console.log('loadMore media length:', media.length);
+        media.forEach(util.formatMedium);
 
-          const recommendNoMore = that.data.needRead && media.length < that.data.pageSize;
-          if (recommendNoMore) console.log('recommend no more');
+        const recommendNoMore = that.data.needRead && media.length < that.data.pageSize;
+        if (recommendNoMore) console.log('recommend no more');
 
-          that.setData({
-            media: that.data.media.concat(media),
-            loadingMore: false,
-            pageNumber: that.data.pageNumber + 1,
-            recommendNoMore
-          });
-          // console.log(`loadMore data set used ${new Date() - now}ms`);
-        },
-        fail(res) {
-          console.log('request more recommended media fail');
-        }
+        that.setData({
+          media: that.data.media.concat(media),
+          loadingMore: false,
+          pageNumber: that.data.pageNumber + 1,
+          recommendNoMore
+        });
+        // console.log(`loadMore data set used ${new Date() - now}ms`);
+      },res => {
+        console.log('request more recommended media fail');
       });
     }
   },
@@ -99,21 +99,19 @@ Page({
       that.setData({ loadingMoreSubscribe: true });
       const lastId = that.data.lastId;
       const url = `${app.globalData.apiBase}/media/subscribed-timeline?userId=${Auth.getLocalUserId()}&page[size]=${that.data.pageSize}&lastId=${lastId}`;
-      wx.request({
+      request({
         url,
-        success(res) {
-          const media = res.data.data;
-          media.forEach(util.formatMedium);
+      }).then(res => {
+        const media = res.data;
+        media.forEach(util.formatMedium);
 
-          that.setData({
-            subscribedTopicMedia: that.data.subscribedTopicMedia.concat(media),
-            loadingMoreSubscribe: false,
-            lastId: media[media.length - 1].id
-          });
-        },
-        fail(res) {
-          console.log('request more subscribed media fail');
-        }
+        that.setData({
+          subscribedTopicMedia: that.data.subscribedTopicMedia.concat(media),
+          loadingMoreSubscribe: false,
+          lastId: media[media.length - 1].id
+        });
+      },res => {
+        console.log('request more subscribed media fail');
       });
     }
   },
@@ -132,79 +130,16 @@ Page({
         loading: true,
         loadingSubscribe: true,
         needRead: false,
-        lastInitedAt: + new Date(),
         recommendNoMore: false
       });
     } else {
       that.setData({
         needRead: false,
-        lastInitedAt: + new Date(),
         recommendNoMore: false
       });
     }
 
-    //检查storage里是否有userId，没有则请求
-    if (Auth.getLocalUserId()) {
-      init();
-    } else {
-      Auth.login(init, that);
-    }
-
-    function init() {
-      // console.log(`onLoad request begin used ${new Date() - now}ms`);
-      //获取推荐文章
-      wx.request({
-        url: `${app.globalData.apiBase}/media/feeds2?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`,
-        success(res) {
-          // console.log(`onLoad request used ${new Date() - now}ms`);
-          const media = res.data.data;
-          const len = media.length;
-          // console.log('onload recommend media length:', len);
-          media.forEach(util.formatMedium);
-
-          const needRead = len < that.data.pageSize;
-          that.setData({
-            media,
-            loading: false,
-            needRead
-          });
-          // console.log(`onLoad data set used ${new Date() - now}ms`);
-          wx.stopPullDownRefresh();
-
-          if (needRead) {
-            that.loadMore();
-          }
-        },
-        fail(res) {
-          console.log('request recommended media fail');
-        }
-      });
-
-      util.ga({
-        cid: Auth.getLocalUserId() || '555',
-        dp: '%2FriduTab_XiaoChengXu',
-        dt: '日读tab页（小程序）'
-      });
-
-      // //获取订阅专题下的文章
-      // wx.request({
-      //   url: `${app.globalData.apiBase}/media/subscribed-timeline?userId=${Auth.getLocalUserId()}&page[size]=${that.data.pageSize}`,
-      //   success(res) {
-      //     const media = res.data.data;
-      //     const len = media.length;
-      //     console.log('onload subscribed-timeline media length:', len);
-      //     media.forEach(util.formatMedium);
-      //     that.setData({
-      //       subscribedTopicMedia: media,
-      //       loadingSubscribe: false,
-      //       lastId: media[media.length - 1].id
-      //     });
-      //   },
-      //   fail(res) {
-      //     console.log('request /media/subscribed-timeline fail');
-      //   }
-      // });
-    }
+    Auth.getLocalUserId() && this._load();
   },
 
   /**
@@ -218,7 +153,11 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+    util.ga({
+      cid: Auth.getLocalUserId() || '555',
+      dp: '%2FriduTab_XiaoChengXu',
+      dt: '日读tab页（小程序）'
+    });
   },
 
   /**
@@ -239,7 +178,38 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    this.onLoad({ pullDown: true });
+    // this.onLoad({ pullDown: true });
+    const that = this;
+    request({
+      url: `${app.globalData.apiBase}/media/feeds2?from=miniProgram&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`,
+    }).then(res => {
+      // console.log('pull down refresh request success');
+      const media = res.data;
+      const len = media.length;
+      const lastInitedAt = res.data.meta && res.data.meta.now;
+      let needRead;
+      if (len) {
+        needRead = len < that.data.pageSize;
+        media.forEach(util.formatMedium);
+        const data = {
+          media,
+          pageNumber: 1,
+          needRead,
+          recommendNoMore: false
+        };
+        if (lastInitedAt) {
+          data.lastInitedAt = lastInitedAt;
+        }
+        that.setData(data);
+      }
+      wx.stopPullDownRefresh();
+      if (needRead) {
+        that.loadMore();
+      }
+    },res => {
+      wx.stopPullDownRefresh();
+      console.log('request recommended media fail');
+    });
   },
 
   /**
@@ -253,6 +223,42 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-  
+    return {
+      title: '日读'
+    };
+  },
+  _load() {
+    // console.log(`onLoad request begin used ${new Date() - now}ms`);
+    //获取推荐文章
+    request({
+      url: `${app.globalData.apiBase}/media/feeds2?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${this.data.pageSize}&from=miniProgram`,
+    }).then(res => {
+      // console.log(res.data);
+      // console.log(`onLoad request used ${new Date() - now}ms`);
+      const media = res.data;
+      const lastInitedAt = res.meta && res.meta.now;
+      const len = media.length;
+      const needRead = len < this.data.pageSize;
+      // console.log('onload recommend media length:', len);
+      media.forEach(util.formatMedium);
+      
+      const data = {
+        media,
+        loading: false,
+        needRead
+      };
+      if (lastInitedAt) {
+        data.lastInitedAt = lastInitedAt;
+      }
+      this.setData(data);
+      // console.log(`onLoad data set used ${new Date() - now}ms`);
+      wx.stopPullDownRefresh();
+
+      if (needRead) {
+        this.loadMore();
+      }
+    },res => {
+      console.log('request recommended media fail');
+    });
   }
 })

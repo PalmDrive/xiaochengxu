@@ -1,0 +1,16 @@
+<import src="../../templates/topic-list.wxml"/>
+
+<scroll-view scroll-x class="scroll-x tabs">
+  <text wx:for="{{fields}}" wx:for-item="field" wx:key="id" data-field-id="{{field.id}}" bindtap="onSelectField" class="{{field.id === selectedFieldId ? 'active' : ''}} size-18">{{field.attributes.name}}</text>
+</scroll-view>
+
+<scroll-view scroll-y bindscrolltolower="loadMore" lower-threshold="200" class="tab-content">
+  <template is="topicList" data="{{topics: topics}}"></template>
+
+  <view class="loading text-center size-12" hidden="{{!loadingMore}}">
+    <text>更多数据加载中...</text>
+  </view>
+</scroll-view>
+
+<button class="btn-save">完成订阅</button>
+

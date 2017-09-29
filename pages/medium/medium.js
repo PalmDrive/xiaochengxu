@@ -3,13 +3,15 @@ const app = getApp(),
       util = require('../../utils/util.js'),
       Auth = require('../../utils/auth.js'),
       WxParse = require('../../utils/wxParse/wxParse.js'),
-      he = require('../../utils/he.js');
+      he = require('../../utils/he.js'),
+      {request} = require('../../utils/request');
 
 Page({
   /**
    * 页面的初始数据
    */
   data: {
+    mediumId: '',
     medium: {},
     relatedMedia: [],
     relatedTopics: [],
@@ -29,90 +31,10 @@ Page({
   onLoad: function (options) {
     const that = this,
       mediumId = options.id;
+    that.setData({mediumId});
 
-    //检查storage里是否有userId，没有则请求
-    if (Auth.getLocalUserId()) {
-      init();
-    } else {
-      Auth.login(init, that);
-    }
+    Auth.getLocalUserId() && this._load();
 
-    function init() {
-      //获取文章数据
-      wx.request({
-        url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt`,
-        success(result) {
-          const medium = result.data.data,
-            css = result.data.meta.css || '';
-
-          if (Object.keys(medium.attributes.topics).length === 0) {
-            delete medium.attributes.topics;
-          } else {
-            medium.attributes.topic = medium.attributes.topics[Object.keys(medium.attributes.topics)[0]];
-          }
-
-          if (medium.attributes.publishedAt) {
-            medium.attributes.publishedAt = util.convertDate(new Date(medium.attributes.publishedAt));
-          } else {
-            medium.attributes.publishedAt = '';
-          }
-
-          const html = medium.attributes.htmlContent,
-            decoded = he.decode(html);
-          WxParse.wxParse('htmlContent', 'html', decoded, that, 0);
-
-          that.setData({
-            medium,
-            loading: false
-          });
-
-          util.ga({
-            cid: Auth.getLocalUserId() || '555',
-            dp: '%2FarticlePage_XiaoChengXu',
-            dt: `article_title:${medium.attributes.title},article_id:${mediumId}`
-          });
-        },
-        fail() {
-          console.log('medium page request medium data fail');
-        }
-      });
-    }
-
-    // //获取推荐文章
-    // wx.request({
-    //   url: `${app.globalData.apiBase}/media/${mediumId}/related-media`,
-    //   success(result) {
-    //     const relatedMedia = result.data.data;
-    //     relatedMedia.forEach(util.formatMedium);
-    //     that.setData({
-    //       relatedMedia
-    //     });
-    //   },
-    //   fail() {
-    //     console.log('medium page request related-media data fail');
-    //   }
-    // });
-    // //获取推荐专题
-    // wx.request({
-    //   url: `${app.globalData.apiBase}/media/${mediumId}/related-topics`,
-    //   success(result) {
-    //     const topics = result.data.data;
-    //     topics.forEach(t => {
-    //       if (t.attributes.lastMediumAddedAt) {
-    //         t.attributes.lastMediumAddedAt = util.convertDate(new Date(t.attributes.lastMediumAddedAt));
-    //       }
-    //       if (t.attributes.lastMediumTitle) {
-    //         t.attributes.lastMediumTitle = t.attributes.lastMediumTitle.slice(0, 15) + '...';
-    //       }
-    //     });
-    //     that.setData({
-    //       relatedTopics: topics
-    //     });
-    //   },
-    //   fail() {
-    //     console.log('medium page request related-topics data fail');
-    //   }
-    // });
   },
 
   /**
@@ -126,7 +48,21 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+    // console.log('onShow');
+    const userId = Auth.getLocalUserId(),
+      mediumId = this.data.mediumId;
+    if (userId && mediumId) {
+      // console.log('记录足迹');
+      request({
+        method: 'POST',
+        url: `${app.globalData.apiBase}/media/${mediumId}/views?from=miniProgram`,
+        data: {
+          data: {attributes: {userId}}
+        }
+      }).then(null, err => {
+        console.log('Medium page, onShow, record lastViewedAt fail');
+      });
+    }
   },
 
   /**
@@ -162,13 +98,55 @@ Page({
    */
   onShareAppMessage: function () {
     const medium = this.data.medium,
-      userInfo = Auth.getLocalUserInfo();
+      userInfo = Auth.getLocalUserInfo().attributes || {};
     util.gaEvent({
       cid: Auth.getLocalUserId(),
       ec: `article_title:${medium.attributes.title}, article_id:${medium.id}`,
       ea: 'share_article',
-      el: `user_name:${userInfo.nickName}, user_id:${userInfo.openId}`,
+      el: `user_name:${userInfo.wxUsername}, user_id:${userInfo.openId}`,
       ev: 4
+    });
+    return {
+      title: medium.attributes.title
+    };
+  },
+
+  _load() {
+    const mediumId = this.data.mediumId;
+    request({
+      url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt&from=miniProgram`
+    }).then((result) => {
+      const medium = result.data,
+        css = result.meta.css || '';
+
+      if (Object.keys(medium.attributes.topics).length === 0) {
+        delete medium.attributes.topics;
+      } else {
+        medium.attributes.topic = medium.attributes.topics[Object.keys(medium.attributes.topics)[0]];
+      }
+
+      if (medium.attributes.publishedAt) {
+        medium.attributes.publishedAt = util.convertDate(new Date(medium.attributes.publishedAt));
+      } else {
+        medium.attributes.publishedAt = '';
+      }
+
+      const html = medium.attributes.htmlContent,
+        decoded = he.decode(html);
+      WxParse.wxParse('htmlContent', 'html', decoded, this, 0);
+
+      this.setData({
+        medium,
+        loading: false
+      });
+
+      util.ga({
+        cid: Auth.getLocalUserId() || '555',
+        dp: '%2FarticlePage_XiaoChengXu',
+        dt: `article_title:${medium.attributes.title},article_id:${mediumId}`
+      });
+    }, () => {
+      console.log('medium page request medium data fail');
     });
   }
 })
