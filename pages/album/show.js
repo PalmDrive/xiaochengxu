@@ -38,7 +38,7 @@ Page({
     //console.log(getCurrentPages()[1]);
     const bannerImageRatio = 375 / 400, // width / height
           updates = {
-            groupId: options.id,
+            groupId: options.id || '18d319f0-9a18-11e7-a202-9bb8a0ea118f',
             loadingStatus: 'LOADING'
           },
           that = this;

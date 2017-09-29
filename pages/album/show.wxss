@@ -6,8 +6,9 @@ page {
   text-align: center;
 }
 
-.top-titlle {
-  margin-top: 30px;
+.top-title {
+  margin-top: 20px;
+  display: block;
 }
 
 .top-tip {

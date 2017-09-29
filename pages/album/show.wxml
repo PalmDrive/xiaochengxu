@@ -27,7 +27,7 @@
 
 <view class="container" lower-threshold="200">
   <view wx:if="{{loadingStatus !== 'LOADING'}}" class="top-view column">
-    <text class=" size-26 text-color1 FZRUIZH_CUJW--GB1-0 top-titlle">{{ userName }}</text>
+    <text class=" size-26 text-color1 FZRUIZH_CUJW--GB1-0 top-title">{{ userName }}</text>
   </view>
 
   <swiper current="{{current}}" bindchange="listenSwiper" class="list-container" wx:key="">
@@ -41,8 +41,8 @@
               <view class="row bottom-view">
                 <image src="{{topic.attributes.picUrl}}" class="head-img"></image>
                 <view class="right-view column top-text" >
-                  <text class=" size-10 ji-zhu-text">辑主</text>
-                  <text class=" size-12 ji-zhu-name">宋颂颂🐳 </text>
+                  <text class="size-10 ji-zhu-text">辑主</text>
+                  <text class="size-12 ji-zhu-name">宋颂颂🐳 </text>
                 </view>
               </view>
               <text class=" size-12 text-white top-text">{{topic.attributes.title}}</text>
@@ -64,14 +64,14 @@
     </swiper-item>
   </swiper>
   <view class="count-view row">
-    <view class="row" style="justify-content: flex-start; align-items: center;width: 70%;">
-      <image src="../../images/paid-group/lock.png" class="other-user-img" style="z-index: 5;position: absolute;left: 30px;"></image>
-      <image src="../../images/paid-group/lock.png" class="other-user-img" style="z-index: 4;position: absolute;left: 38px;"></image>
-      <image src="../../images/paid-group/lock.png" class="other-user-img" style="z-index: 3;position: absolute;left: 47px;"></image>
-      <image src="../../images/paid-group/lock.png" class="other-user-img" style="z-index: 2;position: absolute;left: 56px;"></image>
-      <image src="../../images/paid-group/lock.png" class="other-user-img" style="z-index: 1;position: absolute;left: 65px;"></image>
-      <text class="size-10 text-color2 bottom-tip">123人与你共同观看</text>
-    </view>
+    <!-- <view class="row" style="justify-content: flex-start; align-items: center;width: 70%;">
+      <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 5;position: absolute;left: 30px;"></image>
+      <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 4;position: absolute;left: 38px;"></image>
+      <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 3;position: absolute;left: 47px;"></image>
+      <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 2;position: absolute;left: 56px;"></image>
+      <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 1;position: absolute;left: 65px;"></image>
+      <text class="/images/paid-group/lock.png">123人与你共同观看</text>
+    </view> -->
 
     <view class="row" style="justify-content: flex-end; align-items: flex-end;">
       <text class=" size-22 pingfang-medium text-color1">{{current + 1}}</text>

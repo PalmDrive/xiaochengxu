@@ -125,7 +125,7 @@ Page({
     });
     if (role) {
       wx.navigateTo({
-        url: `../groups/group?id=${userId}`
+        url: `../album/show?id=${userId}`
       });
     } else {
       wx.navigateTo({

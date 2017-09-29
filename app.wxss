@@ -25,7 +25,7 @@ view {
 .container {
   box-sizing: border-box;
   overflow-x: hidden;
-} 
+}
 
 .d-ib {
   display: inline-block;
@@ -93,7 +93,7 @@ view {
   .topic .break-line {
     margin: 0 15px;
   }
-  
+
 
   .t-top {
     padding: 17px 20px 11px;
@@ -135,4 +135,16 @@ view {
 
 .medium-list, .medium-list-2 {
   word-break: break-all;
+}
+
+.row {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: row;
+}
+
+.column {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
 }
