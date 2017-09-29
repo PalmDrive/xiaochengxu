@@ -1,8 +1,9 @@
 {
   "pages":[
-    "pages/groups/groups",
-    "pages/map/map",
+    "pages/map/share",
     "pages/map/leaderboard",
+    "pages/map/map",
+    "pages/groups/groups",
     "pages/album/buy",
     "pages/album/show",
     "pages/topics/topics",
