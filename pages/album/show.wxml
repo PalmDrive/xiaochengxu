@@ -39,10 +39,10 @@
             <view class="medium-banner" style="background-image: url('{{topic.attributes.picUrl}}')">
               <view class="medium-banner-mask"></view>
               <view class="row bottom-view">
-                <image src="{{topic.attributes.picUrl}}" class="head-img"></image>
+                <image src="{{author.attributes.profilePicUrl}}" class="head-img"></image>
                 <view class="right-view column top-text" >
                   <text class="size-10 ji-zhu-text">辑主</text>
-                  <text class="size-12 ji-zhu-name">宋颂颂🐳 </text>
+                  <text class="size-12 ji-zhu-name">{{author.attributes.username}}</text>
                 </view>
               </view>
               <text class=" size-12 text-white top-text">{{topic.attributes.title}}</text>
@@ -70,7 +70,7 @@
       <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 3;position: absolute;left: 47px;"></image>
       <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 2;position: absolute;left: 56px;"></image>
       <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 1;position: absolute;left: 65px;"></image>
-      <text class="/images/paid-group/lock.png">123人与你共同观看</text>
+      <text>123人与你共同观看</text>
     </view> -->
 
     <view class="row" style="justify-content: flex-end; align-items: flex-end;">

@@ -9,6 +9,12 @@ function loadData(groupId, lastDate) {
   });
 }
 
+function loadUserData(groupId) {
+  return request({
+    url: `${app.globalData.apiBase}/groups/${groupId}/relationships/users`
+  });
+}
+
 let didUserPay = false;
 const PAID_USER_ROLE = 2;
 
@@ -26,7 +32,10 @@ Page({
     modalShown: false,
     qrcodeModalShown: false,
     bannerImage: {},
-    current: 0
+    current: 0,
+    author: {},
+    subscribers: [],
+    subscribersCount: 0
   },
 
   //关闭首次登陆弹窗
@@ -99,6 +108,16 @@ Page({
    * 加载数据
    */
   _load() {
+    loadUserData(this.data.groupId)
+      .then(data => {
+        const updates = {
+          author: data.relationships.author.data,
+          subscribers: data.data,
+          subscribersCount: data.meta.count
+        };
+        this.setData(updates);
+      });
+
     loadData(this.data.groupId, this.data.lastDate)
       .then(this._onLoadSuccess);
   },

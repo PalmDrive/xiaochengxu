@@ -43,6 +43,8 @@ page {
 .bottom-view {
   margin-top: 120px;
   margin-bottom: 3px;
+  position: relative;
+  z-index: 10;
 }
 
 .top-text {
