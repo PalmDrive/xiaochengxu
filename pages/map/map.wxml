@@ -1,7 +1,7 @@
 <view class="map-page">
   <view class="banner">
-    <text wx:if="{{lcUsers.length < MIN_USERS_COLLECTED_COUNT}}" class="size-12">聚齐{{MIN_USERS_COLLECTED_COUNT}}个吃货免费领取《七日辑 - 在家也能免费做美食》</text>
-    <text wx:if="{{lcUsers.length >= MIN_USERS_COLLECTED_COUNT}}" class="size-12 success">点击领取《七日辑 - 在家也能免费做美食》</text>
+    <text wx:if="{{lcUsers.length < MIN_USERS_COLLECTED_COUNT}}" class="size-12">聚齐{{MIN_USERS_COLLECTED_COUNT}}个吃货免费领取《七日辑 - 在家也能做网红美食》</text>
+    <text wx:if="{{lcUsers.length >= MIN_USERS_COLLECTED_COUNT}}" class="size-12 success">点击领取《七日辑 - 在家也能做网红美食》</text>
     <!-- <text class="size-9" wx:if="{{usersCount !== null}}">已收集{{usersCount}}个吃货</text>
     <view class="barrage-container">
       <text wx:for="{{barrages}}" wx:key="" class="size-9">{{item}}</text>
@@ -13,8 +13,10 @@
   <view class="toolbar">
     <view hidden="{{state === 1 || state === -1}}">
       <view class="toolbar-msg">
-        <text class="size-14" wx:if="{{lcUsers.length < MIN_USERS_COLLECTED_COUNT}}">已收集到{{state === 0 ? 0 : lcUsers.length}}个吃货, 还差{{state === 0 ? MIN_USERS_COLLECTED_COUNT : MIN_USERS_COLLECTED_COUNT - lcUsers.length}}</text>
+        <text class="size-14" wx:if="{{lcUsers.length < MIN_USERS_COLLECTED_COUNT}}">已收集到{{state === 0 ? 0 : lcUsers.length}}个吃货, 还差{{state === 0 ? MIN_USERS_COLLECTED_COUNT : MIN_USERS_COLLECTED_COUNT - lcUsers.length}}个</text>
         <text wx:if="{{lcUsers.length >= MIN_USERS_COLLECTED_COUNT}}" class="size-14">已收集到{{lcUsers.length}}个吃货, 真👍</text>
+
+        <button class="btn-leaderboard size-12" bindtap="gotoLeaderboard">查看排行榜</button>
       </view>
 
       <scroll-view style="width: 100%" scroll-x>

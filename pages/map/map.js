@@ -37,7 +37,6 @@ Page({
     message: '',
     lcUsers: [],
     collectedUsersContainerWidth: 0,
-    usersCount: null,
     markers: [],
     size: {},
     center: {
@@ -156,6 +155,7 @@ Page({
           let mSessIds = lcUser.get('mapSessionIds') || [];
           userMapSession.set('mapSessionId', sharedMapSessionId);
           userMapSession.set('user', lcUser);
+          userMapSession.set('role', 1);
           userMapSession.set('userInfo', {wxUsername: lcUser.get('name')});
           userMapSession.save();
           
@@ -176,6 +176,7 @@ Page({
   },
 
   onRegionChange(e) {
+    if (!mapCtx) return;
     const that = this;
     if (e.type === 'end') {
       toPromise(mapCtx.getScale).call(mapCtx)
@@ -210,7 +211,7 @@ Page({
   start(e) {
     this.setData({state: 1});
     const userId = Auth.getLocalUserId();
-    let usersCount, currLocation;
+    let currLocation;
 
     if (!userId) {
       return onError('用户id不存在');
@@ -220,12 +221,10 @@ Page({
 
     return this._init()
     .then(res => {
-      usersCount = res[0];
       zdkMarkers = uniqPush(zdkMarkers, this._newMarkerFromUser(lcUser));
       currLocation = lcUser.get('currLocation');
 
       this.setData({
-        usersCount,
         center: {
           longitude: currLocation.longitude,
           latitude: currLocation.latitude
@@ -297,6 +296,12 @@ Page({
       }
     });
   },
+
+  gotoLeaderboard() {
+    wx.navigateTo({
+      url: `/pages/map/leaderboard?userId=${lcUser.id}`
+    });
+  },
   
   /**
    * options.mapSessionId
@@ -340,7 +345,6 @@ Page({
 
               this.setData({
                 state: 2,
-                usersCount: res[0]
               });
               return this._fetchAndShowUsers({
                 method: '_fetchAllUsers',
@@ -390,10 +394,15 @@ Page({
         collectedUsers.push({profileImage: USER_PLACEHOLDER_IMG});
       }
     }
+
+    // 若是奇数，加一个placeholder
+    if (collectedUsers.length % 2) {
+      collectedUsers.push({profileImage: USER_PLACEHOLDER_IMG});
+    }
    
     return {
       collectedUsers: this._sortCollectedUsers(collectedUsers),
-      width: Math.ceil(collectedUsers.length / 2) * (margin * 2 + imageSize) + 2 * containerPadding
+      width: (collectedUsers.length / 2) * (margin * 2 + imageSize) + 2 * containerPadding
     };
   },
   
@@ -491,7 +500,7 @@ Page({
   },
   
   /**
-   * get users count; update lcUser and userMapSession
+   * update lcUser and userMapSession
    */
   _init() {
     return toPromise(wx.getLocation)({
@@ -522,7 +531,6 @@ Page({
       }
 
       return Promise.all([
-        this._countUsers(),
         lcUser.save(),
         this._updateUserMapSession()
       ]);
@@ -667,20 +675,23 @@ Page({
             distinctUers.push(u);
           }
         });
+
+        lcUser.set('collectedUsersCount', distinctUers.length);
+        lcUser.save();
         
         return distinctUers;
       });
   },
 
-  _countUsers() {
-    const cql = `
-    select count(*) from UserMapSession where
-    user != pointer('WechatCampaignUser', ?) and
-    mapSessionId in ?
-    `;
-    return AV.Query.doCloudQuery(cql, [lcUser.id, lcUser.get('mapSessionIds')])
-      .then(data => data.count, onError);
-  },
+  // _countUsers() {
+  //   const cql = `
+  //   select count(*) from UserMapSession where
+  //   user != pointer('WechatCampaignUser', ?) and
+  //   mapSessionId in ?
+  //   `;
+  //   return AV.Query.doCloudQuery(cql, [lcUser.id, lcUser.get('mapSessionIds')])
+  //     .then(data => data.count, onError);
+  // },
 
   _updateUserMapSession() {
     if (!mapSessionId) {

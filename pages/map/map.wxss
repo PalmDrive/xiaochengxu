@@ -1,7 +1,7 @@
 .map-page {
   height: 100vh;
   padding-bottom: 250px;
-  padding-top: 47px;
+  padding-top: 27px;
   background-color: #FAF8FE;
 }
 
@@ -24,14 +24,14 @@
   top: 0;
   left: 0;
   text-align: center;
-  padding-top: 8px;
 }
 
 .banner text {
   color: white;
-  padding: 10px 20px;
+  padding: 5px;
+  width: 100%;
   background-color: #505050;
-  border-radius: 19px;
+  display: block;
 }
 
 .banner text.success {
@@ -95,4 +95,15 @@ input {
 .text-for-message {
   padding: 10px 20px;
   display: block;
+}
+
+.toolbar .btn-leaderboard {
+  float: right;
+  line-height: 1.1;
+  background-color: transparent;
+  padding: 7px;
+  color: #157EFB;
+  border: 1px solid #157EFB;
+  border-radius: 3px;
+  margin-right: 15px;
 }
