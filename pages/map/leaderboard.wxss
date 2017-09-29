@@ -1,7 +1,11 @@
+.map-leaderboard {
+  padding-bottom: 20px;
+}
+
 .title {
   text-align: center;
   color: #157EFB;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   display: block;
 }
 
@@ -11,14 +15,14 @@
   padding: 10px 20px;
   width: 245px;
   color: white;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
   border-radius: 0 27px 27px 0;
 }
 
 .leaderboard-row {
   display: flex;
   justify-content: space-between;
-  padding: 8px 30px;
+  padding: 5px 30px;
 }
 
 .leaderboard-row .left {
