@@ -7,6 +7,7 @@
 </view>
  -->
 <view class="groups" scroll-y bindscrolltolower="onReachBottom" lower-threshold="20">
+  <navigator url="/pages/map/map?friendId=59ce3d20a22b9d0061312243" style="padding-top: 10px;color: #157EFB" class="size-14">国庆特别活动：吃货们都去哪儿了?</navigator>
   <view wx:for="{{groups}}" wx:for-item="group" wx:key>
     <!-- group -->
     <view class="group" wx:if="{{group.attributes.role === 'group'}}">
