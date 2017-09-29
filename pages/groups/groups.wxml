@@ -1,0 +1,37 @@
+<import src="../../templates/loading.wxml"/>
+<include src="../../includes/hint.wxml"/>
+<!-- 
+<view class="create">
+  <view class="text">为你的群创建一个群头条吧，你可以为他们订阅相关的热门资讯和行业观点</view>
+  <view class="createGroup" bindtap="gotoNewGroup">创建群头条</view>
+</view>
+ -->
+<view class="groups" scroll-y bindscrolltolower="onReachBottom" lower-threshold="20">
+  <view wx:for="{{groups}}" wx:for-item="group" wx:key>
+    <!-- group -->
+    <view class="group" wx:if="{{group.attributes.role === 'group'}}">
+      <view class="group-title" data-group="{{ group }}" bindtap="gotoGroup" style="background-color: {{['#3e2723','#212121','#263238'][index%3]}}">
+        <text class="group-name">{{group.attributes.username}}</text>
+        <!-- <text class="group-pageview">点击：333</text> -->
+        <text class="group-update-count" wx:if="{{group.lastPublishedAt}}">{{group.lastPublishedAt}}更新{{group.relationships.media.meta.count}}篇</text>
+      </view>
+      <view class="media">
+        <view class="medium" wx:for="{{group.relationships.media.data}}" wx:for-item="medium" wx:key data-medium="{{ medium }}" bindtap="goToMedium">{{medium.attributes.title}}</view>
+      </view>
+      <view class="group-bottom" wx:if="{{group.relationships.media.meta.count}}">
+        <view class="like-count">
+          <image class="icon" src="../../images/like.png"></image>
+          <text>23</text>
+        </view>
+        <view class="shar-count">
+          <image class="icon" src="../../images/shar.png"></image>
+          <text>23</text>
+        </view>
+        <view class="update-count" data-group="{{ group }}" bindtap="gotoGroup">| 查看全部{{group.relationships.media.meta.count}}篇 ></view>
+      </view>
+    </view>
+    <!-- paid_group -->
+    <image src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/七日辑/{{group.attributes.groupInfo.codename}}/列表图.jpg" wx:else mode="widthFix"  data-group="{{ group }}" bindtap="gotoPaidGroup" class="paid-group-pic group"></image>
+  </view>
+</view>
+<template is="loading" data="{{loadingStatus}}"></template>

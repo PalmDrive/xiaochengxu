@@ -1,10 +1,16 @@
 {
   "pages":[
-    "pages/index/index",
+    "pages/groups/groups",
+    "pages/album/buy",
+    "pages/album/show",
     "pages/topics/topics",
     "pages/topic/topic",
     "pages/medium/medium",
-    "pages/my/my"
+    "pages/my/my",
+    "pages/groups/group",
+    "pages/groups/new-group",
+    "pages/index/index",
+    "pages/topics/select-topics"
   ],
   "window":{
     "backgroundTextStyle":"dark",
@@ -20,16 +26,22 @@
     "position": "bottom",
     "list": [
       {
-        "pagePath": "pages/index/index",
-        "text": "日读",
-        "iconPath": "images/tabIcons/index.png",
-        "selectedIconPath": "images/tabIcons/index_selected.png"
+        "pagePath": "pages/groups/groups",
+        "text": "七日辑",
+        "iconPath": "images/tabIcons/groups.png",
+        "selectedIconPath": "images/tabIcons/groups_selected.png"
       },
       {
         "pagePath": "pages/topics/topics",
         "text": "专题",
         "iconPath": "images/tabIcons/topics.png",
         "selectedIconPath": "images/tabIcons/topics_selected.png"
+      },
+      {
+        "pagePath": "pages/index/index",
+        "text": "日读",
+        "iconPath": "images/tabIcons/index.png",
+        "selectedIconPath": "images/tabIcons/index_selected.png"
       },
       {
         "pagePath": "pages/my/my",

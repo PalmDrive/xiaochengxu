@@ -1,5 +1,13 @@
 /* text */
 
+.text-bold {
+  font-weight: bold;
+}
+
+.text-center {
+  text-align: center;
+}
+/* text color*/
 .text-grey {
   color: #B7B7B7;
 }
@@ -12,12 +20,32 @@
   color: #FFF;
 }
 
-.text-bold {
-  font-weight: bold;
+.text-color1 {
+  color: #1A1A1A
 }
 
-.text-center {
-  text-align: center;
+.text-color2 {
+  color: #606060
+}
+
+.text-color3 {
+  color: #B7B7B7
+}
+
+.text-color4 {
+  color: #D5D5D5
+}
+
+.text-color5 {
+  color: #EDEDED
+}
+
+.text-color6 {
+  color: #383838
+}
+
+.main-color {
+  color: #0090E7
 }
 
 /* font-size */
@@ -60,4 +88,24 @@
 
 .size-20 {
   font-size: 20px;
+}
+
+.size-22 {
+  font-size: 20px;
+}
+
+.size-26 {
+  font-size: 26px;
+}
+
+.pingfang-regular {
+  font-family: PingFangSC-Regular;
+}
+
+.pingfang-medium {
+  font-family: PingFangSC-Medium;
+}
+
+.FZRUIZH_CUJW--GB1-0 {
+  font-family: FZRUIZH_CUJW--GB1-0;
 }

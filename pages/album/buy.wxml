@@ -1,0 +1,4 @@
+<view wx:if="{{album}}">
+  <image class="pic" mode="widthFix" src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/七日辑/{{album.codename}}/长图.jpg"></image>
+  <button bindtap="buy" class="btn-buy" disabled="{{processing}}" loading="{{processing}}">马上订阅 {{album.price / 100}}元</button>
+</view>

@@ -1,0 +1,86 @@
+<!--topics.wxml-->
+<import src="../../templates/topic-list.wxml"/>
+<import src="../../templates/homepage-topic-section.wxml"/>
+<import src="../../templates/loading.wxml"/>
+<include src="../../includes/hint.wxml"/>
+
+<view class="modal-container" hidden="{{!modalShown}}">
+  <view class="modal">
+    <image src="../../images/paid-group/{{groupInfo.modalImage}}" class="modal-bg"></image>
+    <button class="size-14 text-white" bindtap="copyWechatId">一键复制微信号</button>
+    <image src="../../images/paid-group/close.png" class="btn-close" bindtap="toggleModalShown"></image>
+  </view>
+  <view class="modal-drop"></view>
+</view>
+
+<view class="modal-container" hidden="{{!qrcodeModalShown}}">
+  <view class="modal">
+    <text class=" size-22 .pingfang-medium main-color text-center model-text1">开启推送</text>
+    <text class=" size-14 text-color1 model-text2" >关注微信公众号「职得看」，我们为您每日推送课程</text>
+    <image src="../../images/paid-group/qrcode.jpg" class="modal-qrcode"></image>
+    <text class=" size-14 text-color1 model-text3" >请截图保存，用微信扫描</text>
+    <button class="size-14 text-white" bindtap="toggleModalShown">知道了</button>
+    <image src="../../images/paid-group/close.png" class="btn-close" bindtap="toggleQrcodeModalShown"></image>
+  </view>
+  <view class="modal-drop"></view>
+</view>
+
+<view class="container" lower-threshold="200">
+  <view wx:if="{{loadingStatus !== 'LOADING'}}" class="top-view column">
+    <text class=" size-26 text-color1 FZRUIZH_CUJW--GB1-0 top-title">{{ userName }}</text>
+  </view>
+
+  <swiper current="{{current}}" bindchange="listenSwiper" class="list-container" wx:key="">
+    <swiper-item id="id-{{topic.id}}" wx:for="{{ dateList[0].topics }}" wx:for-item="topic"  wx:key="">
+      <view wx:if="{{topic.relationships.media.data.length > 0}}">
+        <text class=" size-12 text-color3 FZRUIZH_CUJW--GB1-0 top-tip">　　</text>
+        <view class="topic">
+          <view class="topic-info">
+            <view class="medium-banner" style="background-image: url('{{topic.attributes.picUrl}}')">
+              <view class="medium-banner-mask"></view>
+              <view class="row bottom-view">
+                <image src="{{author.attributes.profilePicUrl}}" class="head-img"></image>
+                <view class="right-view column top-text" >
+                  <text class="size-10 ji-zhu-text">辑主</text>
+                  <text class="size-12 ji-zhu-name">{{author.attributes.username}}</text>
+                </view>
+              </view>
+              <text class=" size-12 text-white top-text">{{topic.attributes.title}}</text>
+            </view>
+          </view>
+
+          <view class="mediums">
+            <view class="medium {{topic.relationships.media.data.length > 2 ? 'medium-50' : 'medium-100'}} {{index === 1 || index === 2 ? 'medium-gray' : ''}}" wx:for="{{ topic.relationships.media.data }}" wx:for-item="medium" data-medium="{{ medium }}" wx:key="" bindtap="goToMedium">
+              <text class="medium-title  size-16">{{ medium.attributes.title }}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{topic.relationships.media.data.length == 0}}" class="text-center">
+        <text class=" size-12 text-color3 FZRUIZH_CUJW--GB1-0 top-tip">还未解锁，一天解锁一课哦</text>
+        <view class="topic" style="background-image: url('../../images/paid-group/lock.png')"></view>
+      </view>
+    </swiper-item>
+  </swiper>
+  <view class="count-view row">
+    <!-- <view class="row" style="justify-content: flex-start; align-items: center;width: 70%;">
+      <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 5;position: absolute;left: 30px;"></image>
+      <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 4;position: absolute;left: 38px;"></image>
+      <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 3;position: absolute;left: 47px;"></image>
+      <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 2;position: absolute;left: 56px;"></image>
+      <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 1;position: absolute;left: 65px;"></image>
+      <text>123人与你共同观看</text>
+    </view> -->
+
+    <view class="row" style="justify-content: flex-end; align-items: flex-end;">
+      <text class=" size-22 pingfang-medium text-color1">{{current + 1}}</text>
+      <text class=" size-12 pingfang-medium text-color1">/{{dateList[0].topics.length}}</text>
+    </view>
+  </view>
+
+  <view class="tip-line">
+    <view class="line {{index === current ? 'line-blue' : 'line-gray'}}" wx:for="{{ dateList[0].topics }}" wx:for-item="topic"  wx:key=""></view>
+  </view>
+  <template is="loading" data="{{loadingStatus}}"></template>
+</view>

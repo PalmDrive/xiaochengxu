@@ -1,0 +1,7 @@
+<view>
+  <form>
+    <text>输入群名字</text>
+    <input type="text" name="group_name" placeholder="产品经理群" bindinput="bindGroupNameInput" />
+    <button type="default" disabled="{{!groupName}}" bindtap="gotoSelectTopics" loading="{{processing}}">下一步，添加专题</button>
+  </form>
+</view>

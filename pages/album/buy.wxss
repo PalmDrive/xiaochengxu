@@ -1,0 +1,16 @@
+.btn-buy {
+  position: fixed;
+  bottom: 0px;
+  background: #0090E7;
+  width: 100%;
+  text-align: center;
+  line-height: 3;
+  font-size: 18px;
+  color: #FFFFFF;
+  border-radius: 0;
+}
+
+.pic {
+  width: 100%;
+  margin-bottom: 40px;
+}

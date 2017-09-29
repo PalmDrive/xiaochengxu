@@ -1,0 +1,59 @@
+<!--topics.wxml-->
+<import src="../../templates/topic-list.wxml"/>
+<import src="../../templates/homepage-topic-section.wxml"/>
+<import src="../../templates/loading.wxml"/>
+<include src="../../includes/hint.wxml"/>
+
+<view class="modal-container" hidden="{{!modalShown}}">
+  <view class="modal">
+    <image src="../../images/paid-group/{{groupInfo.modalImage}}" class="modal-bg"></image>
+    <button class="size-14 text-white" bindtap="copyWechatId">一键复制微信号</button>
+    <image src="../../images/paid-group/close.png" class="btn-close" bindtap="toggleModalShown"></image>
+  </view>
+  <view class="modal-drop"></view>
+</view>
+
+<view class="container" scroll-y bindscrolltolower="onReachBottom" lower-threshold="200">
+  <view wx:if="{{loadingStatus !== 'LOADING'}}">
+    <view wx:if="{{isPaidGroup}}">
+      <image src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/七日辑/{{groupInfo.codename}}/banner图.jpg" mode="aspectFill" class="head-banner-image" style="height: {{bannerImage.height}}px"></image>
+       <!-- <image src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/morningpost/0607/%E8%81%8C%E5%B0%8F%E5%85%B5.jpeg" mode="aspectFit" bindlongpress="scanCode"></image> -->
+    </view>
+    <view wx:if="{{!isPaidGroup}}" class="head">
+      <text class="group-name size-18">{{userName}}</text>
+      <view class="top-15 text-container">
+        <text class="group-pageviews size-12">阅读：{{groupInfo.pageviews}}</text>
+        <text class="update-count size-12">今日更新 {{newMediaCount}} 篇</text>
+      </view>
+      <text class="creator size-12 top-15" wx:if="{{groupInfo.groupOwnerMessage}}">{{groupInfo.groupOwnerMessage}}</text>
+      <!-- <view class="join-button size-12 top-25">添加</view> -->
+    </view>
+  </view>
+  <view class="list-container" wx:for="{{ dateList }}" wx:for-item="list" wx:key="">
+    <view class="date-title size-12" wx:if="{{!isPaidGroup}}">{{ list.date }}</view>
+    <view class="topic" wx:for="{{ list.topics }}" wx:for-item="topic" wx:if="{{ topic.relationships.media.data.length > 0 || isPaidGroup}}" wx:key="">
+      <view class="news-title">
+        <!-- 正常的群头条 -->
+        <view class="medium-list" bindtap="goToTopic" data-topic="{{topic}}" wx:if="{{!isPaidGroup}}">
+          <image src="{{ topic.attributes.imgUrl }}" class="logo"></image>
+          <text class="name size-12">{{ topic.attributes.name }}</text>
+        </view>
+
+        <!-- 七日辑 -->
+        <view class="medium-banner" style="background-image: url('{{topic.attributes.picUrl}}')" wx:if="{{isPaidGroup}}">
+          <view class="medium-banner-mask"></view>
+          <view class="medium-banner-title">
+            <text class="size-15 text-white">{{topic.attributes.title}}</text>
+          </view>
+          <text class="size-12 text-white">{{topic.attributes.lead[0]}}</text>
+        </view>
+      </view>
+      <view class="medium-container medium-list {{medium.attributes.picurl ? 'with-pic' : ''}}" wx:for="{{ topic.relationships.media.data }}" wx:for-item="medium" data-medium="{{ medium }}" wx:key="" bindtap="goToMedium">
+        <text class="medium-title size-15">{{ medium.attributes.title }}</text>
+        <image class="medium-image" wx:if="{{ medium.attributes.picurl }}" src="{{ medium.attributes.picurl }}" mode="aspectFill"></image>
+      </view>
+    </view>
+  </view>
+  <template is="loading" data="{{loadingStatus}}"></template>
+  <!-- <view class="new-media-count text-white text-center size-14" hidden="{{!isShar}}">今日更新{{ newMddiumCount }}篇</view> -->
+</view>
