@@ -325,6 +325,12 @@ Page({
       url: `/pages/map/leaderboard?userId=${lcUser.id}`
     });
   },
+
+  onShareBtnClick() {
+    wx.navigateTo({
+      url: `/pages/map/share?friendId=${lcUser.id}`
+    });
+  },
   
   /**
    * options.mapSessionId

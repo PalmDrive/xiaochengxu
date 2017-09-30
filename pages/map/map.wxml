@@ -36,7 +36,7 @@
     <view class="btns" wx:if="{{state === 2}}">
       <!--<button bindtap="toggleShowAllUsers" class="size-12" hidden="{{mode === 'all'}}">查看所有吃货</button> -->
       <!-- <button bindtap="toggleShowAllUsers" class="size-12" hidden="{{mode === 'group'}}">查看群里吃货</button> -->
-      <button class="size-14">分享到朋友圈</button>
+      <button class="size-14" bindtap="onShareBtnClick">分享到朋友圈</button>
       <button class="size-14" open-type="share">分享到微信群，收集更多吃货</button>
     </view>
   </view>

@@ -1,7 +1,16 @@
 const {request} = require('../../utils/request'),
       Auth = require('../../utils/auth'),
+      {toPromise} = require('../../utils/util'),
       app = getApp(),
       baseUrl = app.globalData.apiBase;
+
+function onError(err) {
+  wx.showModal({
+    title: '错误',
+    content: err.message || err
+  });
+  console.log(err);
+}
 
 Page({
   data: {
@@ -23,23 +32,24 @@ Page({
       this.setData({
         imgUrls: res.data
       });
-    })
+    });
   },
 
   saveImage() {
-    wx.downloadFile({
+    toPromise(wx.downloadFile)({
       url: this.data.imgUrls[this.data.imgIndex],
-      success(res) {
-        wx.saveImageToPhotosAlbum({
-          filePath: res.tempFilePath,
-          success(res) {
-            wx.showToast({
-              title: '保存成功！'
-            });
-          }
-        });
-      }
-    });
+    })
+    .then(res => {
+      return toPromise(wx.saveImageToPhotosAlbum)({
+        filePath: res.tempFilePath,
+      });
+    })
+    .then(() => {
+      wx.showToast({
+        title: '保存成功'
+      });
+    })
+    .catch(onError);
   },
   
   cancel() {
