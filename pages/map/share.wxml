@@ -8,5 +8,5 @@
   </swiper>
   
   <button class="button-save size-14" bindtap="saveImage">保存到相册后可发朋友圈</button>
-  <button class="button-cancel size-14 text-grey" bindtap="cancel">取消</button>
+  <button class="button-cancel size-14 text-gray" bindtap="cancel">取消</button>
 </view>

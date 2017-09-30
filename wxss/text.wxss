@@ -8,7 +8,7 @@
   text-align: center;
 }
 /* text color*/
-.text-grey {
+.text-gray {
   color: #B7B7B7;
 }
 

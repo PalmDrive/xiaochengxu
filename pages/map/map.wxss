@@ -7,7 +7,6 @@
 
 .btn-start {
   width: 80%;
-  margin-top: 14px;
 }
 
 .toolbar {
@@ -44,7 +43,7 @@ input {
 
 .btns button {
   display: inline-block;
-  margin: 5px;
+  margin: 0 5px;
 }
 
 .collected-users-container {
@@ -72,12 +71,11 @@ input {
 .btns {
   display: flex;
   justify-content: space-around;
-  padding-top: 14px;
 }
 
 .toolbar button {
   background-color: #09BB07;
-  padding: 7px 10px;
+  padding: 5px 10px;
   color: white;
 }
 
@@ -95,6 +93,12 @@ input {
 .text-for-message {
   padding: 10px 20px;
   display: block;
+}
+
+.hint {
+  display: block;
+  text-align: center;
+  margin: 7px 0;
 }
 
 .toolbar .btn-leaderboard {

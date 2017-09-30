@@ -10,7 +10,7 @@
     <image class="topic-img" src="{{topic.attributes.imgUrl}}" mode="aspectFill"></image>
     <view class="topic-info">
       <view class="topic-title text-bold size-17">{{topic.attributes.name}}</view>
-      <view class="topic-meta text-grey size-9">
+      <view class="topic-meta text-gray size-9">
         <image class="icon-xs" src="../../images/content.png"></image>
         <text>{{topic.attributes.fields[0] || '领域'}}</text>
         <image class="icon-xs" src="../../images/update.png"></image>
