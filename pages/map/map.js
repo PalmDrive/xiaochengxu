@@ -802,6 +802,7 @@ Page({
     })
       .then(res => {
         let hasCurrentUser = false,
+            hasFriend = false,
             distinctUers = [];
 
         let usersWithTimestamp = res[0].results.map(d => {
@@ -830,6 +831,9 @@ Page({
             if (u.id === lcUser.id) {
               hasCurrentUser = true;
             }
+            if (lcFriend && u.id === lcFriend.id) {
+              hasFriend = true;
+            }
           }
         });
         
@@ -847,6 +851,11 @@ Page({
           'collectedUsersCount': distinctUers.length
         });
         
+        // 第一次，没有进入游戏，也需要把分享者的位置显示
+        if (this.data.state === 0 && !hasFriend && lcFriend) {
+          distinctUers = uniqPush(distinctUers, lcFriend);
+        }
+
         return distinctUers;
       });
   },

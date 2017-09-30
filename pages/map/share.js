@@ -29,7 +29,7 @@ Page({
       data: {
         scene: options.friendId,
         nickname: userInfo.attributes.wxUsername,
-        page: 'pages/groups/groups',
+        page: 'pages/map/map',
         friendNum: 12,
         cityNum: 17
       }
