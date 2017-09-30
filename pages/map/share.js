@@ -24,14 +24,16 @@ Page({
       mask: true
     });
     const userInfo = Auth.getLocalUserInfo();
+    const data = {
+      scene: options.friendId,
+      page: 'pages/map/map',
+      title: `${options.username} 的吃货地图`,
+      subtitle: `${options.username}已收集了 ${options.count} 个吃货，快来扩充TA的吃货版图吧`,
+    };
+    //console.log('share data:', data);
     request({
       url: `${baseUrl}/wechat/chihuo-map/share-img`,
-      data: {
-        scene: options.friendId,
-        page: 'pages/index/index',
-        title: `${userInfo.attributes.wxUsername} 的吃货地图`,
-        subtitle: `${userInfo.attributes.wxUsername} 在 12 名吃货的带领下吃遍了 17 个城市，快来扩充TA的吃货版图吧`,
-      }
+      data
     }).then(res => {
       wx.hideLoading();
       this.setData({

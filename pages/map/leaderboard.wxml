@@ -10,7 +10,7 @@
     </view>
     <view class="right">
       <text>{{user.name}}</text>
-      <text>{{user.collectedUsersCount || 0}}个吃货</text>
+      <text>{{user.collectedUsersCount || 0}} 个吃货</text>
     </view>
   </view>
 </view>

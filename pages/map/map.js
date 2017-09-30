@@ -1,5 +1,5 @@
 const Auth = require('../../utils/auth'),
-      {toPromise, uniqPush, unshift} = require('../../utils/util'),
+      {toPromise, uniqPush, unshift, ga} = require('../../utils/util'),
       Marker = require('../../utils/Marker'),
       AV = require('../../utils/av-weapp-min'),
       Logger = require('../../utils/Logger'),
@@ -87,6 +87,14 @@ Page({
       //   iconPath: '/images/search.png'
       // }
     ]
+  },
+
+  onShow() {
+    ga({
+      cid: Auth.getLocalUserId(),
+      dp: '%2FcampaignMap_XiaoChengxu',
+      dt: `吃货地图页`
+    });
   },
 
   onReady() {
@@ -361,7 +369,7 @@ Page({
     } else {
       wx.showModal({
         title: '邀请好友',
-        content: '您可以通过分享到群和朋友圈来邀请好友加入'
+        content: '你可以分享到群和朋友圈来邀请好友加入'
       });
     }
   },
@@ -373,8 +381,9 @@ Page({
   },
 
   onShareBtnClick() {
+    const count = this.data.lcUsers ? this.data.lcUsers.length : 0;
     wx.navigateTo({
-      url: `/pages/map/share?friendId=${lcUser.id}`
+      url: `/pages/map/share?friendId=${lcUser.id}&username=${lcUser.get('name')}&count=${count}`
     });
   },
   

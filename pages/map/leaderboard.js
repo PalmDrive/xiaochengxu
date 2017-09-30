@@ -1,4 +1,6 @@
-const AV = require('../../utils/av-weapp-min');
+const AV = require('../../utils/av-weapp-min'),
+      Auth = require('../../utils/auth'),
+      {ga} = require('../../utils/util');
 
 let lcUserId;
 
@@ -55,6 +57,14 @@ Page({
         wx.hideLoading()
         this.setData({users});
       });
+
+    ga({
+      cid: Auth.getLocalUserId(),
+      dp: '%2FcampaignMapRanking_XiaoChengxu',
+      dt: `吃货地图排行页`
+    });
+
+    
   },
 
   _fetchData() {
