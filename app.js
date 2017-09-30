@@ -35,7 +35,8 @@ AV.init({
 App({
   onShow(options) {
     console.log('app onShow options:', options);
-
+    // for testing
+    //options.shareTicket = '20071b2b-df8b-4422-8ed7-4ed9c1f7b526';
     if (options.shareTicket) {
       this.globalData.shareTicket = options.shareTicket;
     }

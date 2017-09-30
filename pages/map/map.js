@@ -143,6 +143,11 @@ Page({
         this._getMapSessionIdFromShareInfo(app.globalData.shareTicket)
           .then(id => {
             console.log('get map session id from shareTicket:', id);
+
+            if (!id) { // 从单人聊天或者朋友圈进入
+              return this._onLoad({friendId: options.friendId});
+            }
+
             this._onLoad({
               mapSessionId: id,
               friendId: options.friendId
@@ -942,7 +947,11 @@ Page({
       shareTicket
     })
     .then(res => Auth.decryptData(res.encryptedData, res.iv, Auth.getLocalSessionKey()))
-    .then(res => res.data.openGId);
+    .then(res => res.data.openGId)
+    .catch(err => {
+      console.log('getMapSessionIdFromShareInfo err:', err);
+      return null;
+    });
   },
 
   _migrate() {
