@@ -10,8 +10,17 @@ let mapCtx,
     clusteredMarkers,
     mapSessionId,
     friendId,
+    lcFriend,
     lcUser,
     pageFrom;
+
+const DEBUEG = {
+  enabled: true,
+  reload: true,
+  from: 'mapsession', // mapsession, friend
+  mapSessionId: 'GXh7w0OV1brLuFBUagx9tgcnRlzI',
+  friendId: '59ce3d20a22b9d0061312243'
+};
 
 const MIN_USERS_COLLECTED_COUNT = 20,
       USER_PLACEHOLDER_IMG = '/images/map/user-placeholder.jpg',
@@ -21,8 +30,10 @@ const MIN_USERS_COLLECTED_COUNT = 20,
       DEFAULT_SCALE = 12;
 
 const logger = new Logger();
-console.log('init logger');
-//logger.disabled(); 
+if (DEBUEG.enabled) {
+  console.log('init logger');
+  logger.disabled(); 
+}
 
 function onError(err) {
   wx.showModal({
@@ -85,13 +96,22 @@ Page({
 
   onLoad(options) {
     const app = getApp();
+    let reloadPromise = new Promise(resolve => resolve());
 
-    const defaultMapSessionId = '59c7298d7565710044c06a24',
-          defaultFriendId = '59ce3d20a22b9d0061312243';
+    if (DEBUEG.reload && DEBUEG.enabled) {
+      reloadPromise = new AV.Query('WechatCampaignUser')
+        .equalTo('zdkId', Auth.getLocalUserId())
+        .first()
+        .then(user => {
+          user.unset('currLocation');
+          return user.save();
+        });
+    }
 
     // for dev
     if (!options.friendId) {
-      options.friendId = defaultFriendId;
+      console.log('friend id not exist. Using friendId from debug');
+      options.friendId = DEBUEG.friendId;
     }
 
     console.log('map onLoad options:', options);
@@ -109,8 +129,9 @@ Page({
     //   return onError(JSON.stringify(options));
     // }
 
-    if (app.globalData.shareTicket) {
-      this._getMapSessionIdFromShareInfo(app.globalData.shareTicket)
+    if (app.globalData.shareTicket || (DEBUEG.enabled && DEBUEG.from === 'mapsession')) {
+      reloadPromise.then(() => {
+        this._getMapSessionIdFromShareInfo(app.globalData.shareTicket)
           .then(id => {
             console.log('get map session id from shareTicket:', id);
             this._onLoad({
@@ -118,9 +139,12 @@ Page({
               friendId: options.friendId
             });
           });
+      });
+      
     } else { // 从单人聊天或者朋友圈进入
-      //return onError('Forbidden: 必须从聊天群进入');
-      this._onLoad({friendId: options.friendId});
+      reloadPromise.then(() => {
+        this._onLoad({friendId: options.friendId});
+      });
     }
 
     //return this._onLoad({mapSessionId: defaultMapSessionId});
@@ -170,15 +194,18 @@ Page({
           // create userMapSession and add mapSessionId to users.mapSessionIds
           const userMapSession = new UserMapSession();
           let mSessIds = lcUser.get('mapSessionIds') || [];
-          userMapSession.set('mapSessionId', sharedMapSessionId);
-          userMapSession.set('user', lcUser);
-          userMapSession.set('role', 1);
-          userMapSession.set('userInfo', {wxUsername: lcUser.get('name')});
-          userMapSession.save();
+
+          userMapSession.save({
+            mapSessionId: sharedMapSessionId,
+            user: lcUser,
+            role: 1,
+            userInfo: {wxUsername: lcUser.get('name')}
+          });
           
           mSessIds = uniqPush(mSessIds, sharedMapSessionId);
-          lcUser.set('mapSessionIds', mSessIds);
-          lcUser.save();
+          lcUser.save({
+            mapSessionIds: mSessIds
+          });
         })
         .catch(err => {
           logger.sendException(err, {
@@ -265,8 +292,7 @@ Page({
           marker = zdkMarkers.filter(m => m.id === lcUser.id)[0];
     marker.title = msg;
     notes[(new Date()).toString()] = msg;
-    lcUser.set('notes', notes);
-    lcUser.save();
+    lcUser.save({notes});
 
     lcUsers = uniqPush(lcUsers, lcUser);
 
@@ -371,24 +397,26 @@ Page({
     ])
       .then(res => {
         lcUser = res[0][0];
-        const friend = res[1],
-              fetchParams = {
+        lcFriend = res[1];
+        const fetchParams = {
                 method: '_fetchAllUsers',
                 initCollectedUsers: true
               };
 
         wx.hideLoading();
 
-        if (friend) {
-          const fLocation = friend.get('currLocation') || {};
+        if (lcFriend) {
+          const fLocation = lcFriend.get('currLocation') || {};
           fetchParams.center = {
             longitude: fLocation.longitude,
             latitude: fLocation.latitude
           };
           fetchParams.scale = DEFAULT_SCALE;
+        } else {
+          console.log(`warning: user with ${friendId} not found`);
         }
 
-        if (lcUser.get('currLocation')) {
+        if (lcUser.get('currLocation')) { // 用户已经参与了游戏
           return this._init()
             .then(res => {
               logger.log('_init finished');
@@ -398,12 +426,9 @@ Page({
               });
               return this._fetchAndShowUsers(fetchParams);
             }, onError);
-        } else {
+        } else { // 用户还未参与了游戏
           this.setData({state: 0});
-          this._collectUser(true)
-            .then(() => {
-              return this._fetchAndShowUsers(fetchParams);
-            });
+          return this._fetchAndShowUsers(fetchParams);
         }
       })
       .catch(console.log);
@@ -498,7 +523,7 @@ Page({
         theUser = user;
       }
     });
-    if (this.data.state > 0) {
+    if (this.data.state > 0 && theUser) {
       res.unshift(theUser);
     }
     
@@ -593,16 +618,17 @@ Page({
 
       return this._collectUser()
         .then(() => {
-          lcUser.set('currLocation', currLocation);
           return Promise.all([
-            lcUser.save(),
-            this._updateUserMapSession()
+            lcUser.save({currLocation}),
+            this._updateUserMapSession(),
+            this._collectedByFriend()
           ]);
         });
     });
   },
   
-  // Add 
+  // 把分享者的id或者mapSessionId加入到自己的
+  // friends或者mapSessionIds里面
   _collectUser(save) {
     let arr, key, res;
     if (mapSessionId) {
@@ -643,6 +669,16 @@ Page({
     options = options || {};
     this[options.method](options.params)
       .then(data => {
+        // fitler d.location不存在的用户
+        // 一般情况下不应该出现
+        data = data.filter(d => d.get('currLocation'));
+
+        const defaultCenter = {
+          longitude: data[0].get('currLocation').longitude,
+          latitude: data[0].get('currLocation').latitude
+        },
+        center = options.center;
+
         const dataUpdates = {
           barrages: this._getBarrageMessages(data),
           lcUsers: data
@@ -667,7 +703,7 @@ Page({
           return this._renderMarkers({
             includePoints: options.needIncludePoints ? zdkMarkers : null,
             scale: options.scale,
-            center: options.center
+            center: (center && center.longitude) ? center : (DEBUEG.enabled && defaultCenter)
           });
         }
       });
@@ -708,7 +744,7 @@ Page({
   _newMarkerFromUser(user) {
     const [msg, timestamp] = this._getBarrageMessage(user);
     return new Marker({
-      title: msg,
+      title: msg || this.data.message,
       longitude: user.get('currLocation').longitude,
       latitude: user.get('currLocation').latitude,
       id: user.id,
@@ -776,8 +812,9 @@ Page({
           }
         });
 
-        lcUser.set('collectedUsersCount', distinctUers.length);
-        lcUser.save();
+        lcUser.save({
+          'collectedUsersCount': distinctUers.length
+        });
         
         return distinctUers;
       });
@@ -792,6 +829,19 @@ Page({
   //   return AV.Query.doCloudQuery(cql, [lcUser.id, lcUser.get('mapSessionIds')])
   //     .then(data => data.count, onError);
   // },
+  
+  // @WARN: raise condition
+  _collectedByFriend() {
+    if (mapSessionId || !lcFriend) {
+      return new Promise(resolve => resolve());
+    }
+    const friends = lcFriend.get('friends') || [];
+    uniqPush(friends, {
+      id: lcUser.id,
+      joinedAt: +new Date()
+    });
+    return lcFriend.save();
+  },
 
   _updateUserMapSession() {
     if (!mapSessionId) {
@@ -810,14 +860,18 @@ Page({
             userInfo = userMapSession.get('userInfo') || {};
       viewLog[(new Date().toString())] = [currLocation.longitude, currLocation.latitude];
       userInfo.wxUsername = lcUser.get('name');
-      userMapSession.set('viewLog', viewLog);
-      userMapSession.set('userInfo', userInfo);
-      
-      return userMapSession.save();
+      return userMapSession.save({
+        viewLog,
+        userInfo
+      });
     });
   },
 
   _getMapSessionIdFromShareInfo(shareTicket) {
+    if (DEBUEG.enabled && DEBUEG.from === 'mapsession') {
+      return new Promise(resolve => resolve(DEBUEG.mapSessionId));
+    }
+
     return toPromise(wx.getShareInfo)({
       shareTicket
     })
@@ -838,8 +892,7 @@ Page({
             currLocation: d.get('currLocation')
           })
           .then(res => {
-            d.set('user', res[0]);
-            return d.save();
+            return d.save({user: res[0]});
           }, console.log);
         }));
       })
