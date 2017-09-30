@@ -3,20 +3,23 @@ const Auth = require('../../utils/auth'),
       Marker = require('../../utils/Marker'),
       AV = require('../../utils/av-weapp-min'),
       Logger = require('../../utils/Logger'),
-      LeanCloud = require('../../utils/leancloud');
+      LeanCloud = require('../../utils/leancloud'),
+      MapFriendship = AV.Object.extend('MapFriendship');
 
 let mapCtx,
     zdkMarkers,
     clusteredMarkers,
     mapSessionId,
+    mapSessionIds,
     friendId,
+    friendIds,
     lcFriend,
     lcUser,
     pageFrom;
 
 const DEBUEG = {
   enabled: true,
-  reload: true,
+  reload: false,
   from: 'mapsession', // mapsession, friend
   mapSessionId: 'GXh7w0OV1brLuFBUagx9tgcnRlzI',
   friendId: '59ce3d20a22b9d0061312243'
@@ -193,7 +196,7 @@ Page({
 
           // create userMapSession and add mapSessionId to users.mapSessionIds
           const userMapSession = new UserMapSession();
-          let mSessIds = lcUser.get('mapSessionIds') || [];
+          //let mSessIds = lcUser.get('mapSessionIds') || [];
 
           userMapSession.save({
             mapSessionId: sharedMapSessionId,
@@ -202,10 +205,10 @@ Page({
             userInfo: {wxUsername: lcUser.get('name')}
           });
           
-          mSessIds = uniqPush(mSessIds, sharedMapSessionId);
-          lcUser.save({
-            mapSessionIds: mSessIds
-          });
+          //mSessIds = uniqPush(mSessIds, sharedMapSessionId);
+          // lcUser.save({
+          //   mapSessionIds: mSessIds
+          // });
         })
         .catch(err => {
           logger.sendException(err, {
@@ -453,9 +456,26 @@ Page({
         selected: user.id === lcUser.id
       };
     }
+    
+    // If el in the collection, 
+    // put the el in the first
+    function unshift(collection, el) {
+      let res = [], tmpEl;
+      collection.forEach(c => {
+        if (c.id === el.id) {
+          tmpEl = el;
+        } else {
+          res.push(c);
+        }
+      });
+      if (tmpEl) {
+        res.unshift(tmpEl);
+      }
+      return res;
+    }
+
     let collectedUsers = [];
     if (this.data.state !== 0) {
-      //lcUsers = lcUsers.filter(u => u.id !== lcUser.id);
       if (lcUsers.length < MIN_USERS_COLLECTED_COUNT) {
         for (let i = 0; i < MIN_USERS_COLLECTED_COUNT; i++) {
           let el = lcUsers[i];
@@ -465,6 +485,8 @@ Page({
       } else {
         collectedUsers = lcUsers.map(newCollectedUser);
       }
+
+      collectedUsers = unshift(collectedUsers, newCollectedUser(lcUser));
     } else {
       for (let i = 0; i < MIN_USERS_COLLECTED_COUNT; i++) {
         collectedUsers.push({profileImage: USER_PLACEHOLDER_IMG});
@@ -477,62 +499,9 @@ Page({
     }
    
     return {
-      collectedUsers: this._sortCollectedUsers(collectedUsers),
+      collectedUsers,
       width: (collectedUsers.length / 2) * (margin * 2 + imageSize) + 2 * containerPadding
     };
-  },
-  
-  /**
-   * 自己排在第一个；
-   * 先把friends按照joinedAt desc排序
-   * 再把users from userMapSession按照createdAt desc排序
-   */
-  _sortCollectedUsers(collectedUsers) {
-    const friends = lcUser.get('friends'),
-          sortedFriends = [],
-          res = [];
-    let sorted = [], theUser;
-          
-    if (friends && friends.length) {
-      const friendsMap = {};
-      friends.forEach(user => {
-        friendsMap[user.id] = true;
-      });
-      collectedUsers.forEach(user => {
-        if (friendsMap[user.id]) {
-          friendsMap[user.id] = user;
-        } else {
-          sorted.push(user);
-        }
-      });
-
-      friends.sort((a, b) => b.joinedAt - a.joinedAt);
-
-      friends.forEach(f => {
-        let user = friendsMap[f.id];
-        if (typeof user === 'object') {
-          sortedFriends.push(user);
-        }
-      });
-
-      sorted = sortedFriends.concat(sorted);
-    } else {
-      sorted = collectedUsers;
-    }
-
-    // Place theUser in the front
-    sorted.forEach(user => {
-      if (user.id !== lcUser.id) {
-        res.push(user);
-      } else {
-        theUser = user;
-      }
-    });
-    if (this.data.state > 0 && theUser) {
-      res.unshift(theUser);
-    }
-    
-    return res;
   },
 
   _updateMarkerIconPath() {
@@ -626,42 +595,12 @@ Page({
         latitude: res.latitude
       });
 
-      return this._collectUser()
-        .then(() => {
-          return Promise.all([
+      return Promise.all([
             lcUser.save({currLocation}),
             this._updateUserMapSession(),
-            this._collectedByFriend()
+            this._updateMapFriendship()
           ]);
-        });
     });
-  },
-  
-  // 把分享者的id或者mapSessionId加入到自己的
-  // friends或者mapSessionIds里面
-  _collectUser(save) {
-    let arr, key, res;
-    if (mapSessionId) {
-      key = 'mapSessionIds';
-      arr = uniqPush(lcUser.get(key) || [], mapSessionId);
-    } else if (friendId) {
-      key = 'friends';
-      arr = uniqPush(lcUser.get(key) || [], {
-        id: friendId,
-        joinedAt: +new Date()
-      });
-    }
-    if (key) {
-      lcUser.set(key, arr);
-      if (save) {
-        res = lcUser.save();
-      } else {
-        res = new Promise(resolve => resolve(lcUser));
-      }
-    } else {
-      res = new Promise(resolve => resolve());
-    }
-    return res;
   },
 
   /**
@@ -779,42 +718,122 @@ Page({
       });
   },
 
+  _getMapSessionIds(force) {
+    if (force || !mapSessionIds) {
+      logger.log('getting mapSessionIds from LeanCloud...');
+      return new AV.Query('UserMapSession')
+        .equalTo('user', lcUser)
+        .find()
+        .then(userMapSessions => {
+          logger.log('mapSessionIds from LeanCloud gotten');
+          mapSessionIds = userMapSessions.map(o => o.get('mapSessionId'));
+          return mapSessionIds;
+        }, err => {
+          logger.log('mapSessionIds from LeanCloud err:');
+          console.log(err);
+          mapSessionIds = [];
+          return mapSessionIds;
+        });
+    } else {
+      return new Promise(resolve => resolve(mapSessionIds));
+    }
+  },
+
+  _getFriendIds(force) {
+    if (force || !friendIds) {
+      logger.log('getting friendIds from LeanCloud...');
+
+      const cql = `select * from MapFriendship where 
+      user1 = pointer('WechatCampaignUser', ?) or 
+      user2 = pointer('WechatCampaignUser', ?)
+      order by -createdAt
+      limit 1000
+      `;
+      return AV.Query.doCloudQuery(cql, [lcUser.id, lcUser.id])
+        .then(res => {
+          logger.log('getting friendIds from LeanCloud...');
+          let data = []; 
+          res.results.forEach(obj => {
+            if (obj.get('user1').id !== lcUser.id) {
+              data.push(obj.get('user1').id);
+            } else if (obj.get('user2').id !== lcUser.id) {
+              data.push(obj.get('user2').id);
+            }
+          });
+          friendIds = data;
+          return friendIds;
+        });
+    } else {
+      return new Promise(resolve => resolve(friendIds));
+    }
+  },
+
+  _getFriends() {
+    logger.log('getting friends from LeanCloud...');
+
+    const cql = `select include user1, include user2, * from MapFriendship where 
+    user1 = pointer('WechatCampaignUser', ?) or 
+    user2 = pointer('WechatCampaignUser', ?)
+    order by -createdAt
+    limit 1000
+    `;
+    return AV.Query.doCloudQuery(cql, [lcUser.id, lcUser.id])
+      .then(res => {
+        logger.log('getting friends from LeanCloud...');
+        let data = [];
+        res.results.forEach(obj => {
+          if (obj.get('user1').id !== lcUser.id) {
+            data.push(obj.get('user1'));
+          } else if (obj.get('user2').id !== lcUser.id) {
+            data.push(obj.get('user2'));
+          }
+        });
+        return data;
+      });
+  },
+
   _fetchAllUsers() {
-    const ids = lcUser.get('mapSessionIds') || [],
-          friends = lcUser.get('friends') || [],
-          cql = `
+    const cql = `
             select include user, * from UserMapSession where
             mapSessionId in ?
             order by -createdAt
             limit 1000
-          `,
-          cql2 = `
-            select * from WechatCampaignUser where objectId in ?
-            limit 1000
           `;
-
-    if (!this.data.state) {
-      if (friendId) {
-        friends.push({
-          id: friendId,
-          joinedAt: +new Date()
-        });
-      } else if (mapSessionId) {
-        ids.push(mapSessionId);
-      }
-    }
+          // cql2 = `
+          //   select * from WechatCampaignUser where objectId in ?
+          //   limit 1000
+          // `;
 
     return Promise.all([
-      AV.Query.doCloudQuery(cql, [ids]),
-      AV.Query.doCloudQuery(cql2, [friends.map(o => o.id)]),
+      this._getMapSessionIds(),
     ])
+    .then(() => {
+      return Promise.all([
+        AV.Query.doCloudQuery(cql, [mapSessionIds]),
+        this._getFriends()
+      ])
+    })
       .then(res => {
-        let users = res[0].results.map(d => d.get('user'));
-        const users2 = res[1].results,
+        let usersWithTimestamp = res[0].results.map(d => {
+          return {
+            user: d.get('user'),
+            timestamp: d.get('createdAt')
+          };
+        });
+
+        const users2WithTimestamp = res[1].map(d => {
+          return {
+            user: d.get('user'),
+            timestamp: d.get('createdAt')
+          };
+        }),
               map = {},
-              distinctUers = []
-        users = users.concat(users2);
-        // distict users
+              distinctUers = [];
+
+        const users = usersWithTimestamp.concat(users2WithTimestamp)
+                .sort((a, b) => b.timestamp - a.timestamp)
+                .map(obj => obj.user);
+
         users.forEach(u => {
           if (u && !map[u.id]) {
             map[u.id] = true;
@@ -841,16 +860,23 @@ Page({
   // },
   
   // @WARN: raise condition
-  _collectedByFriend() {
+  _updateMapFriendship() {
     if (mapSessionId || !lcFriend) {
       return new Promise(resolve => resolve());
     }
-    const friends = lcFriend.get('friends') || [];
-    uniqPush(friends, {
-      id: lcUser.id,
-      joinedAt: +new Date()
+    const userIds = [lcFriend.id, lcUser.id].sort((a, b) => {
+      if (a > b) return -1;
+      if (a < b) return 1;
+      return 0;
     });
-    return lcFriend.save();
+    const user1 = AV.Object.createWithoutData('WechatCampaignUser', userIds[0]),
+          user2 = AV.Object.createWithoutData('WechatCampaignUser', userIds[1]);
+    const obj = new MapFriendship();
+    return obj.save({
+      user1,
+      user2
+    })
+      .then(data => data, err => console.log);
   },
 
   _updateUserMapSession() {

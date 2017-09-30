@@ -13,8 +13,9 @@
   <view class="toolbar">
     <view hidden="{{state === 1 || state === -1}}">
       <view class="toolbar-msg">
-        <text class="size-14" wx:if="{{lcUsers.length < MIN_USERS_COLLECTED_COUNT}}">已收集到{{state === 0 ? 0 : lcUsers.length}}个吃货, 还差{{state === 0 ? MIN_USERS_COLLECTED_COUNT : MIN_USERS_COLLECTED_COUNT - lcUsers.length}}个</text>
-        <text wx:if="{{lcUsers.length >= MIN_USERS_COLLECTED_COUNT}}" class="size-14">已收集到{{lcUsers.length}}个吃货, 真👍</text>
+        <text class="size-14" wx:if="{{lcUsers.length < MIN_USERS_COLLECTED_COUNT}}">你已收集到{{state === 0 ? 0 : lcUsers.length}}个吃货, 还差<text style="display:'inline';color:#157EFB"> {{state === 0 ? MIN_USERS_COLLECTED_COUNT : MIN_USERS_COLLECTED_COUNT - lcUsers.length}} </text>个</text>
+
+        <text wx:if="{{lcUsers.length >= MIN_USERS_COLLECTED_COUNT}}" class="size-14">你已收集到 {{lcUsers.length}} 个吃货, 真👍</text>
 
         <button class="btn-leaderboard size-12" bindtap="gotoLeaderboard">查看排行榜</button>
       </view>

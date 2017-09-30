@@ -16,7 +16,7 @@ const alertMapping = [
   {
     min: 0.8,
     max: 0.9,
-    text: '您就是那28比例里面的2，加油！！'
+    text: '您就是那二八比例里面的二，加油！！'
   },
   {
     min: 0.9,
