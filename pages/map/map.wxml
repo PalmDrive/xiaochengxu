@@ -1,7 +1,7 @@
 <view class="map-page">
   <view class="banner">
     <text wx:if="{{lcUsers.length < MIN_USERS_COLLECTED_COUNT}}" class="size-12">聚齐{{MIN_USERS_COLLECTED_COUNT}}个吃货免费领取《七日辑 - 在家也能做网红美食》</text>
-    <text wx:if="{{lcUsers.length >= MIN_USERS_COLLECTED_COUNT}}" class="size-12 success">点击领取《七日辑 - 在家也能做网红美食》</text>
+    <text wx:if="{{lcUsers.length >= MIN_USERS_COLLECTED_COUNT}}" class="size-12 success" bindtap="gotoAlbum">点击领取《七日辑 - 在家也能做网红美食》</text>
     <!-- <text class="size-9" wx:if="{{usersCount !== null}}">已收集{{usersCount}}个吃货</text>
     <view class="barrage-container">
       <text wx:for="{{barrages}}" wx:key="" class="size-9">{{item}}</text>

@@ -4,7 +4,8 @@ const Auth = require('../../utils/auth'),
       AV = require('../../utils/av-weapp-min'),
       Logger = require('../../utils/Logger'),
       LeanCloud = require('../../utils/leancloud'),
-      MapFriendship = AV.Object.extend('MapFriendship');
+      MapFriendship = AV.Object.extend('MapFriendship'),
+      {request} = require('../../utils/request');
 
 let mapCtx,
     zdkMarkers,
@@ -385,6 +386,19 @@ Page({
     wx.navigateTo({
       url: `/pages/map/share?friendId=${lcUser.id}&username=${lcUser.get('name')}&count=${count}`
     });
+  },
+
+  gotoAlbum() {
+    const albumId = 'e8036fb0-a59c-11e7-bfa3-b7065b275101';
+    request({
+      url: `${getApp().globalData.apiBase}/groups/${albumId}/unlock`,
+      method: 'POST'
+    })
+      .then(() => {
+        wx.navigateTo({
+          url: `/pages/album/show?id=${albumId}`
+        });
+      }, onError);
   },
   
   /**
