@@ -22,10 +22,10 @@
 					"scene": "1048"
 				},
 				{
-					"id": -1,
+					"id": 1,
 					"name": "吃货地图群进入",
 					"pathName": "pages/map/map",
-					"query": "friendId=59ce3d20a22b9d0061312243&from=mapsession",
+					"query": "friendId=59cf5b9b67f3560042b30901&from=mapsession",
 					"scene": "1008"
 				}
 			]

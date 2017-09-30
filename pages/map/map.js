@@ -20,7 +20,7 @@ let mapCtx,
 const DEBUEG = {
   enabled: false,
   reload: false,
-  from: 'friend', // mapsession, friend
+  from: 'mapsession', // mapsession, friend
   mapSessionId: 'GXh7w0OV1brLuFBUagx9tgcnRlzI',
   friendId: '59ce3d20a22b9d0061312243'
 };
@@ -277,9 +277,10 @@ Page({
         state: 1,
         message: `我在吃${food}`
       });
-      zdkMarkers = uniqPush(zdkMarkers, this._newMarkerFromUser(lcUser));
       currLocation = lcUser.get('currLocation');
-      return this._renderMarkers({
+      return this._fetchAndShowUsers({
+        method: '_fetchAllUsers',
+        initCollectedUsers: true,
         scale:  DEFAULT_SCALE,
         center: {
           longitude: currLocation.longitude,
@@ -507,9 +508,15 @@ Page({
   },
   
   /**
-   * options.scale  <Number>
-   * options.center <Dict>
+   * options.includePoints
    * options.wait   <Number>
+   * options.data   <Dict>
+   * options.data.scale  <Number>
+   * options.data.center  <Dict>
+   * options.data.barrages
+   * options.data.lcUsers
+   * options.data.collectedUsers
+   * options.data.collectedUsersContainerWidth
    */
   _renderMarkers(options) {
     options = options || {};
@@ -528,11 +535,12 @@ Page({
         //scale: res.scale Do not set scale here
       };
 
-      if (options.scale) {
-        data.scale = options.scale;
-      }
-      if (options.center) {
-        data.center = options.center;
+      if (options.data) {
+        for (let key in options.data) {
+          if (options.data[key]) {
+            data[key] = options.data[key];
+          }
+        }
       }
 
       this.setData(data);
@@ -555,9 +563,11 @@ Page({
 
         // _updateMarkerIconPath 需要下载图片，可能会比较花时间
         // 现在这部完成之前，用户头像没法显示
+        logger.log('start downloading profile photos...');
         return this._updateMarkerIconPath();
       })
       .then(res => {
+        logger.log('downloaded profile photos');
         setData();
       });
   },
@@ -617,15 +627,15 @@ Page({
 
         const dataUpdates = {
           barrages: this._getBarrageMessages(data),
-          lcUsers: data
-        }
+          lcUsers: data,
+          scale: options.scale,
+          center: (center && center.longitude) ? center : (DEBUEG.enabled && defaultCenter)
+        };
         if (options.initCollectedUsers) {
           const {collectedUsers, width} = this._initCollectedUsers(data);
           dataUpdates.collectedUsers = collectedUsers;
           dataUpdates.collectedUsersContainerWidth = width;
         }
-
-        this.setData(dataUpdates);
 
         // Rendering markers
         zdkMarkers = data.map(d => this._newMarkerFromUser(d));
@@ -638,8 +648,7 @@ Page({
         } else {
           return this._renderMarkers({
             includePoints: options.needIncludePoints ? zdkMarkers : null,
-            scale: options.scale,
-            center: (center && center.longitude) ? center : (DEBUEG.enabled && defaultCenter)
+            data: dataUpdates
           });
         }
       });
@@ -720,6 +729,14 @@ Page({
           console.log(err);
           mapSessionIds = [];
           return mapSessionIds;
+        })
+        .then(data => {
+          // 在当前用户未参加游戏之前，
+          // 也要显示同群里面的用户位置
+          if (this.data.state === 0 && mapSessionId) {
+            mapSessionIds = uniqPush(mapSessionIds, mapSessionId); 
+          }
+          return mapSessionIds;
         });
     } else {
       return new Promise(resolve => resolve(mapSessionIds));
@@ -775,6 +792,11 @@ Page({
             data.push(obj.get('user2'));
           }
         });
+        // 在当前用户未参加游戏之前，
+        // 也要显示分享者的地理位置
+        if (this.data.state === 0 && lcFriend) {
+          data = uniqPush(data, lcFriend);
+        }
         return data;
       });
   },
@@ -814,7 +836,7 @@ Page({
 
         const users2WithTimestamp = res[1].map(d => {
           return {
-            user: d.get('user'),
+            user: d,
             timestamp: d.get('createdAt')
           };
         }),
@@ -845,15 +867,9 @@ Page({
           } else {
             distinctUers.unshift(lcUser);
           }
-        }
-
-        lcUser.save({
-          'collectedUsersCount': distinctUers.length
-        });
-        
-        // 第一次，没有进入游戏，也需要把分享者的位置显示
-        if (this.data.state === 0 && !hasFriend && lcFriend) {
-          distinctUers = uniqPush(distinctUers, lcFriend);
+          lcUser.save({
+            collectedUsersCount: distinctUers.length
+          });
         }
 
         return distinctUers;
@@ -872,9 +888,10 @@ Page({
   
   // @WARN: raise condition
   _updateMapFriendship() {
-    if (mapSessionId || !lcFriend) {
+    if ((mapSessionId || !lcFriend) || lcFriend.id === lcUser.id) {
       return new Promise(resolve => resolve());
     }
+
     const userIds = [lcFriend.id, lcUser.id].sort((a, b) => {
       if (a > b) return -1;
       if (a < b) return 1;
