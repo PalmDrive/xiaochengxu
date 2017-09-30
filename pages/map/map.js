@@ -1,5 +1,5 @@
 const Auth = require('../../utils/auth'),
-      {toPromise, uniqPush} = require('../../utils/util'),
+      {toPromise, uniqPush, unshift} = require('../../utils/util'),
       Marker = require('../../utils/Marker'),
       AV = require('../../utils/av-weapp-min'),
       Logger = require('../../utils/Logger'),
@@ -18,9 +18,9 @@ let mapCtx,
     pageFrom;
 
 const DEBUEG = {
-  enabled: true,
+  enabled: false,
   reload: false,
-  from: 'mapsession', // mapsession, friend
+  from: 'friend', // mapsession, friend
   mapSessionId: 'GXh7w0OV1brLuFBUagx9tgcnRlzI',
   friendId: '59ce3d20a22b9d0061312243'
 };
@@ -64,28 +64,28 @@ Page({
     state: -1, // -1, 0, 1, 2
     mode: 'group', // group, all
     controls: [
-      {
-        clickable: true,
-        id: 'zoomIn',
-        position: {
-          left: 20,
-          top: 20,
-          width: 20,
-          height: 20,
-        },
-        iconPath: '/images/like.png'
-      },
-      {
-        clickable: true,
-        id: 'zoomOut',
-        position: {
-          left: 50,
-          top: 20,
-          width: 20,
-          height: 20,
-        },
-        iconPath: '/images/search.png'
-      }
+      // {
+      //   clickable: true,
+      //   id: 'zoomIn',
+      //   position: {
+      //     left: 20,
+      //     top: 20,
+      //     width: 20,
+      //     height: 20,
+      //   },
+      //   iconPath: '/images/like.png'
+      // },
+      // {
+      //   clickable: true,
+      //   id: 'zoomOut',
+      //   position: {
+      //     left: 50,
+      //     top: 20,
+      //     width: 20,
+      //     height: 20,
+      //   },
+      //   iconPath: '/images/search.png'
+      // }
     ]
   },
 
@@ -456,23 +456,6 @@ Page({
         selected: user.id === lcUser.id
       };
     }
-    
-    // If el in the collection, 
-    // put the el in the first
-    function unshift(collection, el) {
-      let res = [], tmpEl;
-      collection.forEach(c => {
-        if (c.id === el.id) {
-          tmpEl = el;
-        } else {
-          res.push(c);
-        }
-      });
-      if (tmpEl) {
-        res.unshift(tmpEl);
-      }
-      return res;
-    }
 
     let collectedUsers = [];
     if (this.data.state !== 0) {
@@ -485,8 +468,6 @@ Page({
       } else {
         collectedUsers = lcUsers.map(newCollectedUser);
       }
-
-      collectedUsers = unshift(collectedUsers, newCollectedUser(lcUser));
     } else {
       for (let i = 0; i < MIN_USERS_COLLECTED_COUNT; i++) {
         collectedUsers.push({profileImage: USER_PLACEHOLDER_IMG});
@@ -739,34 +720,34 @@ Page({
     }
   },
 
-  _getFriendIds(force) {
-    if (force || !friendIds) {
-      logger.log('getting friendIds from LeanCloud...');
+  // _getFriendIds(force) {
+  //   if (force || !friendIds) {
+  //     logger.log('getting friendIds from LeanCloud...');
 
-      const cql = `select * from MapFriendship where 
-      user1 = pointer('WechatCampaignUser', ?) or 
-      user2 = pointer('WechatCampaignUser', ?)
-      order by -createdAt
-      limit 1000
-      `;
-      return AV.Query.doCloudQuery(cql, [lcUser.id, lcUser.id])
-        .then(res => {
-          logger.log('getting friendIds from LeanCloud...');
-          let data = []; 
-          res.results.forEach(obj => {
-            if (obj.get('user1').id !== lcUser.id) {
-              data.push(obj.get('user1').id);
-            } else if (obj.get('user2').id !== lcUser.id) {
-              data.push(obj.get('user2').id);
-            }
-          });
-          friendIds = data;
-          return friendIds;
-        });
-    } else {
-      return new Promise(resolve => resolve(friendIds));
-    }
-  },
+  //     const cql = `select * from MapFriendship where 
+  //     user1 = pointer('WechatCampaignUser', ?) or 
+  //     user2 = pointer('WechatCampaignUser', ?)
+  //     order by -createdAt
+  //     limit 1000
+  //     `;
+  //     return AV.Query.doCloudQuery(cql, [lcUser.id, lcUser.id])
+  //       .then(res => {
+  //         logger.log('getting friendIds from LeanCloud...');
+  //         let data = []; 
+  //         res.results.forEach(obj => {
+  //           if (obj.get('user1').id !== lcUser.id) {
+  //             data.push(obj.get('user1').id);
+  //           } else if (obj.get('user2').id !== lcUser.id) {
+  //             data.push(obj.get('user2').id);
+  //           }
+  //         });
+  //         friendIds = data;
+  //         return friendIds;
+  //       });
+  //   } else {
+  //     return new Promise(resolve => resolve(friendIds));
+  //   }
+  // },
 
   _getFriends() {
     logger.log('getting friends from LeanCloud...');
@@ -814,6 +795,9 @@ Page({
       ])
     })
       .then(res => {
+        let hasCurrentUser = false,
+            distinctUers = [];
+
         let usersWithTimestamp = res[0].results.map(d => {
           return {
             user: d.get('user'),
@@ -827,9 +811,8 @@ Page({
             timestamp: d.get('createdAt')
           };
         }),
-              map = {},
-              distinctUers = [];
-
+              map = {};
+        
         const users = usersWithTimestamp.concat(users2WithTimestamp)
                 .sort((a, b) => b.timestamp - a.timestamp)
                 .map(obj => obj.user);
@@ -838,8 +821,21 @@ Page({
           if (u && !map[u.id]) {
             map[u.id] = true;
             distinctUers.push(u);
+            if (u.id === lcUser.id) {
+              hasCurrentUser = true;
+            }
           }
         });
+        
+        // Hacky.
+        // Make sure to include the current user
+        if (this.data.state > 0) {
+          if (hasCurrentUser) {
+            distinctUers = unshift(distinctUers, lcUser);
+          } else {
+            distinctUers.unshift(lcUser);
+          }
+        }
 
         lcUser.save({
           'collectedUsersCount': distinctUers.length
@@ -876,7 +872,9 @@ Page({
       user1,
       user2
     })
-      .then(data => data, err => console.log);
+      .then(data => data, err => {
+        return logger.log('error caught:', err);
+      });
   },
 
   _updateUserMapSession() {

@@ -267,6 +267,24 @@ function uniqPush(collection, object) {
   return res;
 }
 
+// If el in the collection, 
+// put the el in the first
+function unshift(collection, el, key) {
+  key = key || 'id';
+  let res = [], tmpEl;
+  collection.forEach(c => {
+    if (c[key] === el[key]) {
+      tmpEl = el;
+    } else {
+      res.push(c);
+    }
+  });
+  if (tmpEl) {
+    res.unshift(tmpEl);
+  }
+  return res;
+}
+
 module.exports = {
   formatTime,
   formatDateToDay,
@@ -285,5 +303,6 @@ module.exports = {
   closeHint,
   toPromise,
   genRandomStr,
-  uniqPush
+  uniqPush,
+  unshift
 };

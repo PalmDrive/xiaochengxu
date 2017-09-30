@@ -1,8 +1,7 @@
 {
   "pages":[
-    "pages/map/map",
     "pages/groups/groups",
-    
+    "pages/map/map",
     "pages/map/share",
     "pages/map/leaderboard",
     "pages/album/buy",
