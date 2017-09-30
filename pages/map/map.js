@@ -5,7 +5,9 @@ const Auth = require('../../utils/auth'),
       Logger = require('../../utils/Logger'),
       LeanCloud = require('../../utils/leancloud'),
       MapFriendship = AV.Object.extend('MapFriendship'),
-      {request} = require('../../utils/request');
+      {request} = require('../../utils/request'),
+      _ = require('../../vendors/underscore'),
+      foods = require('../../utils/foods');
 
 let mapCtx,
     zdkMarkers,
@@ -283,7 +285,7 @@ Page({
       return onError('用户id不存在');
     }
 
-    const food = '烤鸭';
+    const food = _.sample(foods);
 
     return this._init()
     .then(res => {
@@ -465,7 +467,7 @@ Page({
               logger.log('_init finished');
 
               this.setData({
-                state: 2,
+                state: 2
               });
               return this._fetchAndShowUsers(fetchParams);
             }, onError);

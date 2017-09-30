@@ -124,7 +124,9 @@ Page({
           userId = group.id,
           name = group.username,
           role = group.relationships && group.relationships.userGroup.data.attributes.role || null,
-          userInfo = Auth.getLocalUserInfo().attributes || {};
+          userInfo = Auth.getLocalUserInfo().attributes || {},
+          groupInfo = group.attributes.groupInfo;
+
     util.gaEvent({
       cid: Auth.getLocalUserId(),
       ev: 0,
@@ -132,7 +134,7 @@ Page({
       ec: `qiriji_name:${name},toutiao_id:${userId}`,
       el: `user_name:${userInfo.wxUsername},user_id:${userId}`
     });
-    if (role) {
+    if (role || !groupInfo.price) {
       wx.navigateTo({
         url: `../album/show?id=${userId}`
       });
