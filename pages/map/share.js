@@ -19,16 +19,22 @@ Page({
   },
 
   onLoad(options) {
+    wx.showLoading({
+      title: '加载中',
+      mask: true
+    });
+    const userInfo = Auth.getLocalUserInfo();
     request({
       url: `${baseUrl}/wechat/chihuo-map/share-img`,
       data: {
         scene: 'hello',
-        nickname: '昵称',
+        nickname: userInfo.attributes.wxUsername,
         page: 'pages/index/index',
         friendNum: 12,
         cityNum: 17
       }
     }).then(res => {
+      wx.hideLoading();
       this.setData({
         imgUrls: res.data
       });
