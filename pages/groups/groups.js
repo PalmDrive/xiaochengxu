@@ -134,6 +134,7 @@ Page({
       ec: `qiriji_name:${name},toutiao_id:${userId}`,
       el: `user_name:${userInfo.wxUsername},user_id:${userId}`
     });
+
     if (role || !groupInfo.price) {
       wx.navigateTo({
         url: `../album/show?id=${userId}`

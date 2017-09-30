@@ -1,5 +1,6 @@
 const {request} = require('../../utils/request'),
       Auth = require('../../utils/auth'),
+      {ga} = require('../../utils/util'),
       app = getApp(),
       baseUrl = app.globalData.apiBase;
 
@@ -7,6 +8,16 @@ Page({
   data: {
     album: null,
     processing: false
+  },
+
+  onShow() {
+    if (this.data.album) {
+      ga({
+        cid: Auth.getLocalUserId(),
+        dp: '%2FalbumBuyPage_XiaoChengXu',
+        dt: `album_name:${this.data.album.name},album_id:${this.data.album.id}`
+      });
+    }
   },
 
   onLoad(options) {
@@ -20,6 +31,12 @@ Page({
         album.name = data.data.attributes.username;
         this.setData({
           album
+        });
+
+        ga({
+          cid: Auth.getLocalUserId(),
+          dp: '%2FalbumBuyPage_XiaoChengXu',
+          dt: `album_name:${this.data.album.name},album_id:${this.data.album.id}`
         });
       });
   },

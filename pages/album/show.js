@@ -69,8 +69,8 @@ Page({
     if (this.data.userName) {
       util.ga({
         cid: Auth.getLocalUserId(),
-        dp: '%2FtoutiaoPage_XiaoChengXu',
-        dt: `toutiao_name:${this.data.userName},toutiao_id:${this.data.groupId}`
+        dp: '%2FalbumShowPage_XiaoChengXu',
+        dt: `album_name:${this.data.userName},album_id:${this.data.groupId}`
       });
     }
   },
@@ -81,8 +81,8 @@ Page({
     const gaOptions = {
       cid: Auth.getLocalUserId(),
       ec: `topic_name:${topic.attributes.name},topic_id:${topic.id}`,
-      ea: 'click_topic_in_toutiaoPage',
-      el: `toutiao_name:${this.data.userName},toutiao_id:${this.data.groupId}`,
+      ea: 'click_topic_in_albumShowPage',
+      el: `album_name:${this.data.userName},album_id:${this.data.groupId}`,
       ev: 1
     };
     util.goToTopic(event, gaOptions);
@@ -94,8 +94,8 @@ Page({
           gaOptions = {
             cid: Auth.getLocalUserId(),
             ec: `article_title:${medium.attributes.title},article_id:${medium.id}`,
-            ea: 'click_article_in_toutiaoPage',
-            el: `toutiao_name:${this.data.userName},toutiao_id:${this.data.groupId}`,
+            ea: 'click_article_in_albumShowPage',
+            el: `album_name:${this.data.userName},album_id:${this.data.groupId}`,
             ev: 0
           };
     if (didUserPay) {
@@ -172,8 +172,8 @@ Page({
 
     util.ga({
       cid: Auth.getLocalUserId(),
-      dp: '%2FtoutiaoPage_XiaoChengXu',
-      dt: `toutiao_name:${this.data.userName},toutiao_id:${this.data.groupId}`
+      dp: '%2FalbumShowPage_XiaoChengXu',
+      dt: `album_name:${this.data.userName},album_id:${this.data.groupId}`
     });
   },
 
