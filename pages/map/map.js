@@ -30,8 +30,8 @@ const MIN_USERS_COLLECTED_COUNT = 20,
       DEFAULT_SCALE = 12;
 
 const logger = new Logger();
-if (DEBUEG.enabled) {
-  console.log('init logger');
+console.log('init logger');
+if (!DEBUEG.enabled) {
   logger.disabled(); 
 }
 
@@ -343,6 +343,11 @@ Page({
       });
 
       this._renderMarkers();
+    } else {
+      wx.showModal({
+        title: '邀请好友',
+        content: '您可以通过分享到群和朋友圈来邀请好友加入'
+      });
     }
   },
 
@@ -561,38 +566,43 @@ Page({
       });
     }
 
+    const setData = () => {
+      const data = {
+        markers: clusteredMarkers.map(m => m.mapAttrs),
+        //scale: res.scale Do not set scale here
+      };
+
+      if (options.scale) {
+        data.scale = options.scale;
+      }
+      if (options.center) {
+        data.center = options.center;
+      }
+
+      this.setData(data);
+    };
+
     return new Promise(resolve => {
       setTimeout(resolve, wait);
     })
-      .then(() => Marker.cluster(zdkMarkers, mapCtx))
+      .then(() => {
+        return Promise.all([
+          Marker.cluster(zdkMarkers, mapCtx),
+          toPromise(mapCtx.getScale).call(mapCtx)
+        ]);
+      })
       .then(res => {
-        clusteredMarkers = res;
+        clusteredMarkers = res[0];
+        this.data.scale = res[1].scale;
+        console.log('current scale:', this.data.scale);
+        setData();
 
-        logger.log('start downloading user profile images');
-
+        // _updateMarkerIconPath 需要下载图片，可能会比较花时间
+        // 现在这部完成之前，用户头像没法显示
         return this._updateMarkerIconPath();
       })
-      .then(() => {
-        return toPromise(mapCtx.getScale).call(mapCtx);
-      })
       .then(res => {
-        logger.log('Downloaded all user profile images');
-        this.data.scale = res.scale;
-
-        console.log('current scale:',res.scale);
-        const data = {
-          markers: clusteredMarkers.map(m => m.mapAttrs),
-          //scale: res.scale Do not set scale here
-        };
-
-        if (options.scale) {
-          data.scale = options.scale;
-        }
-        if (options.center) {
-          data.center = options.center;
-        }
-
-        this.setData(data);
+        setData();
       });
   },
   
