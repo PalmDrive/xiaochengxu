@@ -16,6 +16,15 @@ Page({
   },
 
   onLoad(options) {
+    // for testing
+    console.log('page load options:');
+    console.log(options);
+    options = options || {};
+    if (options.scene) {
+      const scene = decodeURIComponent(options.scene);
+      console.log('scene:', scene);
+    }
+    
     const userId = Auth.getLocalUserId();
     //console.log('groups page on load called. userId:', userId);
     this.setData({

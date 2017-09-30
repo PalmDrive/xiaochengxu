@@ -1,0 +1,35 @@
+{
+	"description": "项目配置文件。",
+	"setting": {
+		"urlCheck": false,
+		"es6": true,
+		"postcss": false,
+		"minified": true
+	},
+	"compileType": "weapp",
+	"libVersion": "1.5.2",
+	"appid": "wxdc5881d5a721842e",
+	"projectname": "%E8%81%8C%E5%BE%97%E7%9C%8B",
+	"condition": {
+		"weapp": {
+			"current": 0,
+			"list": [
+				{
+					"id": 0,
+					"name": "吃货地图扫码进入",
+					"pathName": "pages/map/map",
+					"query": "scene=59ce3d20a22b9d0061312243",
+					"scene": "1048"
+				}
+			]
+		},
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		}
+	}
+}

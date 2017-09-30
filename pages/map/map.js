@@ -98,7 +98,15 @@ Page({
   },
 
   onLoad(options) {
+    console.log('map onLoad options:', options);
+    options = options || {};
     const app = getApp();
+
+    if (options.scene) {
+      options.friendId = decodeURIComponent(options.scene);
+      console.log('get friendId from scene:', options.friendId);
+    }
+
     let reloadPromise = new Promise(resolve => resolve());
 
     if (DEBUEG.reload && DEBUEG.enabled) {
@@ -116,8 +124,6 @@ Page({
       console.log('friend id not exist. Using friendId from debug');
       options.friendId = DEBUEG.friendId;
     }
-
-    console.log('map onLoad options:', options);
 
     wx.showLoading({
       title: '加载中',

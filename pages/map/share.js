@@ -20,16 +20,16 @@ Page({
 
   onLoad(options) {
     wx.showLoading({
-      title: '加载中',
+      title: '生成中',
       mask: true
     });
     const userInfo = Auth.getLocalUserInfo();
     request({
       url: `${baseUrl}/wechat/chihuo-map/share-img`,
       data: {
-        scene: 'hello',
+        scene: options.friendId,
         nickname: userInfo.attributes.wxUsername,
-        page: 'pages/index/index',
+        page: 'pages/groups/groups',
         friendNum: 12,
         cityNum: 17
       }
@@ -38,10 +38,18 @@ Page({
       this.setData({
         imgUrls: res.data
       });
+    })
+    .catch(err => {
+      wx.hideLoading();
+      console.log(err);
     });
   },
 
   saveImage() {
+    wx.showLoading({
+      title: '下载保存中',
+      mask: true
+    });
     toPromise(wx.downloadFile)({
       url: this.data.imgUrls[this.data.imgIndex],
     })
@@ -51,25 +59,26 @@ Page({
       });
     })
     .then(() => {
-      wx.showToast({
-        title: '保存成功'
-      });
+      wx.hideLoading();
+      setTimeout(() => {
+        wx.showToast({
+          title: '保存成功'
+        });
+      }, 500);
     })
-    .catch(onError);
+    .catch(err => {
+      wx.hideLoading();
+      onError(err);
+    });
   },
   
   cancel() {
-
+    wx.navigateBack();
   },
 
   changeSlide(e) {
     this.setData({
       imgIndex: e.detail.current
     });
-  },
-
-  /**
-   * 分享给好友 事件
-   */
-  onShareAppMessage: function () {}
+  }
 });
