@@ -28,10 +28,9 @@ Page({
       url: `${baseUrl}/wechat/chihuo-map/share-img`,
       data: {
         scene: options.friendId,
-        nickname: userInfo.attributes.wxUsername,
-        page: 'pages/map/map',
-        friendNum: 12,
-        cityNum: 17
+        page: 'pages/index/index',
+        title: `${userInfo.attributes.wxUsername} 的吃货地图`,
+        subtitle: `${userInfo.attributes.wxUsername} 在 12 名吃货的带领下吃遍了 17 个城市，快来扩充TA的吃货版图吧`,
       }
     }).then(res => {
       wx.hideLoading();
