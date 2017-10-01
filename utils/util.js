@@ -136,6 +136,8 @@ function closeHint(that) {
 }
 
 function ga(options) {
+  if (getApp().globalData.env === 'dev') return;
+
   wx.request({
     method: 'POST',
     url: `https://www.google-analytics.com/collect?v=1&tid=UA-93993572-2&cid=${options.cid}&t=pageview&dh=xiaochengxu&dp=${options.dp}&dt=${options.dt}`,
@@ -149,6 +151,8 @@ function ga(options) {
 }
 
 function gaEvent(options) {
+  if (getApp().globalData.env === 'dev') return;
+  
   wx.request({
     method: 'POST',
     url: 'https://www.google-analytics.com/collect',

@@ -1,6 +1,6 @@
 //app.js
-const env = 'production';
-//const env = 'dev';
+//const env = 'production';
+const env = 'dev';
 const {reloadPage, showHint} = require('utils/util');
 
 const API_BASES = {
@@ -84,7 +84,7 @@ App({
           userAttrs = userInfo.attributes || {};
     if (!Auth.getLocalUserId() || !Auth.getLocalJWT() || !userAttrs.wxOpenId) {
       _login();
-    } else {
+    } else if (env !== 'dev') {
       wx.checkSession({
         fail() {
           _login();
@@ -94,6 +94,7 @@ App({
   },
 
   globalData: {
-    apiBase
+    apiBase,
+    env
   }
 })
