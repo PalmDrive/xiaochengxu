@@ -24,7 +24,7 @@ Page({
     groupId: null,
     lastDate: null,
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
-    dateList: [],
+    posts: [],
 
     newMediaCount: 0, // 今日更新数量
     groupInfo: {},
@@ -125,32 +125,21 @@ Page({
    * 数据加载 成功 回调
    */
   _onLoadSuccess: function (res) {
-    let updates = {},
-        dateList = this.data.dateList;
+    let updates = {
+      posts: res.data
+    };
 
     // 没有数据 显示loading页的加载完毕
     if (!res.data || !res.data.length) {
       return this.setData({loadingStatus: 'LOADED_ALL'});
     }
-    const today = new Date(res.meta ? res.meta.mediumLastDate : new Date());
-    dateList.push({
-      date: '· ' + util.formatDateToDay(today) + ' 周' + '日一二三四五六'[today.getDay()],
-      topics: res.data
-    });
-    // dateList[0].topics[0].relationships.media.data.push(dateList[0].topics[0].relationships.media.data[0])
-    // console.log("dateList: ---" + res.data)
+
     // 找到已解锁到第几天
-    for (let i = 0; i < res.data.length; i++) {
-      if (res.data[i].relationships.media.data.length === 0) {
-        this.setData({current: i - 1 < 0 ? 0 : i - 1});
-        break;
-      }
-    }
+    updates.current = res.data.filter(d => d.relationships.media.data.length).length;
 
     const group = res.included[0],
           groupInfo = group.attributes.groupInfo;
     groupInfo.pageviews = util.shortNumber(groupInfo.pageviews);
-    updates.dateList = dateList;
     updates.userName = res.included[0].attributes.username;
     updates.groupInfo = groupInfo;
     updates.lastDate = res.meta ? res.meta.mediumLastDate : null;
@@ -178,8 +167,8 @@ Page({
   },
 
   _countMedia() {
-    const dateList = this.data.dateList,
-          topics = dateList.reduce((memo, obj) => {
+    const posts = this.data.posts,
+          topics = posts.reduce((memo, obj) => {
             memo = memo.concat(obj.topics);
             return memo;
           }, []);
@@ -227,8 +216,8 @@ Page({
     this.setData({qrcodeModalShown});
   },
 
-  listenSwiper:function(e) {
+  listenSwiper(e) {
     console.log(e.detail.current);
-    this.setData({current: e.detail.current});
+    this.setData({current: this.data.posts.length - e.detail.current});
   }
 })

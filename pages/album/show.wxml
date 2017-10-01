@@ -30,13 +30,13 @@
     <text class=" size-26 text-color1 FZRUIZH_CUJW--GB1-0 top-title">{{ userName }}</text>
   </view>
 
-  <swiper current="{{current}}" bindchange="listenSwiper" class="list-container" wx:key="">
-    <swiper-item id="id-{{topic.id}}" wx:for="{{ dateList[0].topics }}" wx:for-item="topic"  wx:key="">
-      <view wx:if="{{topic.relationships.media.data.length > 0}}">
+  <swiper current="{{posts.length - current}}" bindchange="listenSwiper" class="list-container" wx:key="">
+    <swiper-item id="id-{{post.id}}" wx:for="{{posts}}" wx:for-item="post"  wx:key="">
+      <view wx:if="{{post.relationships.media.data.length > 0}}">
         <text class=" size-12 text-color3 FZRUIZH_CUJW--GB1-0 top-tip">　　</text>
         <view class="topic">
           <view class="topic-info">
-            <view class="medium-banner" style="background-image: url('{{topic.attributes.picUrl}}')">
+            <view class="medium-banner" style="background-image: url('{{post.attributes.picUrl}}')">
               <view class="medium-banner-mask"></view>
               <view class="row bottom-view">
                 <image src="{{author.attributes.profilePicUrl}}" class="head-img"></image>
@@ -45,19 +45,19 @@
                   <text class="size-12 ji-zhu-name">{{author.attributes.username}}</text>
                 </view>
               </view>
-              <text class=" size-12 text-white top-text">{{topic.attributes.title}}</text>
+              <text class=" size-12 text-white top-text">{{post.attributes.title}}</text>
             </view>
           </view>
 
           <view class="mediums">
-            <view class="medium {{topic.relationships.media.data.length > 2 ? 'medium-50' : 'medium-100'}} {{index === 1 || index === 2 ? 'medium-gray' : ''}}" wx:for="{{ topic.relationships.media.data }}" wx:for-item="medium" data-medium="{{ medium }}" wx:key="" bindtap="goToMedium">
+            <view class="medium {{post.relationships.media.data.length > 2 ? 'medium-50' : 'medium-100'}} {{index === 1 || index === 2 ? 'medium-gray' : ''}}" wx:for="{{ post.relationships.media.data }}" wx:for-item="medium" data-medium="{{ medium }}" wx:key="" bindtap="goToMedium">
               <text class="medium-title  size-16">{{ medium.attributes.title }}</text>
             </view>
           </view>
         </view>
       </view>
 
-      <view wx:if="{{topic.relationships.media.data.length == 0}}" class="text-center">
+      <view wx:if="{{post.relationships.media.data.length == 0}}" class="text-center">
         <text class=" size-12 text-color3 FZRUIZH_CUJW--GB1-0 top-tip">还未解锁，一天解锁一课哦</text>
         <view class="topic" style="background-image: url('../../images/paid-group/lock.png')"></view>
       </view>
@@ -74,13 +74,13 @@
     </view> -->
 
     <view class="row" style="justify-content: flex-end; align-items: flex-end;">
-      <text class=" size-22 pingfang-medium text-color1">{{current + 1}}</text>
-      <text class=" size-12 pingfang-medium text-color1">/{{dateList[0].topics.length}}</text>
+      <text class=" size-22 pingfang-medium text-color1">{{current}}</text>
+      <text class=" size-12 pingfang-medium text-color1">/{{posts.length}}</text>
     </view>
   </view>
 
   <view class="tip-line">
-    <view class="line {{index === current ? 'line-blue' : 'line-gray'}}" wx:for="{{ dateList[0].topics }}" wx:for-item="topic"  wx:key=""></view>
+    <view class="line {{index === (posts.length - current) ? 'line-blue' : 'line-gray'}}" wx:for="{{posts}}" wx:for-item="post"  wx:key=""></view>
   </view>
   <template is="loading" data="{{loadingStatus}}"></template>
 </view>
