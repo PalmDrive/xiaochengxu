@@ -27,19 +27,20 @@
 
 <view class="container" lower-threshold="200">
   <view wx:if="{{loadingStatus !== 'LOADING'}}" class="top-view column">
-    <text class=" size-26 text-color1 FZRUIZH_CUJW--GB1-0 top-title">{{ userName }}</text>
+    <text class=" size-26 text-color1 FZRUIZH_CUJW--GB1-0 top-title">{{userName}}</text>
   </view>
 
   <swiper current="{{posts.length - current}}" bindchange="listenSwiper" class="list-container" wx:key="">
-    <swiper-item id="id-{{post.id}}" wx:for="{{posts}}" wx:for-item="post" wx:key="" class="{{post.meta.unlocked ? 'unlocked' : 'locked'}}">
+    <swiper-item id="id-{{post.id}}" wx:for="{{posts}}" wx:for-item="post" wx:key="" class="{{((post.meta.unlocked && didUserPay) || (posts.length - index === 1)) ? 'unlocked' : 'locked'}}">
 
-      <text class=" size-12 text-color3 FZRUIZH_CUJW--GB1-0 top-tip text-center">　{{post.meta.unlocked ? '' : '还未解锁，一天解锁一课哦'}}</text>
+      <text class="size-12 text-color3 FZRUIZH_CUJW--GB1-0 top-tip text-center">{{post.hint}}</text>
       <view class="topic">
         <view class="locker-mask" style="background-image: url(/images/paid-group/lock.png)"></view>
        
         <view class="topic-info">
           <view class="medium-banner" style="background-image: url('{{post.attributes.picUrl}}')">
             <view class="medium-banner-mask"></view>
+            <text class="size-12 text-white label-trial" wx:if="{{!didUserPay && posts.length - index === 1}}">免费试读</text>
             <view class="row bottom-view">
               <image src="{{author.attributes.profilePicUrl}}" class="head-img"></image>
               <view class="right-view column top-text" >

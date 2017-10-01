@@ -3,9 +3,9 @@ const app = getApp(),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request');
 
-function loadData(groupId, lastDate) {
+function loadData(groupId) {
   return request({
-    url: `${app.globalData.apiBase}/groups/${groupId}/topics-24hours?date=${lastDate}&from=miniProgram`,
+    url: `${app.globalData.apiBase}/groups/${groupId}/topics-24hours?from=miniProgram`,
   });
 }
 
@@ -15,18 +15,16 @@ function loadUserData(groupId) {
   });
 }
 
-let didUserPay = false;
 const PAID_USER_ROLE = 2;
 
 Page({
   data: {
     userName: null, // group or toutiao name actually
     groupId: null,
-    lastDate: null,
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
     posts: [],
+    didUserPay: false, // 用户是否已经购买
 
-    newMediaCount: 0, // 今日更新数量
     groupInfo: {},
     showHint: false,
     modalShown: false,
@@ -75,18 +73,6 @@ Page({
     }
   },
 
-  //点击专题
-  goToTopic: function(event) {
-    const topic = event.currentTarget.dataset.topic;
-    const gaOptions = {
-      cid: Auth.getLocalUserId(),
-      ec: `topic_name:${topic.attributes.name},topic_id:${topic.id}`,
-      ea: 'click_topic_in_albumShowPage',
-      el: `album_name:${this.data.userName},album_id:${this.data.groupId}`,
-      ev: 1
-    };
-    util.goToTopic(event, gaOptions);
-  },
   //点击文章
   goToMedium: function(event) {
     const medium = event.currentTarget.dataset.medium,
@@ -98,11 +84,6 @@ Page({
             el: `album_name:${this.data.userName},album_id:${this.data.groupId}`,
             ev: 0
           };
-    if (didUserPay) {
-      util.goToMedium(event, gaOptions);
-    } else {
-      this.toggleModalShown();
-    }
   },
   /**
    * 加载数据
@@ -118,13 +99,25 @@ Page({
         this.setData(updates);
       });
 
-    loadData(this.data.groupId, this.data.lastDate)
+    loadData(this.data.groupId)
       .then(this._onLoadSuccess);
   },
   /**
    * 数据加载 成功 回调
    */
   _onLoadSuccess: function (res) {
+    const getHintMsg = (post, postIndex) => {
+      let msg = ' ';
+      if (!updates.didUserPay) {
+        if (postIndex > 1) {
+          msg = `还未解锁。解锁只需${updates.groupInfo.price/100}元`;
+        }
+      } else if (!post.meta.unlocked) {
+        msg = '还未解锁，一天解锁一课哦';
+      }
+      return msg;
+    };
+
     let updates = {
       posts: res.data
     };
@@ -142,15 +135,13 @@ Page({
     groupInfo.pageviews = util.shortNumber(groupInfo.pageviews);
     updates.userName = res.included[0].attributes.username;
     updates.groupInfo = groupInfo;
-    updates.lastDate = res.meta ? res.meta.mediumLastDate : null;
     updates.loadingStatus = null;
 
-    const totalMediaCount = this._countMedia();
-    didUserPay = group.relationships && group.relationships.userGroup.data.attributes.role === PAID_USER_ROLE;
+    updates.didUserPay = group.relationships && group.relationships.userGroup.data.attributes.role === PAID_USER_ROLE;
 
-    if (!this.data.newMediaCount) {
-      updates.newMediaCount = totalMediaCount;
-    }
+    updates.posts.forEach((post, index) => {
+      post.hint = getHintMsg(post, updates.posts.length - index);
+    });
 
     this.setData(updates);
 
@@ -164,19 +155,6 @@ Page({
       dp: '%2FalbumShowPage_XiaoChengXu',
       dt: `album_name:${this.data.userName},album_id:${this.data.groupId}`
     });
-  },
-
-  _countMedia() {
-    const posts = this.data.posts,
-          topics = posts.reduce((memo, obj) => {
-            memo = memo.concat(obj.topics);
-            return memo;
-          }, []);
-
-    return topics.reduce((memo, topic) => {
-      memo += topic.relationships.media.data.length;
-      return memo;
-    }, 0);
   },
 
   /**

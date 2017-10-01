@@ -13,7 +13,7 @@ page {
   right: 0;
   width: 100%;
   height: 100%;
-  background: rgba(50, 50, 50, 0.8) center no-repeat;
+  background: rgba(0, 0, 0, 0.8) center no-repeat;
 }
 
 .top-view {
@@ -21,13 +21,14 @@ page {
 }
 
 .top-title {
-  margin-top: 20px;
+  padding: 20px 20px 0 20px;
   display: block;
 }
 
 .top-tip {
   margin-top: 12px;
   margin-bottom: 14px;
+  height: 17px;
 }
 
 .list-container {
@@ -129,6 +130,15 @@ page {
   top: 0;
   bottom: 0;
   background-color: rgba(50, 50, 50, 0.4);
+}
+
+.label-trial {
+  background-color: #59AA00;
+  padding: 7px 10px 7px 28px;
+  border-radius: 0 3px 3px 0;
+  position: absolute;
+  left: 0;
+  top: 12px;
 }
 
 .count-view {
