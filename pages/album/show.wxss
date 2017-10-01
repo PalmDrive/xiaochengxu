@@ -176,8 +176,7 @@ page {
   display: -webkit-flex;
   justify-content: space-around;
   flex-direction: row;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin: 0 20px 20px 20px;
 }
 
 .line-blue {
