@@ -62,9 +62,11 @@
     </swiper-item>
   </swiper>
   <view class="count-view row">
-    <view class="row" wx:if="{{subscribersCount >= 5}}">
-      <image src="{{user.attributes.profilePicUrl}}" wx:for="{{subscribers}}" wx:key="" wx:for-item="user" class="subscriber-profile-image"></image>
-      <text class="text-gray size-10 text-subscribers-count">{{subscribersCount}}人与你共同观看</text>
+    <view>
+      <view wx:if="{{subscribersCount >= 5}}" class="row"> <!-- To make sure page indicator always on the right-->
+        <image src="{{user.attributes.profilePicUrl}}" wx:for="{{subscribers}}" wx:key="" wx:for-item="user" class="subscriber-profile-image"></image>
+        <text class="text-gray size-10 text-subscribers-count">{{subscribersCount}}人与你共同观看</text>
+      </view>
     </view>
 
     <view>
