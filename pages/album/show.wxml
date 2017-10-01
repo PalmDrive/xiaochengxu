@@ -59,25 +59,17 @@
         </view>
 
       </view>
-      <!-- <view wx:if="{{!post.meta.unlocked}}" class="text-center">
-        <text class=" size-12 text-color3 FZRUIZH_CUJW--GB1-0 top-tip">还未解锁，一天解锁一课哦</text>
-        <view class="topic" style="background-image: url('../../images/paid-group/lock.png')"></view>
-      </view> -->
     </swiper-item>
   </swiper>
   <view class="count-view row">
-    <!-- <view class="row" style="justify-content: flex-start; align-items: center;width: 70%;">
-      <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 5;position: absolute;left: 30px;"></image>
-      <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 4;position: absolute;left: 38px;"></image>
-      <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 3;position: absolute;left: 47px;"></image>
-      <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 2;position: absolute;left: 56px;"></image>
-      <image src="/images/paid-group/lock.png" class="other-user-img" style="z-index: 1;position: absolute;left: 65px;"></image>
-      <text>123人与你共同观看</text>
-    </view> -->
+    <view class="row" wx:if="{{subscribersCount >= 5}}">
+      <image src="{{user.attributes.profilePicUrl}}" wx:for="{{subscribers}}" wx:key="" wx:for-item="user" class="subscriber-profile-image"></image>
+      <text class="text-gray size-10 text-subscribers-count">{{subscribersCount}}人与你共同观看</text>
+    </view>
 
-    <view class="row" style="justify-content: flex-end; align-items: flex-end;">
-      <text class=" size-22 pingfang-medium text-color1">{{current}}</text>
-      <text class=" size-12 pingfang-medium text-color1">/{{posts.length}}</text>
+    <view>
+      <text class="size-22 pingfang-medium text-color1">{{current}}</text>
+      <text class="size-12 pingfang-medium text-color1">/{{posts.length}}</text>
     </view>
   </view>
 
