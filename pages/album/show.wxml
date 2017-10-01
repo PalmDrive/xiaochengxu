@@ -31,36 +31,37 @@
   </view>
 
   <swiper current="{{posts.length - current}}" bindchange="listenSwiper" class="list-container" wx:key="">
-    <swiper-item id="id-{{post.id}}" wx:for="{{posts}}" wx:for-item="post"  wx:key="">
-      <view wx:if="{{post.relationships.media.data.length > 0}}">
-        <text class=" size-12 text-color3 FZRUIZH_CUJW--GB1-0 top-tip">　　</text>
-        <view class="topic">
-          <view class="topic-info">
-            <view class="medium-banner" style="background-image: url('{{post.attributes.picUrl}}')">
-              <view class="medium-banner-mask"></view>
-              <view class="row bottom-view">
-                <image src="{{author.attributes.profilePicUrl}}" class="head-img"></image>
-                <view class="right-view column top-text" >
-                  <text class="size-10 ji-zhu-text">辑主</text>
-                  <text class="size-12 ji-zhu-name">{{author.attributes.username}}</text>
-                </view>
-              </view>
-              <text class=" size-12 text-white top-text">{{post.attributes.title}}</text>
-            </view>
-          </view>
+    <swiper-item id="id-{{post.id}}" wx:for="{{posts}}" wx:for-item="post" wx:key="" class="{{post.meta.unlocked ? 'unlocked' : 'locked'}}">
 
-          <view class="mediums">
-            <view class="medium {{post.relationships.media.data.length > 2 ? 'medium-50' : 'medium-100'}} {{index === 1 || index === 2 ? 'medium-gray' : ''}}" wx:for="{{ post.relationships.media.data }}" wx:for-item="medium" data-medium="{{ medium }}" wx:key="" bindtap="goToMedium">
-              <text class="medium-title  size-16">{{ medium.attributes.title }}</text>
+      <text class=" size-12 text-color3 FZRUIZH_CUJW--GB1-0 top-tip text-center">　{{post.meta.unlocked ? '' : '还未解锁，一天解锁一课哦'}}</text>
+      <view class="topic">
+        <view class="locker-mask" style="background-image: url(/images/paid-group/lock.png)"></view>
+       
+        <view class="topic-info">
+          <view class="medium-banner" style="background-image: url('{{post.attributes.picUrl}}')">
+            <view class="medium-banner-mask"></view>
+            <view class="row bottom-view">
+              <image src="{{author.attributes.profilePicUrl}}" class="head-img"></image>
+              <view class="right-view column top-text" >
+                <text class="size-10 ji-zhu-text">辑主</text>
+                <text class="size-12 ji-zhu-name">{{author.attributes.username}}</text>
+              </view>
             </view>
+            <text class=" size-12 text-white top-text">{{post.attributes.title}}</text>
           </view>
         </view>
-      </view>
 
-      <view wx:if="{{post.relationships.media.data.length == 0}}" class="text-center">
+        <view class="mediums">
+          <view class="medium {{post.relationships.media.data.length > 2 ? 'medium-50' : 'medium-100'}} {{index === 1 || index === 2 ? 'medium-gray' : ''}}" wx:for="{{ post.relationships.media.data }}" wx:for-item="medium" data-medium="{{ medium }}" wx:key="" bindtap="goToMedium">
+            <text class="medium-title  size-16">{{ medium.attributes.title }}</text>
+          </view>
+        </view>
+
+      </view>
+      <!-- <view wx:if="{{!post.meta.unlocked}}" class="text-center">
         <text class=" size-12 text-color3 FZRUIZH_CUJW--GB1-0 top-tip">还未解锁，一天解锁一课哦</text>
         <view class="topic" style="background-image: url('../../images/paid-group/lock.png')"></view>
-      </view>
+      </view> -->
     </swiper-item>
   </swiper>
   <view class="count-view row">

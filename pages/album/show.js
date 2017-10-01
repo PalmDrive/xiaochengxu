@@ -47,7 +47,7 @@ Page({
     //console.log(getCurrentPages()[1]);
     const bannerImageRatio = 375 / 400, // width / height
           updates = {
-            groupId: options.id || '18d319f0-9a18-11e7-a202-9bb8a0ea118f',
+            groupId: options.id,
             loadingStatus: 'LOADING'
           },
           that = this;
@@ -135,7 +135,7 @@ Page({
     }
 
     // 找到已解锁到第几天
-    updates.current = res.data.filter(d => d.relationships.media.data.length).length;
+    updates.current = res.data.filter(d => d.meta.unlocked).length;
 
     const group = res.included[0],
           groupInfo = group.attributes.groupInfo;
