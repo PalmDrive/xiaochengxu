@@ -84,6 +84,7 @@ Page({
             el: `album_name:${this.data.userName},album_id:${this.data.groupId}`,
             ev: 0
           };
+    util.goToMedium(event, gaOptions);
   },
   /**
    * 加载数据
@@ -163,8 +164,8 @@ Page({
   onShareAppMessage: function () {
     const title = this.data.userName;
     return {
-      title
-    }
+      title: `七日辑: ${title}`
+    };
   },
 
   copyWechatId() {

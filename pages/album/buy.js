@@ -109,5 +109,9 @@ Page({
   /**
    * 分享给好友 事件
    */
-  onShareAppMessage: function () {}
+  onShareAppMessage: function () {
+    return {
+      title: `七日辑: ${this.data.album.name}`
+    };
+  }
 });
