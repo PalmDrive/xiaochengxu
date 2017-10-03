@@ -527,6 +527,8 @@ Page({
       return m.clusteredCount === 0 && (!m.iconPath || m.iconPath === Marker.defaultIconPath); //!tmpImagesHash[m.id];
     });
 
+    logger.log('start downloading profile photos:', singleMarkers.length);
+
     return Promise.all(singleMarkers.map(m => {
       return toPromise(wx.downloadFile)({url: m.picurl})
         .then(res => {
@@ -593,7 +595,6 @@ Page({
 
         // _updateMarkerIconPath 需要下载图片，可能会比较花时间
         // 现在这部完成之前，用户头像没法显示
-        logger.log('start downloading profile photos...');
         return this._updateMarkerIconPath();
       })
       .then(res => {
@@ -719,7 +720,7 @@ Page({
   _newMarkerFromUser(user) {
     const [msg, timestamp] = this._getBarrageMessage(user);
     return new Marker({
-      title: msg || this.data.message,
+      title: msg || (this.data.message || '我什么也没吃'),
       longitude: user.get('currLocation').longitude,
       latitude: user.get('currLocation').latitude,
       id: user.id,
