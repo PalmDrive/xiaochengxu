@@ -1,5 +1,6 @@
 {
   "pages":[
+    "pages/map/dazhaxie",
     "pages/groups/groups",
     "pages/map/map",
     "pages/map/share",

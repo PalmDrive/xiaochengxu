@@ -28,7 +28,7 @@ Page({
       scene: options.friendId,
       page: 'pages/map/map',
       title: `${options.username} 的吃货地图`,
-      subtitle: `${options.username}已收集了 ${options.count} 个吃货，快来扩充TA的吃货版图吧`,
+      subtitle: `${options.username} 已经召集了 ${options.count} 个吃货，击败了全国66%的人`,
     };
     //console.log('share data:', data);
     request({
@@ -47,6 +47,7 @@ Page({
   },
 
   saveImage() {
+    this.data.imgUrls[this.data.imgIndex] = 'https://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/shar-img/59cf64e5ee920a0044c67492-1.png'
     wx.showLoading({
       title: '下载保存中',
       mask: true
