@@ -1,6 +1,9 @@
 
+const Auth = require('../../utils/auth');
+
 Page({
   data: {
+    hidden: true
   },
 
   onShow() {
@@ -11,28 +14,49 @@ Page({
   },
 
   onLoad(options) {
-    if (wx.getStorageSync('dazhaxiePageHasShow')) {
+    options = options || {};
+
+    if (wx.getStorageSync('dazhaxiePageHasShow') && !options.initiative) {
       wx.switchTab({
         url: `/pages/groups/groups`
       });
     } else {
-      wx.setStorage({
-        key: 'dazhaxiePageHasShow',
-        data: true
-      })
+
+    console.log(wx.getStorageSync('dazhaxiePageHasShow') +'&&'+ !options.initiative)
+
+      this.setData({
+        hidden: false
+      });
     }
   },
 
   gotoMap() {
-    wx.navigateTo({
-      url: `/pages/map/map`
+    wx.setStorage({
+      key: 'dazhaxiePageHasShow',
+      data: true
+    })
+    wx.redirectTo({
+      url: `/pages/map/map?friendId=59ce3d20a22b9d0061312243`
     });
+  },
+
+  clearStorage() {
+    wx.setStorage({
+      key: 'dazhaxiePageHasShow',
+      data: false,
+      success: () => {
+        wx.showToast({
+          title: '数据清除成功'
+        })
+      }
+    })
   },
 
   onShareAppMessage(options) {
     return {
-      title: '召集吃货抢大闸蟹啦',
-      imageUrl: 'https://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/dazhaxie_shar.png'
+      title: `${Auth.getLocalUserInfo().attributes.wxUsername}正在抢大闸蟹礼券，快来帮Ta吧`,
+      imageUrl: 'https://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/dazhaxie_shar.png',
+      path: '/pages/map/dazhaxie?initiative=true'
     }
   }
 });

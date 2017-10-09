@@ -203,7 +203,7 @@ Page({
   onShareAppMessage(options) {
     const that = this;
     return {
-      title: '吃货都去哪儿了？',
+      title: `${Auth.getLocalUserInfo().attributes.wxUsername}正在抢大闸蟹礼券，快来帮Ta吧`,
       imageUrl: 'https://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/dazhaxie_shar.png',
       path: `/pages/map/map?from=mapsession&friendId=${lcUser.id}`,
       success(res) {
