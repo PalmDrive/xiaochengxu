@@ -34,6 +34,13 @@
 					"pathName": "pages/album/show",
 					"query": "id=35cb43c0-994b-11e7-83e6-811feeb3ae13",
 					"scene": "1008"
+				},
+				{
+					"id": -1,
+					"name": "Album buy",
+					"pathName": "pages/album/buy",
+					"query": "id=35cb43c0-994b-11e7-83e6-811feeb3ae13",
+					"scene": "1008"
 				}
 			]
 		},

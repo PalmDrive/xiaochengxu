@@ -80,7 +80,7 @@ Page({
         params.success = (res) => {
           console.log('wx requestPayment success');
           console.log(res);
-          this.gotoGroup()
+          this.gotoAlbum();
         };
         params.fail = (err) => {
           console.log('wx requestPayment fail');
@@ -99,10 +99,14 @@ Page({
       });
   },
 
-  gotoGroup() {
+  gotoTrial() {
+    this.gotoAlbum();
+  },
+
+  gotoAlbum() {
     const userId = this.data.album.id;
     wx.redirectTo({
-      url: `../groups/group?id=${userId}`
+      url: `../album/show?id=${userId}`
     });
   },
 

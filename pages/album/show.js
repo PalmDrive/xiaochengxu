@@ -196,7 +196,6 @@ Page({
   },
 
   listenSwiper(e) {
-    console.log(e.detail.current);
     this.setData({current: this.data.posts.length - e.detail.current});
   }
 })
