@@ -24,7 +24,8 @@ Page({
       title: '生成中',
       mask: true
     });
-    this._getPercentage(options.count).then(p => {
+    this._getPercentage(Number(options.count))
+    .then(p => {
       const userInfo = Auth.getLocalUserInfo();
       const data = {
         scene: options.friendId,
@@ -32,21 +33,21 @@ Page({
         title: `${options.username} 的吃货地图`,
         subtitle: `${options.username} 已经召集了 ${options.count} 个吃货，击败了全国${p}的人`,
       };
-      //console.log('share data:', data);
-      request({
+      return request({
         url: `${baseUrl}/wechat/chihuo-map/share-img`,
         data
-      }).then(res => {
-        wx.hideLoading();
-        this.setData({
-          imgUrls: res.data
-        });
-      })
-      .catch(err => {
-        wx.hideLoading();
-        console.log(err);
       });
     })
+    .then(res => {
+      wx.hideLoading();
+      this.setData({
+        imgUrls: res.data
+      });
+    })
+    .catch(err => {
+      wx.hideLoading();
+      console.log(err);
+    });
   },
 
   saveImage() {
@@ -87,11 +88,21 @@ Page({
   },
 
   _getPercentage(count) {
-    const cql = `select count(*) from WechatCampaignUser where currLocation is exists`;
+    const cql = `
+            select count(*), * from WechatCampaignUser where currLocation is exists and collectedUsersCount < ?
+          `,
+          cql2 = `
+            select count(*) from WechatCampaignUser where currLocation is exists
+          `;
 
-    return AV.Query.doCloudQuery(cql)
+    return Promise.all([
+      AV.Query.doCloudQuery(cql, [count]),
+      AV.Query.doCloudQuery(cql2)
+    ])
     .then(res => {
-      let p = count / res.count * 100;
+      console.log(count + ',' + res[0].count + ',' + res[1].count);
+      let p = res[0].count / res[1].count;
+      p = p * 100;
       if (p % 1) {
         p = p.toFixed(1);
       }
