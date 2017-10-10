@@ -47,7 +47,6 @@ Page({
   },
 
   saveImage() {
-    this.data.imgUrls[this.data.imgIndex] = 'https://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/shar-img/59cf64e5ee920a0044c67492-1.png'
     wx.showLoading({
       title: '下载保存中',
       mask: true

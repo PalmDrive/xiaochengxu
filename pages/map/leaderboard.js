@@ -99,7 +99,7 @@ Page({
         p = p.toFixed(1);
       }
 
-      return `您收集了${count}个吃货，击败了${p}%的用户。${alertObject.text}`;
+      return `你收集了${count}个吃货，击败了${p}%的用户。${alertObject.text}`;
     });
   }
 });
