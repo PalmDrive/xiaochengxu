@@ -35,7 +35,7 @@
 
       <text class="size-12 text-color3 FZRUIZH_CUJW--GB1-0 top-tip text-center">{{post.hint}}</text>
       <view class="topic">
-        <view class="locker-mask" style="background-image: url(/images/paid-group/lock_white.png)"></view>
+        <view class="locker-mask"></view>
        
         <view class="topic-info">
           <view class="medium-banner" style="background-image: url('{{post.attributes.picUrl}}')">

@@ -43,3 +43,13 @@
   height: 35px;
   width: 35px;
 }
+
+.tip {
+  display: block;
+  background: #5CCD3D;
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+  margin-bottom: 7px;
+  color: #FFFFFF;
+}
