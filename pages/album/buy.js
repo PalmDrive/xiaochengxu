@@ -100,7 +100,10 @@ Page({
   },
 
   gotoTrial() {
-    this.gotoAlbum();
+    const userId = this.data.album.id;
+    wx.navigateTo({
+      url: `../album/show?id=${userId}`
+    });
   },
 
   gotoAlbum() {
