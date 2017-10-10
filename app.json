@@ -1,7 +1,7 @@
 {
   "pages":[
-    "pages/map/dazhaxie",
     "pages/groups/groups",
+    "pages/map/dazhaxie",
     "pages/map/map",
     "pages/map/share",
     "pages/map/leaderboard",

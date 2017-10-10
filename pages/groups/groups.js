@@ -146,6 +146,18 @@ Page({
     }
   },
 
+  gotoMap() {
+    if (wx.getStorageSync('dazhaxiePageHasShow')) {
+      wx.navigateTo({
+        url: `/pages/map/map?friendId=59ce3d20a22b9d0061312243`
+      });
+    } else {
+      wx.navigateTo({
+        url: `/pages/map/dazhaxie`
+      });
+    }
+  },
+
   /**
    * 用户点击右上角分享
    */
