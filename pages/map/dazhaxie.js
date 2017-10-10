@@ -10,7 +10,6 @@ Page({
   },
 
   onReady() {
-    wx.setNavigationBarTitle({ title: '召集吃货抢大闸蟹啦'})
   },
 
   onLoad(options) {
@@ -21,12 +20,10 @@ Page({
         url: `/pages/groups/groups`
       });
     } else {
-
-    console.log(wx.getStorageSync('dazhaxiePageHasShow') +'&&'+ !options.initiative)
-
       this.setData({
         hidden: false
       });
+      wx.setNavigationBarTitle({ title: '召集吃货抢大闸蟹啦'})
     }
   },
 
