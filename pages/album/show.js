@@ -138,7 +138,7 @@ Page({
     updates.groupInfo = groupInfo;
     updates.loadingStatus = null;
 
-    updates.didUserPay = group.relationships && group.relationships.userGroup.data.attributes.role === PAID_USER_ROLE;
+    updates.didUserPay = group.relationships && group.relationships.userGroup.data.attributes.role > 0;
 
     updates.posts.forEach((post, index) => {
       post.hint = getHintMsg(post, updates.posts.length - index);
