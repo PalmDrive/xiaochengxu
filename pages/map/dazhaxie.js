@@ -55,5 +55,11 @@ Page({
       imageUrl: 'https://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/dazhaxie_shar.png',
       path: '/pages/map/dazhaxie?initiative=true'
     }
+  },
+
+  _getFromId(e) {
+    wx.showToast({
+      title: e.detail.formId || 'null'
+    })
   }
 });
