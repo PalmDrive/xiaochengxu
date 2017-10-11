@@ -153,7 +153,7 @@ Page({
       });
     } else {
       wx.navigateTo({
-        url: `/pages/map/dazhaxie`
+        url: `/pages/map/dazhaxie?friendId=59ce3d20a22b9d0061312243`
       });
     }
   },
