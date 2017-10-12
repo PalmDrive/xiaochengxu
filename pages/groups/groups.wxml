@@ -7,7 +7,7 @@
 </view>
  -->
 <view class="groups" scroll-y bindscrolltolower="onReachBottom" lower-threshold="20">
-  <view style="padding-top: 10px;color: #157EFB" class="size-14" bindtap="gotoMap">国庆特别活动：吃货们都去哪儿了?</view>
+  <view style="padding-top: 10px;color: #157EFB" class="size-14" bindtap="gotoMap">十月特别活动：吃货们都去哪儿了?</view>
   <view wx:for="{{groups}}" wx:for-item="group" wx:key>
     <!-- group -->
     <view class="group" wx:if="{{group.attributes.role === 'group'}}">

@@ -1,6 +1,6 @@
 <view class="map-leaderboard">
   <navigator url="./dazhaxie?initiative=true">
-    <text class="size-12 tip">截至10月14日上午10:00，前十名都可获得价值¥800 元的大闸蟹礼券</text>
+    <text class="size-12 tip">截至10月16日上午10:00，前十名都可获得价值¥800 元的大闸蟹礼券</text>
   </navigator>
   <text class="size-12 alert" wx:if="{{alert}}">{{alert}}</text>
   <text class="size-18 title">吃货地图前十名</text>
