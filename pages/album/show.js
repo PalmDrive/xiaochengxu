@@ -127,12 +127,8 @@ Page({
 
     updates.current = morningPosts.filter(d => d.meta.unlocked).length;
 
-    // const group = res.included[0],
-    //       groupInfo = group.attributes.groupInfo;
-
     this.data.title = res.data.attributes.title
     updates.title = res.data.attributes.title;
-    // updates.groupInfo = groupInfo;
     updates.loadingStatus = null;
 
     updates.didUserPay = true;
