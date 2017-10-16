@@ -5,29 +5,27 @@
     <image src="/images/paid-group/type_background@3x.png" class="type-background"></image>
     <text class=" size-12 qi-title">七日辑　　挑三拣四，让你达到小预期</text>
   </view>
-  <view wx:for="{{groups}}" wx:for-item="group" wx:key>
+  <view wx:for="{{groups}}" wx:for-item="group" wx:key class="groups">
     <!-- paid_group -->
-    <view class="groups">
-      <image src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%94%A8/%E5%88%97%E8%A1%A8%E5%B0%8F%E5%9B%BE/{{group.attributes.groupInfo.modalImage}}" wx:if="{{group.attributes.role === 'paid_group'}}" mode="widthFix" data-group="{{ group }}" bindtap="gotoPaidGroup" class="paid-group-pic"></image>
-      <view class="description">
-        <text class="description-text  size-10">学会在摄影，马上就要有女朋友啦，哈哈心动了嘛</text>
-      </view>
-      <view class="title">
-        <text class="title-text  size-26">{{group.attributes.username}}</text>
-        <text class="title-type">零基础</text>
-      </view>
-      <view class="bottom-view row">
-          <image src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%94%A8/%E5%88%97%E8%A1%A8%E5%B0%8F%E5%9B%BE/{{group.attributes.groupInfo.modalImage}}" class="head-img"></image>
-          <view class="bottom-left-view column" >
-            <text class="ji-zhu-text  size-10">辑主</text>
-            <text class="ji-zhu-name  size-12">宋颂颂🐳 </text>
-          </view>
-          <view class="bottom-right-view">
-            <text class="price-tip  size-12">售价</text>
-            <text class="price-tip price-old  size-12">￥49.9 </text>
-            <text class="price-now  size-20">￥{{(group.attributes.groupInfo.price / 100)}} </text>
-          </view>
-      </view>
+    <image src="{{group.attributes.picurl}}" mode="aspectFill" data-group="{{ group }}" bindtap="gotoPaidGroup" class="paid-group-pic"></image>
+    <view class="description">
+      <text class="description-text  size-10">{{group.attributes.description}}</text>
+    </view>
+    <view class="title">
+      <text class="title-text  size-26">{{group.attributes.title}}</text>
+      <text class="title-type">零基础</text>
+    </view>
+    <view class="bottom-view row">
+        <image src="{{group.attributes.editorInfo.profilePicUrl}}" class="head-img"></image>
+        <view class="bottom-left-view column" >
+          <text class="ji-zhu-text  size-10">辑主</text>
+          <text class="ji-zhu-name  size-12">{{group.attributes.editorInfo.username}}</text>
+        </view>
+        <view class="bottom-right-view">
+          <text class="price-tip  size-12">售价</text>
+          <text class="price-tip price-old  size-12">￥49.9 </text>
+          <text class="price-now  size-20">￥{{(group.attributes.price / 100)}} </text>
+        </view>
     </view>
   </view>
 </view>

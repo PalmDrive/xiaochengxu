@@ -42,7 +42,7 @@ page {
   width: 100%;
   background: rgba(0,0,0,0.60);
   position: absolute;
-  margin-top: -30px;
+  margin-top: -26px;
 }
 
 .description-text {

@@ -41,7 +41,7 @@ Page({
    */
   _load(type) {
     return request({
-      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram&include=media&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&role=${type}`,
+      url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=title,description,picurl,price,editorInfo,id`,
     });
   },
 
@@ -95,20 +95,19 @@ Page({
    */
   gotoPaidGroup(event) {
     const group = event.currentTarget.dataset.group,
-          userId = group.id,
+          id = group.id,
           name = group.username,
-          role = group.relationships && group.relationships.userGroup.data.attributes.role || null,
           userInfo = Auth.getLocalUserInfo().attributes || {};
     util.gaEvent({
       cid: Auth.getLocalUserId(),
       ev: 0,
       ea: 'click_qiriji_in_toutiaoTab',
-      ec: `qiriji_name:${name},toutiao_id:${userId}`,
-      el: `user_name:${userInfo.wxUsername},user_id:${userId}`
+      ec: `qiriji_name:${name},toutiao_id:${id}`,
+      el: `user_name:${userInfo.wxUsername},user_id:${id}`
     });
     // if (role) {
       wx.navigateTo({
-        url: `../album/show?id=${userId}`
+        url: `../album/show?id=${id}`
       });
     // } else {
     //   wx.navigateTo({

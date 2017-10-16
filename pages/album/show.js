@@ -3,15 +3,15 @@ const app = getApp(),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request');
 
-function loadData(groupId) {
+function loadData(id) {
   return request({
-    url: `${app.globalData.apiBase}/groups/${groupId}/topics-24hours?from=miniProgram`,
+    url: `${app.globalData.apiBase}/albums/${id}`,
   });
 }
 
-function loadUserData(groupId) {
+function loadUserData(id) {
   return request({
-    url: `${app.globalData.apiBase}/groups/${groupId}/relationships/users`
+    url: `${app.globalData.apiBase}/albums/${id}/relationships/users`
   });
 }
 
@@ -19,8 +19,8 @@ const PAID_USER_ROLE = 2;
 
 Page({
   data: {
-    userName: null, // group or toutiao name actually
-    groupId: null,
+    title: null, // group or toutiao name actually
+    albumId: null,
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
     posts: [],
     didUserPay: false, // 用户是否已经购买
@@ -45,7 +45,7 @@ Page({
     //console.log(getCurrentPages()[1]);
     const bannerImageRatio = 375 / 400, // width / height
           updates = {
-            groupId: options.id,
+            albumId: options.id,
             loadingStatus: 'LOADING'
           },
           that = this;
@@ -64,11 +64,11 @@ Page({
   },
 
   onShow() {
-    if (this.data.userName) {
+    if (this.data.title) {
       util.ga({
         cid: Auth.getLocalUserId(),
         dp: '%2FalbumShowPage_XiaoChengXu',
-        dt: `album_name:${this.data.userName},album_id:${this.data.groupId}`
+        dt: `album_name:${this.data.title},album_id:${this.data.albumId}`
       });
     }
   },
@@ -81,7 +81,7 @@ Page({
             cid: Auth.getLocalUserId(),
             ec: `article_title:${medium.attributes.title},article_id:${medium.id}`,
             ea: 'click_article_in_albumShowPage',
-            el: `album_name:${this.data.userName},album_id:${this.data.groupId}`,
+            el: `album_name:${this.data.title},album_id:${this.data.albumId}`,
             ev: 0
           };
     util.goToMedium(event, gaOptions);
@@ -90,7 +90,7 @@ Page({
    * 加载数据
    */
   _load() {
-    loadUserData(this.data.groupId)
+    loadUserData(this.data.albumId)
       .then(data => {
         const updates = {
           author: data.relationships.author.data,
@@ -100,7 +100,7 @@ Page({
         this.setData(updates);
       });
 
-    loadData(this.data.groupId)
+    loadData(this.data.albumId)
       .then(this._onLoadSuccess);
   },
   /**
@@ -119,26 +119,24 @@ Page({
       return msg;
     };
 
+    // 找到已解锁到第几天
+    const morningPosts = res.data.relationships.posts.data;
     let updates = {
-      posts: res.data
+      posts: morningPosts
     };
 
-    // 没有数据 显示loading页的加载完毕
-    if (!res.data || !res.data.length) {
-      return this.setData({loadingStatus: 'LOADED_ALL'});
-    }
+    updates.current = morningPosts.filter(d => d.meta.unlocked).length;
 
-    // 找到已解锁到第几天
-    updates.current = res.data.filter(d => d.meta.unlocked).length;
+    // const group = res.included[0],
+    //       groupInfo = group.attributes.groupInfo;
 
-    const group = res.included[0],
-          groupInfo = group.attributes.groupInfo;
-    groupInfo.pageviews = util.shortNumber(groupInfo.pageviews);
-    updates.userName = res.included[0].attributes.username;
-    updates.groupInfo = groupInfo;
+    this.data.title = res.data.attributes.title
+    updates.title = res.data.attributes.title;
+    // updates.groupInfo = groupInfo;
     updates.loadingStatus = null;
 
-    updates.didUserPay = group.relationships && group.relationships.userGroup.data.attributes.role > 0;
+    updates.didUserPay = true;
+    //group.relationships && group.relationships.userGroup.data.attributes.role > 0;
 
     updates.posts.forEach((post, index) => {
       post.hint = getHintMsg(post, updates.posts.length - index);
@@ -148,13 +146,13 @@ Page({
 
     // 设置标题
     wx.setNavigationBarTitle({
-      title: updates.userName
+      title: updates.title
     });
 
     util.ga({
       cid: Auth.getLocalUserId(),
       dp: '%2FalbumShowPage_XiaoChengXu',
-      dt: `album_name:${this.data.userName},album_id:${this.data.groupId}`
+      dt: `album_name:${this.data.title},album_id:${this.data.albumId}`
     });
   },
 
@@ -162,7 +160,7 @@ Page({
    * 分享给好友 事件
    */
   onShareAppMessage: function () {
-    const title = this.data.userName;
+    const title = this.data.title;
     return {
       title: `七日辑: ${title}`
     };
