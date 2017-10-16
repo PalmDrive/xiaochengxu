@@ -1,4 +1,7 @@
 <view wx:if="{{album}}">
-  <image class="pic" mode="widthFix" src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/七日辑/小程序用/长图/{{album.modalImage}}"></image>
-  <view bindtap="buy" class="btn-buy" disabled="{{processing}}">马上订阅 {{album.price / 100}}元</view>
+  <image class="pic" mode="widthFix" src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/七日辑/{{album.codename}}/长图.jpg"></image>
+  <view class="btns-container">
+    <button bindtap="gotoTrial" class="btn-trial">免费试读</button>
+    <button bindtap="buy" class="btn-buy" disabled="{{processing}}" loading="{{processing}}">马上订阅 {{album.price / 100}}元</button>
+  </view>
 </view>

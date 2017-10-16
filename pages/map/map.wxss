@@ -1,0 +1,113 @@
+.map-page {
+  height: 100vh;
+  padding-bottom: 250px;
+  padding-top: 27px;
+  background-color: #FAF8FE;
+}
+
+.btn-start {
+  width: 80%;
+}
+
+.toolbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 14px 0;
+}
+
+.banner {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  text-align: center;
+}
+
+.banner text {
+  color: white;
+  padding: 5px;
+  width: 100%;
+  background-color: #505050;
+  display: block;
+}
+
+.banner text.success {
+  background-color: #09BB07;
+}
+
+input {
+  background-color: white;
+}
+
+.btns button {
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.collected-users-container {
+  display: flex;
+  flex-direction: column;
+  height: 112px;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  background-color: #EAEAEA;
+  padding: 7px;
+}
+
+.collected-users-container image {
+  width: 35px;
+  height: 35px;
+  margin: 7px;
+}
+
+.collected-users-container image.active {
+  border: 2px solid #157EFB;
+  width: 31px;
+  height: 31px;
+}
+
+.btns {
+  display: flex;
+  justify-content: space-around;
+}
+
+.toolbar button {
+  background-color: #09BB07;
+  padding: 5px 10px;
+  color: white;
+}
+
+.toolbar-msg {
+  text-align: center;
+  padding-bottom: 14px;
+}
+
+.barrage-input {
+  width: 90%;
+  margin: 0 auto 140px;
+  padding: 8px 5px;
+}
+
+.text-for-message {
+  padding: 10px 20px;
+  display: block;
+}
+
+.hint {
+  display: block;
+  text-align: center;
+  margin: 7px 0;
+}
+
+.toolbar .btn-leaderboard {
+  float: right;
+  line-height: 1.1;
+  background-color: transparent;
+  padding: 7px;
+  color: #157EFB;
+  border: 1px solid #157EFB;
+  border-radius: 3px;
+  margin-right: 15px;
+}

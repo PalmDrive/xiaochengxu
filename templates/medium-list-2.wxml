@@ -11,7 +11,7 @@
 
       <view class="medium-topic">
         <view class="medium-topic-image img-cover d-ib" style="background-image: {{'url(' + medium.attributes.topic.imgUrl + ')'}}"></view>
-        <view class="medium-topic-name d-ib size-10 text-grey">{{medium.attributes.topic.name}}</view>
+        <view class="medium-topic-name d-ib size-10 text-gray">{{medium.attributes.topic.name}}</view>
       </view>
 
       <view class="medium-container-without-image" wx:if="{{!medium.attributes.picurl}}">
@@ -25,7 +25,7 @@
         </view>
         <image class="medium-img" src="{{medium.attributes.picurl}}" mode="aspectFill"></image>
       </view>
-      <view class="editor-comment size-13 text-grey" wx:if="{{medium.attributes.editorComment}}">{{medium.attributes.editorComment}}</view>
+      <view class="editor-comment size-13 text-gray" wx:if="{{medium.attributes.editorComment}}">{{medium.attributes.editorComment}}</view>
     </view>
   </view>
 </template>

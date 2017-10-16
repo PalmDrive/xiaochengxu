@@ -19,7 +19,16 @@ const setLocalUserInfo = userInfo => {
 };
 
 const getLocalUserId = () => {
+  //return 'a16bf0b0-65f8-11e7-8bad-1f67fd9ef4e8';
   return getLocalUserInfo().id;
+};
+
+const setLocalSessionKey = sessionKey => {
+  wx.setStorageSync(`${nameSpace}:sessionKey`, sessionKey);
+};
+
+const getLocalSessionKey = () => {
+  return wx.getStorageSync(`${nameSpace}:sessionKey`);
 };
 
 /**
@@ -54,6 +63,7 @@ const _getWechatBaseUserInfo = function() {
                 reject(res.data);
               } else {
                 console.log('base user data:', res.data);
+                setLocalSessionKey(res.data.session_key);
                 resolve(res.data);
               }              
             },
@@ -154,11 +164,35 @@ const _loginRequest = function(userInfo) {
     }, () => console.log('request /users/login fail'));
 }
 
+const decryptData = (encryptedData, iv, sessionKey) => {
+  const app = getApp() || this,
+        apiBase = app.globalData.apiBase;
+  let promise = new Promise(resolve => resolve(sessionKey));
+  if (!sessionKey) {
+    promise = _getWechatBaseUserInfo()
+      .then(data => data.session_key);
+  }
+
+  return promise
+  .then(sessionKey => {
+    return request({
+      url: `${apiBase}/wechat/xiaochengxu/decrypt`,
+      data: {
+        encryptedData,
+        iv,
+        sessionKey
+      }
+    });
+  });
+}
+
 module.exports = {
   login,
   getLocalUserInfo,
   setLocalUserInfo,
   getLocalUserId,
   getLocalJWT,
-  setLocalJWT
+  setLocalJWT,
+  decryptData,
+  getLocalSessionKey
 };

@@ -7,6 +7,7 @@
 </view>
  -->
 <view class="groups" scroll-y bindscrolltolower="onReachBottom" lower-threshold="20">
+  <view style="padding-top: 10px;color: #157EFB" class="size-14" bindtap="gotoMap">国庆特别活动：吃货们都去哪儿了?</view>
   <view wx:for="{{groups}}" wx:for-item="group" wx:key>
     <!-- group -->
     <view class="group" wx:if="{{group.attributes.role === 'group'}}">
@@ -31,7 +32,7 @@
       </view>
     </view>
     <!-- paid_group -->
-    <image src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/%E5%B0%8F%E7%A8%8B%E5%BA%8F%E7%94%A8/%E5%88%97%E8%A1%A8%E5%B0%8F%E5%9B%BE/{{group.attributes.groupInfo.modalImage}}" wx:else mode="widthFix"  data-group="{{ group }}" bindtap="gotoPaidGroup" class="paid-group-pic group"></image>
+    <image src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/七日辑/{{group.attributes.groupInfo.codename}}/列表图.jpg" wx:else mode="widthFix"  data-group="{{ group }}" bindtap="gotoPaidGroup" class="paid-group-pic group"></image>
   </view>
 </view>
 <template is="loading" data="{{loadingStatus}}"></template>

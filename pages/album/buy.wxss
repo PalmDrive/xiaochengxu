@@ -1,12 +1,26 @@
 .btn-buy {
+  background: #59AA00;
+  color: #FFFFFF;
+  width: 67%;
+}
+
+.btn-trial {
+  color: #B0B0B9;
+  width: 33%;
+}
+
+.btns-container {
   position: fixed;
-  bottom: 0;
-  background: #0090E7;
-  width: 100%;
+  bottom: 0px;
+  display: flex;
+  width: 100vw;
+}
+
+.btns-container button {
+  border-radius: 0;
+  font-size: 18px;
   text-align: center;
   line-height: 3;
-  font-size: 18px;
-  color: #FFFFFF;
 }
 
 .pic {

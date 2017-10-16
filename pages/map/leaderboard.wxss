@@ -1,0 +1,55 @@
+.map-leaderboard {
+  padding-bottom: 20px;
+}
+
+.title {
+  text-align: center;
+  color: #157EFB;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.alert {
+  display: block;
+  background-color: #157EFB;
+  padding: 10px 20px;
+  width: 245px;
+  color: white;
+  margin-bottom: 15px;
+  border-radius: 0 27px 27px 0;
+}
+
+.leaderboard-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 30px;
+}
+
+.leaderboard-row .left {
+  width: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.leaderboard-row .right {
+  width: 215px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-image {
+  height: 35px;
+  width: 35px;
+}
+
+.tip {
+  display: block;
+  background: #5CCD3D;
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+  margin-bottom: 7px;
+  color: #FFFFFF;
+}

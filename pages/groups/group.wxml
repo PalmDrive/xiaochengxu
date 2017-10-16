@@ -16,7 +16,7 @@
 <view class="container" scroll-y bindscrolltolower="onReachBottom" lower-threshold="200">
   <view wx:if="{{loadingStatus !== 'LOADING'}}">
     <view wx:if="{{isPaidGroup}}">
-      <image src="{{groupInfo.picurl}}" mode="aspectFill" class="head-banner-image" style="height: {{bannerImage.height}}px"></image>
+      <image src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/七日辑/{{groupInfo.codename}}/banner图.jpg" mode="aspectFill" class="head-banner-image" style="height: {{bannerImage.height}}px"></image>
        <!-- <image src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/morningpost/0607/%E8%81%8C%E5%B0%8F%E5%85%B5.jpeg" mode="aspectFit" bindlongpress="scanCode"></image> -->
     </view>
     <view wx:if="{{!isPaidGroup}}" class="head">

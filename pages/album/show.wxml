@@ -1,0 +1,83 @@
+<!--topics.wxml-->
+<import src="../../templates/topic-list.wxml"/>
+<import src="../../templates/homepage-topic-section.wxml"/>
+<import src="../../templates/loading.wxml"/>
+<include src="../../includes/hint.wxml"/>
+
+<view class="modal-container" hidden="{{!modalShown}}">
+  <view class="modal">
+    <image src="../../images/paid-group/{{groupInfo.modalImage}}" class="modal-bg"></image>
+    <button class="size-14 text-white" bindtap="copyWechatId">一键复制微信号</button>
+    <image src="../../images/paid-group/close.png" class="btn-close" bindtap="toggleModalShown"></image>
+  </view>
+  <view class="modal-drop"></view>
+</view>
+
+<view class="modal-container" hidden="{{!qrcodeModalShown}}">
+  <view class="modal">
+    <text class=" size-22 .pingfang-medium main-color text-center model-text1">开启推送</text>
+    <text class=" size-14 text-color1 model-text2" >关注微信公众号「职得看」，我们为您每日推送课程</text>
+    <image src="../../images/paid-group/qrcode.jpg" class="modal-qrcode"></image>
+    <text class=" size-14 text-color1 model-text3" >请截图保存，用微信扫描</text>
+    <button class="size-14 text-white" bindtap="toggleModalShown">知道了</button>
+    <image src="../../images/paid-group/close.png" class="btn-close" bindtap="toggleQrcodeModalShown"></image>
+  </view>
+  <view class="modal-drop"></view>
+</view>
+
+<view class="container" lower-threshold="200">
+  <view wx:if="{{loadingStatus !== 'LOADING'}}" class="top-view column">
+    <text class=" size-26 text-color1 FZRUIZH_CUJW--GB1-0 top-title">{{userName}}</text>
+  </view>
+
+  <swiper current="{{posts.length - current}}" bindchange="listenSwiper" class="list-container" wx:key="">
+    <swiper-item id="id-{{post.id}}" wx:for="{{posts}}" wx:for-item="post" wx:key="" class="{{((post.meta.unlocked && didUserPay) || (posts.length - index === 1)) ? 'unlocked' : 'locked'}}">
+
+      <text class="size-12 text-color3 FZRUIZH_CUJW--GB1-0 top-tip text-center">{{post.hint}}</text>
+      <view class="topic">
+        <view class="locker-mask"></view>
+       
+        <view class="topic-info">
+          <view class="medium-banner" style="background-image: url('{{post.attributes.picUrl}}')">
+            <view class="medium-banner-mask"></view>
+            <text class="size-12 text-white label-trial" wx:if="{{!didUserPay && posts.length - index === 1}}">免费试读</text>
+            <view class="row bottom-view">
+              <image src="{{author.attributes.profilePicUrl}}" class="head-img"></image>
+              <view class="right-view column top-text" >
+                <text class="size-10 ji-zhu-text">辑主</text>
+                <text class="size-12 ji-zhu-name">{{author.attributes.username}}</text>
+              </view>
+            </view>
+            <text class=" size-12 text-white top-text">{{post.attributes.title}}</text>
+          </view>
+        </view>
+
+        <view class="mediums">
+          <view class="medium {{post.relationships.media.data.length > 2 ? 'medium-50' : 'medium-100'}} {{index === 1 || index === 2 ? 'medium-gray' : ''}}" wx:for="{{ post.relationships.media.data }}" wx:for-item="medium" data-medium="{{ medium }}" wx:key="" bindtap="goToMedium">
+            <text class="medium-title  size-16">{{ medium.attributes.title }}</text>
+          </view>
+        </view>
+
+      </view>
+    </swiper-item>
+  </swiper>
+  <view class="count-view row">
+    <view>
+      <view wx:if="{{subscribersCount >= 5}}" class="row"> <!-- To make sure page indicator always on the right-->
+        <image src="{{user.attributes.profilePicUrl}}" wx:for="{{subscribers}}" wx:key="" wx:for-item="user" class="subscriber-profile-image"></image>
+        <text class="text-gray size-10 text-subscribers-count">{{subscribersCount}}人与你共同观看</text>
+      </view>
+    </view>
+
+    <view>
+      <text class="size-22 pingfang-medium text-color1">{{current}}</text>
+      <text class="size-12 pingfang-medium text-color1">/{{posts.length}}</text>
+    </view>
+  </view>
+
+  <view class="tip-line">
+    <view class="line {{index === (posts.length - current) ? 'line-blue' : 'line-gray'}}" wx:for="{{posts}}" wx:for-item="post"  wx:key=""></view>
+  </view>
+
+  <template is="loading" data="{{loadingStatus}}"></template>
+</view>

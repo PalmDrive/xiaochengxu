@@ -1,5 +1,6 @@
 const {request} = require('../../utils/request'),
       Auth = require('../../utils/auth'),
+      {ga} = require('../../utils/util'),
       app = getApp(),
       baseUrl = app.globalData.apiBase;
 
@@ -7,6 +8,16 @@ Page({
   data: {
     album: null,
     processing: false
+  },
+
+  onShow() {
+    if (this.data.album) {
+      ga({
+        cid: Auth.getLocalUserId(),
+        dp: '%2FalbumBuyPage_XiaoChengXu',
+        dt: `album_name:${this.data.album.name},album_id:${this.data.album.id}`
+      });
+    }
   },
 
   onLoad(options) {
@@ -18,9 +29,14 @@ Page({
         const album = data.data.attributes.groupInfo;
         album.id = data.data.id;
         album.name = data.data.attributes.username;
-        this.data.album = album;
         this.setData({
-          album: this.data.album
+          album
+        });
+
+        ga({
+          cid: Auth.getLocalUserId(),
+          dp: '%2FalbumBuyPage_XiaoChengXu',
+          dt: `album_name:${this.data.album.name},album_id:${this.data.album.id}`
         });
       });
   },
@@ -43,7 +59,9 @@ Page({
         data: {
           totalFee: this.data.album.price,
           name: this.data.album.name,
-          openid: attrs.wxOpenId
+          openid: attrs.wxOpenId,
+          productId: this.data.album.id,
+          productType: 'Album'
         }
       }
     })
@@ -62,7 +80,7 @@ Page({
         params.success = (res) => {
           console.log('wx requestPayment success');
           console.log(res);
-          this.gotoGroup()
+          this.gotoAlbum();
         };
         params.fail = (err) => {
           console.log('wx requestPayment fail');
@@ -81,10 +99,26 @@ Page({
       });
   },
 
-  gotoGroup() {
+  gotoTrial() {
     const userId = this.data.album.id;
-    wx.redirectTo({
-      url: `../groups/group?id=${userId}`
+    wx.navigateTo({
+      url: `../album/show?id=${userId}`
     });
   },
+
+  gotoAlbum() {
+    const userId = this.data.album.id;
+    wx.redirectTo({
+      url: `../album/show?id=${userId}`
+    });
+  },
+
+  /**
+   * 分享给好友 事件
+   */
+  onShareAppMessage: function () {
+    return {
+      title: `七日辑: ${this.data.album.name}`
+    };
+  }
 });

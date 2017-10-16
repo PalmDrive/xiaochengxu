@@ -10,10 +10,10 @@
       <view class="topic-info d-ib">
         <view class="topic-title size-15 text-bold">
           <text>{{topic.attributes.name}} </text>
-          <text bindtap="subscribeTopic" data-topic-id="{{topic.id}}">{{topic.attributes.isSubscribed ? '取消订阅' : '订阅'}}</text>
+          <!-- <text bindtap="subscribeTopic" data-topic-id="{{topic.id}}">{{topic.attributes.isSubscribed ? '取消订阅' : '订阅'}}</text> -->
         </view>
-        <view class="topic-update size-10 text-grey d-ib">{{topic.attributes.lastMediumAddedAt}}更新</view>
-        <view class="topic-last-medium size-12 text-grey">{{topic.attributes.lastMediumTitle}}</view>
+        <view class="topic-update size-10 text-gray d-ib">{{topic.attributes.lastMediumAddedAt}}更新</view>
+        <view class="topic-last-medium size-12 text-gray">{{topic.attributes.lastMediumTitle}}</view>
       </view>
     </view>
   </view>

@@ -136,3 +136,14 @@ view {
 .medium-list, .medium-list-2 {
   word-break: break-all;
 }
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}

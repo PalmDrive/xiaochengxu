@@ -6,9 +6,11 @@
 
 .text-center {
   text-align: center;
+  display: block;
 }
+
 /* text color*/
-.text-grey {
+.text-gray {
   color: #B7B7B7;
 }
 

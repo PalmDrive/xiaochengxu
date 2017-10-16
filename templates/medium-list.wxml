@@ -5,7 +5,7 @@
   <view class="medium-list">
     <view class="medium" wx:for="{{media}}" wx:for-item="medium" wx:key="id" data-medium="{{medium}}" bindtap="goToMedium">
       <view class="break-line"></view>
-      <view class="time text-grey size-12">{{medium.attributes.publishedAt}}</view>
+      <view class="time text-gray size-12">{{medium.attributes.publishedAt}}</view>
       <view class="medium-container-without-image" wx:if="{{!medium.attributes.picurl}}">
         <view class="title size-18">{{medium.attributes.title}}</view>
         <view class="summary size-14 text-dark-grey">{{medium.attributes.summary}}</view>
@@ -17,7 +17,7 @@
         </view>
         <image class="medium-img" src="{{medium.attributes.picurl}}" mode="aspectFill"></image>
       </view>
-      <view class="editor-comment size-13 text-grey" wx:if="{{medium.attributes.editorComment}}">{{medium.attributes.editorComment}}</view>
+      <view class="editor-comment size-13 text-gray" wx:if="{{medium.attributes.editorComment}}">{{medium.attributes.editorComment}}</view>
     </view>
   </view>
 </template>

@@ -136,6 +136,8 @@ function closeHint(that) {
 }
 
 function ga(options) {
+  if (getApp().globalData.env === 'dev') return;
+
   wx.request({
     method: 'POST',
     url: `https://www.google-analytics.com/collect?v=1&tid=UA-93993572-2&cid=${options.cid}&t=pageview&dh=xiaochengxu&dp=${options.dp}&dt=${options.dt}`,
@@ -149,6 +151,8 @@ function ga(options) {
 }
 
 function gaEvent(options) {
+  if (getApp().globalData.env === 'dev') return;
+  
   wx.request({
     method: 'POST',
     url: 'https://www.google-analytics.com/collect',
@@ -175,13 +179,19 @@ function trimMediumTitle(m) {
 
 function reloadPage(page) {
   const options = page.options || {};
+
+  // wx.showModal({
+  //   title: 'page',
+  //   content: JSON.stringify(page)
+  // });
+
   let params = [],
       url = '/' + page.route;
   if (Object.keys(options).length) {
     for (let key in options) {
       params.push(`${key}=${options[key]}`);
     }
-    params.join('&')
+    params = params.join('&')
     url += `?${params}`;
   }
   wx.reLaunch({url});
@@ -205,6 +215,80 @@ function showHint(page) {
   });
 };
 
+function toPromise(fn) {
+  return function(params) { // CANNOT USE =>, because need bind context
+    const that = this;
+    let p = new Promise((resolve, reject) => {
+      params = params || {};
+      params.success = resolve;
+      // params.fail = (res) => {
+      //   console.log('fail:');
+      //   console.log(res);
+      //   reject(res);
+      // };
+      params.fail = reject;
+
+      fn.call(that, params);
+    });
+    if (params.complete) {
+      p = p.then(params.complete);
+    }
+    return p;
+  };
+};
+
+function genRandomStr() {
+  return Math.random().toString(36).slice(2);
+}
+
+/**
+ * objects in collection are unique with id
+ */
+function uniqPush(collection, object) {
+  if (!collection.length) {
+    return [object];
+  }
+
+  let flag = false;
+  if (typeof collection[0] !== 'object') {
+    flag = true;
+    collection = collection.map(el => {
+      return {id: el};
+    });
+    object = {id: object};
+  }
+
+  const map = {};
+  for (let el of collection) {
+    map[el.id] = el;
+  }
+  map[object.id] = object;
+  const res = [];
+  for (let key in map) {
+    res.push(flag ? map[key].id : map[key]);
+  }
+
+  return res;
+}
+
+// If el in the collection, 
+// put the el in the first
+function unshift(collection, el, key) {
+  key = key || 'id';
+  let res = [], tmpEl;
+  collection.forEach(c => {
+    if (c[key] === el[key]) {
+      tmpEl = el;
+    } else {
+      res.push(c);
+    }
+  });
+  if (tmpEl) {
+    res.unshift(tmpEl);
+  }
+  return res;
+}
+
 module.exports = {
   formatTime,
   formatDateToDay,
@@ -221,4 +305,8 @@ module.exports = {
   reloadPage,
   showHint,
   closeHint,
+  toPromise,
+  genRandomStr,
+  uniqPush,
+  unshift
 };

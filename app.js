@@ -26,8 +26,22 @@ const getPage = () => {
   });
 };
 
+const AV = require('utils/av-weapp-min.js');
+AV.init({ 
+  appId: 'l7Ffw76ym9wuEsz4mUEJNcbS-gzGzoHsz', 
+  appKey: 'bp8ie0RFdBG9nHkGHpOknCMQ', 
+});
+
 App({
-  onShow() {
+  onShow(options) {
+    console.log('app onShow options:', options);
+    // for testing
+    //options.shareTicket = '20071b2b-df8b-4422-8ed7-4ed9c1f7b526';
+    if (options.shareTicket) {
+      this.globalData.shareTicket = options.shareTicket;
+    }
+
+    const that = this;
     const Auth = require('utils/auth');
 
     console.log('app on show');
@@ -52,11 +66,8 @@ App({
       wx.showToast({title: '登陆成功'});     
     };
 
-    //检查storage里是否有userId，没有则请求
-    const userInfo = Auth.getLocalUserInfo(),
-          userAttrs = userInfo.attributes || {};
-    if (!Auth.getLocalUserId() || !Auth.getLocalJWT() || !userAttrs.wxOpenId) {
-      Auth.login.call(this)
+    const _login = () => {
+      Auth.login.call(that)
         .then(_afterLogin)
         .catch(err => {
           wx.showToast({
@@ -66,10 +77,24 @@ App({
           });
           console.log('Auth.log err:', err);
         });
+    };
+
+    //检查storage里是否有userId，没有则请求
+    const userInfo = Auth.getLocalUserInfo(),
+          userAttrs = userInfo.attributes || {};
+    if (!Auth.getLocalUserId() || !Auth.getLocalJWT() || !userAttrs.wxOpenId) {
+      _login();
+    } else if (env !== 'dev') {
+      wx.checkSession({
+        fail() {
+          _login();
+        }
+      });
     }
   },
 
   globalData: {
-    apiBase
+    apiBase,
+    env
   }
 })

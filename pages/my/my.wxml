@@ -21,6 +21,6 @@
     <view class="loading text-center" hidden="{{!noMore}}">没有更多了</view>
     <view class="loading text-center" hidden="{{!loadingMore}}">更多数据加载中...</view>
 
-    <view class="size-13 no-subscription text-center text-grey" hidden="{{favoriteTopics && favoriteTopics.length}}">暂无数据</view>
+    <view class="size-13 no-subscription text-center text-gray" hidden="{{favoriteTopics && favoriteTopics.length}}">暂无数据</view>
   </view>
 </view>

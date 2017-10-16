@@ -16,6 +16,15 @@ Page({
   },
 
   onLoad(options) {
+    // for testing
+    console.log('page load options:');
+    console.log(options);
+    options = options || {};
+    if (options.scene) {
+      const scene = decodeURIComponent(options.scene);
+      console.log('scene:', scene);
+    }
+    
     const userId = Auth.getLocalUserId();
     //console.log('groups page on load called. userId:', userId);
     this.setData({
@@ -115,7 +124,9 @@ Page({
           userId = group.id,
           name = group.username,
           role = group.relationships && group.relationships.userGroup.data.attributes.role || null,
-          userInfo = Auth.getLocalUserInfo().attributes || {};
+          userInfo = Auth.getLocalUserInfo().attributes || {},
+          groupInfo = group.attributes.groupInfo;
+
     util.gaEvent({
       cid: Auth.getLocalUserId(),
       ev: 0,
@@ -123,13 +134,26 @@ Page({
       ec: `qiriji_name:${name},toutiao_id:${userId}`,
       el: `user_name:${userInfo.wxUsername},user_id:${userId}`
     });
-    if (role) {
+
+    if (role || !groupInfo.price) {
       wx.navigateTo({
-        url: `../groups/group?id=${userId}`
+        url: `../album/show?id=${userId}`
       });
     } else {
       wx.navigateTo({
         url: `../album/buy?id=${userId}`
+      });
+    }
+  },
+
+  gotoMap() {
+    if (wx.getStorageSync('dazhaxiePageHasShow')) {
+      wx.navigateTo({
+        url: `/pages/map/map?friendId=59ce3d20a22b9d0061312243`
+      });
+    } else {
+      wx.navigateTo({
+        url: `/pages/map/dazhaxie?friendId=59ce3d20a22b9d0061312243`
       });
     }
   },
@@ -139,7 +163,7 @@ Page({
    */
   onShareAppMessage() {
     return {
-      title: '我的群头条'
+      title: '七日辑'
     };
   },
   /**
