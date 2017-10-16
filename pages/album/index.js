@@ -108,7 +108,7 @@ Page({
     });
     // if (role) {
       wx.navigateTo({
-        url: `../album/detail?id=${userId}`
+        url: `../album/show?id=${userId}`
       });
     // } else {
     //   wx.navigateTo({
