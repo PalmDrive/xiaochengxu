@@ -1,9 +1,9 @@
+<import src="../../templates/button-formid.wxml"/>
+
 <view hidden="{{hidden}}">
   <view bindlongpress="clearStorage" style="height: 50px;width: 50px;position: absolute;"></view>
   <image src="https://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/dazhaxie.png" mode="widthFix"></image>
   <button bindtap="gotoMap">我要大闸蟹</button>
+  <template is="buttonFormid" data="{{text:'我要大闸蟹',bindtap:'gotoMap'}}"></template>
   <view style="height: 1px;"></view>
-  <form bindsubmit="_getFromId" report-submit="true">
-    <button class="hidden" formType="submit">Submit</button>
-  </form>
 </view>

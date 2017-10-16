@@ -1,5 +1,8 @@
 
-const Auth = require('../../utils/auth');
+const Auth = require('../../utils/auth'),
+      {request} = require('../../utils/request'),
+      app = getApp(),
+      baseUrl = app.globalData.apiBase;
 
 Page({
   data: {
@@ -25,6 +28,7 @@ Page({
       });
       wx.setNavigationBarTitle({ title: '召集吃货抢大闸蟹啦'})
     }
+
   },
 
   gotoMap() {
@@ -58,8 +62,22 @@ Page({
   },
 
   _getFromId(e) {
-    wx.showToast({
-      title: e.detail.formId || 'null'
-    })
+    const tap = this[e.currentTarget.dataset.tap],
+          formId = e.detail.formId;
+    request({
+      method: 'POST',
+      url: `${baseUrl}/wechat/send-template`,
+      data: {
+        userId: Auth.getLocalUserId(),
+        groupId: 'formId',
+        formid: 'formId'
+      }
+    }).then((d) => {
+      console.log(d);
+      // tap && tap();
+      wx.showToast({
+        title: formId || 'null'
+      })
+    });
   }
 });

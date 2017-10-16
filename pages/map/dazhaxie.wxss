@@ -15,7 +15,7 @@ button {
   background-color: red; 
 }
 
-.hidden {
+.hidden1 {
   position: fixed;
   display: block;
   width: 100%;
