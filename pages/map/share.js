@@ -29,7 +29,7 @@ Page({
       const userInfo = Auth.getLocalUserInfo();
       const data = {
         scene: options.friendId,
-        page: 'pages/map/map',
+        page: 'pages/map/dazhaxie',
         title: `${options.username} 的吃货地图`,
         subtitle: `${options.username} 已经召集了 ${options.count} 个吃货，击败了全国${p}的人`,
       };

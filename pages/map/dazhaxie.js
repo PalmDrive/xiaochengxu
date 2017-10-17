@@ -18,10 +18,16 @@ Page({
   onLoad(options) {
     options = options || {};
 
+    if (options.scene) {
+      options.friendId = decodeURIComponent(options.scene);
+    }
+
+    this.setData({
+      friendId: options.friendId || '59ce3d20a22b9d0061312243'
+    })
+
     if (wx.getStorageSync('dazhaxiePageHasShow') && !options.initiative) {
-      wx.switchTab({
-        url: `/pages/groups/groups`
-      });
+      this.gotoMap();
     } else {
       this.setData({
         hidden: false
@@ -37,7 +43,7 @@ Page({
       data: true
     })
     wx.redirectTo({
-      url: `/pages/map/map?friendId=59ce3d20a22b9d0061312243`
+      url: `/pages/map/map?friendId=${this.data.friendId}`
     });
   },
 
@@ -57,7 +63,7 @@ Page({
     return {
       title: `${Auth.getLocalUserInfo().attributes.wxUsername}正在抢大闸蟹礼券，快来帮Ta吧`,
       imageUrl: 'https://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/dazhaxie_shar.png',
-      path: '/pages/map/dazhaxie?initiative=true'
+      path: `/pages/map/dazhaxie?friendId=${Auth.getLocalUserId()}&from=mapsession`
     }
   },
 
