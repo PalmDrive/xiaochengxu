@@ -52,6 +52,7 @@ Page({
     const bannerImageRatio = 375 / 400, // width / height
           updates = {
             albumId: options.id,
+            free: options.free,
             loadingStatus: 'LOADING'
           },
           that = this;
@@ -265,6 +266,9 @@ Page({
   },
 
   gotoTrial() {
-    this.setData({free: true});
+    const userId = this.data.albumId;
+    wx.navigateTo({
+      url: `../album/show?id=${userId}&free=${true}`
+    });
   }
 })

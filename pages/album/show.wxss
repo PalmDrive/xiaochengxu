@@ -243,6 +243,7 @@ page {
   font-family: FZRUIZH_CUJW--GB1-0;
   color: #161616;
   letter-spacing: 0.9px;
+  width: 83%;
 }
 
 .title-type {
@@ -402,6 +403,7 @@ page {
   padding-right: 5px;
   padding-top: 12px;
   padding-bottom: 12px;
+  white-space:nowrap;
 }
 
 .about-type-right {
