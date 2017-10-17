@@ -24,7 +24,6 @@ Page({
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
     posts: [],
     didUserPay: false, // 用户是否已经购买
-
     groupInfo: {},
     showHint: false,
     modalShown: false,
@@ -33,7 +32,12 @@ Page({
     current: 0,
     author: {},
     subscribers: [],
-    subscribersCount: 0
+    subscribersCount: 0,
+    price: 0,
+    picurl: '',
+    processing: false,
+    editorInfo: {},
+    catalog: []
   },
 
   //关闭首次登陆弹窗
@@ -107,11 +111,17 @@ Page({
    * 数据加载 成功 回调
    */
   _onLoadSuccess: function (res) {
+    // 找到已解锁到第几天
+    const morningPosts = res.data.relationships.posts.data;
+    const role = res.included[0].userAlbum.data.attributes.role;
+    let updates = {
+      posts: morningPosts
+    };
     const getHintMsg = (post, postIndex) => {
       let msg = ' ';
       if (!updates.didUserPay) {
         if (postIndex > 1) {
-          msg = `还未解锁。解锁只需${updates.groupInfo.price/100}元`;
+          msg = `还未解锁。解锁只需${updates.price/100}元`;
         }
       } else if (!post.meta.unlocked) {
         msg = '还未解锁，一天解锁一课哦';
@@ -119,20 +129,17 @@ Page({
       return msg;
     };
 
-    // 找到已解锁到第几天
-    const morningPosts = res.data.relationships.posts.data;
-    let updates = {
-      posts: morningPosts
-    };
-
     updates.current = morningPosts.filter(d => d.meta.unlocked).length;
 
     this.data.title = res.data.attributes.title
     updates.title = res.data.attributes.title;
+    updates.price = res.data.attributes.price;
+    updates.picurl = res.data.attributes.picurl;
+    updates.editorInfo = res.data.attributes.editorInfo;
+    updates.catalog = res.data.attributes.catalog;
     updates.loadingStatus = null;
 
-    updates.didUserPay = true;
-    //group.relationships && group.relationships.userGroup.data.attributes.role > 0;
+    updates.didUserPay = role === 2;
 
     updates.posts.forEach((post, index) => {
       post.hint = getHintMsg(post, updates.posts.length - index);
@@ -145,9 +152,13 @@ Page({
       title: updates.title
     });
 
+    let gaName = '%2FalbumBuyPage_XiaoChengXu';
+    if (!updates.didUserPay) {
+      gaName = '%2FalbumShowPage_XiaoChengXu';
+    }
     util.ga({
       cid: Auth.getLocalUserId(),
-      dp: '%2FalbumShowPage_XiaoChengXu',
+      dp: gaName,
       dt: `album_name:${this.data.title},album_id:${this.data.albumId}`
     });
   },
@@ -191,5 +202,70 @@ Page({
 
   listenSwiper(e) {
     this.setData({current: this.data.posts.length - e.detail.current});
+  },
+
+  buy() {
+    const url = `${baseUrl}/wechat/pay/unifiedorder?from=miniProgram`,
+          userInfo = Auth.getLocalUserInfo(),
+          attrs = userInfo.attributes || {};
+
+    if (this.data.processing) {
+      return;
+    }
+
+    this.setData({processing: true});
+
+    request({
+      method: 'POST',
+      url,
+      data: {
+        data: {
+          totalFee: this.data.price,
+          name: this.data.title,
+          openid: attrs.wxOpenId,
+          productId: this.data.albumId,
+          productType: 'Album'
+        }
+      }
+    })
+      .then(data => {
+        const params = {
+          timeStamp: data.data.timeStamp,
+          nonceStr: data.data.nonce_str,
+          package: `prepay_id=${data.data.prepay_id}`,
+          signType: 'MD5',
+          paySign: data.data.paySign
+        };
+
+        console.log('params:');
+        console.log(params);
+
+        params.success = (res) => {
+          console.log('wx requestPayment success');
+          console.log(res);
+          this.setData({didUserPay: true});
+        };
+        params.fail = (err) => {
+          console.log('wx requestPayment fail');
+          console.log(err);
+        };
+        params.complete = () => {
+          console.log('wx requestPayment complete');
+          this.setData({processing: false});
+        };
+        wx.requestPayment(params);
+      })
+      .catch(err => {
+        console.log('wechat unifiedorder request err:');
+        console.log(err);
+        this.setData({processing: false});
+      });
+  },
+
+  gotoTrial() {
+    const userId = this.data.album.id;
+    wx.navigateTo({
+      url: `../album/show?id=${userId}`
+    });
   }
 })

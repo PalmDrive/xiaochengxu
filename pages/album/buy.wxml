@@ -1,5 +1,17 @@
 <view wx:if="{{album}}">
-  <image class="pic" mode="widthFix" src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/七日辑/{{album.codename}}/长图.jpg"></image>
+  <view class="groups">
+    <!-- paid_group -->
+    <image src="{{group.attributes.picurl}}" mode="aspectFill" data-group="{{ group }}" bindtap="gotoPaidGroup" class="paid-group-pic"></image>
+    <view class="title">
+      <text class="title-text  size-26">{{group.attributes.title}}</text>
+      <text class="title-type">零基础</text>
+    </view>
+    <view class="price-view row">
+      <text class="price-tip  size-12">售价</text>
+      <text class="price-tip price-old  size-12">￥49.9 </text>
+      <text class="price-now  size-20">￥{{(group.attributes.price / 100)}} </text>
+    </view>
+  </view>
   <view class="btns-container">
     <button bindtap="gotoTrial" class="btn-trial">免费试读</button>
     <button bindtap="buy" class="btn-buy" disabled="{{processing}}" loading="{{processing}}">马上订阅 {{album.price / 100}}元</button>
