@@ -206,7 +206,7 @@ Page({
           
     request({
       method: 'POST',
-      url: `${baseUrl}/wechat/send-template`,
+      url: `${baseUrl}/user-group/formid`,
       data: {
         userId: Auth.getLocalUserId(),
         groupId: this.data.groupId,
@@ -214,10 +214,9 @@ Page({
       }
     }).then((d) => {
       console.log(d);
-      // tap && tap();
-      wx.showToast({
-        title: formId || 'null'
-      })
+      // wx.showToast({
+      //   title: formId || 'null'
+      // })
     });
   }
 })
