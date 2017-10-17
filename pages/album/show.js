@@ -39,7 +39,7 @@ Page({
     processing: false,
     editorInfo: {},
     catalog: [],
-    free: false
+    trial: false
   },
 
   //关闭首次登陆弹窗
@@ -52,7 +52,7 @@ Page({
     const bannerImageRatio = 375 / 400, // width / height
           updates = {
             albumId: options.id,
-            free: options.free,
+            trial: options.trial,
             loadingStatus: 'LOADING'
           },
           that = this;
@@ -117,8 +117,12 @@ Page({
     // 找到已解锁到第几天
     const morningPosts = res.data.relationships.posts.data;
     const role = res.included[0].userAlbum.data.attributes.role;
+    let posts = []
+    for(var i = morningPosts.length - 1; i >= 0; i--){
+      posts[morningPosts.length - 1 - i] = morningPosts[i];
+    }
     let updates = {
-      posts: morningPosts
+      posts: posts
     };
     const getHintMsg = (post, postIndex) => {
       let msg = ' ';
@@ -132,7 +136,7 @@ Page({
       return msg;
     };
 
-    updates.current = morningPosts.filter(d => d.meta.unlocked).length;
+    updates.current = posts.filter(d => d.meta.unlocked).length;
 
     this.data.title = res.data.attributes.title
     updates.title = res.data.attributes.title;
@@ -268,7 +272,7 @@ Page({
   gotoTrial() {
     const userId = this.data.albumId;
     wx.navigateTo({
-      url: `../album/show?id=${userId}&free=${true}`
+      url: `../album/show?id=${userId}&trial=${true}`
     });
   }
 })
