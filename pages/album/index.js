@@ -41,7 +41,7 @@ Page({
    */
   _load(type) {
     return request({
-      url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=title,description,picurl,price,editorInfo,id`,
+      url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=title,description,picurl,price,editorInfo,id,metaData`,
     });
   },
 
@@ -161,25 +161,3 @@ Page({
     util.goToMedium(event, gaOptions);
   },
 });
-
-function convertDate(date) {
-  const paramDate = date.getTime();
-  //获取js 时间戳
-  let time = new Date().getTime();
-  //去掉 js 时间戳后三位，与php 时间戳保持一致
-  time = parseInt((time - paramDate) / 1000);
-
-  //存储转换值
-  let s;
-  if (time < 60 * 60 * 24) {
-    //少于24小时
-    return '今日';
-  } else if ((time < 60 * 60 * 24 * 3) && (time >= 60 * 60 * 24)) {
-    //超过1天少于3天内
-    s = Math.floor(time / 60 / 60 / 24);
-    return s + '天前';
-  } else {
-    //超过3天
-    return (date.getMonth() + 1) + '月' + date.getDate() + '日';
-  }
-}

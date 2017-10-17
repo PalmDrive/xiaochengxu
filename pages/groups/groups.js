@@ -24,7 +24,7 @@ Page({
       const scene = decodeURIComponent(options.scene);
       console.log('scene:', scene);
     }
-    
+
     const userId = Auth.getLocalUserId();
     //console.log('groups page on load called. userId:', userId);
     this.setData({
@@ -65,7 +65,7 @@ Page({
     res.data.forEach(group => {
       if (group.attributes.role === 'group') {
         const media = group.relationships.media;
-        group.lastPublishedAt = media && media.meta && convertDate(new Date(media.meta.publishedAt));
+        group.lastPublishedAt = media && media.meta && util.convertDate(new Date(media.meta.publishedAt));
       }
     });
     this.data.page.number ++;
@@ -203,25 +203,3 @@ Page({
     util.goToMedium(event, gaOptions);
   },
 });
-
-function convertDate(date) {
-  const paramDate = date.getTime();
-  //获取js 时间戳
-  let time = new Date().getTime();
-  //去掉 js 时间戳后三位，与php 时间戳保持一致
-  time = parseInt((time - paramDate) / 1000);
-
-  //存储转换值
-  let s;
-  if (time < 60 * 60 * 24) {
-    //少于24小时
-    return '今日';
-  } else if ((time < 60 * 60 * 24 * 3) && (time >= 60 * 60 * 24)) {
-    //超过1天少于3天内
-    s = Math.floor(time / 60 / 60 / 24);
-    return s + '天前';
-  } else {
-    //超过3天
-    return (date.getMonth() + 1) + '月' + date.getDate() + '日';
-  }
-}
