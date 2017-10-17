@@ -274,5 +274,24 @@ Page({
     wx.navigateTo({
       url: `../album/show?id=${userId}&trial=${true}`
     });
+  },
+  
+  _getFromId(e) {
+    const tap = this[e.currentTarget.dataset.tap],
+          formId = e.detail.formId;
+          
+    request({
+      method: 'POST',
+      url: `${baseUrl}/wechat/send-template`,
+      data: {
+        userId: Auth.getLocalUserId(),
+        albumId: this.data.albumId,
+        formid: formId
+      }
+    }).then((d) => {
+      // wx.showToast({
+      //   title: formId || 'null'
+      // })
+    });
   }
 })
