@@ -117,6 +117,13 @@ page {
   background: #EDEDED;
 }
 
+.medium-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
 .medium-banner {
   padding-left: 20px;
   padding-top: 3px;

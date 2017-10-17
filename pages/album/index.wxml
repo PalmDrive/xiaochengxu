@@ -5,9 +5,9 @@
     <image src="/images/paid-group/type_background@3x.png" class="type-background"></image>
     <text class=" size-12 qi-title">七日辑　　挑三拣四，让你达到小预期</text>
   </view>
-  <view wx:for="{{groups}}" wx:for-item="group" wx:key class="groups">
+  <view wx:for="{{groups}}" wx:for-item="group" wx:key class="groups" data-group="{{ group }}" bindtap="gotoPaidGroup">
     <!-- paid_group -->
-    <image src="{{group.attributes.picurl}}" mode="aspectFill" data-group="{{ group }}" bindtap="gotoPaidGroup" class="paid-group-pic"></image>
+    <image src="{{group.attributes.picurl}}" mode="aspectFill" class="paid-group-pic"></image>
     <view class="description">
       <text class="description-text  size-10">{{group.attributes.description}}</text>
     </view>

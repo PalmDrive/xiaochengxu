@@ -50,6 +50,10 @@ page {
   margin-left: 20px;
   margin-top: 3px;
   position: absolute;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
 }
 
 .title {
@@ -63,6 +67,7 @@ page {
   font-family: FZRUIZH_CUJW--GB1-0;
   color: #161616;
   letter-spacing: 0.9px;
+  max-width: 85%;
 }
 
 .title-type {

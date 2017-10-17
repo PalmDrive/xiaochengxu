@@ -1,7 +1,8 @@
 const app = getApp(),
     util = require('../../utils/util'),
     Auth = require('../../utils/auth'),
-    {request} = require('../../utils/request');
+    {request} = require('../../utils/request'),
+    baseUrl = app.globalData.apiBase;
 
 function loadData(id) {
   return request({
