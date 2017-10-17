@@ -11,7 +11,8 @@ Page({
     favoriteTopics: [],
     loaded: false,
     page: {number: 1, size: 8},
-    noMore: false
+    noMore: false,
+    items: []
   },
   //事件处理函数
   goToTopic: Util.goToTopic,
@@ -25,7 +26,13 @@ Page({
     }
 
     Auth.getLocalUserId() && this._load();
-
+    const items = [
+      {icon: '礼品卡', title: '礼品卡', tip: '你还有50个礼品卡'},
+      {icon: '订单', title: '订单', tip: '你还有50个礼品卡'},
+      {icon: '免费得', title: '免费得', tip: '1个活动进行中，点击查看详情'},
+      {icon: '成就', title: '成就', tip: '完成一个七日辑就可获得一个成就'}
+    ];
+    that.setData({items: items});
   },
 
   /**
