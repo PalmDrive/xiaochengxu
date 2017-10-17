@@ -475,3 +475,13 @@ page {
 }
 
 /* 购买页面结束 */
+ 
+ /* 获取formid的button */
+.buttonFormid {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  opacity: 0;
+} 
