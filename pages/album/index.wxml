@@ -27,6 +27,7 @@
           <text class="price-now  size-20">￥{{(group.attributes.price / 100)}} </text>
         </view>
     </view>
+    <view class="line-view"></view>
   </view>
 </view>
 <template is="loading" data="{{loadingStatus}}"></template>

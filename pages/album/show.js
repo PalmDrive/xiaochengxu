@@ -37,7 +37,8 @@ Page({
     picurl: '',
     processing: false,
     editorInfo: {},
-    catalog: []
+    catalog: [],
+    free: false
   },
 
   //关闭首次登陆弹窗
@@ -263,9 +264,6 @@ Page({
   },
 
   gotoTrial() {
-    const userId = this.data.album.id;
-    wx.navigateTo({
-      url: `../album/show?id=${userId}`
-    });
+    this.setData({free: true});
   }
 })

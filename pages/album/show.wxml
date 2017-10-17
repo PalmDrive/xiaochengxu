@@ -16,7 +16,7 @@
   <view class="modal-drop"></view>
 </view>
 
-<view class="container" lower-threshold="200" wx:if="{{didUserPay}}">
+<view class="container" lower-threshold="200" wx:if="{{didUserPay || free}}">
   <view wx:if="{{loadingStatus !== 'LOADING'}}" class="top-view column">
     <text class=" size-26 text-color1 FZRUIZH_CUJW--GB1-0 top-title">{{title}}</text>
   </view>
@@ -73,7 +73,7 @@
   <template is="loading" data="{{loadingStatus}}"></template>
 </view>
 
-<view wx:if="{{!didUserPay}}">
+<view wx:if="{{!didUserPay && !free}}" class="buy-page">
   <view class="head-view">
     <!-- paid_group -->
     <image src="{{picurl}}" mode="aspectFill"  class="paid-group-pic"></image>
@@ -92,10 +92,12 @@
   <view class="center-view">
     <text class="jizhu-tip size-12 text-color2">本期辑主</text>
     <view class="jizhu-view">
-      <image src="{{group.attributes.editorInfo.profilePicUrl}}" class="jizhu-img"></image>
-      <view class="bottom-left-view column" >
-        <text class="ji-zhu-username  size-14 text-color1">{{editorInfo.username}}</text>
-        <text class="ji-zhu-summary  size-10 text-color2">{{editorInfo.summary || '这是一句话简介'}}</text>
+      <view class="row">
+        <image src="{{editorInfo.profilePicUrl}}" class="jizhu-img"></image>
+        <view class="bottom-left-view column" >
+          <text class="ji-zhu-username  size-14 text-color1">{{editorInfo.username}}</text>
+          <text class="ji-zhu-summary  size-10 text-color2">{{editorInfo.summary || '这是一句话简介'}}</text>
+        </view>
       </view>
       <view class="small-line-view"></view>
       <text class="ji-zhu-description  size-12 text-color2">{{editorInfo.description || '这是详细介绍' }}</text>
@@ -138,11 +140,23 @@
       <text class="about-type-right text-color2 size-14">你是否想要发掘更多更有趣的公众号/专栏? </text>
     </view>
 
-    <text class="concat-us text-color3 size-14">如有其它需求请直接联系我们</text>
+    <view class="concat-us column">
+      <text class="concat-us-text text-color3 size-14">如有其它需求请直接联系我们</text>
+      <image src="/images/paid-group/职小看.jpg" class="qrcode-img" mode="aspectFill"></image>
+    </view>
   </view>
 
-  <view class="btns-container">
-    <button bindtap="gotoTrial" class="btn-trial">免费试读</button>
-    <button bindtap="buy" class="btn-buy" disabled="{{processing}}" loading="{{processing}}">马上订阅 {{price / 100}}元</button>
+  <view class="btns-container row">
+    <view class="shidu column" bindtap="gotoTrial">
+      <image src="/images/paid-group/试读.jpg" class="shidu-img" mode="aspectFill"></image>
+      <text class="shidu-text text-color2 size-12">试读</text>
+    </view>
+    <!--
+    <view class="free column" bindtap="gotoTrial">
+      <image src="/images/paid-group/免费@2x.png" class="free-img" mode="aspectFill"></image>
+      <text class="free-text text-color2 size-12">免费得</text>
+    </view>
+    -->
+    <button bindtap="buy" class="btn-buy" disabled="{{processing}}" loading="{{processing}}">立刻购买 {{price / 100}}元</button>
   </view>
 </view>

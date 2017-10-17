@@ -32,7 +32,7 @@
     "position": "bottom",
     "list": [
       {
-        "pagePath": "pages/groups/groups",
+        "pagePath": "pages/album/index",
         "text": "七日辑",
         "iconPath": "images/tabIcons/groups.png",
         "selectedIconPath": "images/tabIcons/groups_selected.png"

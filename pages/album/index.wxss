@@ -1,6 +1,5 @@
 page {
-  background: #F2F2F2;
-  padding-bottom: 15px;
+  background: white;
 }
 
 .type-view {
@@ -126,4 +125,9 @@ page {
   color: #0090E7;
   letter-spacing: 1.25px;
   margin-left: 25px;
+}
+
+.line-view {
+  height: 15px;
+  margin-top:15px;
 }
