@@ -1,7 +1,8 @@
 const app = getApp(),
     util = require('../../utils/util'),
     Auth = require('../../utils/auth'),
-    {request} = require('../../utils/request');
+    {request} = require('../../utils/request'),
+    baseUrl = app.globalData.apiBase;
 
 function loadData(groupId) {
   return request({
@@ -197,5 +198,25 @@ Page({
 
   listenSwiper(e) {
     this.setData({current: this.data.posts.length - e.detail.current});
+  },
+
+  _getFromId(e) {
+    const tap = this[e.currentTarget.dataset.tap],
+          formId = e.detail.formId;
+          
+    request({
+      method: 'POST',
+      url: `${baseUrl}/user-group/formid`,
+      data: {
+        userId: Auth.getLocalUserId(),
+        groupId: this.data.groupId,
+        formid: formId
+      }
+    }).then((d) => {
+      console.log(d);
+      // wx.showToast({
+      //   title: formId || 'null'
+      // })
+    });
   }
 })

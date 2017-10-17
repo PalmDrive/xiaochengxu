@@ -1,5 +1,8 @@
 
-const Auth = require('../../utils/auth');
+const Auth = require('../../utils/auth'),
+      {request} = require('../../utils/request'),
+      app = getApp(),
+      baseUrl = app.globalData.apiBase;
 
 Page({
   data: {
@@ -31,6 +34,7 @@ Page({
       });
       wx.setNavigationBarTitle({ title: '召集吃货抢大闸蟹啦'})
     }
+
   },
 
   gotoMap() {
@@ -61,5 +65,25 @@ Page({
       imageUrl: 'https://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/dazhaxie_shar.png',
       path: `/pages/map/dazhaxie?friendId=${Auth.getLocalUserId()}&from=mapsession`
     }
+  },
+
+  _getFromId(e) {
+    const tap = this[e.currentTarget.dataset.tap],
+          formId = e.detail.formId;
+    request({
+      method: 'POST',
+      url: `${baseUrl}/wechat/send-template`,
+      data: {
+        userId: Auth.getLocalUserId(),
+        groupId: 'formId',
+        formid: 'formId'
+      }
+    }).then((d) => {
+      console.log(d);
+      // tap && tap();
+      wx.showToast({
+        title: formId || 'null'
+      })
+    });
   }
 });

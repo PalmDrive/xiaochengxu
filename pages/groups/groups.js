@@ -16,6 +16,12 @@ Page({
   },
 
   onLoad(options) {
+
+    request({
+      url: `${app.globalData.apiBase}/albums/ce880ef0-a1e7-11e7-863d-233362a7b699`,
+    }).then(req => {
+      console.log(req);
+    });
     // for testing
     console.log('page load options:');
     console.log(options);

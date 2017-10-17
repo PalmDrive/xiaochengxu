@@ -3,6 +3,7 @@
 <import src="../../templates/homepage-topic-section.wxml"/>
 <import src="../../templates/loading.wxml"/>
 <include src="../../includes/hint.wxml"/>
+<import src="../../templates/button-formid.wxml"/>
 
 <view class="modal-container" hidden="{{!modalShown}}">
   <view class="modal">
@@ -54,6 +55,7 @@
 
         <view class="mediums">
           <view class="medium {{post.relationships.media.data.length > 2 ? 'medium-50' : 'medium-100'}} {{index === 1 || index === 2 ? 'medium-gray' : ''}}" wx:for="{{ post.relationships.media.data }}" wx:for-item="medium" data-medium="{{ medium }}" wx:key="" bindtap="goToMedium">
+            <template is="buttonFormid"></template>
             <text class="medium-title  size-16">{{ medium.attributes.title }}</text>
           </view>
         </view>
