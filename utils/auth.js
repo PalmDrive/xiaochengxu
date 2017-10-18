@@ -53,7 +53,8 @@ const setLocalAchieve = (key, hideAchieve) => {
  */
 const _getWechatBaseUserInfo = function() {
   const app = getApp() || this,
-        apiBase = app.globalData.apiBase;
+        apiBase = app.globalData.apiBase,
+        name = 'days7';
   return new Promise((resolve, reject) => {
     // 获取登陆凭证code
     wx.login({
@@ -63,7 +64,8 @@ const _getWechatBaseUserInfo = function() {
           wx.request({
             url: `${apiBase}/wechat/xiaochengxu/on-login?from=miniProgram`,
             data: {
-              code: res.code
+              code: res.code,
+              name
             },
             success(res) {
               if (res.statusCode.toString()[0] !== '2') {
@@ -248,7 +250,7 @@ const decryptData = (encryptedData, iv, sessionKey) => {
   return promise
   .then(sessionKey => {
     return request({
-      url: `${apiBase}/wechat/xiaochengxu/decrypt`,
+      url: `${apiBase}/wechat/xiaochengxu/decrypt&name=days7`,
       data: {
         encryptedData,
         iv,
