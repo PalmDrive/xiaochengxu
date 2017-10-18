@@ -365,6 +365,10 @@ page {
   padding-left: 10px;
   padding-top: 6px;
   padding-bottom: 6px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
 }
 
 .day-bottom {
@@ -475,7 +479,7 @@ page {
 }
 
 /* 购买页面结束 */
- 
+
  /* 获取formid的button */
 .buttonFormid {
   position: absolute;
@@ -484,4 +488,4 @@ page {
   left: 0;
   top: 0;
   opacity: 0;
-} 
+}
