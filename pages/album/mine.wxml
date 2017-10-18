@@ -1,0 +1,29 @@
+<!--pages/my/my.wxml-->
+<import src="../../templates/topic-list.wxml"/>
+
+<view class="container">
+  <view class="userinfo" wx:if="{{userInfo}}">
+    <image class="userinfo-avatar" src="{{userInfo.profilePicUrl}}" background-size="cover"></image>
+    <text class="userinfo-nickname text-bold size-20">{{userInfo.wxUsername}}</text>
+  </view>
+  <view class="center-view">
+    <view class="center-item row" wx:for="{{items}}" wx:for-item="item" wx:key>
+      <view class="center-item-left">
+        <image class="center-item-icon" src="/images/paid-group/{{item.icon}}@2x.png"></image>
+        <text class="center-item-text  size-16 text-color2">{{item.title}}</text>
+      </view>
+      <view class="center-item-right">
+        <text class="center-item-tip  size-12 text-color3">{{item.tip}}</text>
+        <image class="center-item-arrow" src="/images/paid-group/arrow@2x.png"></image>
+      </view>
+    </view>
+  </view>
+
+  <view class="bottom-view center-item row">
+    <view class="center-item-left">
+      <image class="center-item-icon" src="/images/paid-group/客服@2x.png"></image>
+      <text class="center-item-text  size-16 text-color2">在线客服</text>
+    </view>
+    <text class="center-item-tip  size-12 text-color3">周一至周五 10:00-20:00</text>
+  </view>
+</view>

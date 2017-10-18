@@ -1,17 +1,18 @@
 const app = getApp(),
     util = require('../../utils/util'),
     Auth = require('../../utils/auth'),
-    {request} = require('../../utils/request');
+    {request} = require('../../utils/request'),
+    baseUrl = app.globalData.apiBase;
 
-function loadData(groupId) {
+function loadData(id) {
   return request({
-    url: `${app.globalData.apiBase}/groups/${groupId}/topics-24hours?from=miniProgram`,
+    url: `${app.globalData.apiBase}/albums/${id}`,
   });
 }
 
-function loadUserData(groupId) {
+function loadUserData(id) {
   return request({
-    url: `${app.globalData.apiBase}/groups/${groupId}/relationships/users`
+    url: `${app.globalData.apiBase}/albums/${id}/relationships/users`
   });
 }
 
@@ -19,12 +20,11 @@ const PAID_USER_ROLE = 2;
 
 Page({
   data: {
-    userName: null, // group or toutiao name actually
-    groupId: null,
+    title: null, // group or toutiao name actually
+    albumId: null,
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
     posts: [],
     didUserPay: false, // 用户是否已经购买
-
     groupInfo: {},
     showHint: false,
     modalShown: false,
@@ -33,7 +33,13 @@ Page({
     current: 0,
     author: {},
     subscribers: [],
-    subscribersCount: 0
+    subscribersCount: 0,
+    price: 0,
+    picurl: '',
+    processing: false,
+    editorInfo: {},
+    catalog: [],
+    trial: false
   },
 
   //关闭首次登陆弹窗
@@ -45,7 +51,8 @@ Page({
     //console.log(getCurrentPages()[1]);
     const bannerImageRatio = 375 / 400, // width / height
           updates = {
-            groupId: options.id,
+            albumId: options.id,
+            trial: options.trial,
             loadingStatus: 'LOADING'
           },
           that = this;
@@ -64,11 +71,11 @@ Page({
   },
 
   onShow() {
-    if (this.data.userName) {
+    if (this.data.title) {
       util.ga({
         cid: Auth.getLocalUserId(),
         dp: '%2FalbumShowPage_XiaoChengXu',
-        dt: `album_name:${this.data.userName},album_id:${this.data.groupId}`
+        dt: `album_name:${this.data.title},album_id:${this.data.albumId}`
       });
     }
   },
@@ -81,7 +88,7 @@ Page({
             cid: Auth.getLocalUserId(),
             ec: `article_title:${medium.attributes.title},article_id:${medium.id}`,
             ea: 'click_article_in_albumShowPage',
-            el: `album_name:${this.data.userName},album_id:${this.data.groupId}`,
+            el: `album_name:${this.data.title},album_id:${this.data.albumId}`,
             ev: 0
           };
     util.goToMedium(event, gaOptions);
@@ -90,7 +97,7 @@ Page({
    * 加载数据
    */
   _load() {
-    loadUserData(this.data.groupId)
+    loadUserData(this.data.albumId)
       .then(data => {
         const updates = {
           author: data.relationships.author.data,
@@ -100,18 +107,25 @@ Page({
         this.setData(updates);
       });
 
-    loadData(this.data.groupId)
+    loadData(this.data.albumId)
       .then(this._onLoadSuccess);
   },
   /**
    * 数据加载 成功 回调
    */
   _onLoadSuccess: function (res) {
+    // 找到已解锁到第几天
+    const morningPosts = res.data.relationships.posts.data;
+    const role = res.included[0].userAlbum.data.attributes.role;
+
+    let updates = {
+      posts: morningPosts
+    };
     const getHintMsg = (post, postIndex) => {
       let msg = ' ';
       if (!updates.didUserPay) {
         if (postIndex > 1) {
-          msg = `还未解锁。解锁只需${updates.groupInfo.price/100}元`;
+          msg = `还未解锁。解锁只需${updates.price/100}元`;
         }
       } else if (!post.meta.unlocked) {
         msg = '还未解锁，一天解锁一课哦';
@@ -119,26 +133,17 @@ Page({
       return msg;
     };
 
-    let updates = {
-      posts: res.data
-    };
+    updates.current = morningPosts.filter(d => d.meta.unlocked).length;
 
-    // 没有数据 显示loading页的加载完毕
-    if (!res.data || !res.data.length) {
-      return this.setData({loadingStatus: 'LOADED_ALL'});
-    }
-
-    // 找到已解锁到第几天
-    updates.current = res.data.filter(d => d.meta.unlocked).length;
-
-    const group = res.included[0],
-          groupInfo = group.attributes.groupInfo;
-    groupInfo.pageviews = util.shortNumber(groupInfo.pageviews);
-    updates.userName = res.included[0].attributes.username;
-    updates.groupInfo = groupInfo;
+    this.data.title = res.data.attributes.title
+    updates.title = res.data.attributes.title;
+    updates.price = res.data.attributes.price;
+    updates.picurl = res.data.attributes.picurl;
+    updates.editorInfo = res.data.attributes.editorInfo;
+    updates.catalog = res.data.attributes.catalog;
     updates.loadingStatus = null;
 
-    updates.didUserPay = group.relationships && group.relationships.userGroup.data.attributes.role > 0;
+    updates.didUserPay = role === 2;
 
     updates.posts.forEach((post, index) => {
       post.hint = getHintMsg(post, updates.posts.length - index);
@@ -148,13 +153,17 @@ Page({
 
     // 设置标题
     wx.setNavigationBarTitle({
-      title: updates.userName
+      title: updates.title
     });
 
+    let gaName = '%2FalbumBuyPage_XiaoChengXu';
+    if (!updates.didUserPay) {
+      gaName = '%2FalbumShowPage_XiaoChengXu';
+    }
     util.ga({
       cid: Auth.getLocalUserId(),
-      dp: '%2FalbumShowPage_XiaoChengXu',
-      dt: `album_name:${this.data.userName},album_id:${this.data.groupId}`
+      dp: gaName,
+      dt: `album_name:${this.data.title},album_id:${this.data.albumId}`
     });
   },
 
@@ -162,7 +171,7 @@ Page({
    * 分享给好友 事件
    */
   onShareAppMessage: function () {
-    const title = this.data.userName;
+    const title = this.data.title;
     return {
       title: `七日辑: ${title}`
     };
@@ -197,5 +206,89 @@ Page({
 
   listenSwiper(e) {
     this.setData({current: this.data.posts.length - e.detail.current});
+  },
+
+  buy() {
+    const url = `${baseUrl}/wechat/pay/unifiedorder?from=miniProgram`,
+          userInfo = Auth.getLocalUserInfo(),
+          attrs = userInfo.attributes || {};
+
+    if (this.data.processing) {
+      return;
+    }
+
+    this.setData({processing: true});
+
+    request({
+      method: 'POST',
+      url,
+      data: {
+        data: {
+          totalFee: this.data.price,
+          name: this.data.title,
+          openid: attrs.wxOpenId,
+          productId: this.data.albumId,
+          productType: 'Album'
+        }
+      }
+    })
+      .then(data => {
+        const params = {
+          timeStamp: data.data.timeStamp,
+          nonceStr: data.data.nonce_str,
+          package: `prepay_id=${data.data.prepay_id}`,
+          signType: 'MD5',
+          paySign: data.data.paySign
+        };
+
+        console.log('params:');
+        console.log(params);
+
+        params.success = (res) => {
+          console.log('wx requestPayment success');
+          console.log(res);
+          this.setData({didUserPay: true});
+        };
+        params.fail = (err) => {
+          console.log('wx requestPayment fail');
+          console.log(err);
+        };
+        params.complete = () => {
+          console.log('wx requestPayment complete');
+          this.setData({processing: false});
+        };
+        wx.requestPayment(params);
+      })
+      .catch(err => {
+        console.log('wechat unifiedorder request err:');
+        console.log(err);
+        this.setData({processing: false});
+      });
+  },
+
+  gotoTrial() {
+    const userId = this.data.albumId;
+    wx.navigateTo({
+      url: `../album/show?id=${userId}&trial=${true}`
+    });
+  },
+  
+  _getFromId(e) {
+    const tap = this[e.currentTarget.dataset.tap],
+          formId = e.detail.formId;
+          
+    request({
+      method: 'POST',
+      url: `${baseUrl}/wechat/send-template`,
+      data: {
+        userId: Auth.getLocalUserId(),
+        albumId: this.data.albumId,
+        formid: formId
+      }
+    }).then((d) => {
+      // wx.showToast({
+      //   title: formId || 'null'
+      // })
+    });
   }
 })

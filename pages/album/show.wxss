@@ -1,6 +1,9 @@
 page {
   background: #F2F2F2;
+  padding-bottom:40px;
 }
+
+/* 已购买页面 */
 
 .unlocked .locker-mask {
   display: none;
@@ -38,13 +41,15 @@ page {
 }
 
 .topic {
-  height: 417px;
-  border-radius: 3px;
+  height: 410px;
   margin-left: 20px;
   margin-right: 20px;
   background-size: cover;
   background-position: center;
   position: relative;
+  border-radius: 5px;
+  box-shadow: 0px 2px 8px 2px #ccc;
+  overflow: hidden;
 }
 
 .topic-info {
@@ -87,9 +92,6 @@ page {
 
 .mediums {
   height: 216px;
-  display: flex;
-  display: -webkit-flex;
-  flex-direction: row;
   flex-wrap: wrap;
   background: white;
 }
@@ -113,6 +115,13 @@ page {
 
 .medium-gray {
   background: #EDEDED;
+}
+
+.medium-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 
 .medium-banner {
@@ -206,3 +215,277 @@ page {
   transform: translateX(-50%);
 }
 /* modal end */
+/* 已购买页面结束 */
+
+
+/* 购买页面 */
+/* top view */
+.head-view {
+  width: 100%;
+}
+
+.paid-group-pic {
+  width: 100%;
+  height: 160px;
+  position: relative;
+}
+
+.title {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: row;
+  margin-left: 20px;
+  margin-top: 17px;
+  margin-bottom: 17px;
+}
+
+.title-text {
+  font-family: FZRUIZH_CUJW--GB1-0;
+  color: #161616;
+  letter-spacing: 0.9px;
+  width: 83%;
+}
+
+.title-type {
+  background: #505050;
+  border-radius: 3px;
+  font-size: 9px;
+  color: #FFFFFF;
+  letter-spacing: 0.31px;
+  height: 16px;
+  width: 36px;
+  text-align: center;
+  padding-top: 2px;
+  margin-left: 3px;
+  margin-top: 6px;
+}
+
+.price-view {
+  margin-left: 20px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  align-items: flex-end;
+}
+
+.price-tip {
+  color: #767676;
+  letter-spacing: 0.41px;
+  line-height: 16px;
+}
+
+.price-old {
+  text-decoration:line-through;
+}
+
+.price-now {
+  color: #0090E7;
+  letter-spacing: 1.25px;
+  margin-left: 25px;
+}
+
+.center-view {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 15px;
+}
+
+.jizhu-view {
+  border-radius: 3px;
+  border: 1px #ffffff solid;
+  box-shadow: 0px 2px 8px 2px #ccc;
+  padding: 20px;
+  margin-bottom: 25px;
+  margin-top: 15px;
+}
+
+.jizhu-img {
+  border-radius: 16px;
+  height: 32px;
+  width: 32px;
+}
+
+.bottom-left-view {
+  margin-left: 8px;
+}
+
+.ji-zhu-username {
+  letter-spacing: 0.34px;
+}
+
+.ji-zhu-summary {
+  color: #505050;
+  letter-spacing: 0.41px;
+}
+
+.small-line-view {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.ji-zhu-description {
+  margin-left: 40px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.lesson-tip {
+  margin-bottom: 5px;
+}
+
+.lesson {
+  margin-top: 15px;
+}
+
+.lessons {
+  padding-bottom: 25px;
+}
+
+.bg-blue {
+  background-color: #0090E7;
+  color: white;
+}
+
+.day-index {
+  width: 30px;
+  margin-right: 1px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 9px;
+}
+
+.day-text {
+  margin-left: 60px;
+  height: 20px;
+}
+
+.day-title {
+  width: 100%;
+  padding-left: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+
+.day-bottom {
+  margin-top: 10px;
+}
+
+.about-view {
+  padding: 20px;
+}
+
+.about-qiriji {
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.about-qiriji-content {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  padding-top: 10px;
+  padding-bottom: 25px;
+  letter-spacing: 0.48px;
+  line-height: 24px;
+}
+
+.about-type {
+  margin-bottom: 25px;
+}
+
+.about-type-left {
+  font-family: PingFangSC-Thin;
+  letter-spacing: 1.5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  white-space:nowrap;
+}
+
+.about-type-right {
+  letter-spacing: 1.75px;
+  line-height: 24px;
+  padding-left: 10px;
+}
+
+.concat-us {
+  align-items:center;
+}
+
+.concat-us-text {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.qrcode-img {
+  width: 220px;
+  height: 220px;
+}
+
+.buy-page {
+  background-color: white;
+}
+
+
+/* buy button */
+.btn-buy {
+  background: #59AA00;
+  color: #FFFFFF;
+  width: 67%;
+  border:0px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0px;
+  height: 55px;
+  padding-top: 5px;
+}
+
+.shidu {
+  width: 33%;
+  align-items: center;
+}
+
+.shidu-img {
+  width: 16px;
+  height: 15px;
+  margin-bottom: 4px;
+}
+
+.free-img {
+  width: 18px;
+  height: 18px;
+  margin-bottom: 4px;
+}
+
+.free {
+  align-items: center;
+  width: 25%;
+}
+
+.btns-container {
+  position: fixed;
+  bottom: 0px;
+  display: flex;
+  width: 100vw;
+  background: white;
+  box-shadow: 0px 0px 5px 0px #ccc;
+  height: 55px;
+}
+
+/* 购买页面结束 */
+
+ /* 获取formid的button */
+.buttonFormid {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}

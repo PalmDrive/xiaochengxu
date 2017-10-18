@@ -1,5 +1,7 @@
 {
   "pages":[
+    "pages/album/index",
+    "pages/album/mine",
     "pages/groups/groups",
     "pages/map/dazhaxie",
     "pages/map/map",
@@ -30,7 +32,7 @@
     "position": "bottom",
     "list": [
       {
-        "pagePath": "pages/groups/groups",
+        "pagePath": "pages/album/index",
         "text": "七日辑",
         "iconPath": "images/tabIcons/groups.png",
         "selectedIconPath": "images/tabIcons/groups_selected.png"

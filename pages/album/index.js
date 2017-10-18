@@ -16,15 +16,6 @@ Page({
   },
 
   onLoad(options) {
-    // for testing
-    console.log('page load options:');
-    console.log(options);
-    options = options || {};
-    if (options.scene) {
-      const scene = decodeURIComponent(options.scene);
-      console.log('scene:', scene);
-    }
-
     const userId = Auth.getLocalUserId();
     //console.log('groups page on load called. userId:', userId);
     this.setData({
@@ -50,28 +41,7 @@ Page({
    */
   _load(type) {
     return request({
-      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram&include=media&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&role=${type}`,
-    });
-  },
-
-  /**
-   * Group 数据加载 成功 回调
-   */
-  _loadGroupOver(res) {
-    let loadingStatus = null;
-    if (!res.data.length) {
-      loadingStatus = 'LOADED_ALL';
-    }
-    res.data.forEach(group => {
-      if (group.attributes.role === 'group') {
-        const media = group.relationships.media;
-        group.lastPublishedAt = media && media.meta && util.convertDate(new Date(media.meta.publishedAt));
-      }
-    });
-    this.data.page.number ++;
-    this.setData({
-      loadingStatus: loadingStatus,
-      groups: this.data.groups.concat(res.data)
+      url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=title,description,picurl,price,editorInfo,id,metaData`,
     });
   },
 
@@ -80,15 +50,19 @@ Page({
    */
   _loadPaidGroupOver(res) {
     this.data.page.number ++;
-    this.setData({
-      groups: this.data.groups.concat(res.data)
-    });
-    if (res.data.length === this.data.page.size) {
-      this._load('paid_group').then(this._loadPaidGroupOver);
+    console.log('=============')
+    console.log(res.data);
+    console.log('=============')
+    let loadingStatus;
+    if (!res.data.length) {
+      loadingStatus = 'LOADED_ALL';
     } else {
-      this.data.page.number = 1;
-      this._load('group').then(this._loadGroupOver);
+      loadingStatus = null;
     }
+    this.setData({
+      groups: this.data.groups.concat(res.data),
+      loadingStatus: loadingStatus
+    });
   },
 
   gotoNewGroup() {
@@ -121,41 +95,25 @@ Page({
    */
   gotoPaidGroup(event) {
     const group = event.currentTarget.dataset.group,
-          userId = group.id,
+          id = group.id,
           name = group.username,
-          role = group.relationships && group.relationships.userGroup.data.attributes.role || null,
-          userInfo = Auth.getLocalUserInfo().attributes || {},
-          groupInfo = group.attributes.groupInfo;
-
+          userInfo = Auth.getLocalUserInfo().attributes || {};
     util.gaEvent({
       cid: Auth.getLocalUserId(),
       ev: 0,
       ea: 'click_qiriji_in_toutiaoTab',
-      ec: `qiriji_name:${name},toutiao_id:${userId}`,
-      el: `user_name:${userInfo.wxUsername},user_id:${userId}`
+      ec: `qiriji_name:${name},toutiao_id:${id}`,
+      el: `user_name:${userInfo.wxUsername},user_id:${id}`
     });
-
-    if (role || !groupInfo.price) {
+    // if (role) {
       wx.navigateTo({
-        url: `../album/show?id=${userId}`
+        url: `../album/show?id=${id}`
       });
-    } else {
-      wx.navigateTo({
-        url: `../album/buy?id=${userId}`
-      });
-    }
-  },
-
-  gotoMap() {
-    if (wx.getStorageSync('dazhaxiePageHasShow')) {
-      wx.navigateTo({
-        url: `/pages/map/map?friendId=59ce3d20a22b9d0061312243`
-      });
-    } else {
-      wx.navigateTo({
-        url: `/pages/map/dazhaxie?friendId=59ce3d20a22b9d0061312243`
-      });
-    }
+    // } else {
+    //   wx.navigateTo({
+    //     url: `../album/buy?id=${userId}`
+    //   });
+    // }
   },
 
   /**
@@ -163,7 +121,7 @@ Page({
    */
   onShareAppMessage() {
     return {
-      title: '七日辑'
+      title: '我的群头条'
     };
   },
   /**
@@ -186,7 +144,7 @@ Page({
         loadingStatus: 'LOADING_MORE'
       })
       console.log('LOADING_MORE');
-      this._load('group').then(this._loadGroupOver);
+      this._load('paid_group').then(this._loadPaidGroupOver);
     }
   },
   //点击文章

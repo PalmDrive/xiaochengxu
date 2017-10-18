@@ -152,7 +152,7 @@ function ga(options) {
 
 function gaEvent(options) {
   if (getApp().globalData.env === 'dev') return;
-  
+
   wx.request({
     method: 'POST',
     url: 'https://www.google-analytics.com/collect',
@@ -271,7 +271,7 @@ function uniqPush(collection, object) {
   return res;
 }
 
-// If el in the collection, 
+// If el in the collection,
 // put the el in the first
 function unshift(collection, el, key) {
   key = key || 'id';

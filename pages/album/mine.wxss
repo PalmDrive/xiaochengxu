@@ -1,0 +1,107 @@
+/* pages/my/my.wxss */
+
+page {
+  height:100%;
+}
+
+.container {
+  height: 100%;
+  height: 100%;
+  background-color: #EDEDED;
+}
+
+.userinfo {
+  margin-top: 3px;
+  margin-bottom: 10px;
+  display: flex;
+  background-color: white;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 60px;
+  height: 60px;
+  margin: 20rpx;
+  border-radius: 50%;
+  margin-left: 16px;
+  margin-right: 25px;
+}
+
+.center-view {
+  background-color: white;
+  width: 100%;
+}
+
+.center-item {
+  height: 46px;
+  justify-content: space-between;
+}
+
+.center-item-icon {
+  width: 17px;
+  height: 17px;
+  margin-left: 20px;
+  margin-right: 10px;
+}
+
+.center-item-right {
+  margin-right: 20px;
+}
+
+.center-item-arrow {
+  width: 7px;
+  height: 14px;
+  margin-left: 8px;
+}
+
+.bottom-view {
+  background-color: white;
+  margin-top: 10px;
+  padding-right: 20px;
+}
+
+/*
+.section-break {
+  height: 10px;
+}
+
+.no-subscription {
+  width: 100px;
+  margin: auto;
+  margin-top: 100px;
+}
+
+.paid-group-pic {
+  width: 100%;
+  height: 160px;
+  position: relative;
+}
+
+.image-bottom {
+  margin-left: 20px;
+  display: block;
+  margin-bottom: 15px;
+  margin-top: 5px;
+}
+
+.line {
+  height: 1px;
+  width: 40px;
+}
+
+.tip-line {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: space-around;
+  flex-direction: row;
+  margin-right: 20px;
+}
+
+.line-blue {
+  background-color: #0090E7;
+}
+
+.line-gray {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+*/

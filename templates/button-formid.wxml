@@ -1,0 +1,5 @@
+<template name="buttonFormid">
+  <form bindsubmit="_getFromId" data="tap" report-submit="true" data-tap="{{bindtap}}">
+    <button class="buttonFormid {{class}}" formType="submit">{{text}}</button>
+  </form>
+</template>
