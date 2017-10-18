@@ -117,12 +117,9 @@ Page({
     // 找到已解锁到第几天
     const morningPosts = res.data.relationships.posts.data;
     const role = res.included[0].userAlbum.data.attributes.role;
-    let posts = []
-    for(var i = morningPosts.length - 1; i >= 0; i--){
-      posts[morningPosts.length - 1 - i] = morningPosts[i];
-    }
+
     let updates = {
-      posts: posts
+      posts: morningPosts
     };
     const getHintMsg = (post, postIndex) => {
       let msg = ' ';
@@ -136,7 +133,7 @@ Page({
       return msg;
     };
 
-    updates.current = posts.filter(d => d.meta.unlocked).length;
+    updates.current = morningPosts.filter(d => d.meta.unlocked).length;
 
     this.data.title = res.data.attributes.title
     updates.title = res.data.attributes.title;

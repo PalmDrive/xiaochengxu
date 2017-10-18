@@ -1,12 +1,12 @@
 //app.js
 const env = 'production';
-//const env = 'dev';
+// const env = 'dev';
 const {reloadPage, showHint} = require('utils/util');
 
 const API_BASES = {
   production: 'https://ainterest-service-production.ailingual.cn/api/v1',
   staging: 'https://ainterest-service-staging.ailingual.cn/api/v1',
-  dev: 'http://localhost:5000/api/v1'
+  dev: 'http://172.10.23.70:5000/api/v1'
 };
 
 const apiBase = API_BASES[env];
@@ -27,9 +27,9 @@ const getPage = () => {
 };
 
 const AV = require('utils/av-weapp-min.js');
-AV.init({ 
-  appId: 'l7Ffw76ym9wuEsz4mUEJNcbS-gzGzoHsz', 
-  appKey: 'bp8ie0RFdBG9nHkGHpOknCMQ', 
+AV.init({
+  appId: 'l7Ffw76ym9wuEsz4mUEJNcbS-gzGzoHsz',
+  appKey: 'bp8ie0RFdBG9nHkGHpOknCMQ',
 });
 
 App({
@@ -63,7 +63,7 @@ App({
           }, 1500);
         });
 
-      wx.showToast({title: '登陆成功'});     
+      wx.showToast({title: '登陆成功'});
     };
 
     const _login = () => {
