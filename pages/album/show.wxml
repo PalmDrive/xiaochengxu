@@ -16,8 +16,8 @@
   </view>
   <view class="modal-drop"></view>
 </view>
-
-<view class="container" lower-threshold="200" wx:if="{{didUserPay || trial}}">
+<template is="loading" data="{{loadingStatus}}"></template>
+<view class="container" lower-threshold="200" wx:if="{{(didUserPay || trial) && loadingStatus === null}}">
   <view wx:if="{{loadingStatus !== 'LOADING'}}" class="top-view column">
     <text class=" size-26 text-color1 FZRUIZH_CUJW--GB1-0 top-title">{{title}}</text>
   </view>
@@ -75,7 +75,7 @@
   <template is="loading" data="{{loadingStatus}}"></template>
 </view>
 
-<view wx:if="{{!didUserPay && !trial}}" class="buy-page">
+<view wx:if="{{(!didUserPay && !trial) && loadingStatus === null}}" class="buy-page">
   <view class="head-view">
     <!-- paid_group -->
     <image src="{{picurl}}" mode="aspectFill"  class="paid-group-pic"></image>
