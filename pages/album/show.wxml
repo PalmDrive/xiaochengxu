@@ -23,7 +23,7 @@
   </view>
 
   <swiper current="{{posts.length - current}}" bindchange="listenSwiper" class="list-container" wx:key="">
-    <swiper-item id="id-{{post.id}}" wx:for="{{posts}}" wx:for-item="post" wx:key="" class="{{((post.meta.unlocked && didUserPay) || (posts.length - index === 1)) ? 'unlocked' : 'locked'}}">
+    <swiper-item id="id-{{post.id}}" wx:for="{{posts}}" wx:for-item="post" wx:key="" class="{{((post.meta.unlocked && didUserPay) || (posts.length - index === 1)) || (role === 1) ? 'unlocked' : 'locked'}}">
 
       <text class="size-12 text-color3 FZRUIZH_CUJW--GB1-0 top-tip text-center">{{post.hint}}</text>
       <view class="topic">

@@ -39,7 +39,8 @@ Page({
     processing: false,
     editorInfo: {},
     catalog: [],
-    trial: false
+    trial: false,
+    role: 0
   },
 
   //关闭首次登陆弹窗
@@ -142,8 +143,8 @@ Page({
     updates.editorInfo = res.data.attributes.editorInfo;
     updates.catalog = res.data.attributes.catalog;
     updates.loadingStatus = null;
-
-    updates.didUserPay = role === 2;
+    updates.role = role;
+    updates.didUserPay = role === 2 || role === 1;
 
     updates.posts.forEach((post, index) => {
       post.hint = getHintMsg(post, updates.posts.length - index);
