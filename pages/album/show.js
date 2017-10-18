@@ -22,7 +22,7 @@ Page({
   data: {
     title: null, // group or toutiao name actually
     albumId: null,
-    loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
+    loadingStatus: 'LOADING', // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
     posts: [],
     didUserPay: false, // 用户是否已经购买
     groupInfo: {},
@@ -280,7 +280,7 @@ Page({
 
     request({
       method: 'POST',
-      url: `${baseUrl}/wechat/send-template`,
+      url: `${baseUrl}/user-album/formid`,
       data: {
         userId: Auth.getLocalUserId(),
         albumId: this.data.albumId,
