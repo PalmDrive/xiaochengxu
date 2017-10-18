@@ -247,7 +247,8 @@ Page({
         params.success = (res) => {
           console.log('wx requestPayment success');
           console.log(res);
-          this.setData({didUserPay: true});
+          loadData(this.data.albumId)
+            .then(this._onLoadSuccess);
         };
         params.fail = (err) => {
           console.log('wx requestPayment fail');
@@ -272,11 +273,11 @@ Page({
       url: `../album/show?id=${userId}&trial=${true}`
     });
   },
-  
+
   _getFromId(e) {
     const tap = this[e.currentTarget.dataset.tap],
           formId = e.detail.formId;
-          
+
     request({
       method: 'POST',
       url: `${baseUrl}/wechat/send-template`,
