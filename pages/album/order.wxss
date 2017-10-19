@@ -7,7 +7,6 @@ page {
 .container {
   height: 100%;
   height: 100%;
-  background-color: #EDEDED;
 }
 
 .section-break {
@@ -29,13 +28,13 @@ page {
 .image-bottom {
   margin-left: 20px;
   display: block;
-  margin-bottom: 15px;
-  margin-top: 5px;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .line {
   height: 2px;
-  width: 30px;
+  width: 13%;
 }
 
 .tip-line {
