@@ -91,6 +91,21 @@ function formatTopic(t) {
   // }
 }
 
+function formatAlbum(t) {
+  //格式化时间
+  let dateString = t.relationships.userAlbum.data.attributes.unlockedAt;
+
+  if (dateString) {
+    let date1 = new Date(dateString).getTime();
+    let now = new Date().getTime();
+    let days = Math.floor((now - date1 ) / (24*3600*1000))
+    days = days > 7 ? 7 : days;
+    t.attributes.index = days >= 1 ? days - 1 : 0;
+  } else {
+    t.attributes.index = -1;
+  }
+}
+
 function formatMedium(m) {
   if (Object.keys(m.attributes.topics).length === 0) {
     delete m.attributes.topics;
@@ -308,5 +323,6 @@ module.exports = {
   toPromise,
   genRandomStr,
   uniqPush,
-  unshift
+  unshift,
+  formatAlbum
 };

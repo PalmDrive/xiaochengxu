@@ -7,9 +7,8 @@ Page({
   data: {
     userInfo: {},
     userId: null,
-    loading: true,
+    loading: false,
     favoriteTopics: [],
-    loaded: false,
     page: {number: 1, size: 8},
     noMore: false,
     items: []
@@ -39,40 +38,18 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    const that = this;
-
     Util.ga({
       cid: Auth.getLocalUserId() || '555',
       dp: '%2FwodeTab_XiaoChengXu',
       dt: '已购tab页（小程序）'
     });
-
-    if (that.data.loaded && that.data.loading) {
-      // console.log('do stuff onShow');
-      //更新订阅列表
-      const cb = topics => {
-        topics.forEach(Util.formatTopic);
-        const data = {
-          loading: false,
-          favoriteTopics: topics
-        };
-        if (topics.length < that.data.page.size) {
-          console.log('onShow no more');
-          data.noMore = true;
-        }
-        that.setData(data);
-      };
-      that.getTopics(1, cb);
-    }
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    if (this.data.loaded) {
-      this.setData({ loading: true, noMore: false, 'page.number': 1 });
-    }
+    this.setData({ loading: true, noMore: false, 'page.number': 1 });
   },
 
   /**
@@ -86,6 +63,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
+    this.setData({favoriteTopics: []});
     this.onLoad({pullDown: true});
   },
 
@@ -93,23 +71,10 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    const that = this;
     if (!this.data.loadingMore && !this.data.noMore) {
       const pageNumber = this.data.page.number + 1;
-      that.setData({loadingMore: true, 'page.number': pageNumber});
-      const cb = topics => {
-        topics.forEach(Util.formatTopic);
-
-        const data = {
-          loadingMore: false,
-          favoriteTopics: that.data.favoriteTopics.concat(topics)
-        };
-        if (topics.length < that.data.page.size) {
-          data.noMore = true;
-        }
-        that.setData(data);
-      };
-      this.getTopics(pageNumber, cb);
+      this.setData({loadingMore: true, 'page.number': pageNumber});
+      this.getTopics(pageNumber);
     }
   },
 
@@ -122,34 +87,56 @@ Page({
     };
   },
 
-  getTopics: function(pageNumber, cb) {
+  updateData: function(topics) {
+    topics.forEach(Util.formatAlbum);
+
+    const data = {
+      loadingMore: false,
+      favoriteTopics: this.data.favoriteTopics.concat(topics)
+    };
+    if (topics.length < this.data.page.size) {
+      data.noMore = true;
+    }
+    this.setData(data);
+  },
+
+  getTopics: function(pageNumber) {
     request({
       url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/albums?page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=title,picurl&filter=unlocked`
     }).then((res) => {
       const topics = res.data;
-      cb(topics);
+      this.updateData(topics);
     }, () => {
       console.log('my page, getTopics request fail');
     });
   },
+  /**
+   * 进入七日辑
+   */
+  gotoPaidGroup(event) {
+    const group = event.currentTarget.dataset.group,
+          id = group.id,
+          name = group.username,
+          userInfo = Auth.getLocalUserInfo().attributes || {};
+    util.gaEvent({
+      cid: Auth.getLocalUserId(),
+      ev: 0,
+      ea: 'click_qiriji_in_toutiaoTab',
+      ec: `qiriji_name:${name},toutiao_id:${id}`,
+      el: `user_name:${userInfo.wxUsername},user_id:${id}`
+    });
+
+    wx.navigateTo({
+      url: `../album/show?id=${id}`
+    });
+  },
   _load() {
     const userId = Auth.getLocalUserId();
-    const cb = topics => {
-      topics.forEach(Util.formatTopic);
-
-      const data = {
-        loading: false,
-        userInfo: Auth.getLocalUserInfo().attributes,
-        userId,
-        favoriteTopics: topics,
-        loaded: true
-      };
-      if (topics.length < this.data.page.size) {
-        data.noMore = true;
-      }
-      this.setData(data);
-      wx.stopPullDownRefresh();
+    const data = {
+      userInfo: Auth.getLocalUserInfo().attributes,
+      userId
     };
-    this.getTopics(1, cb);
+    this.setData(data);
+    this.getTopics(1);
   }
 })

@@ -35,13 +35,13 @@ page {
 
 .line {
   height: 1px;
-  width: 40px;
+  width: 30px;
 }
 
 .tip-line {
   display: flex;
   display: -webkit-flex;
-  justify-content: space-around;
+  justify-content: space-between;
   flex-direction: row;
   margin-right: 20px;
 }
