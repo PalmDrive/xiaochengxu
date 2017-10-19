@@ -18,14 +18,25 @@ page {
   height: 100%;
   background: rgba(0, 0, 0, 0.8) center no-repeat;
   background-size: 50px 62px;
+  padding-top: 60px;
+  align-items:center;
 }
 /*url(https://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/lock_white.png)*/
 
 .lock-img {
   width: 12px;
   height: 16px;
+  margin-right: 5px;
 }
 
+.buy-button {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border: 1px #ffffff solid;
+  margin-top: 15px;
+}
 
 .top-view {
   text-align: center;
