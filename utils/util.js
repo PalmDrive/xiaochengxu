@@ -312,6 +312,38 @@ function unshift(collection, el, key) {
   return res;
 }
 
+/**
+ * called in the mediumOnShow
+ * @param  {dict} params
+ *                params.userId
+ *                params.mediumId
+ *                [params.albumId]
+ *                [params.index]  
+ */
+function mediumPageOnShow(params) {
+  const data = {
+          data: {attributes: {
+            userId: params.userId
+          }}
+        };
+
+  if (params.albumId) {
+    data.data.albumId = params.albumId;
+    data.data.daysLog = {};
+    data.data.daysLog[params.index] = +new Date();
+  }
+  if (params.userId && params.mediumId) {
+    // console.log('记录足迹');
+    request({
+      method: 'POST',
+      url: `${getApp().globalData.apiBase}/media/${params.mediumId}/views?from=miniProgram`,
+      data
+    }).then(null, err => {
+      console.log('Medium page, onShow, record lastViewedAt fail');
+    });
+  }
+}
+
 module.exports = {
   formatTime,
   formatDateToDay,
@@ -332,5 +364,6 @@ module.exports = {
   genRandomStr,
   uniqPush,
   unshift,
-  formatAlbum
+  formatAlbum,
+  mediumPageOnShow
 };

@@ -1,0 +1,13 @@
+<view>
+  <view>
+    <video src="{{selectedMedium.attributes.video}}" controls style="width: {{videoSize.width}}px; height: {{videoSize.height}}px"></video>
+    <text>{{selectedMedium.attributes.title}}</text>
+  </view>
+  <view>
+    <text>共{{media.length}}个视频</text>
+    <view wx:for="{{media}}" wx:key data-itemid="{{item.id}}" bindtap="selectMedium" class="list-item row">
+      <text>{{item.attributes.title}}</text>
+      <text>{{item.attributes.duration}}秒</text>
+    </view>
+  </view>
+</view>
