@@ -7,6 +7,7 @@ const app = getApp(),
       {request} = require('../../utils/request');
 
 let albumId = null;
+let index = null;
 
 Page({
   /**
@@ -34,6 +35,7 @@ Page({
     const that = this,
       mediumId = options.id;
     albumId = options.albumId;
+    index = options.idx;
     that.setData({mediumId});
 
     Auth.getLocalUserId() && this._load();
@@ -44,7 +46,7 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-  
+
   },
 
   /**
@@ -57,9 +59,11 @@ Page({
       data = {
         data: {attributes: {userId}}
       };
+
       if (albumId) {
         data.data.albumId = albumId;
-        data.data.daysLog = {day1: +new Date()}; // TODO: day1 is hardcocded
+        data.data.daysLog = {};
+        data.data.daysLog[index] = +new Date(); // TODO: day1 is hardcocded
       }
     if (userId && mediumId) {
       // console.log('记录足迹');
@@ -77,28 +81,28 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-  
+
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-  
+
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-  
+
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-  
+
   },
 
   /**
