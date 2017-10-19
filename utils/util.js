@@ -126,15 +126,21 @@ function formatPublishedAt(m) {
 
 function goToMedium(event, gaOptions, options) {
   options = options || {};
-  const albumId = options.albumId;
-  const idx = options.idx;
+  const albumId = options.albumId,
+        idx = options.idx;
 
   if (gaOptions) {
     gaEvent(gaOptions);
   }
 
-  const mediumId = event.currentTarget.dataset.medium.id;
-  let url = `../medium/medium?id=${mediumId}`;
+  const medium = event.currentTarget.dataset.medium;
+
+  let url = `../medium/medium?id=${medium.id}`;
+
+  if (medium.attributes.mediumType === 'video') {
+    url = `../medium/video?id=${medium.id}`;
+  }
+
   if (albumId) {
     url = `${url}&albumId=${albumId}&idx=${idx}`;
   }
