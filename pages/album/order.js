@@ -17,13 +17,9 @@ Page({
   goToTopic: Util.goToTopic,
 
   onLoad: function (options) {
-    // console.log('onLoad');
-    const that = this;
-
     if (options && options.pullDown) {
-      that.setData({ 'page.number': 1, noMore: false });
+      this.setData({ 'page.number': 1, noMore: false });
     }
-
     Auth.getLocalUserId() && this._load();
   },
 
