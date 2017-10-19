@@ -498,7 +498,7 @@ page {
 
 /* 购买页面结束 */
 
- /* 获取formid的button */
+/* 获取formid的button */
 .buttonFormid {
   position: absolute;
   width: 100%;
@@ -506,4 +506,46 @@ page {
   left: 0;
   top: 0;
   opacity: 0;
+}
+
+/* 成就 */
+.achieve-tip {
+  background: #FFFFFF;
+  border-radius: 3px;
+  align-items: center;
+  width: 255px;
+  height: 310px;
+  padding: 20px;
+}
+
+.achieve-tip-image {
+  width: 80px;
+  height: 110px;
+  margin-top: -55px;
+}
+
+.achieve-tip-text1 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.achieve-tip-text2 {
+  margin-bottom: 8px;
+}
+
+.achieve-tip-button {
+  margin-top: 15px;
+  border-radius: 3px;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.achieve-tip-button1 {
+  border: 1px solid #B0B0B0;
+}
+
+.achieve-tip-button2 {
+  border: 1px solid #D5D5D5;
 }
