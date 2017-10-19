@@ -6,6 +6,8 @@ const app = getApp(),
       he = require('../../utils/he.js'),
       {request} = require('../../utils/request');
 
+let albumId = null;
+
 Page({
   /**
    * 页面的初始数据
@@ -31,6 +33,7 @@ Page({
   onLoad: function (options) {
     const that = this,
       mediumId = options.id;
+    albumId = options.albumId;
     that.setData({mediumId});
 
     Auth.getLocalUserId() && this._load();
@@ -50,15 +53,20 @@ Page({
   onShow: function () {
     // console.log('onShow');
     const userId = Auth.getLocalUserId(),
-      mediumId = this.data.mediumId;
+      mediumId = this.data.mediumId,
+      data = {
+        data: {attributes: {userId}}
+      };
+      if (albumId) {
+        data.data.albumId = albumId;
+        data.data.daysLog = {day1: +new Date()}; // TODO: day1 is hardcocded
+      }
     if (userId && mediumId) {
       // console.log('记录足迹');
       request({
         method: 'POST',
         url: `${app.globalData.apiBase}/media/${mediumId}/views?from=miniProgram`,
-        data: {
-          data: {attributes: {userId}}
-        }
+        data
       }).then(null, err => {
         console.log('Medium page, onShow, record lastViewedAt fail');
       });

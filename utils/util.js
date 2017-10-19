@@ -124,14 +124,21 @@ function formatPublishedAt(m) {
   }
 }
 
-function goToMedium(event, gaOptions) {
+function goToMedium(event, gaOptions, options) {
+  options = options || {};
+  const albumId = options.albumId;
+
   if (gaOptions) {
     gaEvent(gaOptions);
   }
 
   const mediumId = event.currentTarget.dataset.medium.id;
+  let url = `../medium/medium?id=${mediumId}`;
+  if (albumId) {
+    url = `${url}&albumId=${albumId}`;
+  }
   wx.navigateTo({
-    url: `../medium/medium?id=${mediumId}`
+    url
   });
 }
 

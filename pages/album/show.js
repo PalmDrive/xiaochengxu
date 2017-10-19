@@ -92,7 +92,9 @@ Page({
             el: `album_name:${this.data.title},album_id:${this.data.albumId}`,
             ev: 0
           };
-    util.goToMedium(event, gaOptions);
+    util.goToMedium(event, gaOptions, {
+      albumId: this.data.albumId
+    });
   },
   /**
    * 加载数据
