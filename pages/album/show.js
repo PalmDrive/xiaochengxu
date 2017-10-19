@@ -84,6 +84,7 @@ Page({
   //点击文章
   goToMedium: function(event) {
     const medium = event.currentTarget.dataset.medium,
+          index = event.currentTarget.dataset.index,
           userInfo = Auth.getLocalUserInfo(),
           gaOptions = {
             cid: Auth.getLocalUserId(),
@@ -93,6 +94,7 @@ Page({
             ev: 0
           };
     util.goToMedium(event, gaOptions, {
+      idx: (6 - index) + 1,
       albumId: this.data.albumId
     });
   },

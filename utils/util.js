@@ -127,6 +127,7 @@ function formatPublishedAt(m) {
 function goToMedium(event, gaOptions, options) {
   options = options || {};
   const albumId = options.albumId;
+  const idx = options.idx;
 
   if (gaOptions) {
     gaEvent(gaOptions);
@@ -135,7 +136,7 @@ function goToMedium(event, gaOptions, options) {
   const mediumId = event.currentTarget.dataset.medium.id;
   let url = `../medium/medium?id=${mediumId}`;
   if (albumId) {
-    url = `${url}&albumId=${albumId}`;
+    url = `${url}&albumId=${albumId}&idx=${idx}`;
   }
   wx.navigateTo({
     url
