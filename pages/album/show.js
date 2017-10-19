@@ -40,7 +40,12 @@ Page({
     editorInfo: {},
     catalog: [],
     trial: false,
-    role: 0
+    role: 0,
+    isStart: false,
+    hideAchieve: true,
+    achieveProcess: 1,
+    hideAchieveCard: false,
+    username: ''
   },
 
   //关闭首次登陆弹窗
@@ -61,6 +66,7 @@ Page({
     wx.getSystemInfo({
       success(res) {
         updates.bannerImage = {height: res.windowWidth / bannerImageRatio};
+        updates.wxUsername = Auth.getLocalUserInfo().attributes.wxUsername;
         that.setData(updates);
         Auth.getLocalUserId() && that._load();
       },
@@ -203,6 +209,17 @@ Page({
   toggleQrcodeModalShown() {
     const qrcodeModalShown = !this.data.qrcodeModalShown;
     this.setData({qrcodeModalShown});
+  },
+
+  toggleAchieveOK() {
+    const hideAchieve = !this.data.hideAchieve;
+    this.setData({hideAchieve});
+  },
+
+  toggleAchieveNoMore() {
+    const hideAchieve = !this.data.hideAchieve;
+    this.setData({hideAchieve});
+    Auth.setLocalAchieve(true);
   },
 
   listenSwiper(e) {

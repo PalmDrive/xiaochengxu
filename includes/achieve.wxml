@@ -1,0 +1,11 @@
+<view hidden="{{hideAchieveCard}}">
+  <view class="modal">
+    <view class="achieve-card">
+      <text class="size-13 pingfang-medium text-color1"> {{title}} </text>
+      <image src="../../images/achieve/{{achieveProcess}}@2x.png" class="achieve-card-image"></image>
+      <text class="text-white size-9 achieve-card-process" style="{background: {{achieveProcess === 7 ? '#42BD56' : '#B0B0B0'}}}"> {{achieveProcess === 7 ? '完成' : '未完成'}}</text>
+      <text class="text-color3 size-9"> {{username}} </text>
+    </view>
+  </view>
+  <view class="modal-drop"></view>
+</view>
