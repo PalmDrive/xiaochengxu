@@ -94,7 +94,7 @@ Page({
             ev: 0
           };
     util.goToMedium(event, gaOptions, {
-      idx: (6 - index) + 1,
+      idx: 'day' + (6 - index + 1),
       albumId: this.data.albumId
     });
   },

@@ -7,7 +7,7 @@ const app = getApp(),
       {request} = require('../../utils/request');
 
 let albumId = null;
-let index = 0;
+let index = null;
 
 Page({
   /**
@@ -59,11 +59,11 @@ Page({
       data = {
         data: {attributes: {userId}}
       };
-      let key = "day" + index;
+
       if (albumId) {
         data.data.albumId = albumId;
         data.data.daysLog = {};
-        data.data.daysLog[key] = +new Date(); // TODO: day1 is hardcocded
+        data.data.daysLog[index] = +new Date(); // TODO: day1 is hardcocded
       }
     if (userId && mediumId) {
       // console.log('记录足迹');
