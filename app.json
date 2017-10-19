@@ -1,7 +1,7 @@
 {
   "pages":[
-    "pages/album/order",
     "pages/album/index",
+    "pages/album/order",
     "pages/album/mine",
     "pages/groups/groups",
     "pages/map/dazhaxie",
@@ -34,21 +34,15 @@
     "list": [
       {
         "pagePath": "pages/album/index",
-        "text": "七日辑",
-        "iconPath": "images/tabIcons/groups.png",
-        "selectedIconPath": "images/tabIcons/groups_selected.png"
+        "text": "首页",
+        "iconPath": "images/tabIcons/home.png",
+        "selectedIconPath": "images/tabIcons/home_selected.png"
       },
       {
-        "pagePath": "pages/topics/topics",
-        "text": "专题",
-        "iconPath": "images/tabIcons/topics.png",
-        "selectedIconPath": "images/tabIcons/topics_selected.png"
-      },
-      {
-        "pagePath": "pages/index/index",
-        "text": "日读",
-        "iconPath": "images/tabIcons/index.png",
-        "selectedIconPath": "images/tabIcons/index_selected.png"
+        "pagePath": "pages/album/order",
+        "text": "已购",
+        "iconPath": "images/tabIcons/buy.png",
+        "selectedIconPath": "images/tabIcons/buy_selected.png"
       },
       {
         "pagePath": "pages/my/my",

@@ -34,7 +34,7 @@ page {
 }
 
 .line {
-  height: 1px;
+  height: 2px;
   width: 30px;
 }
 
