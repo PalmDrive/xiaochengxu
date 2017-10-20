@@ -31,8 +31,16 @@ const getLocalSessionKey = () => {
   return wx.getStorageSync(`${nameSpace}:sessionKey`);
 };
 
+const getLocalAchieve = (key) => {
+  return wx.getStorageSync(`${nameSpace}:${key}`);
+};
+
+const setLocalAchieve = (key, hideAchieve) => {
+  wx.setStorageSync(`${nameSpace}:${key}`, hideAchieve);
+};
+
 /**
- * Get code and send to the server 
+ * Get code and send to the server
  * The server uses the code to get the basic info
  * @return {Promise}
  * {
@@ -48,8 +56,8 @@ const _getWechatBaseUserInfo = function() {
         apiBase = app.globalData.apiBase;
   return new Promise((resolve, reject) => {
     // 获取登陆凭证code
-    wx.login({ 
-      success(res) { 
+    wx.login({
+      success(res) {
         if (res.code) {
            //用code, 通过服务器获取session_key
           wx.request({
@@ -65,7 +73,7 @@ const _getWechatBaseUserInfo = function() {
                 console.log('base user data:', res.data);
                 setLocalSessionKey(res.data.session_key);
                 resolve(res.data);
-              }              
+              }
             },
             fail(err) {
               reject(err);
@@ -84,7 +92,7 @@ const _getWechatBaseUserInfo = function() {
 };
 
 /**
- * @return {Promise} The resolved data is the data 
+ * @return {Promise} The resolved data is the data
  * from _loginRequest, which is the data from the login endpoint
  *
  * @notes: DO NOT use es6 =>, because the context 'this' needs to be passed
@@ -121,13 +129,13 @@ const login = function() {
 /**
  * @param  String
  * @param  {
- *           wxUnionId 
+ *           wxUnionId
  *           wxUsername
  *           gender
  *           profilePicUrl
  *         }
  * @return {Promise} The resolved data is the data from the server
- * 
+ *
  * @notes: DO NOT use es6 =>, because the context 'this' needs to be passed
  */
 const _loginRequest = function(userInfo) {
@@ -194,5 +202,7 @@ module.exports = {
   getLocalJWT,
   setLocalJWT,
   decryptData,
-  getLocalSessionKey
+  getLocalSessionKey,
+  getLocalAchieve,
+  setLocalAchieve
 };

@@ -106,6 +106,16 @@ function formatAlbum(t) {
   }
 }
 
+function getAchieveProgress(t) {
+  // 阅读进度
+  let logs = t.relationships.userAlbum.data.attributes.logs.days;
+  let length = 0;
+  for(var key in logs) {
+    length = length + 1;
+  }
+  t.attributes.achieveProcess = length;
+}
+
 function formatMedium(m) {
   if (Object.keys(m.attributes.topics).length === 0) {
     delete m.attributes.topics;
@@ -332,5 +342,6 @@ module.exports = {
   genRandomStr,
   uniqPush,
   unshift,
-  formatAlbum
+  formatAlbum,
+  getAchieveProgress
 };

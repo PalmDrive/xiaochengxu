@@ -3,6 +3,7 @@
     "pages/album/index",
     "pages/album/order",
     "pages/album/mine",
+    "pages/album/achieve",
     "pages/groups/groups",
     "pages/map/dazhaxie",
     "pages/map/map",
@@ -45,7 +46,7 @@
         "selectedIconPath": "images/tabIcons/buy_selected.png"
       },
       {
-        "pagePath": "pages/my/my",
+        "pagePath": "pages/album/mine",
         "text": "我的",
         "iconPath": "images/tabIcons/my.png",
         "selectedIconPath": "images/tabIcons/my_selected.png"

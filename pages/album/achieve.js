@@ -37,7 +37,7 @@ Page({
     Util.ga({
       cid: Auth.getLocalUserId() || '555',
       dp: '%2FwodeTab_XiaoChengXu',
-      dt: '已购tab页（小程序）'
+      dt: '我的成就（小程序）'
     });
   },
 
@@ -79,12 +79,12 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      title: '我的订阅'
+      title: '我的成就'
     };
   },
 
   updateData: function(topics) {
-    topics.forEach(Util.formatAlbum);
+    topics.forEach(Util.getAchieveProgress);
 
     const data = {
       loadingMore: false,
@@ -104,26 +104,6 @@ Page({
       this.updateData(topics);
     }, () => {
       console.log('my page, getTopics request fail');
-    });
-  },
-  /**
-   * 进入七日辑
-   */
-  gotoPaidGroup(event) {
-    const group = event.currentTarget.dataset.group,
-          id = group.id,
-          name = group.username,
-          userInfo = Auth.getLocalUserInfo().attributes || {};
-    Util.gaEvent({
-      cid: Auth.getLocalUserId(),
-      ev: 0,
-      ea: 'click_qiriji_in_toutiaoTab',
-      ec: `qiriji_name:${name},toutiao_id:${id}`,
-      el: `user_name:${userInfo.wxUsername},user_id:${id}`
-    });
-
-    wx.navigateTo({
-      url: `../album/show?id=${id}`
     });
   },
   _load() {

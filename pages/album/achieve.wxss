@@ -1,0 +1,9 @@
+.achieve {
+  flex-wrap: wrap;
+  padding: 20px;
+  justify-content: space-between;
+}
+
+.achieve-card {
+  margin-top: 15px;
+}

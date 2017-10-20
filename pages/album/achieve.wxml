@@ -1,0 +1,10 @@
+<view class="achieve row">
+  <view class="achieve-card column" wx:for="{{favoriteTopics}}" wx:for-item="group" wx:key>
+    <text class="size-13 pingfang-medium text-color1"> {{group.attributes.title}} </text>
+    <image src="../../images/achieve/{{group.attributes.achieveProcess || 0}}@2x.png" class="achieve-card-image"></image>
+    <view class="row bottom-line">
+      <text class="text-white size-9 achieve-card-process" style="background: {{group.attributes.achieveProcess === 7 ? '#42BD56' : '#B0B0B0'}}"> {{group.attributes.achieveProcess === 7 ? '完成' : '未完成'}}</text>
+      <text class="text-color3 size-9"> {{userInfo.wxUsername}} </text>
+    </view>
+  </view>
+</view>
