@@ -161,6 +161,16 @@ Page({
     updates.loadingStatus = null;
     updates.role = role;
     updates.didUserPay = role === 2 || role === 1;
+    // 阅读进度
+    let logs = res.included[0].userAlbum.data.attributes.logs.days;
+    let length = 0;
+    for(var key in logs) {
+      length = length + 1;
+    }
+    updates.achieveProcess = length;
+    if ((updates.achieveProcess === 0 || updates.achieveProcess === 7) && Auth.getLocalAchieve() !== "true") {
+      updates.hideAchieveTip = false;
+    }
 
     // 阅读进度
     let logs = res.included[0].userAlbum.data.attributes.logs.days;
