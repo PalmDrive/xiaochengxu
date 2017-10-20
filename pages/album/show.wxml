@@ -70,7 +70,7 @@
           <view class="medium-banner" style="background-image: url('{{post.attributes.picUrl}}')">
             <view class="medium-banner-mask"></view>
             <text class="size-12 text-white label-trial" wx:if="{{!didUserPay && posts.length - index === 1}}">免费试读</text>
-            <image src="../../images/achieve/小成就@2x.png" class="achieve-image"  bindtap="toggleAchieveCardOK"></image>
+            <image src="../../images/achieve/小成就@2x.png" class="achieve-image"  bindtap="toggleAchieveCardOK" wx:if="{{didUserPay}}"></image>
             <view class="row bottom-view">
               <image src="{{author.attributes.profilePicUrl}}" class="head-img"></image>
               <view class="right-view column top-text" >
