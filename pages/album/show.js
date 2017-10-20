@@ -312,6 +312,7 @@ Page({
         params.success = (res) => {
           console.log('wx requestPayment success');
           console.log(res);
+          this.setData({trial: false});
           loadData(this.data.albumId)
             .then(this._onLoadSuccess);
         };

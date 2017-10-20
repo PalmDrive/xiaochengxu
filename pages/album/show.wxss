@@ -564,7 +564,8 @@ page {
 .achieve-image {
   width:15px;
   height:20px;
-  right:10px;
-  top:15px;
+  right:1px;
+  top:1px;
   position:absolute;
+  padding: 15px;
 }

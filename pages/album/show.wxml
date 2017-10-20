@@ -9,8 +9,8 @@
   <view class="modal">
     <view class="achieve-tip-card column">
       <include src="../../includes/achieve.wxml"/>
-      <text class="size-14 text-color1 achieve-tip-card-text">学习完成七日辑所有课程可获得完整成就 </text>
-      <text class="size-14 text-color1 achieve-tip-card-text">你可以在我的页面查看所有成就</text>
+      <text class="size-14 text-color1 achieve-tip-card-text">看完七日辑所有内容，可获得一个成就 </text>
+      <text class="size-14 text-color1 achieve-tip-card-text">在我的页面查看所有成就</text>
       <text class="size-16 text-color2 achieve-tip-button1 achieve-tip-button" bindtap="toggleAchieveCardOK">我知道了</text>
     </view>
     <image src="../../images/paid-group/close.png" class="btn-close" bindtap="toggleAchieveCardOK"></image>
@@ -61,7 +61,7 @@
         <view class="locker-mask column">
           <view class="row">
             <image src="../../images/paid-group/锁@2x.png" class="lock-img"></image>
-            <text class="size-16 text-color3">本课还未解锁</text>
+            <text class="size-16 text-color3">{{didUserPay ? '还未解锁，一天解锁一课哦' : '本课还未解锁'}}</text>
           </view>
           <text class="size-12 text-white buy-button" bindtap="buy" wx:if="{{trial}}">购买：{{price / 100}}元</text>
         </view>
