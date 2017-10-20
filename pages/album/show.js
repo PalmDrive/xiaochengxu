@@ -85,6 +85,10 @@ Page({
         dt: `album_name:${this.data.title},album_id:${this.data.albumId}`
       });
     }
+    if (this.data.achieveProcess === 7) {
+      this.setData({hideAchieveTip: false});
+      Auth.setLocalAchieve( `${this.data.albumId}_end_isShowed`, "true")
+    }
   },
 
   //点击文章
@@ -147,7 +151,7 @@ Page({
       } else if (!post.meta.unlocked) {
         msg = '还未解锁，一天解锁一课哦';
       }
-      return msg;
+      return '';
     };
 
     updates.current = morningPosts.filter(d => d.meta.unlocked).length;

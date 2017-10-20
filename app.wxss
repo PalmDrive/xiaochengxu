@@ -170,9 +170,18 @@ view {
   align-items: center;
 }
 
+.achieve-title {
+  text-align: center;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow:hidden;
+  height: 54px;
+}
+
 .achieve-card-image {
-  width: 80px;
-  height: 115px;
+  width: 65px;
+  height: 90px;
   margin-top: 15px;
 }
 
@@ -181,7 +190,7 @@ view {
   padding-right: 5px;
   padding-top: 2px;
   padding-bottom: 2px;
-  margin-left: -20px;
+  margin-left: -15px;
   margin-right:25px;
   width: 35px;
 }

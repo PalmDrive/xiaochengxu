@@ -61,7 +61,7 @@
         <view class="locker-mask column">
           <view class="row">
             <image src="../../images/paid-group/锁@2x.png" class="lock-img"></image>
-            <text class="size-12 text-color3">本课还未解锁</text>
+            <text class="size-16 text-color3">本课还未解锁</text>
           </view>
           <text class="size-12 text-white buy-button" bindtap="buy" wx:if="{{trial}}">购买：{{price / 100}}元</text>
         </view>
@@ -70,7 +70,7 @@
           <view class="medium-banner" style="background-image: url('{{post.attributes.picUrl}}')">
             <view class="medium-banner-mask"></view>
             <text class="size-12 text-white label-trial" wx:if="{{!didUserPay && posts.length - index === 1}}">免费试读</text>
-            <image src="../../images/achieve/小成就@2x.png" class="achieve-image"  bindtap="toggleAchieveCardOK" wx:if="{{didUserPay}}"></image>
+            <image src="../../images/achieve/achieve@2x.png" class="achieve-image"  bindtap="toggleAchieveCardOK" wx:if="{{didUserPay}}"></image>
             <view class="row bottom-view">
               <image src="{{author.attributes.profilePicUrl}}" class="head-img"></image>
               <view class="right-view column top-text" >
@@ -85,7 +85,7 @@
         <view class="mediums row">
           <view class="medium {{post.relationships.media.data.length > 2 ? 'medium-50' : 'medium-100'}} {{idx === 1 || idx === 2 ? 'medium-gray' : ''}}" wx:for="{{ post.relationships.media.data }}" wx:for-item="medium" wx:for-index="idx"  data-medium="{{ medium}}" data-index="{{index}}" wx:key="" bindtap="goToMedium">
             <template is="buttonFormid"></template>
-            <text class="medium-title  size-16">{{(index + 1) + '. ' +  medium.attributes.title }}</text>
+            <text class="medium-title  size-16">{{(idx + 1) + '. ' +  medium.attributes.title }}</text>
           </view>
         </view>
 
