@@ -549,3 +549,23 @@ page {
 .achieve-tip-button2 {
   border: 1px solid #D5D5D5;
 }
+
+.achieve-tip-card {
+  padding: 20px;
+  width: 300px;
+  background: #EDEDED;
+  align-items: center;
+  border-radius: 3px;
+}
+
+.achieve-card {
+  margin-bottom: 20px;
+}
+
+.achieve-image {
+  width:15px;
+  height:20px;
+  right:10px;
+  top:15px;
+  position:absolute;
+}

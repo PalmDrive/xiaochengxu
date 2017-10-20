@@ -41,10 +41,9 @@ Page({
     catalog: [],
     trial: false,
     role: 0,
-    isStart: false,
-    hideAchieve: true,
-    achieveProcess: 1,
-    hideAchieveCard: false,
+    hideAchieveTip: true,
+    achieveProcess: 4,
+    hideAchieveCard: true,
     username: ''
   },
 
@@ -66,7 +65,7 @@ Page({
     wx.getSystemInfo({
       success(res) {
         updates.bannerImage = {height: res.windowWidth / bannerImageRatio};
-        updates.wxUsername = Auth.getLocalUserInfo().attributes.wxUsername;
+        updates.username = Auth.getLocalUserInfo().attributes.wxUsername;
         that.setData(updates);
         Auth.getLocalUserId() && that._load();
       },
@@ -155,6 +154,16 @@ Page({
     updates.loadingStatus = null;
     updates.role = role;
     updates.didUserPay = role === 2 || role === 1;
+    // 阅读进度
+    let logs = res.included[0].userAlbum.data.attributes.logs.days;
+    let length = 0;
+    for(var key in logs) {
+      length = length + 1;
+    }
+    updates.achieveProcess = length;
+    if ((updates.achieveProcess === 0 || updates.achieveProcess === 7) && Auth.getLocalAchieve() !== "true") {
+      updates.hideAchieveTip = false;
+    }
 
     updates.posts.forEach((post, index) => {
       post.hint = getHintMsg(post, updates.posts.length - index);
@@ -216,14 +225,19 @@ Page({
   },
 
   toggleAchieveOK() {
-    const hideAchieve = !this.data.hideAchieve;
-    this.setData({hideAchieve});
+    const hideAchieveTip = !this.data.hideAchieveTip;
+    this.setData({hideAchieveTip});
+  },
+
+  toggleAchieveCardOK() {
+    const hideAchieveCard = !this.data.hideAchieveCard;
+    this.setData({hideAchieveCard});
   },
 
   toggleAchieveNoMore() {
-    const hideAchieve = !this.data.hideAchieve;
-    this.setData({hideAchieve});
-    Auth.setLocalAchieve(true);
+    const hideAchieveTip = !this.data.hideAchieveTip;
+    this.setData({hideAchieveTip});
+    Auth.setLocalAchieve("true");
   },
 
   listenSwiper(e) {
