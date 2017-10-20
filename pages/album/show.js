@@ -20,6 +20,7 @@ const PAID_USER_ROLE = 2;
 
 Page({
   data: {
+    userRole: null,
     title: null, // group or toutiao name actually
     albumId: null,
     loadingStatus: 'LOADING', // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
@@ -45,7 +46,8 @@ Page({
     achieveProcess: 0,
     hideAchieveCard: true,
     username: '',
-    dayLogs: {}
+    dayLogs: {},
+    shareAlert: false
   },
 
   //关闭首次登陆弹窗
@@ -63,20 +65,71 @@ Page({
           },
           that = this;
 
-    wx.getSystemInfo({
-      success(res) {
-        updates.bannerImage = {height: res.windowWidth / bannerImageRatio};
-        updates.username = Auth.getLocalUserInfo().attributes.wxUsername;
-        that.setData(updates);
-        Auth.getLocalUserId() && that._load();
-      },
-      fail() {
-        updates.bannerImage = {height: 400};
-        that.setData(updates);
-      }
+    this.setData({
+      userRole: Auth.getLocalUserInfo().attributes.role
     });
-  },
+    const that = this;
+    function init() {
+      //console.log(getCurrentPages()[1]);
+      const bannerImageRatio = 375 / 400, // width / height
+            updates = {
+              albumId: options.id,
+              trial: options.trial,
+              loadingStatus: 'LOADING'
+            };
+      console.log(this);
+      wx.getSystemInfo({
+        success(res) {
+          updates.bannerImage = {height: res.windowWidth / bannerImageRatio};
+          updates.username = Auth.getLocalUserInfo().attributes.wxUsername;
+          that.setData(updates);
+          Auth.getLocalUserId() && that._load();
+        },
+        fail() {
+          updates.bannerImage = {height: 400};
+          that.setData(updates);
+        }
+      });
+    }
 
+    // 免费得 判断是否是从好友的 二维码进入的
+    if (options.scene) {
+      options.scene = decodeURIComponent(options.scene);
+      request({
+        url: `${baseUrl}/scenes/${options.scene}`
+      }).then(res => {
+        options.id = res.data.attributes.productId;
+        this.setData({
+          id: options.id
+        });
+        init();
+        return request({
+          method: 'POST',
+          url: `${baseUrl}/referrals`,
+          data: {
+            data: {
+              attributes: {
+                refereeId: Auth.getLocalUserId(),
+                productId: this.data.albumId,
+                userId: res.data.attributes.createdBy
+              } 
+            }
+          }
+        })
+      }).then(res => {
+        console.log(res);
+        this.setData({
+          shareAlert: {
+            alert: true,
+            username: res.included.attributes.username
+          }
+        });
+      });
+    } else {
+      init();
+    }
+  },
+  
   onShow() {
     if (this.data.title) {
       util.ga({
@@ -344,6 +397,12 @@ Page({
     });
   },
 
+  gotoFree() {
+    wx.navigateTo({
+      url: `../album/free?id=${this.data.albumId}&imgUrl=${this.data.picurl}`
+    });
+  },
+
   _getFromId(e) {
     const tap = this[e.currentTarget.dataset.tap],
           formId = e.detail.formId;
@@ -360,6 +419,18 @@ Page({
       // wx.showToast({
       //   title: formId || 'null'
       // })
+    });
+  },
+  closeAlert() {
+    this.setData({
+      shareAlert: null
+    });
+  },
+  showGuide() {
+    this.setData({
+      shareAlert: {
+        guide: true
+      }
     });
   }
 })

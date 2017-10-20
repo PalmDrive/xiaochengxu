@@ -4,6 +4,8 @@
     "pages/album/order",
     "pages/album/mine",
     "pages/album/achieve",
+    "pages/album/free",
+    "pages/album/share",
     "pages/groups/groups",
     "pages/map/dazhaxie",
     "pages/map/map",

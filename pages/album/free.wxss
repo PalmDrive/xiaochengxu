@@ -1,0 +1,114 @@
+
+page {
+  background: #fafafa;
+}
+
+.continer {
+  position: relative;
+  padding: 15px;
+  margin: 15px;
+}
+
+.title {
+  line-height: 22px;
+  display: block;
+  text-align: center;
+}
+
+.text {
+  display: block;
+}
+
+.line {
+  position: absolute;
+  top: 32px;
+  height: 1px;
+}
+
+.line-left {
+  left: 20px;
+}
+.line-right {
+  right: 20px;
+}
+
+/* 上半部分的 rule */
+.rule {
+  padding: 20px 30px;
+  background: rgb(255,255,255);
+  border-radius: 3px;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.09);
+}
+
+.rule .text {
+  margin-top: 13px;
+  line-height: 24px;
+}
+
+.rule .line {
+  width: 28%;
+  background: #B0B0B9;
+}
+
+button {
+  width: 180px;
+  color: #fff;
+  background: #DF0A20;
+  border-radius: 3px;
+  line-height: 46px;
+  margin-top: 20px;
+}
+.button-hover {
+  color: rgba(255, 255, 255, 0.8);
+  background: #DF0A20;
+}
+
+.friend {
+  margin-top: 10px;
+}
+.friend .head {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+}
+.friend .friend-continer {
+  vertical-align: top;
+  display: inline-block;
+  width: 100px;
+  height: 40px;
+  margin-left: 10px;
+}
+.friend .nickname {
+  display: block;
+}
+.friend .time {
+  float: left;
+  color: #505050;
+}
+.friend .action {
+  float: right;
+  height: 40px;
+  line-height: 40px;
+}
+.friend-list .text {
+  display: block;
+  text-align: center;
+}
+
+.users {
+  padding: 20px 30px;
+}
+
+.users .line {
+  width: 25%;
+  background: #828282;
+}
+
+.users .text {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.img {
+  width: 100%;
+}
