@@ -140,7 +140,7 @@ Page({
 
       // select the first video
       media[0].selected = true;
-
+      media.forEach(m => m.attributes.durationString = util.convertTime(m.attributes.duration));
       this.setData({
         media,
         selectedMedium: getSelectedMedium(media),
@@ -155,5 +155,17 @@ Page({
     }, () => {
       console.log('medium page request medium data fail');
     });
+  },
+  endedEvent() {
+    const media = this.data.media;
+    let index = media.indexOf(getSelectedMedium(media));
+    if (index >= 0 && index < media.length - 1) {
+      index ++;
+      media.forEach(m => m.selected = m.id === media[index].id);
+      this.setData({
+        media,
+        selectedMedium: media[index]
+      });
+    }
   }
 })
