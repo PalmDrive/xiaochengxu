@@ -68,7 +68,6 @@ Page({
     this.setData({
       userRole: Auth.getLocalUserInfo().attributes.role
     });
-    const that = this;
     function init() {
       //console.log(getCurrentPages()[1]);
       const bannerImageRatio = 375 / 400, // width / height
