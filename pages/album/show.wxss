@@ -24,8 +24,8 @@ page {
 /*url(https://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/lock_white.png)*/
 
 .lock-img {
-  width: 12px;
-  height: 16px;
+  width: 16px;
+  height: 22px;
   margin-right: 5px;
 }
 
@@ -514,7 +514,6 @@ page {
   border-radius: 3px;
   align-items: center;
   width: 255px;
-  height: 310px;
   padding: 20px;
 }
 
@@ -565,7 +564,8 @@ page {
 .achieve-image {
   width:15px;
   height:20px;
-  right:10px;
-  top:15px;
+  right:1px;
+  top:1px;
   position:absolute;
+  padding: 15px;
 }
