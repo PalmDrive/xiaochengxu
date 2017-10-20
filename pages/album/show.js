@@ -42,9 +42,10 @@ Page({
     trial: false,
     role: 0,
     hideAchieveTip: true,
-    achieveProcess: 4,
+    achieveProcess: 0,
     hideAchieveCard: true,
-    username: ''
+    username: '',
+    dayLogs: {}
   },
 
   //关闭首次登陆弹窗
@@ -98,8 +99,14 @@ Page({
             el: `album_name:${this.data.title},album_id:${this.data.albumId}`,
             ev: 0
           };
+    const key = 'day' + (6 - index + 1);
+    if (!this.data.dayLogs[key]) {
+      this.data.dayLogs[key] = 1;
+      this.data.achieveProcess = this.data.achieveProcess + 1;
+      this.setData({achieveProcess: this.data.achieveProcess});
+    }
     util.goToMedium(event, gaOptions, {
-      idx: 'day' + (6 - index + 1),
+      idx: key,
       albumId: this.data.albumId
     });
   },
@@ -154,6 +161,7 @@ Page({
     updates.loadingStatus = null;
     updates.role = role;
     updates.didUserPay = role === 2 || role === 1;
+
     // 阅读进度
     let logs = res.included[0].userAlbum.data.attributes.logs.days;
     let length = 0;
@@ -161,8 +169,20 @@ Page({
       length = length + 1;
     }
     updates.achieveProcess = length;
-    if ((updates.achieveProcess === 0 || updates.achieveProcess === 7) && Auth.getLocalAchieve() !== "true") {
-      updates.hideAchieveTip = false;
+    updates.dayLogs = logs;
+
+    // 是否弹出开始学习或者获得成就
+    const flagStart = updates.achieveProcess === 0 && Auth.getLocalAchieve("hideAchieveStart") !== "true" && Auth.getLocalAchieve( `${this.data.albumId}_start_isShowed`) !== "true";;
+    const flagEnd = updates.achieveProcess === 7 && Auth.getLocalAchieve("hideAchieveEnd") !== "true" && Auth.getLocalAchieve( `${this.data.albumId}_end_isShowed`) !== "true"
+    if (updates.didUserPay) {
+      if (flagStart) {
+        updates.hideAchieveTip = false;
+        Auth.setLocalAchieve( `${this.data.albumId}_start_isShowed`, "true")
+      }
+      if (flagEnd) {
+        updates.hideAchieveTip = false;
+        Auth.setLocalAchieve( `${this.data.albumId}_end_isShowed`, "true")
+      }
     }
 
     updates.posts.forEach((post, index) => {
@@ -237,7 +257,12 @@ Page({
   toggleAchieveNoMore() {
     const hideAchieveTip = !this.data.hideAchieveTip;
     this.setData({hideAchieveTip});
-    Auth.setLocalAchieve("true");
+    if (this.data.achieveProcess === 0) {
+      Auth.setLocalAchieve("hideAchieveStart", "true");
+    }
+    if (this.data.achieveProcess === 7) {
+      Auth.setLocalAchieve("hideAchieveEnd", "true");
+    }
   },
 
   listenSwiper(e) {

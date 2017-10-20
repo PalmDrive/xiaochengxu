@@ -31,12 +31,12 @@ const getLocalSessionKey = () => {
   return wx.getStorageSync(`${nameSpace}:sessionKey`);
 };
 
-const getLocalAchieve = () => {
-  return wx.getStorageSync(`${nameSpace}:hideAchieve`);
+const getLocalAchieve = (key) => {
+  return wx.getStorageSync(`${nameSpace}:${key}`);
 };
 
-const setLocalAchieve = hideAchieve => {
-  wx.setStorageSync(`${nameSpace}:hideAchieve`, hideAchieve);
+const setLocalAchieve = (key, hideAchieve) => {
+  wx.setStorageSync(`${nameSpace}:${key}`, hideAchieve);
 };
 
 /**
