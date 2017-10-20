@@ -116,7 +116,7 @@ Page({
    */
   onShareAppMessage() {
     return {
-      title: '我的群头条'
+      title: '七日辑'
     };
   },
   /**
