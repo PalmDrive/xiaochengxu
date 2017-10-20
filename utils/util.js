@@ -53,15 +53,15 @@ function convertTime(s) {
       var sec = s % 60;
       if (hour > 0) {
         if(hour < 10) {
-            t = '0'+ hour + ":";
+            t = '0'+ hour + ':';
         } else {
-            t = hour + ":";
+            t = hour + ':';
         }
       }
 
-      if(min < 10){t += "0";}
-      t += min + ":";
-      if(sec < 10){t += "0";}
+      if(min < 10){t += '0';}
+      t += min + ':';
+      if(sec < 10){t += '0';}
       t += sec.toFixed(0);
   }
   return t;

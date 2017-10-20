@@ -3,7 +3,7 @@
   text-align:center;
 }
 
-.vedio-view {
+.video-view {
   background: white;
 }
 
@@ -23,19 +23,19 @@
   margin-bottom: 1px;
 }
 
-.vedio-img {
+.video-img {
   width: 12px;
   height: 12px;
   margin-left: 20px;
 }
 
-.vedio-title {
+.video-title {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
   width: 70%;
 }
 
-.vedio-time {
+.video-time {
   margin-right: 20px;
 }
