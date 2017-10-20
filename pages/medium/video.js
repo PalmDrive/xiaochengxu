@@ -1,4 +1,3 @@
-// pages/medium/medium.js
 const app = getApp(),
       util = require('../../utils/util.js'),
       Auth = require('../../utils/auth.js'),
@@ -9,37 +8,44 @@ const app = getApp(),
 let albumId = null;
 let index = null;
 
+function getSelectedMedium(media) {
+  return media.filter(m => m.selected)[0];
+}
+
 Page({
   /**
    * 页面的初始数据
    */
   data: {
     mediumId: '',
-    medium: {},
-    relatedMedia: [],
-    relatedTopics: [],
+    media: [],
+    selectedMedium: null,
     loading: true,
-    showHint: false
+    videoSize: {}
   },
-  //事件处理函数
-  goToTopic: util.goToTopic,
-  goToMedium: util.goToMedium,
-  //关闭首次登陆弹窗
-  closeHint: function () {
-    util.closeHint(this);
-  },
+
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
     const that = this,
-      mediumId = options.id;
+      mediumId = options.id,
+      heightToWidth = 0.75;
+
     albumId = options.albumId;
     index = options.idx;
-    that.setData({mediumId});
+
+    const sysInfo = wx.getSystemInfoSync();
+
+    that.setData({
+      mediumId,
+      videoSize: {
+        width: sysInfo.windowWidth,
+        height: heightToWidth * sysInfo.windowWidth
+      }
+    });
 
     Auth.getLocalUserId() && this._load();
-
   },
 
   /**
@@ -110,42 +116,56 @@ Page({
     };
   },
 
+  selectMedium(e) {
+    const media = this.data.media,
+          id = e.currentTarget.dataset.itemid;
+
+    media.forEach(m => m.selected = m.id === id);
+    this.setData({
+      media,
+      selectedMedium: getSelectedMedium(media)
+    });
+  },
+
   _load() {
     const mediumId = this.data.mediumId;
     request({
-      url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt&from=miniProgram`
-    }).then((result) => {
-      const medium = result.data,
-        css = result.meta.css || '';
+      url: `${app.globalData.apiBase}/media/${mediumId}?from=miniProgram`
+    }).then(result => {
+      let media = result.data;
 
-      if (Object.keys(medium.attributes.topics).length === 0) {
-        delete medium.attributes.topics;
-      } else {
-        medium.attributes.topic = medium.attributes.topics[Object.keys(medium.attributes.topics)[0]];
+      if (!Array.isArray(media)) {
+        media = [media];
       }
 
-      if (medium.attributes.publishedAt) {
-        medium.attributes.publishedAt = util.convertDate(new Date(medium.attributes.publishedAt));
-      } else {
-        medium.attributes.publishedAt = '';
-      }
-
-      const html = medium.attributes.htmlContent,
-        decoded = he.decode(html);
-      WxParse.wxParse('htmlContent', 'html', decoded, this, 0);
-
+      // select the first video
+      media[0].selected = true;
+      media.forEach(m => m.attributes.durationString = util.convertTime(m.attributes.duration));
       this.setData({
-        medium,
+        media,
+        selectedMedium: getSelectedMedium(media),
         loading: false
       });
 
-      util.ga({
-        cid: Auth.getLocalUserId() || '555',
-        dp: '%2FarticlePage_XiaoChengXu',
-        dt: `article_title:${medium.attributes.title},article_id:${mediumId}`
-      });
+      // util.ga({
+      //   cid: Auth.getLocalUserId() || '555',
+      //   dp: '%2FarticlePage_XiaoChengXu',
+      //   dt: `article_title:${medium.attributes.title},article_id:${mediumId}`
+      // });
     }, () => {
       console.log('medium page request medium data fail');
     });
+  },
+  endedEvent() {
+    const media = this.data.media;
+    let index = media.indexOf(getSelectedMedium(media));
+    if (index >= 0 && index < media.length - 1) {
+      index ++;
+      media.forEach(m => m.selected = m.id === media[index].id);
+      this.setData({
+        media,
+        selectedMedium: media[index]
+      });
+    }
   }
 })

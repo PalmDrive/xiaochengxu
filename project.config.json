@@ -12,7 +12,7 @@
 	"projectname": "%E8%81%8C%E5%BE%97%E7%9C%8B",
 	"condition": {
 		"weapp": {
-			"current": -1,
+			"current": 4,
 			"list": [
 				{
 					"id": 0,
@@ -41,6 +41,13 @@
 					"pathName": "pages/album/buy",
 					"query": "id=35cb43c0-994b-11e7-83e6-811feeb3ae13",
 					"scene": "1008"
+				},
+				{
+					"id": -1,
+					"name": "Video show",
+					"pathName": "pages/medium/video",
+					"query": "id=7f5fd080-b4dc-11e7-a975-51fb73f916c3",
+					"scene": "1048"
 				}
 			]
 		},

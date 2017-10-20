@@ -45,6 +45,28 @@ function shortNumber(n) {
   }
 }
 
+function convertTime(s) {
+  var t = '';
+  if(s > -1){
+      var hour = Math.floor(s/3600);
+      var min = Math.floor(s/60) % 60;
+      var sec = s % 60;
+      if (hour > 0) {
+        if(hour < 10) {
+            t = '0'+ hour + ':';
+        } else {
+            t = hour + ':';
+        }
+      }
+
+      if(min < 10){t += '0';}
+      t += min + ':';
+      if(sec < 10){t += '0';}
+      t += sec.toFixed(0);
+  }
+  return t;
+}
+
 /*
 Convert a date to a string for display
 Example string: '刚刚', '20分钟前'
@@ -136,15 +158,21 @@ function formatPublishedAt(m) {
 
 function goToMedium(event, gaOptions, options) {
   options = options || {};
-  const albumId = options.albumId;
-  const idx = options.idx;
+  const albumId = options.albumId,
+        idx = options.idx;
 
   if (gaOptions) {
     gaEvent(gaOptions);
   }
 
-  const mediumId = event.currentTarget.dataset.medium.id;
-  let url = `../medium/medium?id=${mediumId}`;
+  const medium = event.currentTarget.dataset.medium;
+
+  let url = `../medium/medium?id=${medium.id}`;
+
+  if (medium.attributes.mediumType === 'video') {
+    url = `../medium/video?id=${medium.id}`;
+  }
+
   if (albumId) {
     url = `${url}&albumId=${albumId}&idx=${idx}`;
   }
@@ -322,6 +350,38 @@ function unshift(collection, el, key) {
   return res;
 }
 
+/**
+ * called in the mediumOnShow
+ * @param  {dict} params
+ *                params.userId
+ *                params.mediumId
+ *                [params.albumId]
+ *                [params.index]
+ */
+function mediumPageOnShow(params) {
+  const data = {
+          data: {attributes: {
+            userId: params.userId
+          }}
+        };
+
+  if (params.albumId) {
+    data.data.albumId = params.albumId;
+    data.data.daysLog = {};
+    data.data.daysLog[params.index] = +new Date();
+  }
+  if (params.userId && params.mediumId) {
+    // console.log('记录足迹');
+    request({
+      method: 'POST',
+      url: `${getApp().globalData.apiBase}/media/${params.mediumId}/views?from=miniProgram`,
+      data
+    }).then(null, err => {
+      console.log('Medium page, onShow, record lastViewedAt fail');
+    });
+  }
+}
+
 module.exports = {
   formatTime,
   formatDateToDay,
@@ -343,5 +403,7 @@ module.exports = {
   uniqPush,
   unshift,
   formatAlbum,
+  mediumPageOnShow,
+  convertTime,
   getAchieveProgress
 };
