@@ -324,6 +324,10 @@ Page({
       .catch(err => {
         console.log('wechat unifiedorder request err:');
         console.log(err);
+        wx.showToast({
+          title: '哎呀，出错了',
+          icon: 'loading'
+        });
         this.setData({processing: false});
       });
   },
