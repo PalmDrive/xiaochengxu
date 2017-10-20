@@ -7,7 +7,7 @@
     <text class="userinfo-nickname text-bold size-20">{{userInfo.wxUsername}}</text>
   </view>
   <view class="center-view">
-    <view class="center-item row" wx:for="{{items}}" wx:for-item="item" wx:key>
+    <view class="center-item row" wx:for="{{items}}" wx:for-item="item" wx:key bindtap="{{item.action}}">
       <view class="center-item-left">
         <image class="center-item-icon" src="/images/paid-group/{{item.icon}}@2x.png"></image>
         <text class="center-item-text  size-16 text-color2">{{item.title}}</text>

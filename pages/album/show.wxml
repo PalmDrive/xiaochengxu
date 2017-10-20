@@ -5,9 +5,38 @@
 <include src="../../includes/hint.wxml"/>
 <import src="../../templates/button-formid.wxml"/>
 
+<view hidden="{{hideAchieveCard}}">
+  <view class="modal">
+    <view class="achieve-tip-card column">
+      <include src="../../includes/achieve.wxml"/>
+      <text class="size-14 text-color1 achieve-tip-card-text">学习完成七日辑所有课程可获得完整成就 </text>
+      <text class="size-14 text-color1 achieve-tip-card-text">你可以在我的页面查看所有成就</text>
+      <text class="size-16 text-color2 achieve-tip-button1 achieve-tip-button" bindtap="toggleAchieveCardOK">我知道了</text>
+    </view>
+    <image src="../../images/paid-group/close.png" class="btn-close" bindtap="toggleAchieveCardOK"></image>
+  </view>
+  <view class="modal-drop"></view>
+</view>
+
+<view hidden="{{hideAchieveTip}}">
+  <view class="modal">
+    <view class="achieve-tip column">
+      <image src="../../images/achieve/achieve@3x.png" class="achieve-tip-image"></image>
+      <text class="size-22 pingfang-medium text-color1 achieve-tip-text1"> {{achieveProcess === 0 ? '欢迎开始新的学习' : ''}} {{achieveProcess === 7 ? '获得成就' : ''}} </text>
+      <text class="size-14 text-color1 achieve-tip-text2" >
+      {{achieveProcess === 0 ? '学完所有内容获得成就' : ''}}</text>
+      <text class="size-14 text-color1 achieve-tip-text2" > 你可以在我的页面查看所有成就 </text>
+      <text class="size-16 text-color2 achieve-tip-button1 achieve-tip-button" bindtap="toggleAchieveOK">我知道了</text>
+      <text class="size-16 text-color3 achieve-tip-button2 achieve-tip-button" bindtap="toggleAchieveNoMore">不再提示</text>
+    </view>
+    <image src="../../images/paid-group/close.png" class="btn-close" bindtap="toggleAchieveOK"></image>
+  </view>
+  <view class="modal-drop"></view>
+</view>
+
 <view class="modal-container" hidden="{{!qrcodeModalShown}}">
   <view class="modal">
-    <text class=" size-22 .pingfang-medium main-color text-center model-text1">开启推送</text>
+    <text class=" size-22 pingfang-medium main-color text-center model-text1">开启推送</text>
     <text class=" size-14 text-color1 model-text2" >关注微信公众号「职得看」，我们为您每日推送课程</text>
     <image src="../../images/paid-group/qrcode.jpg" class="modal-qrcode"></image>
     <text class=" size-14 text-color1 model-text3" >请截图保存，用微信扫描</text>
@@ -16,7 +45,9 @@
   </view>
   <view class="modal-drop"></view>
 </view>
+
 <template is="loading" data="{{loadingStatus}}"></template>
+
 <view class="container" lower-threshold="200" wx:if="{{(didUserPay || trial) && loadingStatus === null}}">
   <view wx:if="{{loadingStatus !== 'LOADING'}}" class="top-view column">
     <text class=" size-26 text-color1 FZRUIZH_CUJW--GB1-0 top-title">{{title}}</text>
@@ -39,6 +70,7 @@
           <view class="medium-banner" style="background-image: url('{{post.attributes.picUrl}}')">
             <view class="medium-banner-mask"></view>
             <text class="size-12 text-white label-trial" wx:if="{{!didUserPay && posts.length - index === 1}}">免费试读</text>
+            <image src="../../images/achieve/小成就@2x.png" class="achieve-image"  bindtap="toggleAchieveCardOK" wx:if="{{didUserPay}}"></image>
             <view class="row bottom-view">
               <image src="{{author.attributes.profilePicUrl}}" class="head-img"></image>
               <view class="right-view column top-text" >
@@ -53,7 +85,7 @@
         <view class="mediums row">
           <view class="medium {{post.relationships.media.data.length > 2 ? 'medium-50' : 'medium-100'}} {{idx === 1 || idx === 2 ? 'medium-gray' : ''}}" wx:for="{{ post.relationships.media.data }}" wx:for-item="medium" wx:for-index="idx"  data-medium="{{ medium}}" data-index="{{index}}" wx:key="" bindtap="goToMedium">
             <template is="buttonFormid"></template>
-            <text class="medium-title  size-16">{{ medium.attributes.title }}</text>
+            <text class="medium-title  size-16">{{(index + 1) + '. ' +  medium.attributes.title }}</text>
           </view>
         </view>
 
