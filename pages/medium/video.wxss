@@ -1,0 +1,41 @@
+.current-title {
+  padding: 30px 0px 30px 0px;
+  text-align:center;
+}
+
+.vedio-view {
+  background: white;
+}
+
+.tip {
+  padding: 15px 0px 15px 0px;
+  margin-left: 20px;
+}
+
+.line-view {
+  background: #FAFAFA;
+}
+
+.list-item {
+  justify-content: space-between;
+  background: #FAFAFA;
+  padding: 16px 0px 16px 0px;
+  margin-bottom: 1px;
+}
+
+.vedio-img {
+  width: 12px;
+  height: 12px;
+  margin-left: 20px;
+}
+
+.vedio-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  width: 70%;
+}
+
+.vedio-time {
+  margin-right: 20px;
+}
