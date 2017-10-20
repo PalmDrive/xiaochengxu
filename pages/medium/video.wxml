@@ -7,7 +7,7 @@
   <view class="column">
     <text class="tip size-14 text-color1">共{{media.length}}个视频</text>
     <view wx:for="{{media}}" wx:key data-itemid="{{item.id}}" bindtap="selectMedium" class="list-item row">
-      <image src="/images/paid-group/vedio{{item.selected ? '_selected' : '' }}@2x.png" class="vedio-img" mode="aspectFill"></image>
+      <image src="/images/paid-group/video{{item.selected ? '_selected' : '' }}@2x.png" class="vedio-img" mode="aspectFill"></image>
       <text class="vedio-title size-13" style="color: {{item.selected ? '#42BD56' : '#1A1A1A'}}">{{item.attributes.title}}</text>
       <text class="vedio-time text-color3 size-12">{{item.attributes.durationString}}</text>
     </view>
