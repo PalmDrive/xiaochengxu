@@ -5,6 +5,7 @@
 @import "wxss/templates/medium-list.wxss";
 @import "wxss/templates/medium-list-2.wxss";
 @import "wxss/includes/hint.wxss";
+@import "wxss/templates/prompt.wxss";
 
 .scroll-x {
   width: 100%;

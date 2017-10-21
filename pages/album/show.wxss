@@ -569,3 +569,75 @@ page {
   position:absolute;
   padding: 15px;
 }
+
+
+/* 免费得 弹窗 */
+.shareAlert .guide, .shareAlert .masked {
+  z-index: 10;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+.shareAlert .masked {
+  background: rgba(0,0,0,0.70);
+}
+
+.shareAlert .container {
+  margin: 170px auto;
+  padding: 10px;
+  width: 255px;
+  position: relative;
+  background: #FFFFFF;
+  border-radius: 3px;
+  overflow: visible;
+  padding-bottom: 10px;
+}
+
+.shareAlert button {
+  width: 120px;
+  height: 40px;
+  line-height: 40px;
+  margin-top: 25px;
+}
+
+
+.shareAlert .close-button {
+  width: 33px;
+  height: 33px;
+  position: absolute;
+  bottom: -55px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+.shareAlert .title {
+  text-align: center;
+  margin-left: 0;
+  width: 100%;
+  display: block;
+  margin-top: 15px;
+}
+
+.shareAlert .text {
+  margin-top: 10px;
+}
+
+.shareAlert .guide image {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+.shareAlert .guide button {
+  position: absolute;
+  bottom: 180px;
+  left: 50%;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: transparent;
+}
+/* 免费得到 弹窗 */

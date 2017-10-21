@@ -1,5 +1,7 @@
 <import src="../../templates/loading.wxml"/>
 <include src="../../includes/hint.wxml"/>
+<import src="../../templates/prompt.wxml"/>
+
 <view scroll-y bindscrolltolower="onReachBottom" lower-threshold="20" class="pingfang-regular">
   <view class="type-view">
     <image src="/images/paid-group/type_background@3x.png" class="type-background"></image>
@@ -33,3 +35,4 @@
   </view>
 </view>
 <template is="loading" data="{{loadingStatus}}"></template>
+<template is="prompt" data="{{tempAlert}}"></template>

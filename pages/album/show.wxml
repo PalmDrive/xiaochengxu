@@ -191,12 +191,28 @@
       <image src="/images/paid-group/试读.jpg" class="shidu-img" mode="aspectFill"></image>
       <text class="shidu-text text-color2 size-12">试读</text>
     </view>
-    <!--
-    <view class="free column" bindtap="gotoTrial">
+    <view class="free column" bindtap="gotoFree" wx:if="{{userRole==='admin'}}">
       <image src="/images/paid-group/免费@2x.png" class="free-img" mode="aspectFill"></image>
       <text class="free-text text-color2 size-12">免费得</text>
     </view>
-    -->
     <button bindtap="buy" class="btn-buy" disabled="{{processing}}" loading="{{processing}}">立刻购买 {{price / 100}}元</button>
+  </view>
+</view>
+<!-- shareAlert -->
+<view class="shareAlert" wx:if="{{shareAlert && !didUserPay && loadingStatus !== 'LOADING'}}">
+  <view wx:if="{{shareAlert.alert}}" class="masked">
+    <view class="alert">
+      <view class="container">
+        <text class="title size-22">看来你和{{shareAlert && shareAlert.username}}志同道合</text>
+        <text class="text size-16">
+        “集齐5人免费看”活动全场适用，快来逛逛吧！</text>
+        <button bindtap="showGuide" >立刻参加</button>
+        <image class="close-button" src="/images/close-white.png" bindtap="closeAlert" ></image>
+      </view>
+    </view>
+  </view>
+  <view wx:if="{{shareAlert.guide}}" class="guide">
+    <image mode="widthFix" src="https://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/guide.png"></image>
+    <button bindtap="closeAlert">我知道了</button>
   </view>
 </view>

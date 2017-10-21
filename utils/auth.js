@@ -161,6 +161,7 @@ const _loginRequest = function(userInfo) {
     .then(data => {
       const userId = data.data.id,
             jwt = data.data.accessToken;
+      userInfo.role = data.data.attributes.role;
       console.log('userId:', userId);
       console.log('jwt:', jwt);
       setLocalJWT(jwt);

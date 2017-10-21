@@ -1,0 +1,5 @@
+<view class="map-share-page">
+  <image src="{{imgUrl}}" class="slide" mode="widthFix" bindlongpress="saveImage"></image>
+  <button class="button-save size-14" bindtap="saveImage">保存到相册后可发朋友圈</button>
+  <button class="button-cancel size-14 text-gray" bindtap="cancel">取消</button>
+</view>
