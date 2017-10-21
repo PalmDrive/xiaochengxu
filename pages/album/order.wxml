@@ -5,9 +5,9 @@
   <view wx:for="{{favoriteTopics}}" wx:for-item="group" wx:key data-group="{{ group }}" bindtap="gotoPaidGroup">
       <image src="{{group.attributes.picurl}}" mode="widthFix" class="paid-group-pic"></image>
       <text class=" size-26 FZRUIZH_CUJW--GB1-0 image-bottom">{{group.attributes.title}}</text>
-      <text class=" size-12 image-bottom">{{group.attributes.index === -1 ? '快来学习吧，您已经获得该课程' : '已经学到第' + (group.attributes.index + 1) + '天'}}</text>
+      <text class=" size-12 image-bottom">{{'已经解锁到第' + (group.attributes.index) + '天'}}</text>
       <view class="tip-line image-bottom">
-        <view class="line {{index <= group.attributes.index ? 'line-blue' : 'line-gray'}}" wx:for="{{[0,1,2,3,4,5,6]}}" wx:for-item="medium"  wx:key=""></view>
+        <view class="line {{index <= group.attributes.index - 1 ? 'line-blue' : 'line-gray'}}" wx:for="{{[0,1,2,3,4,5,6]}}" wx:for-item="medium"  wx:key=""></view>
       </view>
       <view class="section-break"></view>
   </view>

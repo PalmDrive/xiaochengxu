@@ -125,7 +125,7 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      title: '我的订阅'
+      title: '七日辑-我的页面'
     };
   },
 

@@ -79,7 +79,7 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      title: '我的成就'
+      title: '七日辑-成就'
     };
   },
 
