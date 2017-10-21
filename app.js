@@ -59,7 +59,7 @@ App({
         .then(page => {
           reloadPage(page);
           setTimeout(() => { // wait a bit for reloading
-            showHint();
+            //showHint();
           }, 1500);
         });
 

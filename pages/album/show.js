@@ -163,9 +163,17 @@ Page({
     }
     util.goToMedium(event, gaOptions, {
       idx: key,
-      albumId: this.data.albumId
+      albumId: this.data.albumId,
+      morningPostId: this._getMorningPostId()
     });
   },
+
+  _getMorningPostId() {
+    const posts = this.data.posts,
+          index = posts.length - this.data.current;
+    return posts[index].id;
+  },
+
   /**
    * 加载数据
    */

@@ -172,13 +172,13 @@ function goToMedium(event, gaOptions, options) {
 
   const medium = event.currentTarget.dataset.medium;
 
-  let url = `../medium/medium?id=${medium.id}`;
+  let url = `../medium/medium?id=${medium.id}&morningPostId=${options.morningPostId}`;
 
   if (medium.attributes.mediumType === 'video') {
     url = `../medium/video?id=${medium.id}`;
   }
 
-  if (albumId) {
+  if (albumId) { // for vidoe show
     url = `${url}&albumId=${albumId}&idx=${idx}`;
   }
   wx.navigateTo({

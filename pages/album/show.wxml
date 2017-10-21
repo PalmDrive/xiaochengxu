@@ -23,9 +23,9 @@
     <view class="achieve-tip column">
       <image src="../../images/achieve/achieve@3x.png" class="achieve-tip-image"></image>
       <text class="size-22 pingfang-medium text-color1 achieve-tip-text1"> {{achieveProcess === 0 ? '欢迎开始新的学习' : ''}} {{achieveProcess === 7 ? '获得成就' : ''}} </text>
-      <text class="size-14 text-color1 achieve-tip-text2" >
-      {{achieveProcess === 0 ? '学完所有内容获得成就' : ''}}</text>
-      <text class="size-14 text-color1 achieve-tip-text2" > 你可以在我的页面查看所有成就 </text>
+      <text class="size-14 text-color1 achieve-tip-text2">
+      {{achieveProcess === 0 ? '看完七日辑所有内容，可获得一个成就' : ''}}</text>
+      <text class="size-14 text-color1 achieve-tip-text2">在我的页面查看所有成就</text>
       <text class="size-16 text-color2 achieve-tip-button1 achieve-tip-button" bindtap="toggleAchieveOK">我知道了</text>
       <text class="size-16 text-color3 achieve-tip-button2 achieve-tip-button" bindtap="toggleAchieveNoMore">不再提示</text>
     </view>

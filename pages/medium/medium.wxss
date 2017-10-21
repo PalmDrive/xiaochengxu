@@ -2,6 +2,12 @@
 
 @import "../../utils/wxParse/wxParse.wxss";
 
+.btn-next {
+  background-color: #59AA00;
+  color: #fff;
+  border-radius: 0;
+}
+
 .medium-container {
   padding: 18px 15px 0 15px;
 }

@@ -66,9 +66,9 @@ Page({
    */
   _loadPaidGroupOver(res) {
     this.data.page.number ++;
-    console.log('=============')
-    console.log(res.data);
-    console.log('=============')
+    // console.log('=============')
+    // console.log(res.data);
+    // console.log('=============')
     let loadingStatus;
     if (!res.data.length) {
       loadingStatus = 'LOADED_ALL';

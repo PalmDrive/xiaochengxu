@@ -23,6 +23,8 @@
 
   <view class="size-12 html-footer text-center text-gray" hidden="{{loading}}">网页由“职得看”转码以便移动设备阅读</view>
 
+  <button class="btn-next" bindtap="gotoNext" wx:if="{{nextMediumId}}">下一篇</button>
+
   <!-- <view class="topic" wx:if="{{medium.attributes.topic}}">
     <view class="topic-img img-cover d-ib" style="background-image: {{'url(' + medium.attributes.topic.imgUrl + ')'}}"></view>
   </view>

@@ -6,8 +6,9 @@ const app = getApp(),
       he = require('../../utils/he.js'),
       {request} = require('../../utils/request');
 
-let albumId = null;
-let index = null;
+let albumId = null,
+    index = null,
+    morningPostId = null;
 
 Page({
   /**
@@ -15,6 +16,7 @@ Page({
    */
   data: {
     mediumId: '',
+    nextMediumId: '',
     medium: {},
     relatedMedia: [],
     relatedTopics: [],
@@ -36,6 +38,8 @@ Page({
       mediumId = options.id;
     albumId = options.albumId;
     index = options.idx;
+    morningPostId = options.morningPostId;
+
     that.setData({mediumId});
 
     Auth.getLocalUserId() && this._load();
@@ -92,6 +96,13 @@ Page({
 
   },
 
+  gotoNext() {
+    // TODO: add ga tracking
+    const url = `/pages/medium/medium?id=${this.data.nextMediumId}&morningPostId=${morningPostId}`;
+    
+    wx.redirectTo({url});
+  },
+
   /**
    * 用户点击右上角分享
    */
@@ -111,10 +122,14 @@ Page({
   },
 
   _load() {
+    let url =  `${app.globalData.apiBase}/media/${this.data.mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt&meta[prev]=true&from=miniProgram`;
+    if (morningPostId) {
+      url += `&morningPostId=${morningPostId}`
+    }
     const mediumId = this.data.mediumId;
     request({
-      url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt&from=miniProgram`
-    }).then((result) => {
+      url
+    }).then(result => {
       const medium = result.data,
         css = result.meta.css || '';
 
@@ -135,6 +150,7 @@ Page({
       WxParse.wxParse('htmlContent', 'html', decoded, this, 0);
 
       this.setData({
+        nextMediumId: result.meta && result.meta.next,
         medium,
         loading: false
       });
