@@ -9,7 +9,7 @@ Page({
     userId: null,
     loading: false,
     favoriteTopics: [],
-    page: {number: 1, size: 8},
+    page: {number: 1, size: 10},
     noMore: false,
     items: []
   },
@@ -45,7 +45,7 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    this.setData({ loading: true, noMore: false, 'page.number': 1 });
+    // this.setData({ loading: true, noMore: false, 'page.number': 1 });
   },
 
   /**
@@ -79,7 +79,7 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      title: '我的订阅'
+      title: '七日辑-已购'
     };
   },
 
