@@ -1,7 +1,7 @@
 {
   "pages":[
     "pages/album/index",
-    "pages/album/order",
+    "pages/album/purchased-list",
     "pages/album/free",
     "pages/album/share",
     "pages/groups/groups",
@@ -43,7 +43,7 @@
         "selectedIconPath": "images/tabIcons/home_selected.png"
       },
       {
-        "pagePath": "pages/album/order",
+        "pagePath": "pages/album/purchased-list",
         "text": "已购",
         "iconPath": "images/tabIcons/buy.png",
         "selectedIconPath": "images/tabIcons/buy_selected.png"

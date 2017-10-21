@@ -163,7 +163,7 @@ Page({
 
   goToAchieve() {
     wx.navigateTo({
-      url: './achieve'
+      url: './achievements'
     });
   }
 });
