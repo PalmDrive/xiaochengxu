@@ -2,8 +2,6 @@
   "pages":[
     "pages/album/index",
     "pages/album/order",
-    "pages/album/mine",
-    "pages/album/achieve",
     "pages/album/free",
     "pages/album/share",
     "pages/groups/groups",
@@ -18,6 +16,8 @@
     "pages/medium/medium",
     "pages/medium/video",
     "pages/my/my",
+    "pages/my/index",
+    "pages/my/achievements",
     "pages/groups/group",
     "pages/groups/new-group",
     "pages/index/index",
@@ -49,7 +49,7 @@
         "selectedIconPath": "images/tabIcons/buy_selected.png"
       },
       {
-        "pagePath": "pages/album/mine",
+        "pagePath": "pages/my/index",
         "text": "我的",
         "iconPath": "images/tabIcons/my.png",
         "selectedIconPath": "images/tabIcons/my_selected.png"
