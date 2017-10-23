@@ -50,8 +50,7 @@ Page({
         that.setData({clientHeight: res.windowHeight});
       }
     })
-
-    that.setData({mediumId, dayIndex: index.replace('d', 'D'), mediumIndex: options.mediumIndex, mediumCount: options.count});
+    that.setData({mediumId, dayIndex: index.replace('day', 'Day '), mediumIndex: options.mediumIndex, mediumCount: options.count});
 
     Auth.getLocalUserId() && this._load();
 
