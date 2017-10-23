@@ -15,6 +15,7 @@
     "pages/topic/topic",
     "pages/medium/medium",
     "pages/medium/video",
+    "pages/medium/audio",
     "pages/my/my",
     "pages/my/index",
     "pages/my/achievements",
