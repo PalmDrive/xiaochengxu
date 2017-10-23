@@ -2,10 +2,36 @@
 
 @import "../../utils/wxParse/wxParse.wxss";
 
-.btn-next {
+.cover-view {
   background-color: #59AA00;
-  color: #fff;
-  border-radius: 0;
+  width: 100%;
+  padding: 20px;
+
+}
+
+.cover-text1 {
+  margin-top: 40%;
+}
+
+.cover-text2 {
+  margin-top: 5%;
+}
+
+.cover-text3 {
+  margin-top: 80%;
+}
+
+.btn-next {
+  width: 80px;
+  height: 33px;
+  background: #DBDBDE;
+  margin-left: 10px;
+  margin-right: 0px;
+}
+
+.button-page {
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .medium-container {
