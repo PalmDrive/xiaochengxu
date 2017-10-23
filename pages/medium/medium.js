@@ -26,8 +26,6 @@ Page({
     mediumIndex: 1,
     mediumCount: 1,
     dayIndex: '',
-    scrollTop: 0,
-    animateClass: '',
     current: 0
   },
   //事件处理函数
@@ -53,7 +51,7 @@ Page({
       }
     })
 
-    that.setData({mediumId, dayIndex: index, mediumIndex: options.mediumIndex, mediumCount: options.count});
+    that.setData({mediumId, dayIndex: index.replace('d', 'D'), mediumIndex: options.mediumIndex, mediumCount: options.count});
 
     Auth.getLocalUserId() && this._load();
 

@@ -4,7 +4,6 @@
 <import src="../../utils/wxParse/wxParse.wxml"/>
 <include src="../../includes/hint.wxml"/>
 
-
 <swiper class="container" vertical="true" style="height: {{clientHeight}}px;" current="{{current}}">
   <swiper-item>
     <view class="loading text-center" hidden="{{!loading}}">
@@ -12,10 +11,19 @@
     </view>
 
     <view class="cover-view column" style="height: {{clientHeight}}px;">
-      <text class="size-14 pingfang-medium text-white cover-text1"> 第 {{mediumIndex}} 个卡片（共 {{mediumCount}} 个卡片） </text>
-      <text class="size-28 pingfang-medium text-white cover-text2">
-      {{medium.attributes.title}}</text>
-      <text class="size-18 text-white cover-text3">{{dayIndex}}</text>
+      <view class="cover-view-top column">
+        <text class="size-14 pingfang-medium text-white"> 第 {{mediumIndex}} 节（共 {{mediumCount}} 节内容） </text>
+        <text class="size-28 pingfang-medium text-white">
+        {{medium.attributes.title}}</text>
+        <view class="row clock-view" wx:if="{{medium.attributes.estimatedReadDuration}}">
+          <image src="../../images/paid-group/时间@2x.png" class="clock"></image>
+          <text class="size-16 pingfang-medium text-white"> 预计需要{{(medium.attributes.estimatedReadDuration / 1000)}}分钟</text>
+        </view>
+      </view>
+      <view class="cover-view-bottom column">
+        <text class="size-18 text-white cover-text3">{{dayIndex}}</text>
+        <image src="../../images/paid-group/arrow_bottom.jpg" class="arrow"></image>
+      </view>
     </view>
   </swiper-item>
 
@@ -37,8 +45,8 @@
       <view class="size-12 html-footer text-center text-gray" hidden="{{loading}}">网页由“职得看”转码以便移动设备阅读</view>
 
       <view class="row button-page">
-        <button class="btn-next size-12 text-color1" bindtap="gotoPrev" disabled="{{!prevMediumId}}">上一篇</button>
-        <button class="btn-next size-12 text-color1" bindtap="gotoNext" disabled="{{!nextMediumId}}">下一篇</button>
+        <button class="btn-next size-12 text-color1" bindtap="gotoPrev" disabled="{{!prevMediumId}}">上一节</button>
+        <button class="btn-next size-12 text-color1" bindtap="gotoNext" disabled="{{!nextMediumId}}">下一节</button>
       </view>
     </scroll-view>
   </swiper-item>

@@ -5,33 +5,35 @@
 .cover-view {
   background-color: #59AA00;
   width: 100%;
-  padding: 20px;
-
+  padding: 130px 20px 20px 20px;
+  justify-content: space-between;
 }
 
-.cover-text1 {
-  margin-top: 40%;
+.clock {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
 }
 
-.cover-text2 {
-  margin-top: 5%;
-}
-
-.cover-text3 {
-  margin-top: 80%;
+.arrow {
+  margin-top: -3%;
+  margin-left: 50%;
+  width: 17px;
+  height: 10px;
 }
 
 .btn-next {
   width: 80px;
   height: 33px;
   background: #DBDBDE;
-  margin-left: 10px;
-  margin-right: 0px;
+  margin-left: 20px;
+  margin-right: 20px;
+  padding-top:2px;
 }
 
 .button-page {
   justify-content: center;
-  margin-bottom: 20px;
+  padding-bottom: 40px;
 }
 
 .medium-container {
