@@ -2,10 +2,38 @@
 
 @import "../../utils/wxParse/wxParse.wxss";
 
-.btn-next {
+.cover-view {
   background-color: #59AA00;
-  color: #fff;
-  border-radius: 0;
+  width: 100%;
+  padding: 130px 20px 20px 20px;
+  justify-content: space-between;
+}
+
+.clock {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+.arrow {
+  margin-top: -3%;
+  margin-left: 50%;
+  width: 17px;
+  height: 10px;
+}
+
+.btn-next {
+  width: 80px;
+  height: 33px;
+  background: #DBDBDE;
+  margin-left: 20px;
+  margin-right: 20px;
+  padding-top:2px;
+}
+
+.button-page {
+  justify-content: center;
+  padding-bottom: 40px;
 }
 
 .medium-container {

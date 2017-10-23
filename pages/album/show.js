@@ -111,7 +111,7 @@ Page({
                 refereeId: Auth.getLocalUserId(),
                 productId: this.data.albumId,
                 userId: res.data.attributes.createdBy
-              } 
+              }
             }
           }
         })
@@ -128,7 +128,7 @@ Page({
       init();
     }
   },
-  
+
   onShow() {
     if (this.data.title) {
       util.ga({
@@ -137,7 +137,7 @@ Page({
         dt: `album_name:${this.data.title},album_id:${this.data.albumId}`
       });
     }
-    if (this.data.achieveProcess === 7) {
+    if (this.data.achieveProcess === 7 && Auth.getLocalAchieve( `${this.data.albumId}_end_isShowed`) !== "true") {
       this.setData({hideAchieveTip: false});
       Auth.setLocalAchieve( `${this.data.albumId}_end_isShowed`, "true")
     }
@@ -147,6 +147,8 @@ Page({
   goToMedium: function(event) {
     const medium = event.currentTarget.dataset.medium,
           index = event.currentTarget.dataset.index,
+          idx = event.currentTarget.dataset.idx,
+          count = event.currentTarget.dataset.count,
           userInfo = Auth.getLocalUserInfo(),
           gaOptions = {
             cid: Auth.getLocalUserId(),
@@ -162,7 +164,9 @@ Page({
       this.setData({achieveProcess: this.data.achieveProcess});
     }
     util.goToMedium(event, gaOptions, {
-      idx: key,
+      dayIndex: key,
+      mediumIndex: idx + 1,
+      count: count,
       albumId: this.data.albumId,
       morningPostId: this._getMorningPostId()
     });

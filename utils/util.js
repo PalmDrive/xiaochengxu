@@ -164,7 +164,9 @@ function formatPublishedAt(m) {
 function goToMedium(event, gaOptions, options) {
   options = options || {};
   const albumId = options.albumId,
-        idx = options.idx;
+        dayIndex = options.dayIndex,
+        mediumIndex = options.mediumIndex,
+        count = options.count;
 
   if (gaOptions) {
     gaEvent(gaOptions);
@@ -179,7 +181,7 @@ function goToMedium(event, gaOptions, options) {
   }
 
   if (albumId) { // for vidoe show
-    url = `${url}&albumId=${albumId}&idx=${idx}`;
+    url = `${url}&albumId=${albumId}&dayIndex=${dayIndex}&mediumIndex=${mediumIndex}&count=${count}`;
   }
   wx.navigateTo({
     url

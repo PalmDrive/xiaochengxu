@@ -9,7 +9,6 @@ const app = getApp(),
 let albumId = null,
     index = null,
     morningPostId = null;
-
 Page({
   /**
    * 页面的初始数据
@@ -17,11 +16,17 @@ Page({
   data: {
     mediumId: '',
     nextMediumId: '',
+    prevMediumId: '',
     medium: {},
     relatedMedia: [],
     relatedTopics: [],
     loading: true,
-    showHint: false
+    showHint: false,
+    clientHeight: 0,
+    mediumIndex: 1,
+    mediumCount: 1,
+    dayIndex: '',
+    current: 0
   },
   //事件处理函数
   goToTopic: util.goToTopic,
@@ -35,12 +40,18 @@ Page({
    */
   onLoad: function (options) {
     const that = this,
-      mediumId = options.id;
+          mediumId = options.id;
     albumId = options.albumId;
-    index = options.idx;
+    index = options.dayIndex;
     morningPostId = options.morningPostId;
 
-    that.setData({mediumId});
+    wx.getSystemInfo({
+      success: function (res) {
+        that.setData({clientHeight: res.windowHeight});
+      }
+    })
+
+    that.setData({mediumId, dayIndex: index.replace('d', 'D'), mediumIndex: options.mediumIndex, mediumCount: options.count});
 
     Auth.getLocalUserId() && this._load();
 
@@ -98,8 +109,15 @@ Page({
 
   gotoNext() {
     // TODO: add ga tracking
-    const url = `/pages/medium/medium?id=${this.data.nextMediumId}&morningPostId=${morningPostId}`;
-    
+    const url = `/pages/medium/medium?id=${this.data.nextMediumId}&morningPostId=${morningPostId}&albumId=${albumId}&dayIndex=${index}&mediumIndex=${(parseInt(this.data.mediumIndex) + 1)}&count=${this.data.mediumCount}`;
+
+    wx.redirectTo({url});
+  },
+
+  gotoPrev() {
+    // TODO: add ga tracking
+    const url = `/pages/medium/medium?id=${this.data.prevMediumId}&morningPostId=${morningPostId}&albumId=${albumId}&dayIndex=${index}&mediumIndex=${(parseInt(this.data.mediumIndex) - 1)}&count=${this.data.mediumCount}`;
+
     wx.redirectTo({url});
   },
 
@@ -151,6 +169,7 @@ Page({
 
       this.setData({
         nextMediumId: result.meta && result.meta.next,
+        prevMediumId: result.meta && result.meta.prev,
         medium,
         loading: false
       });
@@ -163,5 +182,11 @@ Page({
     }, () => {
       console.log('medium page request medium data fail');
     });
+  },
+ scroll: function(e) {
+  if (e.detail.scrollTop < 5) {
+    this.setData({ current: 0});
   }
+   console.log('scroll y: ' + e.detail.scrollTop);
+ }
 })

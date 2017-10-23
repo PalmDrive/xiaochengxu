@@ -4,27 +4,52 @@
 <import src="../../utils/wxParse/wxParse.wxml"/>
 <include src="../../includes/hint.wxml"/>
 
-<view class="container">
-  <view class="loading text-center" hidden="{{!loading}}">
-    <text>数据加载中...</text>
-  </view>
-  <view class="medium-container">
-    <view class="title size-20">{{medium.attributes.title}}</view>
-    <view class="meta size-12">
-      <view class="source-image img-cover d-ib" style="background-image: {{'url(' + medium.attributes.sourcePicUrl + ')'}}"></view>
-      <view class="source text-dark-grey d-ib meta-text">{{medium.attributes.source ? medium.attributes.source : ''}}</view>
-      <view class="author text-gray d-ib meta-text">{{medium.attributes.author ? medium.attributes.author : ''}}</view>
-      <view class="time text-dark-grey d-ib meta-text">{{medium.attributes.publishedAt}}</view>
+<swiper class="container" vertical="true" style="height: {{clientHeight}}px;" current="{{current}}">
+  <swiper-item>
+    <view class="loading text-center" hidden="{{!loading}}">
+      <text>数据加载中...</text>
     </view>
-    <view class="html-content size-15">
-      <template is="wxParse" data="{{wxParseData:htmlContent.nodes}}"/>
+
+    <view class="cover-view column" style="height: {{clientHeight}}px;">
+      <view class="cover-view-top column">
+        <text class="size-14 pingfang-medium text-white"> 第 {{mediumIndex}} 节（共 {{mediumCount}} 节内容） </text>
+        <text class="size-28 pingfang-medium text-white">
+        {{medium.attributes.title}}</text>
+        <view class="row clock-view" wx:if="{{medium.attributes.estimatedReadDuration}}">
+          <image src="../../images/paid-group/时间@2x.png" class="clock"></image>
+          <text class="size-16 pingfang-medium text-white"> 预计需要{{(medium.attributes.estimatedReadDuration / 1000)}}分钟</text>
+        </view>
+      </view>
+      <view class="cover-view-bottom column">
+        <text class="size-18 text-white cover-text3">{{dayIndex}}</text>
+        <image src="../../images/paid-group/arrow_bottom.jpg" class="arrow"></image>
+      </view>
     </view>
-  </view>
+  </swiper-item>
 
-  <view class="size-12 html-footer text-center text-gray" hidden="{{loading}}">网页由“职得看”转码以便移动设备阅读</view>
+  <swiper-item>
+    <scroll-view style="height: {{clientHeight}}px;" scroll-y bindscroll="scroll">
+      <view class="medium-container">
+        <view class="title size-20">{{medium.attributes.title}}</view>
+        <view class="meta size-12">
+          <view class="source-image img-cover d-ib" style="background-image: {{'url(' + medium.attributes.sourcePicUrl + ')'}}"></view>
+          <view class="source text-dark-grey d-ib meta-text">{{medium.attributes.source ? medium.attributes.source : ''}}</view>
+          <view class="author text-gray d-ib meta-text">{{medium.attributes.author ? medium.attributes.author : ''}}</view>
+          <view class="time text-dark-grey d-ib meta-text">{{medium.attributes.publishedAt}}</view>
+        </view>
+        <view class="html-content size-15">
+          <template is="wxParse" data="{{wxParseData:htmlContent.nodes}}"/>
+        </view>
+      </view>
 
-  <button class="btn-next" bindtap="gotoNext" wx:if="{{nextMediumId}}">下一篇</button>
+      <view class="size-12 html-footer text-center text-gray" hidden="{{loading}}">网页由“职得看”转码以便移动设备阅读</view>
 
+      <view class="row button-page">
+        <button class="btn-next size-12 text-color1" bindtap="gotoPrev" disabled="{{!prevMediumId}}">上一节</button>
+        <button class="btn-next size-12 text-color1" bindtap="gotoNext" disabled="{{!nextMediumId}}">下一节</button>
+      </view>
+    </scroll-view>
+  </swiper-item>
   <!-- <view class="topic" wx:if="{{medium.attributes.topic}}">
     <view class="topic-img img-cover d-ib" style="background-image: {{'url(' + medium.attributes.topic.imgUrl + ')'}}"></view>
   </view>
@@ -39,4 +64,4 @@
 
   <!-- <view class="section-title text-gray size-14">专题推荐</view>
   <template is="topicList" data="{{topics: relatedTopics}}"></template> -->
-</view>
+</swiper>
