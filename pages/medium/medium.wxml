@@ -15,9 +15,9 @@
         <text class="size-14 pingfang-medium text-white"> 第 {{mediumIndex}} 节（共 {{mediumCount}} 节内容） </text>
         <text class="size-28 pingfang-medium text-white">
         {{medium.attributes.title}}</text>
-        <view class="row clock-view" wx:if="{{medium.attributes.estimatedReadDuration}}">
+        <view class="row clock-view" wx:if="{{medium.attributes.metaData.estimatedReadDuration}}">
           <image src="../../images/paid-group/时间@2x.png" class="clock"></image>
-          <text class="size-16 pingfang-medium text-white"> 预计需要{{(medium.attributes.estimatedReadDuration / 1000)}}分钟</text>
+          <text class="size-16 pingfang-medium text-white"> 预计需要{{(medium.attributes.metaData.estimatedReadDuration / 1000)}}分钟</text>
         </view>
       </view>
       <view class="cover-view-bottom column">
