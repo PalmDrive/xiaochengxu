@@ -1,0 +1,53 @@
+/* pages/my/my.wxss */
+
+page {
+  height:100%;
+}
+
+.container {
+  height: 100%;
+}
+
+.section-break {
+  height: 10px;
+}
+
+.no-subscription {
+  width: 100px;
+  margin: auto;
+  margin-top: 100px;
+}
+
+.paid-group-pic {
+  width: 100%;
+  height: 160px;
+  position: relative;
+}
+
+.image-bottom {
+  margin-left: 20px;
+  display: block;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.line {
+  height: 2px;
+  width: 13%;
+}
+
+.tip-line {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: space-between;
+  flex-direction: row;
+  margin-right: 20px;
+}
+
+.line-blue {
+  background-color: #0090E7;
+}
+
+.line-gray {
+  background-color: rgba(0, 0, 0, 0.05);
+}
