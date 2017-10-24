@@ -126,6 +126,7 @@ Page({
       media,
       selectedMedium: getSelectedMedium(media)
     });
+    this.audioCtx.play()
   },
 
   _load() {
@@ -167,6 +168,7 @@ Page({
         media,
         selectedMedium: media[index]
       });
+      this.audioCtx.play()
     }
   },
   audioPlay: function () {

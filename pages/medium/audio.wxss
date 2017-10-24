@@ -3,6 +3,10 @@
   text-align:center;
 }
 
+audio {
+  margin-left:20px;
+}
+
 .video-view {
   background: white;
 }
