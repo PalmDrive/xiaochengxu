@@ -8,7 +8,7 @@
     <text class="text size-12">1、点击下方按钮生成邀请卡
     2、将邀请卡转发至微信群或朋友圈，邀请小伙伴扫码
     3、集齐5人扫码，即可免费获得此《七日辑》
-    4、您可以“我的”页面查看进度</text>
+    4、可以在“我的”页面查看进度</text>
     <button bindtap="_gotoShare">生成我的邀请卡</button>
   </view>
   <view wx:if="{{users.length > 0}}" class="users continer">
