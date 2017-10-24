@@ -1,0 +1,21 @@
+<!--pages/my/free.wxml-->
+<import src="../../templates/topic-list.wxml"/>
+
+<view class="container">
+  <view class="list" wx:for="{{albums}}" wx:for-item="album" wx:key data-album="{{ album }}" bindtap="gotoAlbum">
+    <image class="topic-img" mode="aspectFill" src="{{album.attributes.picurl}}"></image>
+    <view class="text-container">
+      <text class="size-16 title">{{album.attributes.title}}</text>
+      <text class="size-12 text">已经完成{{album.relationships.referees.length}}/5  去课程里面查看吧</text>
+      <view class="head-imgs">
+        <image class="head-img" src="{{album.relationships.referees[0].attributes.profilePicUrl}}"></image>
+        <image class="head-img" src="{{album.relationships.referees[1].attributes.profilePicUrl}}"></image>
+        <image class="head-img" src="{{album.relationships.referees[2].attributes.profilePicUrl}}"></image>
+        <image class="head-img" src="{{album.relationships.referees[3].attributes.profilePicUrl}}"></image>
+        <image class="head-img" src="{{album.relationships.referees[4].attributes.profilePicUrl}}"></image>
+      </view>
+    </view>
+    <view class="size-12 bottom-text">点击查看详情</view>
+  </view>
+  <view style="text-align: center;" wx:if="albums.length === 0">您还没有免费得的七日编辑</view>
+</view>
