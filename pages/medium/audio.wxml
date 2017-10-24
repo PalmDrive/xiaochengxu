@@ -1,21 +1,28 @@
 <import src="../../utils/wxParse/wxParse.wxml"/>
 
 <view class="video-view column">
-  <view class="column">
-    <audio poster="{{poster}}" name="{{selectedMedium.attributes.title}}" author="{{selectedMedium.attributes.author}}" src="{{selectedMedium.attributes.video}}" id="myAudio" bindended="endedEvent" controls></audio>
+  <view class="column audio-view">
+    <audio poster="{{poster}}" style="width: {{videoSize.width - 40}}px" name="{{selectedMedium.attributes.title}}" author="{{selectedMedium.attributes.author}}" src="{{selectedMedium.attributes.video}}" id="myAudio" bindended="endedEvent" controls></audio>
   </view>
-  <view class="row">
-    <text class="type-button size-14 text-color1" bindtap="clickAudio">音频</text>
-    <text class="type-button size-14 text-color1" bindtap="clickText">文稿</text>
-  </view>
-  <view class="column" wx:if="{{isAudioShow}}">
-    <view wx:for="{{media}}" wx:key data-itemid="{{item.id}}" bindtap="selectMedium" class="list-item row">
-      <image src="/images/paid-group/audio{{item.selected ? '_selected' : '' }}@2x.png" class="audio-img" mode="aspectFill"></image>
-      <text class="video-title size-13" style="color: {{item.selected ? '#42BD56' : '#1A1A1A'}}">{{item.attributes.title}}</text>
-      <text class="video-time text-color3 size-12">{{item.attributes.durationString}}</text>
+
+  <view wx:if="{{media.length > 1}}">
+    <view class="row">
+      <text class="type-button size-14" style="color: {{isAudioShow ? '#42BD56' : '#1A1A1A'}}" bindtap="clickAudio">音频</text>
+      <text class="type-button size-14" style="color: {{isAudioShow ? '#1A1A1A' : '#42BD56'}}" bindtap="clickText">文稿</text>
     </view>
+    <view class="column" wx:if="{{isAudioShow}}">
+      <view wx:for="{{media}}" wx:key data-itemid="{{item.id}}" bindtap="selectMedium" class="list-item row">
+        <image src="/images/paid-group/audio{{item.selected ? '_selected' : '' }}@2x.png" class="audio-img" mode="aspectFill"></image>
+        <text class="video-title size-13" style="color: {{item.selected ? '#42BD56' : '#1A1A1A'}}">{{item.attributes.title}}</text>
+        <text class="video-time text-color3 size-12">{{item.attributes.durationString}}</text>
+      </view>
+    </view>
+    <scroll-view scroll-y style="height: {{videoSize.height - 260}}px;" scroll-into-view="{{toView}}" class="html-content"  wx:if="{{!isAudioShow}}">
+      <template is="wxParse" data="{{wxParseData:htmlContent.nodes}}"/>
+    </scroll-view>
   </view>
-  <view class="html-content size-15" wx:if="{{!isAudioShow}}">
+
+  <scroll-view scroll-y style="height: {{videoSize.height - 210}}px;" scroll-into-view="{{toView}}" class="html-content"  wx:if="{{media.length <= 1}}">
     <template is="wxParse" data="{{wxParseData:htmlContent.nodes}}"/>
-  </view>
+  </scroll-view>
 </view>

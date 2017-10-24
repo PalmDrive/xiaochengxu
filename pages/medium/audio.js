@@ -5,8 +5,8 @@ const app = getApp(),
       he = require('../../utils/he.js'),
       {request} = require('../../utils/request');
 
-let albumId = null;
-let index = null;
+let albumId = null,
+    index = null;
 
 function getSelectedMedium(media) {
   return media.filter(m => m.selected)[0];
@@ -22,7 +22,9 @@ Page({
     selectedMedium: null,
     loading: true,
     videoSize: {},
-    isAudioShow: true
+    isAudioShow: true,
+    css: '',
+    toView: '#'
   },
 
   /**
@@ -42,7 +44,7 @@ Page({
       mediumId,
       videoSize: {
         width: sysInfo.windowWidth,
-        height: heightToWidth * sysInfo.windowWidth
+        height: sysInfo.screenHeight
       }
     });
 
@@ -122,38 +124,61 @@ Page({
     const media = this.data.media,
           id = e.currentTarget.dataset.itemid;
 
-    media.forEach(m => m.selected = m.id === id);
+    let index = 0;
+    media.forEach((m,i) => {
+      m.selected = m.id === id;
+      if (m.id === id) {
+        index = i;
+      }
+    });
     this.setData({
       media,
-      selectedMedium: getSelectedMedium(media)
+      selectedMedium: getSelectedMedium(media),
+      toView: `title${index}`
     });
-    this.audioCtx.play()
+    this.audioCtx.pause();
+    const src = getSelectedMedium(media).attributes.video;
+    if (src) {
+      this.audioCtx.setSrc(src);
+      this.audioCtx.play();
+    }
+
   },
 
   _load() {
     const mediumId = this.data.mediumId;
     request({
-      url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=mediumType,htmlContent,title,duration,relatedArticles`
+      url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=mediumType,htmlContent,title,duration,relatedArticles,video,author&meta[prev]=true&css=true`
     }).then(result => {
-      let media = result.data;
+      let media = result.data,
+          css = result.meta.css;
 
       if (!Array.isArray(media)) {
         media = [media];
       }
+      // media = media.splice(0, 1);
 
       let html = '';
       // select the first video
       media[0].selected = true;
       media.forEach((m,i) => {
         m.attributes.durationString =    util.convertTime(m.attributes.duration);
-        let title = `<div class="audio-text-title">第${(i + 1)}节文稿: ${m.attributes.title}</div>`
-        html += title + he.decode(m.attributes.htmlContent);
+        let tip = `第${(i + 1)}节文稿: `
+        if (media.length === 1) {
+          tip = '';
+        }
+        let title = `<div class="audio-text-title" id="title-${i}" >${tip}${m.attributes.title}</div>`
+        let text = `<div class="audio-text-content">${he.decode(m.attributes.htmlContent)}</div>`
+        html += title + text;
       });
       WxParse.wxParse('htmlContent', 'html', html, this, 0);
       this.setData({
+        nextMediumId: result.meta && result.meta.next,
+        prevMediumId: result.meta && result.meta.prev,
         media,
         selectedMedium: getSelectedMedium(media),
-        loading: false
+        loading: false,
+        css
       });
 
       // util.ga({
@@ -183,5 +208,18 @@ Page({
   },
   clickAudio() {
     this.setData({isAudioShow: true});
+  },
+  gotoNext() {
+    // TODO: add ga tracking
+    const url = `/pages/medium/audio?id=${this.data.nextMediumId}&morningPostId=${morningPostId}&albumId=${albumId}`;
+
+    wx.redirectTo({url});
+  },
+
+  gotoPrev() {
+    // TODO: add ga tracking
+    const url = `/pages/medium/audio?id=${this.data.prevMediumId}&morningPostId=${morningPostId}&albumId=${albumId}`;
+
+    wx.redirectTo({url});
   }
 })
