@@ -134,7 +134,7 @@ Page({
     this.setData({
       media,
       selectedMedium: getSelectedMedium(media),
-      toView: `title${index}`
+      toView: `content-${index}`
     });
     this.audioCtx.pause();
     const src = getSelectedMedium(media).attributes.video;
@@ -142,7 +142,6 @@ Page({
       this.audioCtx.setSrc(src);
       this.audioCtx.play();
     }
-
   },
 
   _load() {
@@ -167,11 +166,15 @@ Page({
         if (media.length === 1) {
           tip = '';
         }
-        let title = `<div class="audio-text-title" id="title-${i}" >${tip}${m.attributes.title}</div>`
-        let text = `<div class="audio-text-content">${he.decode(m.attributes.htmlContent)}</div>`
-        html += title + text;
+        m.attributes.tipTitle = `${tip}${m.attributes.title}`
+
+        let content = `<div class="audio-text-content">${he.decode(m.attributes.htmlContent)}</div>`;
+        WxParse.wxParse('htmlContent' + i, 'html', content, this, 0);
+        if (i === media.length - 1) {
+          WxParse.wxParseTemArray("htmlContentArray",'htmlContent', media.length, this);
+        }
       });
-      WxParse.wxParse('htmlContent', 'html', html, this, 0);
+
       this.setData({
         nextMediumId: result.meta && result.meta.next,
         prevMediumId: result.meta && result.meta.prev,

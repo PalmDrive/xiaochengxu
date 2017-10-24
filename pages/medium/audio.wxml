@@ -18,7 +18,10 @@
       </view>
     </view>
     <scroll-view scroll-y style="height: {{videoSize.height - 260}}px;" scroll-into-view="{{toView}}" class="html-content"  wx:if="{{!isAudioShow}}">
-      <template is="wxParse" data="{{wxParseData:htmlContent.nodes}}"/>
+      <view wx:for="{{htmlContentArray}}" wx:key id="content-{{index}}">
+        <text class="audio-text-title" >{{media[index].attributes.tipTitle}}</text>
+        <template is="wxParse" data="{{wxParseData:item}}"/>
+      </view>
     </scroll-view>
   </view>
 
