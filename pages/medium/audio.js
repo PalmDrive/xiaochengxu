@@ -133,16 +133,15 @@ Page({
   _load() {
     const mediumId = this.data.mediumId;
     request({
-      url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=mediumType,htmlContent,title,duration`
+      url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=mediumType,htmlContent,title,duration,relatedArticles`
     }).then(result => {
-      let media = result.data,
-          css = result.meta.css || '';
+      let media = result.data;
 
       if (!Array.isArray(media)) {
         media = [media];
       }
 
-      let html = css;
+      let html = '';
       // select the first video
       media[0].selected = true;
       media.forEach((m,i) => {
