@@ -1,15 +1,21 @@
+<import src="../../utils/wxParse/wxParse.wxml"/>
+
 <view class="video-view column">
   <view class="column">
     <audio poster="{{poster}}" name="{{selectedMedium.attributes.title}}" author="{{selectedMedium.attributes.author}}" src="{{selectedMedium.attributes.video}}" id="myAudio" bindended="endedEvent" controls></audio>
-    <text class="current-title size-18 pingfang-medium text-color1">{{selectedMedium.attributes.title}}</text>
-    <view class="line-view"></view>
   </view>
-  <view class="column">
-    <text class="tip size-14 text-color1">共{{media.length}}个视频</text>
+  <view class="row">
+    <text class="type-button size-14 text-color1" bindtap="clickAudio">音频</text>
+    <text class="type-button size-14 text-color1" bindtap="clickText">文稿</text>
+  </view>
+  <view class="column" wx:if="{{isAudioShow}}">
     <view wx:for="{{media}}" wx:key data-itemid="{{item.id}}" bindtap="selectMedium" class="list-item row">
       <image src="/images/paid-group/audio{{item.selected ? '_selected' : '' }}@2x.png" class="audio-img" mode="aspectFill"></image>
       <text class="video-title size-13" style="color: {{item.selected ? '#42BD56' : '#1A1A1A'}}">{{item.attributes.title}}</text>
       <text class="video-time text-color3 size-12">{{item.attributes.durationString}}</text>
     </view>
+  </view>
+  <view class="html-content size-15" wx:if="{{!isAudioShow}}">
+    <template is="wxParse" data="{{wxParseData:htmlContent.nodes}}"/>
   </view>
 </view>

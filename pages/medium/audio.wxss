@@ -11,9 +11,10 @@ audio {
   background: white;
 }
 
-.tip {
+.type-button {
   padding: 15px 0px 15px 0px;
-  margin-left: 20px;
+  width: 50%;
+  text-align: center;
 }
 
 .line-view {
@@ -42,4 +43,27 @@ audio {
 
 .video-time {
   margin-right: 20px;
+}
+
+.audio-text-title {
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: #161616;
+  letter-spacing: 0;
+  margin-bottom: 15px;
+  margin-top: 20px;
+}
+
+.html-content {
+  font-family: PingFangSC-Regular;
+  font-size: 14px;
+  color: #505050;
+  letter-spacing: 0;
+  line-height: 26px;
+  background: #FAFAFA;
+  padding: 0px 20px 20px 20px;
+}
+
+.html-content image {
+  margin-left: -15px;
 }

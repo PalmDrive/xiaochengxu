@@ -21,7 +21,8 @@ Page({
     media: [],
     selectedMedium: null,
     loading: true,
-    videoSize: {}
+    videoSize: {},
+    isAudioShow: true
   },
 
   /**
@@ -132,17 +133,24 @@ Page({
   _load() {
     const mediumId = this.data.mediumId;
     request({
-      url: `${app.globalData.apiBase}/media/${mediumId}?from=miniProgram`
+      url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=mediumType,htmlContent,title,duration`
     }).then(result => {
-      let media = result.data;
+      let media = result.data,
+          css = result.meta.css || '';
 
       if (!Array.isArray(media)) {
         media = [media];
       }
 
+      let html = css;
       // select the first video
       media[0].selected = true;
-      media.forEach(m => m.attributes.durationString = util.convertTime(m.attributes.duration));
+      media.forEach((m,i) => {
+        m.attributes.durationString =    util.convertTime(m.attributes.duration);
+        let title = `<div class="audio-text-title">第${(i + 1)}节文稿: ${m.attributes.title}</div>`
+        html += title + he.decode(m.attributes.htmlContent);
+      });
+      WxParse.wxParse('htmlContent', 'html', html, this, 0);
       this.setData({
         media,
         selectedMedium: getSelectedMedium(media),
@@ -171,16 +179,10 @@ Page({
       this.audioCtx.play()
     }
   },
-  audioPlay: function () {
-    this.audioCtx.play()
+  clickText() {
+    this.setData({isAudioShow: false});
   },
-  audioPause: function () {
-    this.audioCtx.pause()
-  },
-  audio14: function () {
-    this.audioCtx.seek(14)
-  },
-  audioStart: function () {
-    this.audioCtx.seek(0)
+  clickAudio() {
+    this.setData({isAudioShow: true});
   }
 })
