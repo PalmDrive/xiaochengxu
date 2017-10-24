@@ -49,3 +49,17 @@ page {
   text-align: center;
   margin-top: 12px;
 }
+
+/* 空状态 */
+.free-null {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #f6f6f6;
+}
+.free-null image {
+  display: block;
+  width: 250px;
+  height: 280px;
+  margin: 20% auto 0 auto;
+}

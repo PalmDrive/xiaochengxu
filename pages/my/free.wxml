@@ -17,5 +17,7 @@
     </view>
     <view class="size-12 bottom-text">点击查看详情</view>
   </view>
-  <view style="text-align: center;" wx:if="albums.length === 0">您还没有免费得的七日编辑</view>
+  <view wx:if="{{albums && (albums.length === 0)}}" class="free-null">
+    <image src="http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/free-null.png"></image>
+  </view>
 </view>

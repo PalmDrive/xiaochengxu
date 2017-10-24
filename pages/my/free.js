@@ -6,7 +6,7 @@ const app = getApp(),
   baseUrl = app.globalData.apiBase;
 Page({
   data: {
-    albums: []
+    albums: null
   },
 
   onLoad: function (options) {
