@@ -180,6 +180,10 @@ function goToMedium(event, gaOptions, options) {
     url = `../medium/video?id=${medium.id}`;
   }
 
+  if (medium.attributes.mediumType === 'audio') {
+    url = `../medium/audio?id=${medium.id}`;
+  }
+
   if (albumId) { // for vidoe show
     url = `${url}&albumId=${albumId}&dayIndex=${dayIndex}&mediumIndex=${mediumIndex}&count=${count}`;
   }

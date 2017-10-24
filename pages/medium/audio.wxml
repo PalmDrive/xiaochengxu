@@ -2,7 +2,7 @@
 
 <view class="video-view column">
   <view class="column audio-view">
-    <audio poster="{{poster}}" style="width: {{videoSize.width - 40}}px" name="{{selectedMedium.attributes.title}}" author="{{selectedMedium.attributes.author}}" src="{{selectedMedium.attributes.video}}" id="myAudio" bindended="endedEvent" controls></audio>
+    <audio poster="{{poster}}" name="{{selectedMedium.attributes.title}}" author="{{selectedMedium.attributes.author}}" src="{{selectedMedium.attributes.video}}" id="myAudio" bindended="endedEvent" controls></audio>
   </view>
 
   <view wx:if="{{media.length > 1}}">

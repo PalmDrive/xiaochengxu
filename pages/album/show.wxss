@@ -136,6 +136,11 @@ page {
   background: #EDEDED;
 }
 
+.medium-type {
+  padding: 7px 2px 7px 2px;
+  background: #B0B0B0;
+}
+
 .medium-title {
   display: -webkit-box;
   -webkit-box-orient: vertical;
