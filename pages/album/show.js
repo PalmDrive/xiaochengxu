@@ -401,6 +401,12 @@ Page({
       });
   },
 
+  showPay () {
+    this.setData({
+      payView: true
+    });
+  },
+
   gotoTrial() {
     const userId = this.data.albumId;
     wx.navigateTo({
