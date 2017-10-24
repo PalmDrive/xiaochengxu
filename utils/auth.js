@@ -1,4 +1,4 @@
-const nameSpace = 'zdk_xiaochengxu';
+const nameSpace = 'qiriji_xiaochengxu';
 
 const {request} = require('request');
 
