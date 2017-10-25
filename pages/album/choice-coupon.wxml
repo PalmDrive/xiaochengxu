@@ -1,0 +1,38 @@
+<!--pages/my/coupon.wxml-->
+
+<view class="container">
+  <view wx:if="{{coupons && coupons.length > 0}}" class="list">
+    <!-- 不使用红包选项 -->
+    <view data-selectedid="{{-1}}" bindtap="choiceCoupon" class="notUse size-16">
+      不使用红包
+      <view wx:if="{{selectedId != -1}}" class="coupon-status2"></view>
+      <image wx:else class="coupon-status3" src="/images/coupon/choice.png"></image>
+    </view>
+    
+    <!-- 优惠券 -->
+    <view class="coupon" wx:for="{{coupons}}" wx:for-item="coupon" wx:key data-selectedid="{{index}}" bindtap="choiceCoupon">
+      <view class="top">
+        <view class="quota size-28"><text class="size-12">￥</text>{{coupon.quota / 100}}</view>
+        <view class="texts">
+          <view class="name size-16">{{coupon.name}}</view>
+          <view class="validityTerm size-12">{{coupon.validityTerm}}</view>
+        </view>
+        <view class="circle circle-left"></view>
+        <view class="circle circle-right"></view>
+      </view>
+      <view class="range size-12">{{coupon.range}}</view>
+      <!--  -->
+      <view wx:if="{{selectedId != index}}" class="coupon-status2"></view>
+      <image wx:else class="coupon-status3" src="/images/coupon/choice.png"></image>
+    </view>
+
+    <!-- 提示 -->
+    <view class="tip size-14">注：只显示符合条件的卡券</view>
+  </view>
+
+  <!-- 没有卡券 -->
+  <view wx:else class="no-coupon">
+    <image class="coupon-icon" src="/images/coupon/icon.png"></image>
+    <view>还没有任何卡券</view>
+  </view>
+</view>

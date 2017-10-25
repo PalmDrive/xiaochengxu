@@ -76,6 +76,7 @@ page {
 }
 /* 已使用 */
 .coupon-status4 {
+  display: none;
   position: absolute;
   top: 18px;
   right: 17px;
@@ -83,6 +84,15 @@ page {
   width: 51.9px;
   height: 38.6px;
 }
+
+/* 已经使用的 start */
+.beused .quota, .beused .name {
+  color: #B0B0B9;
+}
+.beused .coupon-status4 {
+  display: block;
+}
+/* 已经使用的 end */
 
 /* 没有卡券 */
 .no-coupon {
