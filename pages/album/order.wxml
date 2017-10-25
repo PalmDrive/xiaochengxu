@@ -1,14 +1,17 @@
 <!--pages/my/my.wxml-->
 <import src="../../templates/topic-list.wxml"/>
 
-<view class="container">
-  <view wx:for="{{favoriteTopics}}" wx:for-item="group" wx:key data-group="{{ group }}" bindtap="gotoPaidGroup">
-      <image src="{{group.attributes.picurl}}" mode="widthFix" class="paid-group-pic"></image>
-      <text class=" size-26 FZRUIZH_CUJW--GB1-0 image-bottom">{{group.attributes.title}}</text>
-      <text class=" size-12 image-bottom">{{'已经解锁到第' + (group.attributes.index) + '天'}}</text>
-      <view class="tip-line image-bottom">
-        <view class="line {{index <= group.attributes.index - 1 ? 'line-blue' : 'line-gray'}}" wx:for="{{[0,1,2,3,4,5,6]}}" wx:for-item="medium"  wx:key=""></view>
-      </view>
-      <view class="section-break"></view>
-  </view>
+
+<view class="column order-blank-view" wx:if="{{favoriteTopics.length == 0}}">
+  <image src="../../images/paid-group/订单空状态.png" class="order-blank" mode="aspectFit"></image>
+  <text class=" size-14 text-color3">还没有订单</text>
+</view>
+
+
+<view wx:for="{{favoriteTopics}}" wx:for-item="group" wx:key data-group="{{ group }}" bindtap="gotoPaidGroup" class="items column" wx:if="{{favoriteTopics.length > 0}}">
+    <text class=" size-12 text-color3 time">{{group.attributes.unlockedAtString}}</text>
+    <view class="row">
+      <text class=" size-18 text-color1 title" >{{group.attributes.title}}</text>
+      <text class=" size-12 price">实付款: ￥ {{group.attributes.price / 100}}</text>
+    </view>
 </view>

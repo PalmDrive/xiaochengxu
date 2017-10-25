@@ -18,8 +18,10 @@ Page({
 
   onLoad: function (options) {
     if (options && options.pullDown) {
-      this.setData({ 'page.number': 1, noMore: false });
+      this.setData({ 'page.number': 1, noMore: false});
     }
+
+    // this.setData({width: wx.getSystemInfoSync().screenWidth });
     Auth.getLocalUserId() && this._load();
   },
 
@@ -37,7 +39,7 @@ Page({
     Util.ga({
       cid: Auth.getLocalUserId() || '555',
       dp: '%2FwodeTab_XiaoChengXu',
-      dt: '已购tab页（小程序）'
+      dt: '我的订单（小程序）'
     });
   },
 
@@ -79,12 +81,12 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      title: '七日辑-已购'
+      title: '七日辑-订单'
     };
   },
 
   updateData: function(topics) {
-    topics.forEach(Util.formatAlbum);
+    topics.forEach(Util.formatAlbumUnlockedAt);
 
     const data = {
       loadingMore: false,
@@ -98,7 +100,7 @@ Page({
 
   getTopics: function(pageNumber) {
     request({
-      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/albums?page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=title,picurl&filter=unlocked`
+      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/albums?page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=title,picurl,price&filter=unlocked`
     }).then((res) => {
       const topics = res.data;
       this.updateData(topics);
