@@ -1,8 +1,10 @@
 <import src="../../utils/wxParse/wxParse.wxml"/>
+<import src="../../templates/loading.wxml"/>
 
 <view class="video-view column">
+  <template is="loading" data="{{loadingStatus}}"></template>
   <view class="column audio-view">
-    <audio poster="{{poster}}" name="{{selectedMedium.attributes.title}}" author="{{selectedMedium.attributes.author}}" src="{{selectedMedium.attributes.video}}" id="myAudio" bindended="endedEvent" controls></audio>
+    <audio poster="{{poster}}" name="{{selectedMedium.attributes.title}}" author="{{selectedMedium.attributes.author}}" src="{{selectedMedium.attributes.video}}" id="myAudio" bindended="endedEvent" controls bindplay="bindplay" bindpause="bindpause"></audio>
   </view>
 
   <view wx:if="{{media.length > 1}}">

@@ -6,7 +6,8 @@ const app = getApp(),
       {request} = require('../../utils/request');
 
 let albumId = null,
-    index = null;
+    index = null,
+    timer = null;
 
 function getSelectedMedium(media) {
   return media.filter(m => m.selected)[0];
@@ -24,7 +25,8 @@ Page({
     videoSize: {},
     isAudioShow: true,
     css: '',
-    toView: '#'
+    toView: '#',
+    loadingStatus: false
   },
 
   /**
@@ -140,7 +142,7 @@ Page({
     const src = getSelectedMedium(media).attributes.video;
     if (src) {
       this.audioCtx.setSrc(src);
-      this.audioCtx.play();
+      this.play();
     }
   },
 
@@ -203,7 +205,7 @@ Page({
         media,
         selectedMedium: media[index]
       });
-      this.audioCtx.play()
+      this.play()
     }
   },
   clickText() {
@@ -224,5 +226,43 @@ Page({
     const url = `/pages/medium/audio?id=${this.data.prevMediumId}&morningPostId=${morningPostId}&albumId=${albumId}`;
 
     wx.redirectTo({url});
+  },
+
+  bindplay() {
+    // this.audioCtx.play()
+    this.startTimer();
+  },
+
+  bindpause() {
+    this.stopTimer();
+    // this.audioCtx.pause()
+  },
+
+  play() {
+    this.audioCtx.play()
+    this.startTimer();
+  },
+
+  pause() {
+    this.audioCtx.pause()
+    this.stopTimer();
+  },
+
+  startTimer() {
+    timer = setInterval(this.getLoadingState,1000);
+  },
+
+  stopTimer() {
+    //去掉定时器的方法
+    clearInterval(timer);
+  },
+
+  getLoadingState() {
+    let manager = wx.getBackgroundAudioManager();
+    if (manager.paused === false && manager.buffered - manager.current <= 0) {
+      this.setData({loadingStatus: true});
+    } else {
+      this.setData({loadingStatus: false});
+    }
   }
 })
