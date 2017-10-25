@@ -1,7 +1,7 @@
 <!--pages/my/my.wxml-->
 <import src="../../templates/topic-list.wxml"/>
 
-<view class="container">
+<view class="container column">
   <view wx:for="{{favoriteTopics}}" wx:for-item="group" wx:key data-group="{{ group }}" bindtap="gotoPaidGroup">
       <image src="{{group.attributes.picurl}}" mode="widthFix" class="paid-group-pic"></image>
       <text class=" size-26 FZRUIZH_CUJW--GB1-0 image-bottom">{{group.attributes.title}}</text>
