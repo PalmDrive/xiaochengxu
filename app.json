@@ -1,7 +1,7 @@
 {
   "pages":[
-    "pages/album/order",
     "pages/album/index",
+    "pages/my/order",
     "pages/album/purchased-list",
     "pages/album/free",
     "pages/album/share",
