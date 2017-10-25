@@ -47,7 +47,12 @@ Page({
     hideAchieveCard: true,
     username: '',
     dayLogs: {},
-    shareAlert: false
+    shareAlert: false,
+    // 选择的优惠券的id 默认是-1
+    couponIndex: -1,
+    coupon: null,
+    // 用于 choice-coupon
+    coupons: null
   },
 
   //关闭首次登陆弹窗
@@ -129,7 +134,7 @@ Page({
     }
   },
 
-  onShow() {
+  onShow(e) {
     if (this.data.title) {
       util.ga({
         cid: Auth.getLocalUserId(),
@@ -338,6 +343,27 @@ Page({
   },
 
   buy() {
+    const price = this.data.coupon ? (this.data.price - this.data.coupon.quota) : this.data.price;
+    
+    // 使用完优惠券是否是0元
+    if (price <= 0) {
+      this._useCoupon()
+      .then(res => {
+        return this._unlockAlubm()
+      }).then(res => {
+        loadData(this.data.albumId)
+          .then(this._onLoadSuccess)
+          .then(res => {
+            this.setData({
+              trial: false,
+              processing: false,
+              payView: false,
+            });
+          });
+      });
+      return;
+    }
+
     const url = `${baseUrl}/wechat/pay/unifiedorder?from=miniProgram`,
           userInfo = Auth.getLocalUserInfo(),
           attrs = userInfo.attributes || {};
@@ -353,7 +379,7 @@ Page({
       url,
       data: {
         data: {
-          totalFee: this.data.price,
+          totalFee: price,
           name: this.data.title,
           openid: attrs.wxOpenId,
           productId: this.data.albumId,
@@ -379,6 +405,11 @@ Page({
           this.setData({trial: false});
           loadData(this.data.albumId)
             .then(this._onLoadSuccess);
+          
+          // 判断是否是优惠券购买的
+          if (this.data.coupon) {
+            this._useCoupon();
+          }
         };
         params.fail = (err) => {
           console.log('wx requestPayment fail');
@@ -401,9 +432,13 @@ Page({
       });
   },
 
+  // 显示支付的 底部 弹窗
   showPay () {
-    this.setData({
-      payView: true
+    this.findCoupon()
+    .then(d => {
+      this.setData({
+        payView: true
+      });
     });
   },
 
@@ -449,5 +484,77 @@ Page({
         guide: true
       }
     });
-  }
+  },
+  // 选择优惠券
+  gotoChoiceCoupon() {
+    wx.navigateTo({
+      url: `../album/choice-coupon?coupons=${JSON.stringify(this.data.coupons)}`
+    });
+  },
+  // 使用优惠券
+  _useCoupon() {
+    return request({
+      url: `${app.globalData.apiBase}/user-coupons/${this.data.coupon.userCouponId}/redeem`,
+      method: 'POST',
+      data: {
+        albumId: this.data.albumId
+      }
+    }).then(res => {
+      console.log(res);
+    });
+  },
+  // 解锁
+  _unlockAlubm() {
+    return request({
+      url: `${app.globalData.apiBase}/albums/${this.data.albumId}/unlock`,
+      method: 'POST',
+      data: {
+      }
+    }).then(res => {
+      console.log(res);
+    });
+  },
+
+  // 查账 coupons
+  findCoupon: function () {
+    return request({
+      url: `${baseUrl}/user-coupons`,
+      data: {
+        redeemedAt: true,
+        albumId: this.data.albumId
+      },
+      method: 'GET'
+    }).then(res => {
+      const coupons = {};
+      res.included && res.included.map(c => {
+        if (c.type = 'Coupons') {
+          coupons[c.id] = c;
+        }
+      });
+      const couponsData = res.data.map(d => {
+        return {
+          couponId: coupons[d.relationships.coupon.data.id].id,
+          userCouponId: d.id,
+          quota: coupons[d.relationships.coupon.data.id].attributes.value,
+          name: d.attributes.displayName,
+          validityTerm: `有效期至${this._formatDateToDay(new Date(coupons[d.relationships.coupon.data.id].attributes.expiredAt))}`,
+          range: coupons[d.relationships.coupon.data.id].attributes.albumId ? `仅限购买“${coupons[d.relationships.coupon.data.id].attributes.albumId}”` : '全场通用，最高折扣50元',
+        }
+      });
+      this.setData({
+        coupons: couponsData
+      });
+      return res.data;
+    });
+  },
+
+  /**
+   * @return 'xxxx年x月x日'
+   */
+  _formatDateToDay(date) {
+    const year = date.getFullYear(),
+          month = date.getMonth() + 1,
+          day = date.getDate();
+    return year + '-' + month + '-' + day;
+  },
 })

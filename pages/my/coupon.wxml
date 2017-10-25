@@ -1,38 +1,38 @@
 <!--pages/my/coupon.wxml-->
 
 <view class="container">
-  <view class="notUse size-16">
+  <!-- 不使用红包 -->
+  <view class="notUse size-16" style="display: none;">
     不使用红包
     <view class="coupon-status2"></view>
     <image class="coupon-status3" src="/images/coupon/choice.png"></image>
   </view>
   
   <!-- 优惠券 -->
-  <view class="coupon" wx:for="{{coupons}}" wx:for-item="coupon" wx:key>
-    <view class="top">
-      <view class="quota size-28">{{coupon.quota}}</view>
-      <view class="texts">
-        <view class="name size-16">{{coupon.name}}</view>
-        <view class="validityTerm size-12">{{coupon.validityTerm}}</view>
+  <view wx:if="{{coupons && coupons.length > 0}}">
+    <view wx:for="{{coupons}}" wx:for-item="coupon" wx:key class="coupon {{coupon.redeemedAt ? 'beused' : null}}">
+      <view class="top">
+        <view class="quota size-28"><text class="size-12">￥</text>{{coupon.quota / 100}}</view>
+        <view class="texts">
+          <view class="name size-16">{{coupon.name}}</view>
+          <view class="validityTerm size-12">{{coupon.validityTerm}}</view>
+        </view>
+        <view class="circle circle-left"></view>
+        <view class="circle circle-right"></view>
       </view>
-      <view class="circle circle-left"></view>
-      <view class="circle circle-right"></view>
+      <view class="range size-12">{{coupon.range}}</view>
+      <image wx:if="{{coupon.redeemedAt}}" class="coupon-status4" src="/images/coupon/alreadyUsed.png"></image>
     </view>
-    <view class="range size-12">{{coupon.range}}</view>
-    <!--  -->
-    <view class="coupon-status1"></view>
-    <image class="coupon-status3" src="/images/coupon/choice.png"></image>
-    <image class="coupon-status4" src="/images/coupon/alreadyUsed.png"></image>
   </view>
 
   <!-- 没有卡券 -->
-  <view class="no-coupon">
+  <view wx:else class="no-coupon">
     <image class="coupon-icon" src="/images/coupon/icon.png"></image>
     <view>还没有任何卡券</view>
   </view>
 
   <!-- 领取过 的提示 -->
-  <view class="getOver-continer">
+  <view class="getOver-continer" style="display: none;">
     <view class="getOver size-14">您已经领取过此优惠券，请勿重复领取</view>
   </view>
 
