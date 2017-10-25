@@ -155,7 +155,7 @@ Page({
       if (!Array.isArray(media)) {
         media = [media];
       }
-      media = media.splice(0, 1);
+      // media = media.splice(0, 1);
 
       let html = '';
       // select the first video
