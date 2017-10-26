@@ -24,7 +24,6 @@ page {
 .price {
   color: #DF0A20;
   letter-spacing: 0.41px;
-  width: 90px;
 }
 
 .row {

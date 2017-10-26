@@ -96,6 +96,7 @@ Page({
       data.noMore = true;
     }
     this.setData(data);
+    wx.stopPullDownRefresh();
   },
 
   getTopics: function(pageNumber) {
