@@ -105,5 +105,11 @@ giftCoupon(couponId) {
     url: `${baseUrl}/user-coupons/${couponId}/gift`,
     method: 'POST'
   });
-}
+},
+// 下拉刷新
+onPullDownRefresh() {
+  this.findCoupon().then(res => {
+    wx.stopPullDownRefresh();
+  });
+},
 });

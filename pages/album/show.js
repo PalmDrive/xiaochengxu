@@ -441,6 +441,16 @@ Page({
       });
     });
   },
+  // 隐藏 支付页面
+  hidePay () {
+    this.setData({
+      payView: false
+    });
+  },
+  none (event) {
+    console.log(event);
+    return null;
+  },
 
   gotoTrial() {
     const userId = this.data.albumId;

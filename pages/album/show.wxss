@@ -682,6 +682,7 @@ page {
   bottom: 1%;
   background: #FFFFFF;
   border-radius: 8px;
+  z-index: 10;
 }
 
 .pay .remarks {
