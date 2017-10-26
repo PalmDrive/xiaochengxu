@@ -1,4 +1,5 @@
-const _ = require('../vendors/underscore');
+const _ = require('../vendors/underscore'),
+      clientVersion = '1.9.4';
 
 //let _header = {};
 
@@ -32,9 +33,16 @@ const request = opts => {
 
   _.extend(defaultOpts.header, opts.header || {});
 
+  let url = opts.url;
+  if (url.indexOf('?') === -1) {
+    url += `?client_version=${clientVersion}`;
+  } else {
+    url += `&client_version=${clientVersion}`;
+  }
+
   return new Promise((resolve, reject) => {
     wx.request({
-      url: opts.url,
+      url,
       data: opts.data,
       header: defaultOpts.header,
       method: opts.method,
