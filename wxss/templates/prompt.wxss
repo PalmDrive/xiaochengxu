@@ -32,7 +32,7 @@
   height: 97px;
 }
 
-.prompt .close-button {
+.close-button {
   width: 33px;
   height: 33px;
   position: absolute;
@@ -56,4 +56,75 @@
 
 .prompt .text {
   margin-top: 10px;
+}
+
+/* 弹窗 */
+.coupon-continer {
+  position: absolute;
+  width: 321px;
+  height: 381px;
+  background: #DD3918;
+  margin: 10% auto;
+  left: 0;
+  right: 0;
+}
+.coupon-continer .title {
+  text-align: center;
+  color: #fff;
+  margin: 18px 0 7px 0;
+  line-height: 42px;
+}
+
+.coupon-continer .subtitle {
+  display: block;
+  text-align: center;
+  color: #fff;
+}
+
+.coupon-continer .coupon {
+  width: 276px;
+  height: 137px;
+  background: #FFFFFF;
+  box-shadow: 0 3px 9px 0 rgba(0,0,0,0.15);
+  margin: 15px auto;
+  padding-top: 1px;
+}
+
+.coupon-continer .value {
+  font-size: 36px;
+  color: #DF0A20;
+  text-align: center;
+  margin: 15px 0 10px 0;
+}
+
+.coupon-continer .range {
+  text-align: center;
+  margin-top: 5px;
+}
+
+.coupon-continer .prompt {
+  color: rgba(255,255,255,0.6);
+  text-align: center;
+}
+
+.coupon-continer .gift {
+  text-align: center;
+}
+
+.coupon-continer .gifter {
+  line-height: 21px;
+  background: #000;
+  color: #fff;
+  padding: 0px 5px;
+  margin-right: 10px;
+}
+
+.coupon button {
+  margin-top: 20px;
+  width: 195px;
+  height: 46px;
+}
+
+.coupon {
+  /* color: #B0B0B9; */
 }

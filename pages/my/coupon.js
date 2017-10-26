@@ -36,7 +36,7 @@ findCoupon: function () {
         quota: coupons[d.relationships.coupon.data.id].attributes.value,
         name: d.attributes.displayName,
         validityTerm: `有效期至${this._formatDateToDay(new Date(coupons[d.relationships.coupon.data.id].attributes.expiredAt))}`,
-        range: coupons[d.relationships.coupon.data.id].attributes.albumId ? `仅限购买“${coupons[d.relationships.coupon.data.id].attributes.albumId}”` : '全场通用，最高折扣50元',
+        range: coupons[d.relationships.coupon.data.id].attributes.albumId ? `仅限购买“${coupons[d.relationships.coupon.data.id].attributes.albumId}”` : `全场通用，最高折扣${coupons[d.relationships.coupon.data.id].attributes.value/100}元`,
         redeemedAt: d.attributes.redeemedAt
       }
     });
@@ -91,5 +91,19 @@ getPrevPageCouponIndex() {
   const pages = getCurrentPages();
   const prevPage = pages[pages.length - 2];
   return prevPage.data.couponIndex;
+},
+// 接受coupon
+acceptCoupon(couponId) {
+  return request({
+    url: `${baseUrl}/user-coupons/${couponId}/accept`,
+    method: 'POST'
+  });
+},
+// 赠送coupon
+giftCoupon(couponId) {
+  return request({
+    url: `${baseUrl}/user-coupons/${couponId}/gift`,
+    method: 'POST'
+  });
 }
 });
