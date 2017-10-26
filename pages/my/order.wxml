@@ -12,6 +12,6 @@
     <text class=" size-12 text-color3 time">{{group.attributes.unlockedAtString}}</text>
     <view class="row">
       <text class=" size-18 text-color1 title" >{{group.attributes.title}}</text>
-      <text class=" size-12 price">实付款: ￥ {{group.attributes.price / 100}}</text>
+      <text class=" size-12 price">实付款: ￥ {{(group.meta.cashFee ? group.meta.cashFee : 0) / 100}}</text>
     </view>
 </view>
