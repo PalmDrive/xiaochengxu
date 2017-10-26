@@ -31,7 +31,7 @@
   "window":{
     "backgroundTextStyle":"dark",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "职得看",
+    "navigationBarTitleText": "七日辑",
     "navigationBarTextStyle":"black"
   },
   "tabBar": {

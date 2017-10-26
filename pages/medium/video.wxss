@@ -3,6 +3,10 @@
   text-align:center;
 }
 
+.wx-video-fullscreen {
+  display: none;
+}
+
 .video-view {
   background: white;
 }
