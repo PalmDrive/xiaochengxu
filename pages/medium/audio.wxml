@@ -1,0 +1,36 @@
+<import src="../../utils/wxParse/wxParse.wxml"/>
+<import src="../../templates/loading.wxml"/>
+
+<view class="video-view column">
+  <template is="loading" data="{{loadingStatus}}"></template>
+  <view class="column audio-view">
+    <audio poster="{{poster}}" name="{{selectedMedium.attributes.title}}" author="{{selectedMedium.attributes.author}}" src="{{selectedMedium.attributes.video}}" id="myAudio" bindended="endedEvent" controls bindplay="bindplay" bindpause="bindpause"></audio>
+  </view>
+
+  <view wx:if="{{media.length > 1}}">
+    <view class="row">
+      <text class="type-button size-14" style="color: {{isAudioShow ? '#42BD56' : '#1A1A1A'}}" bindtap="clickAudio">音频</text>
+      <text class="type-button size-14" style="color: {{isAudioShow ? '#1A1A1A' : '#42BD56'}}" bindtap="clickText">文稿</text>
+    </view>
+    <view class="column" wx:if="{{isAudioShow}}">
+      <view wx:for="{{media}}" wx:key data-itemid="{{item.id}}" bindtap="selectMedium" class="list-item row">
+        <image src="/images/paid-group/audio{{item.selected ? '_selected' : '' }}@2x.png" class="audio-img" mode="aspectFill"></image>
+        <text class="video-title size-13" style="color: {{item.selected ? '#42BD56' : '#1A1A1A'}}">{{item.attributes.title}}</text>
+        <text class="video-time text-color3 size-12">{{item.attributes.durationString}}</text>
+      </view>
+    </view>
+    <scroll-view scroll-y style="height: {{videoSize.height - 240}}px;" scroll-into-view="{{toView}}" class="html-content"  wx:if="{{!isAudioShow}}">
+      <view wx:for="{{htmlContentArray}}" wx:key id="content-{{index}}">
+        <text class="audio-text-title" >{{media[index].attributes.tipTitle}}</text>
+        <template is="wxParse" data="{{wxParseData:item}}"/>
+      </view>
+    </scroll-view>
+  </view>
+
+  <scroll-view scroll-y style="height: {{videoSize.height - 190}}px;" scroll-into-view="{{toView}}" class="html-content"  wx:if="{{media.length <= 1}}">
+    <view wx:for="{{htmlContentArray}}" wx:key id="content-{{index}}">
+      <text class="audio-text-title" >{{media[index].attributes.tipTitle}}</text>
+      <template is="wxParse" data="{{wxParseData:item}}"/>
+    </view>
+  </scroll-view>
+</view>

@@ -136,11 +136,24 @@ page {
   background: #EDEDED;
 }
 
+.medium-content {
+   align-items: top;
+ }
+.medium-type {
+  padding: 2px 7px 2px 7px;
+  background: #42BD56;
+  margin-right:5px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
 .medium-title {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   overflow: hidden;
+  flex: 1;
 }
 
 .medium-banner {
