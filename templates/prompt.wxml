@@ -7,7 +7,7 @@
         <text class="title size-22">{{tempAlert.title}}</text>
         <text class="text size-14">
         {{tempAlert.content}}</text>
-        <navigator url="{{tempAlert.link}}" style="display: inline;" hover-class="navigator-hover"><button link >立刻查看</button></navigator>
+        <navigator url="{{tempAlert.link}}" style="display: inline;" hover-class="navigator-hover"><button bindtap="tempAlertGoList" link >立刻查看</button></navigator>
         <image class="close-button" src="/images/close-white.png" bindtap="tempAlertClose" ></image>
       </view>
       <!-- coupon -->
@@ -20,7 +20,7 @@
           <view class="range size-14">在“七日辑”小程序内{{tempAlert.album ? tempAlert.album : '任意'}}消费</view>
         </view>
         <view class="prompt size-14">优惠券请到 我的-优惠券 查看</view>
-        <navigator url="{{tempAlert.link}}" style="display: inline;" hover-class="navigator-hover"><button link >立刻查看</button></navigator>        
+        <navigator url="{{tempAlert.link}}" style="display: inline;" hover-class="navigator-hover"><button bindtap="tempAlertGoList" link >立刻查看</button></navigator>        
         <image class="close-button" src="/images/close-white.png" bindtap="tempAlertClose" ></image>
       </view>
     </view>

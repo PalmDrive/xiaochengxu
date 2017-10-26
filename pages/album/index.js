@@ -33,16 +33,25 @@ Page({
 
   onShow() {
     /* 免费得七日辑 start */
-    request({
-      url: `${baseUrl}/users/temp-alert`,
-    }).then(d => {
-      // d = JSON.parse('{"data":{"title":"恭喜你!","content":"已经有5位朋友帮助了你恭喜免费获取《7天告别爵士乐小白》","link":"/pages/album/show?id=1b259840-b23c-11e7-8905-3f3cfcde362a","type":"referral","picurl":"http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/%E7%95%99%E5%AD%A6%E5%B0%8F%E7%99%BD%E5%A6%82%E4%BD%95%E5%8F%98%E8%BA%AB%E8%80%81%E5%8F%B8%E6%9C%BA/banner%E5%9B%BE.jpg"}}')
-      if (d.data) {
-        this.setData({
-          tempAlert: d.data
-        });
-      }
-    })
+    this.data.tempAlert && this.setData({
+      tempAlert: null
+    });
+    if (this.data.tempAlert === false) {
+      this.setData({
+        tempAlert: false
+      });
+    } else {
+      request({
+        url: `${baseUrl}/users/temp-alert`,
+      }).then(d => {
+        // d = JSON.parse('{"data":{"title":"恭喜你!","content":"已经有5位朋友帮助了你恭喜免费获取《7天告别爵士乐小白》","link":"/pages/album/show?id=1b259840-b23c-11e7-8905-3f3cfcde362a","type":"referral","picurl":"http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/%E7%95%99%E5%AD%A6%E5%B0%8F%E7%99%BD%E5%A6%82%E4%BD%95%E5%8F%98%E8%BA%AB%E8%80%81%E5%8F%B8%E6%9C%BA/banner%E5%9B%BE.jpg"}}')
+        if (d.data) {
+          this.setData({
+            tempAlert: d.data
+          });
+        }
+      })
+    }
     /* 免费得七日辑 end */
 
     util.ga({
@@ -175,5 +184,8 @@ Page({
     this.setData({
       tempAlert: null
     });
+  },
+  tempAlertGoList: function () {
+    this.data.tempAlert = false;
   }
 });
