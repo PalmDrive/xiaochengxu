@@ -99,6 +99,7 @@ const _getWechatBaseUserInfo = function() {
  */
 const login = function() {
   const userInfo = {};
+  let result = false;
   return _getWechatBaseUserInfo.call(this)
     .then(data => {
       userInfo.wxUnionId = data.unionid; // 不是所有用户都有
@@ -112,20 +113,82 @@ const login = function() {
             userInfo.wxUsername = fetchedUserInfo.nickName;
             userInfo.gender = fetchedUserInfo.gender;
             userInfo.profilePicUrl = fetchedUserInfo.avatarUrl;
+            result = true;
           },
           fail(err) { // 用户没有授权获取用户信息
             console.log('用户没有授权获取用户信息');
-            reject(err);
+            // reject(err);
           },
           complete() {
             console.log('getUserInfo complete called');
-            _loginRequest.call(this, userInfo)
-              .then(resolve, reject);
+            if (result) {
+              _loginRequest.call(this, userInfo)
+                .then(resolve, reject);
+            } else {
+              openTip().then(r => {
+                userInfo.wxUsername = r.wxUsername;
+                userInfo.gender = r.gender;
+                userInfo.profilePicUrl = r.profilePicUrl;
+                _loginRequest.call(this, userInfo)
+                  .then(resolve, reject);
+              });
+            }
           }
         })
       });
     });
 };
+
+const openTip = function() {
+  return new Promise((resolve, reject) => {
+    wx.showModal({
+      title: '用户未授权',
+      content: '如需正常使用小程序功能，请打开用户信息进行授权。',
+      showCancel: false,
+      success: function (res) {
+        if (res.confirm) {
+          console.log('用户点击确定');
+          openSetting().then(r => {
+            resolve(r)
+          })
+        }
+      }
+    })
+  });
+}
+
+const openSetting = function() {
+  return new Promise((resolve, reject) => {
+    wx.openSetting({
+        success: (res) => {
+          if (res.authSetting["scope.userInfo"]===true){
+            const userInfo = {};
+            let result = false;
+            wx.getUserInfo({
+              success(res) {
+                const fetchedUserInfo = res.userInfo;
+                userInfo.wxUsername = fetchedUserInfo.nickName;
+                userInfo.gender = fetchedUserInfo.gender;
+                userInfo.profilePicUrl = fetchedUserInfo.avatarUrl;
+                result = true;
+              },
+              fail(err) { // 用户没有授权获取用户信息
+                console.log('用户没有授权获取用户信息');
+              },
+              complete() {
+                console.log('getUserInfo complete called');
+                resolve(userInfo);
+              }
+            })
+          }
+          else{
+            resolve(openTip());
+          }
+        }
+      });
+  });
+}
+
 /**
  * @param  String
  * @param  {
