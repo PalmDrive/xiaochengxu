@@ -7,7 +7,7 @@ page {
 .container {
   height: 100%;
   height: 100%;
-  background-color: #EDEDED;
+  background-color: #FAFAFA;
 }
 
 .userinfo {
@@ -28,13 +28,14 @@ page {
 }
 
 .center-view {
-  background-color: white;
   width: 100%;
 }
 
 .center-item {
   height: 46px;
   justify-content: space-between;
+  margin-bottom: 1px;
+  background-color:white;
 }
 
 .center-item-icon {

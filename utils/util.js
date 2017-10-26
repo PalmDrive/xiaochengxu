@@ -133,6 +133,14 @@ function formatAlbum(t) {
   t.attributes.index = days;
 }
 
+function formatAlbumUnlockedAt(t) {
+  //格式化时间
+  let dateString = t.relationships.userAlbum.data.attributes.unlockedAt;
+  dateString = dateString.substr(0,19);
+  dateString = dateString.replace('T', '   ');
+  t.attributes.unlockedAtString = dateString;
+}
+
 function getAchieveProgress(t) {
   // 阅读进度
   let logs = t.relationships.userAlbum.data.attributes.logs.days;
@@ -416,5 +424,6 @@ module.exports = {
   formatAlbum,
   mediumPageOnShow,
   convertTime,
-  getAchieveProgress
+  getAchieveProgress,
+  formatAlbumUnlockedAt
 };

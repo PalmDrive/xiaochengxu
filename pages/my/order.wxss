@@ -1,0 +1,44 @@
+/* pages/my/my.wxss */
+page {
+  height: 100%;
+  background: #FAFAFA;
+  padding-top: 10px;
+}
+.items {
+  margin-bottom: 1px;
+  background: white;
+  height: 67px;
+  padding: 10px 20px 10px 20px;
+}
+
+.title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow:hidden;
+  margin-top: 5px;
+  margin-right: 5px;
+  flex: 1;
+}
+
+.price {
+  color: #DF0A20;
+  letter-spacing: 0.41px;
+  width: 90px;
+}
+
+.row {
+  justify-content: space-between;
+}
+
+.order-blank-view {
+  width: 100%;
+  height: 70%;
+  align-items: center;
+  justify-content: center;
+}
+
+.order-blank {
+  width: 18px;
+  height: 23px;
+}
