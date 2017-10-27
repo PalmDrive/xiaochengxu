@@ -344,7 +344,7 @@ Page({
 
   buy() {
     const price = this.data.coupon ? (this.data.price - this.data.coupon.quota) : this.data.price;
-    
+
     // 使用完优惠券是否是0元
     if (price <= 0) {
       this._useCoupon()
@@ -405,7 +405,7 @@ Page({
           this.setData({trial: false});
           loadData(this.data.albumId)
             .then(this._onLoadSuccess);
-          
+
           // 判断是否是优惠券购买的
           if (this.data.coupon) {
             this._useCoupon();
