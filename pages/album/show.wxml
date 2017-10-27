@@ -196,7 +196,7 @@
       <image src="/images/paid-group/免费@2x.png" class="free-img" mode="aspectFill"></image>
       <text class="free-text text-color2 size-12">免费得</text>
     </view>
-    <button bindtap="buy" class="btn-buy" disabled="{{processing}}" loading="{{processing}}">立刻购买 {{price / 100}}元</button>
+    <button bindtap="showPay" class="btn-buy">立刻购买 {{price / 100}}元</button>
   </view>
 </view>
 <!-- shareAlert -->
@@ -215,5 +215,25 @@
   <view wx:if="{{shareAlert.guide}}" class="guide">
     <image mode="widthFix" src="https://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/guide.png"></image>
     <button bindtap="closeAlert">我知道了</button>
+  </view>
+</view>
+<!-- 支付页面 -->
+<view class="pay" wx:if="{{payView}}">
+  <view bindtap="hidePay" class="mask"></view>
+  <view class="pay-continer" bindtap="none">
+    <view class="size-22">{{title}}</view>
+    <view class="remarks size-12">备注：</view>
+    <view class="line"></view>
+    <text class="text size-16">优惠券</text>
+    <view wx:if="{{coupons.length !== 0}}" bindtap="gotoChoiceCoupon" style="float: right;">
+      <text wx:if="{{(coupons.length !== 0) && !coupon}}" class="size-12" style="background: #DF0A20;border-radius: 3px;color: #fff;height: 21px;width: 44px;display: inline-block;line-height: 21px;text-align: center;vertical-align: middle;margin-right: 5px;">有卡券</text>
+      <text class="size-16">{{couponIndex === -1 ? '还未选择优惠卡券' : coupon.name}}</text>
+    </view>
+    <view wx:else class="size-16" style="float: right;color: #B0B0B9;">没有可以抵用的优惠券</view>
+    <view class="line"></view>
+    <text class="text size-16">支付金额</text>
+    <text class="size-18" style="float: right;">￥{{(coupon ? ((price - coupon.quota) > 0 ? (price - coupon.quota) : 0) : price) / 100}}元</text>
+    <view class="line"></view>
+    <button bindtap="buy" disabled="{{processing}}" loading="{{processing}}">微信支付</button>
   </view>
 </view>

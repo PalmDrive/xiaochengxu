@@ -1,0 +1,59 @@
+<!--pages/my/coupon.wxml-->
+
+<view class="container">
+  <!-- 不使用红包 -->
+  <view class="notUse size-16" style="display: none;">
+    不使用红包
+    <view class="coupon-status2"></view>
+    <image class="coupon-status3" src="/images/coupon/choice.png"></image>
+  </view>
+  
+  <!-- 优惠券 -->
+  <view wx:if="{{coupons && coupons.length > 0}}">
+    <view wx:for="{{coupons}}" wx:for-item="coupon" wx:key class="coupon {{coupon.redeemedAt ? 'beused' : null}}">
+      <view class="top">
+        <view class="quota size-28"><text class="size-12">￥</text>{{coupon.quota / 100}}</view>
+        <view class="texts">
+          <view class="name size-16">{{coupon.name}}</view>
+          <view class="validityTerm size-12">{{coupon.validityTerm}}</view>
+        </view>
+        <view class="circle circle-left"></view>
+        <view class="circle circle-right"></view>
+      </view>
+      <view class="range size-12">{{coupon.range}}</view>
+      <image wx:if="{{coupon.redeemedAt}}" class="coupon-status4" src="/images/coupon/alreadyUsed.png"></image>
+    </view>
+  </view>
+
+  <!-- 没有卡券 -->
+  <view wx:else class="no-coupon">
+    <image class="coupon-icon" src="/images/coupon/icon.png"></image>
+    <view>还没有任何卡券</view>
+  </view>
+
+  <!-- 领取过 的提示 -->
+  <view class="getOver-continer" style="display: none;">
+    <view class="getOver size-14">您已经领取过此优惠券，请勿重复领取</view>
+  </view>
+
+  <!-- 支付页面 -->
+  <view class="pay" style="display: none;">
+    <view class="mask">
+      <view class="pay-continer">
+        <view class="title size-22">手机摄影7日速成</view>
+        <view class="remarks size-12">备注：</view>
+        <view class="line"></view>
+        <text class="text size-16">优惠券</text>
+        <view style="float: right;">
+          <text class="size-12" style="background: #DF0A20;border-radius: 3px;color: #fff;height: 21px;width: 44px;display: inline-block;line-height: 21px;text-align: center;vertical-align: middle;margin-right: 5px;">有卡券</text>
+          <text class="size-16">还未选择优惠卡券</text>
+        </view>
+        <view class="line"></view>
+        <text class="text size-16">支付金额</text>
+        <text class="size-18" style="float: right;">￥99元</text>
+        <view class="line"></view>
+        <button>微信支付</button>
+      </view>
+    </view>
+  </view>
+</view>

@@ -29,6 +29,7 @@ Page({
     const items = [
       // {icon: '礼品卡', title: '礼品卡', tip: '你还有50个礼品卡', action: ''},
       {icon: '订单', title: '订单', tip: '', action: 'goToOrder'},
+      {icon: '礼品卡', title: '卡券', tip: '点击查看详情', action: 'goToCoupon'},
       // {icon: '免费得', title: '免费得', tip: '1个活动进行中，点击查看详情', action: ''},
       {icon: '成就', title: '成就', tip: '完成一个七日辑就可获得一个成就', action: 'goToAchieve'}
     ];
@@ -179,6 +180,12 @@ Page({
   goToFree() {
     wx.navigateTo({
       url: './free'
+    });
+  },
+
+  goToCoupon() {
+    wx.navigateTo({
+      url: './coupon'
     });
   }
 });

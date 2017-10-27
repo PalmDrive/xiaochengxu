@@ -37,7 +37,7 @@ Page({
       console.log(res);
       wx.hideLoading();
       this.setData({
-        imgUrl: res.data.picurl
+        imgUrl: res.data.picurl.replace('http:','https:')
       });
     });
   },

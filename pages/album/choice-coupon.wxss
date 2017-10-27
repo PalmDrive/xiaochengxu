@@ -1,0 +1,169 @@
+/* pages/my/conpon.wxss */
+
+page {
+  background-color:#EDEDED;
+}
+
+.coupon {
+  margin: 10px 20px 0px 20px;
+  background-color: #FFFFFF;
+  position: relative;
+}
+
+.top {
+  padding: 15px 0px;
+  border-bottom:1px dashed #EDEDED;
+}
+
+.quota {
+  display: inline-block;
+  width: 26%;
+  color: #DD3918;
+  text-align: center;
+  float: left;
+}
+.texts {
+  display: inline-block;
+  width: 74%;
+}
+.texts .name {
+  line-height: 22px;
+  color: #161616;
+}
+.texts .validityTerm {
+  line-height: 17px;
+  color: #B0B0B9;
+}
+.range {
+  line-height: 27px;
+  text-align: center;
+  color: #B0B0B9;
+}
+.circle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #EDEDED;
+  bottom: 23px;
+  border-radius: 50%;
+}
+.circle-left {
+  left: -5px;
+}
+.circle-right {
+  right: -5px;
+}
+/* 已获得 */
+.coupon-status1 {
+}
+/* 可使用 */
+.coupon-status2 {
+  position: absolute;
+  top: 25px;
+  right: 20px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid #DBDBDE;
+}
+/* 已选择 */
+.coupon-status3 {
+  position: absolute;
+  top: 25px;
+  right: 20px;
+  width: 18px;
+  height: 18px;
+}
+/* 已使用 */
+.coupon-status4 {
+  position: absolute;
+  top: 18px;
+  right: 17px;
+  /*transform: rotate(-23deg);*/
+  width: 51.9px;
+  height: 38.6px;
+}
+
+/* 没有卡券 */
+.no-coupon {
+  text-align: center;
+}
+
+.coupon-icon {
+  width: 24px;
+  height: 18px;
+  margin-top: 20%;
+  margin-bottom: 11px;
+  display: inline-block;
+}
+
+/* 不使用 红包 */
+.notUse {
+  position: relative;
+  margin: 20px;
+  padding: 0px 20px;
+  height: 52px;
+  line-height: 52px;
+  background: #FFFFFF;
+}
+.notUse .coupon-status2, .notUse .coupon-status3 {
+  top: 17px;
+}
+
+.tip {
+  margin: 15px 20px 0px 20px;
+}
+
+/* 支付页面 */
+.pay {
+  position: fixed;
+}
+
+.pay .mask {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  z-index: 10;
+  background: rgba(0,0,0,0.70);
+}
+
+.pay .pay-continer {
+  /*position: absolute;*/
+  /*width: 100%;*/
+  padding: 15px;
+  /*height: 294px;*/
+  margin: 5px;
+  bottom: 0;
+  background: #FFFFFF;
+  border-radius: 8px;
+}
+
+.pay .remarks {
+  color: #85858D;
+}
+.pay .line {
+  height: 1px;
+  margin: 15px 0px;
+  background: #EDEDED;
+}
+
+.pay button {
+  background: #0BB908;
+  border-radius: 3px;
+  color: #fff;
+}
+
+/* 领取过 */
+.getOver-continer {
+  text-align: center;
+  z-index: 11;
+}
+.getOver {
+  display: inline-block;
+  line-height: 20px;
+  padding: 11px 28px;
+  color: #fff;
+  background: rgba(0,0,0,0.70);
+  border-radius: 3px;
+}

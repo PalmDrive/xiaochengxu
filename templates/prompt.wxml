@@ -1,12 +1,26 @@
 <template name="prompt">
   <view class="prompt" wx:if="{{tempAlert}}">
     <view class="masked">
-      <view class="container">
+      <!-- popup -->
+      <view wx:if="{{tempAlert.type === 'referral'}}" class="container">
         <image class="top-img" src="{{tempAlert.picurl}}"></image>
         <text class="title size-22">{{tempAlert.title}}</text>
         <text class="text size-14">
         {{tempAlert.content}}</text>
-        <navigator url="{{tempAlert.link}}" style="display: inline;" hover-class="navigator-hover"><button link >立刻查看</button></navigator>
+        <navigator url="{{tempAlert.link}}" style="display: inline;" hover-class="navigator-hover"><button bindtap="tempAlertGoList" link >立刻查看</button></navigator>
+        <image class="close-button" src="/images/close-white.png" bindtap="tempAlertClose" ></image>
+      </view>
+      <!-- coupon -->
+      <view wx:if="{{tempAlert.type === 'coupon'}}" class="coupon-continer">
+        <view class="title size-24">{{tempAlert.title}}</view>
+        <text class="subtitle size-14">{{tempAlert.content}}</text>
+        <view class="coupon">
+          <view class="value size-36">价值{{tempAlert.value / 100}}元</view>
+          <view class="gift"><text class="gifter">{{tempAlert.gifter}}</text>送您{{tempAlert.album ? tempAlert.album : '通用'}}优惠券</view>
+          <view class="range size-14">在“七日辑”小程序内{{tempAlert.album ? tempAlert.album : '任意'}}消费</view>
+        </view>
+        <view class="prompt size-14">优惠券请到 我的-优惠券 查看</view>
+        <navigator url="{{tempAlert.link}}" style="display: inline;" hover-class="navigator-hover"><button bindtap="tempAlertGoList" link >立刻查看</button></navigator>        
         <image class="close-button" src="/images/close-white.png" bindtap="tempAlertClose" ></image>
       </view>
     </view>
