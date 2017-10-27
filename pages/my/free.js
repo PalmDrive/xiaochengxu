@@ -10,7 +10,7 @@ Page({
   },
 
   onLoad: function (options) {
-    request({
+    return request({
       url: `${baseUrl}/users/referees`,
       data: {
         productType: 'Album'
@@ -78,5 +78,11 @@ Page({
     wx.navigateTo({
       url: `../album/free?id=${album.id}&imgUrl=${album.attributes.picurl}`
     }); 
-  }
+  },
+  // 下拉刷新
+  onPullDownRefresh() {
+    return this.onLoad().then(res => {
+      wx.stopPullDownRefresh();
+    });
+  },
 });

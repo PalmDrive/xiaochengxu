@@ -74,11 +74,15 @@ button {
 .friend .friend-continer {
   vertical-align: top;
   display: inline-block;
-  width: 100px;
+  width: 64%;
   height: 40px;
   margin-left: 10px;
 }
 .friend .nickname {
+  text-overflow : ellipsis;
+  height: 26px;
+  overflow: hidden;
+  white-space: nowrap;
   display: block;
 }
 .friend .time {
