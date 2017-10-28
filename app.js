@@ -72,6 +72,10 @@ App({
             duration: 3000,
             icon: 'loading'
           });
+          wx.showModal({
+            title: '出错了',
+            content: JSON.stringify(err)
+          });
           console.log('Auth.log err:', err);
         });
     };
