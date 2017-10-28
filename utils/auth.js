@@ -1,4 +1,5 @@
-const nameSpace = 'qiriji_xiaochengxu';
+const nameSpace = 'qiriji_xiaochengxu',
+      _ = require('../vendors/underscore');
 
 const {request} = require('request');
 
@@ -157,39 +158,39 @@ const openTip = function() {
       }
     })
   });
-}
+};
 
 const openSetting = function() {
   return new Promise((resolve, reject) => {
     wx.openSetting({
-        success: (res) => {
-          if (res.authSetting["scope.userInfo"]===true){
-            const userInfo = {};
-            let result = false;
-            wx.getUserInfo({
-              success(res) {
-                const fetchedUserInfo = res.userInfo;
-                userInfo.wxUsername = fetchedUserInfo.nickName;
-                userInfo.gender = fetchedUserInfo.gender;
-                userInfo.profilePicUrl = fetchedUserInfo.avatarUrl;
-                result = true;
-              },
-              fail(err) { // 用户没有授权获取用户信息
-                console.log('用户没有授权获取用户信息');
-              },
-              complete() {
-                console.log('getUserInfo complete called');
-                resolve(userInfo);
-              }
-            })
-          }
-          else{
-            resolve(openTip());
-          }
+      success: (res) => {
+        if (res.authSetting['scope.userInfo']){
+          const userInfo = {};
+          let result = false;
+          wx.getUserInfo({
+            success(res) {
+              const fetchedUserInfo = res.userInfo;
+              userInfo.wxUsername = fetchedUserInfo.nickName;
+              userInfo.gender = fetchedUserInfo.gender;
+              userInfo.profilePicUrl = fetchedUserInfo.avatarUrl;
+              result = true;
+            },
+            fail(err) { // 用户没有授权获取用户信息
+              console.log('用户没有授权获取用户信息');
+            },
+            complete() {
+              console.log('getUserInfo complete called');
+              resolve(userInfo);
+            }
+          })
         }
-      });
+        else{
+          resolve(openTip());
+        }
+      }
+    });
   });
-}
+};
 
 /**
  * @param  String
@@ -205,18 +206,22 @@ const openSetting = function() {
  */
 const _loginRequest = function(userInfo) {
   const app = getApp() || this,
-        apiBase = app.globalData.apiBase;
+        apiBase = app.globalData.apiBase,
+        attributes = _.extend({}, userInfo);
 
   if (!userInfo.wxUnionId && !userInfo.wxOpenId) {
     return new Promise((resolve, reject) => reject('wxUnionId missing'));
   }
+
+  attributes.wxQirijiXCXOpenId = userInfo.wxOpenId;
+  delete attributes.wxOpenId;
 
   return request({
     method: 'POST',
     url: `${apiBase}/users/login?from=miniProgram`,
     data: {
       data: {
-        attributes: userInfo
+        attributes
       },
       meta: {
         loginType: 'wxUnionId'

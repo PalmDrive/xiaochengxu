@@ -26,7 +26,7 @@ Page({
     });
     request({
       method: 'POST',
-      url: `${baseUrl}/users/${Auth.getLocalUserId()}/referral-cards`,
+      url: `${baseUrl}/users/${Auth.getLocalUserId()}/referral-cards?appName=days7Xiaochengxu`,
       data: {
         data: {
           productId: options.id,
