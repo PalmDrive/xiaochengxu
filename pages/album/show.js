@@ -6,7 +6,7 @@ const app = getApp(),
 
 function loadData(id) {
   return request({
-    url: `${app.globalData.apiBase}/albums/${id}`,
+    url: `${app.globalData.apiBase}/albums/${id}?app_name=${app.globalData.appName}`,
   });
 }
 

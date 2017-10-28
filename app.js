@@ -1,6 +1,6 @@
 //app.js
-//const env = 'production';
-const env = 'dev';
+const env = 'production';
+//const env = 'dev';
 const {reloadPage, showHint} = require('utils/util');
 
 const API_BASES = {
@@ -92,6 +92,7 @@ App({
 
   globalData: {
     apiBase,
-    env
+    env,
+    appName: 'days7Xiaochengxu'
   }
 })
