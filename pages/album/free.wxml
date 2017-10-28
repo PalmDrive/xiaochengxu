@@ -18,7 +18,7 @@
     <view class="friend" wx:for="{{users}}" wx:for-item="user" wx:key>
       <image class="head" src="{{user.attributes.profilePicUrl}}"></image>
       <view class="friend-continer">
-        <text class="nickname size-16">{{user.attributes.wxUsername}}</text>
+        <text class="nickname size-16">{{user.attributes.username || user.attributes.wxUsername}}</text>
         <text class="time size-10" >10.11 15:21:43</text>
       </view>
       <text class="action size-12">帮助了你</text>

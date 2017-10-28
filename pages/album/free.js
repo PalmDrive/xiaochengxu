@@ -15,10 +15,13 @@ Page({
       imgUrl: options.imgUrl,
       id: options.id
     });
-    request({
+    this.loadReferees();
+  },
+  loadReferees() {
+    return request({
       url: `${baseUrl}/users/referees`,
       data: {
-        productId: options.id,
+        productId: this.data.id,
         productType: 'Album'
       }
     }).then(res => {
@@ -30,6 +33,12 @@ Page({
   _gotoShare() {
     wx.navigateTo({
       url: `../album/share?id=${this.data.id}`
+    });
+  },
+  // 下拉刷新
+  onPullDownRefresh() {
+    loadReferees().then(res => {
+      wx.stopPullDownRefresh();
     });
   }
 });
