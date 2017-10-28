@@ -5,7 +5,7 @@ const app = getApp(),
 
 function loadData(groupId, lastDate) {
   return request({
-    url: `${app.globalData.apiBase}/groups/${groupId}/topics-24hours?date=${lastDate}&from=miniProgram`,
+    url: `${app.globalData.apiBase}/groups/${groupId}/topics-24hours?date=${lastDate}`,
   });
 }
 

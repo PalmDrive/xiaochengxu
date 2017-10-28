@@ -218,7 +218,7 @@ const _loginRequest = function(userInfo) {
 
   return request({
     method: 'POST',
-    url: `${apiBase}/users/login?from=miniProgram`,
+    url: `${apiBase}/users/login`,
     data: {
       data: {
         attributes

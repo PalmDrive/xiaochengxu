@@ -39,6 +39,9 @@ const request = opts => {
   } else {
     url += `&client_version=${clientVersion}`;
   }
+  if (url.indexOf('from=miniProgram') === -1) {
+    url += '&from=miniProgram';
+  }
 
   return new Promise((resolve, reject) => {
     wx.request({

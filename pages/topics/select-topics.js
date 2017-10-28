@@ -7,7 +7,7 @@ const _ = require('../../vendors/underscore'),
 const app = getApp();
 
 const _getFields = () => {
-  const url = `${app.globalData.apiBase}/fields?from=miniProgram`;
+  const url = `${app.globalData.apiBase}/fields`;
 
   return request({url})
 };
@@ -20,7 +20,7 @@ const _getTopicsByField = (fieldId, options) => {
 
   _.extend(defaultOptions, options || {});
 
-  const url = `${app.globalData.apiBase}/fields/${fieldId}/topics?page[size]=${defaultOptions.size}&page[number]=${defaultOptions.number}&from=miniProgram`;
+  const url = `${app.globalData.apiBase}/fields/${fieldId}/topics?page[size]=${defaultOptions.size}&page[number]=${defaultOptions.number}`;
 
   return request({url});
 };

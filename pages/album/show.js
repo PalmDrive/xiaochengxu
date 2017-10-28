@@ -364,7 +364,7 @@ Page({
       return;
     }
 
-    const url = `${baseUrl}/wechat/pay/unifiedorder?from=miniProgram&name=days7`,
+    const url = `${baseUrl}/wechat/pay/unifiedorder?name=days7`,
           userInfo = Auth.getLocalUserInfo(),
           attrs = userInfo.attributes || {};
 
