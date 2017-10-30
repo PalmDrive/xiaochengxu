@@ -50,6 +50,10 @@ Page({
             tempAlert: d.data
           });
         }
+
+        if (d.meta) {
+          Auth.setLocalKey( `isSubscribedWX`, d.meta.isSubscribedWX)
+        }
       })
     }
     /* 免费得七日辑 end */

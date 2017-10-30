@@ -34,16 +34,16 @@
   <view class="modal-drop"></view>
 </view>
 
-<view class="modal-container" hidden="{{!qrcodeModalShown}}">
+<view class="modal-container" hidden="{{qrcodeModalHidden}}">
   <view class="modal column qrcode-view">
     <view class="column qrcode-main-view">
       <text class=" size-22 pingfang-medium text-center model-text1">开启推送</text>
       <text class=" size-14 text-color1 model-text2" >关注微信公众号「七日辑」，我们为您推送更新</text>
       <image src="../../images/paid-group/qrcode.jpg" class="modal-qrcode-img"></image>
       <text class=" size-12 text-color3 model-text3" >或截图保存，用微信扫描</text>
-      <text class="size-16 text-white qrcode-button" bindtap="toggleModalShown">知道了</text>
+      <text class="size-16 text-white qrcode-button" bindtap="toggleqrcodeModalHidden">知道了</text>
     </view>
-    <image src="../../images/paid-group/close.png" class="btn-close" bindtap="toggleQrcodeModalShown"></image>
+    <image src="../../images/paid-group/close.png" class="btn-close" bindtap="toggleqrcodeModalHidden"></image>
   </view>
   <view class="modal-drop"></view>
 </view>

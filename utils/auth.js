@@ -31,12 +31,12 @@ const getLocalSessionKey = () => {
   return wx.getStorageSync(`${nameSpace}:sessionKey`);
 };
 
-const getLocalAchieve = (key) => {
+const getLocalKey = (key) => {
   return wx.getStorageSync(`${nameSpace}:${key}`);
 };
 
-const setLocalAchieve = (key, hideAchieve) => {
-  wx.setStorageSync(`${nameSpace}:${key}`, hideAchieve);
+const setLocalKey = (key, value) => {
+  wx.setStorageSync(`${nameSpace}:${key}`, value);
 };
 
 /**
@@ -267,6 +267,6 @@ module.exports = {
   setLocalJWT,
   decryptData,
   getLocalSessionKey,
-  getLocalAchieve,
-  setLocalAchieve
+  getLocalKey,
+  setLocalKey
 };
