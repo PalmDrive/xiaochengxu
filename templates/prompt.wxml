@@ -16,8 +16,8 @@
         <text class="subtitle size-14">{{tempAlert.content}}</text>
         <view class="coupon">
           <view class="value size-36">价值{{tempAlert.value / 100}}元</view>
-          <view class="gift"><text class="gifter">{{tempAlert.gifter}}</text>送您{{tempAlert.album ? tempAlert.album : '通用'}}优惠券</view>
-          <view class="range size-14">在“七日辑”小程序内{{tempAlert.album ? tempAlert.album : '任意'}}消费</view>
+          <view class="gift" wx:if="{{tempAlert.gifter}}"><text class="gifter">{{tempAlert.gifter}}</text>送您{{tempAlert.album ? tempAlert.album : '通用'}}优惠券</view>
+          <view class="range size-14">{{tempAlert.album ? '适用于"' + tempAlert.album + '"' : '可对任意七日辑消费'}}</view>
         </view>
         <view class="prompt size-14">优惠券请到 我的-优惠券 查看</view>
         <navigator url="{{tempAlert.link}}" style="display: inline;" hover-class="navigator-hover"><button bindtap="tempAlertGoList" link >立刻查看</button></navigator>        

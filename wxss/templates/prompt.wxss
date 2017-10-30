@@ -83,23 +83,22 @@
 
 .coupon-continer .coupon {
   width: 276px;
-  height: 137px;
   background: #FFFFFF;
   box-shadow: 0 3px 9px 0 rgba(0,0,0,0.15);
   margin: 15px auto;
-  padding-top: 1px;
+  padding: 15px 0;
 }
 
 .coupon-continer .value {
   font-size: 36px;
   color: #DF0A20;
   text-align: center;
-  margin: 15px 0 10px 0;
+  margin-bottom: 10px;
 }
 
 .coupon-continer .range {
   text-align: center;
-  margin-top: 5px;
+  padding: 5px 0;
 }
 
 .coupon-continer .prompt {
