@@ -50,7 +50,7 @@ Page({
    */
   _load(type) {
     return request({
-      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram&include=media&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&role=${type}`,
+      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?include=media&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&role=${type}`,
     });
   },
 

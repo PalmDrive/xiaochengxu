@@ -3,7 +3,7 @@ const app = getApp(),
       Auth = require('../../utils/auth');
 
 const _createGroup = (groupName, creatorId) => {
-  const url = `${app.globalData.apiBase}/users?from=miniProgram`,
+  const url = `${app.globalData.apiBase}/users`,
         data = {
           attributes: {
             username: groupName,
@@ -33,7 +33,7 @@ const _createGroup = (groupName, creatorId) => {
             };
       // create userGroup
       return request({
-        url: `${app.globalData.apiBase}/user-groups?from=miniProgram`,
+        url: `${app.globalData.apiBase}/user-groups`,
         method: 'POST',
         data
       })

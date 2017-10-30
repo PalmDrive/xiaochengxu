@@ -1,4 +1,5 @@
-const nameSpace = 'zdk_xiaochengxu';
+const nameSpace = 'qiriji_xiaochengxu',
+      _ = require('../vendors/underscore');
 
 const {request} = require('request');
 
@@ -53,7 +54,8 @@ const setLocalKey = (key, value) => {
  */
 const _getWechatBaseUserInfo = function() {
   const app = getApp() || this,
-        apiBase = app.globalData.apiBase;
+        apiBase = app.globalData.apiBase,
+        name = 'days7';
   return new Promise((resolve, reject) => {
     // 获取登陆凭证code
     wx.login({
@@ -63,7 +65,8 @@ const _getWechatBaseUserInfo = function() {
           wx.request({
             url: `${apiBase}/wechat/xiaochengxu/on-login?from=miniProgram`,
             data: {
-              code: res.code
+              code: res.code,
+              name
             },
             success(res) {
               if (res.statusCode.toString()[0] !== '2') {
@@ -155,39 +158,39 @@ const openTip = function() {
       }
     })
   });
-}
+};
 
 const openSetting = function() {
   return new Promise((resolve, reject) => {
     wx.openSetting({
-        success: (res) => {
-          if (res.authSetting["scope.userInfo"]===true){
-            const userInfo = {};
-            let result = false;
-            wx.getUserInfo({
-              success(res) {
-                const fetchedUserInfo = res.userInfo;
-                userInfo.wxUsername = fetchedUserInfo.nickName;
-                userInfo.gender = fetchedUserInfo.gender;
-                userInfo.profilePicUrl = fetchedUserInfo.avatarUrl;
-                result = true;
-              },
-              fail(err) { // 用户没有授权获取用户信息
-                console.log('用户没有授权获取用户信息');
-              },
-              complete() {
-                console.log('getUserInfo complete called');
-                resolve(userInfo);
-              }
-            })
-          }
-          else{
-            resolve(openTip());
-          }
+      success: (res) => {
+        if (res.authSetting['scope.userInfo']){
+          const userInfo = {};
+          let result = false;
+          wx.getUserInfo({
+            success(res) {
+              const fetchedUserInfo = res.userInfo;
+              userInfo.wxUsername = fetchedUserInfo.nickName;
+              userInfo.gender = fetchedUserInfo.gender;
+              userInfo.profilePicUrl = fetchedUserInfo.avatarUrl;
+              result = true;
+            },
+            fail(err) { // 用户没有授权获取用户信息
+              console.log('用户没有授权获取用户信息');
+            },
+            complete() {
+              console.log('getUserInfo complete called');
+              resolve(userInfo);
+            }
+          })
         }
-      });
+        else{
+          resolve(openTip());
+        }
+      }
+    });
   });
-}
+};
 
 /**
  * @param  String
@@ -203,18 +206,22 @@ const openSetting = function() {
  */
 const _loginRequest = function(userInfo) {
   const app = getApp() || this,
-        apiBase = app.globalData.apiBase;
+        apiBase = app.globalData.apiBase,
+        attributes = _.extend({}, userInfo);
 
   if (!userInfo.wxUnionId && !userInfo.wxOpenId) {
     return new Promise((resolve, reject) => reject('wxUnionId missing'));
   }
 
+  attributes.wxQirijiXCXOpenId = userInfo.wxOpenId;
+  delete attributes.wxOpenId;
+
   return request({
     method: 'POST',
-    url: `${apiBase}/users/login?from=miniProgram`,
+    url: `${apiBase}/users/login`,
     data: {
       data: {
-        attributes: userInfo
+        attributes
       },
       meta: {
         loginType: 'wxUnionId'
@@ -248,7 +255,7 @@ const decryptData = (encryptedData, iv, sessionKey) => {
   return promise
   .then(sessionKey => {
     return request({
-      url: `${apiBase}/wechat/xiaochengxu/decrypt`,
+      url: `${apiBase}/wechat/xiaochengxu/decrypt&name=days7`,
       data: {
         encryptedData,
         iv,

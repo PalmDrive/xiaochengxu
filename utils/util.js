@@ -393,7 +393,7 @@ function mediumPageOnShow(params) {
     // console.log('记录足迹');
     request({
       method: 'POST',
-      url: `${getApp().globalData.apiBase}/media/${params.mediumId}/views?from=miniProgram`,
+      url: `${getApp().globalData.apiBase}/media/${params.mediumId}/views`,
       data
     }).then(null, err => {
       console.log('Medium page, onShow, record lastViewedAt fail');

@@ -108,7 +108,7 @@ Page({
     });
     //获取首页分块专题
     request({
-      url: `${app.globalData.apiBase}/topics/homepage${userIdQuery}&from=miniProgram`
+      url: `${app.globalData.apiBase}/topics/homepage${userIdQuery}`
     }).then((res) => {
       const sections = res.data;
       sections.forEach(section => {

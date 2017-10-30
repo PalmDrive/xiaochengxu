@@ -139,7 +139,7 @@ Page({
   },
 
   _load() {
-    let url =  `${app.globalData.apiBase}/media/${this.data.mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt,metaData&meta[prev]=true&from=miniProgram`;
+    let url =  `${app.globalData.apiBase}/media/${this.data.mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt,metaData&meta[prev]=true`;
     if (morningPostId) {
       url += `&morningPostId=${morningPostId}`
     }

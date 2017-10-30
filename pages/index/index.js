@@ -63,9 +63,9 @@ Page({
       //获取推荐文章
       let url;
       if (that.data.needRead) {
-        url = `${app.globalData.apiBase}/media/read?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&lastInitedAt=${that.data.lastInitedAt}&page[number]=${that.data.pageNumber}&page[size]=${that.data.pageSize}&from=miniProgram`;
+        url = `${app.globalData.apiBase}/media/read?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&lastInitedAt=${that.data.lastInitedAt}&page[number]=${that.data.pageNumber}&page[size]=${that.data.pageSize}`;
       } else {
-        url = `${app.globalData.apiBase}/media/feeds2?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}&from=miniProgram`;
+        url = `${app.globalData.apiBase}/media/feeds2?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`;
       }
       // console.log(`loadMore request begin used ${new Date() - now}ms`);
       request({
@@ -181,7 +181,7 @@ Page({
     // this.onLoad({ pullDown: true });
     const that = this;
     request({
-      url: `${app.globalData.apiBase}/media/feeds2?from=miniProgram&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`,
+      url: `${app.globalData.apiBase}/media/feeds2?mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${that.data.pageSize}`,
     }).then(res => {
       // console.log('pull down refresh request success');
       const media = res.data;
@@ -231,7 +231,7 @@ Page({
     // console.log(`onLoad request begin used ${new Date() - now}ms`);
     //获取推荐文章
     request({
-      url: `${app.globalData.apiBase}/media/feeds2?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${this.data.pageSize}&from=miniProgram`,
+      url: `${app.globalData.apiBase}/media/feeds2?filterSource=true&mediumType=article&userId=${Auth.getLocalUserId()}&subscribed=false&page[size]=${this.data.pageSize}`,
     }).then(res => {
       // console.log(res.data);
       // console.log(`onLoad request used ${new Date() - now}ms`);

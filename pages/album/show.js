@@ -6,7 +6,7 @@ const app = getApp(),
 
 function loadData(id) {
   return request({
-    url: `${app.globalData.apiBase}/albums/${id}`,
+    url: `${app.globalData.apiBase}/albums/${id}?app_name=${app.globalData.appName}`,
   });
 }
 
@@ -371,7 +371,7 @@ Page({
       return;
     }
 
-    const url = `${baseUrl}/wechat/pay/unifiedorder?from=miniProgram`,
+    const url = `${baseUrl}/wechat/pay/unifiedorder?name=days7`,
           userInfo = Auth.getLocalUserInfo(),
           attrs = userInfo.attributes || {};
 
