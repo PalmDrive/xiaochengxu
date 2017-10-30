@@ -86,7 +86,7 @@
           <view class="medium {{post.relationships.media.data.length > 2 ? 'medium-50' : 'medium-100'}} {{idx === 1 || idx === 2 ? 'medium-gray' : ''}}" wx:for="{{ post.relationships.media.data }}" wx:for-item="medium" wx:for-index="idx"  data-medium="{{ medium}}" data-index="{{index}}" data-idx="{{idx}}" data-count="{{post.relationships.media.data.length}}" wx:key="" bindtap="goToMedium">
             <template is="buttonFormid"></template>
             <text class="medium-type  size-9 text-white" wx:if="{{medium.attributes.mediumType  === 'video' || medium.attributes.mediumType === 'audio'}}">{{medium.attributes.mediumType === 'video' ? '视频' : '音频'}}</text>
-            <text class="medium-title  size-16">{{(idx + 1) + '. ' +  medium.attributes.title }}</text>
+            <text class="medium-title  size-16">{{post.relationships.media.data.length === 1 ? '' : (idx + 1) + '. ' }}{{medium.attributes.title }}</text>
           </view>
         </view>
 
