@@ -6,7 +6,7 @@ const app = getApp(),
 
 function loadData(id) {
   return request({
-    url: `${app.globalData.apiBase}/albums/${id}`,
+    url: `${app.globalData.apiBase}/albums/${id}?app_name=${app.globalData.appName}`,
   });
 }
 
@@ -29,7 +29,7 @@ Page({
     groupInfo: {},
     showHint: false,
     modalShown: false,
-    qrcodeModalShown: false,
+    qrcodeModalHidden: true,
     bannerImage: {},
     current: 0,
     author: {},
@@ -142,10 +142,12 @@ Page({
         dt: `album_name:${this.data.title},album_id:${this.data.albumId}`
       });
     }
-    if (this.data.achieveProcess === 7 && Auth.getLocalAchieve( `${this.data.albumId}_end_isShowed`) !== "true") {
-      this.setData({hideAchieveTip: false});
-      Auth.setLocalAchieve( `${this.data.albumId}_end_isShowed`, "true")
-    }
+
+    // 开始学习 获得成就
+    // if (this.data.achieveProcess === 7 && Auth.getLocalKey( `${this.data.albumId}_end_isShowed`) !== "true") {
+    //   this.setData({hideAchieveTip: false});
+    //   Auth.setLocalKey( `${this.data.albumId}_end_isShowed`, "true")
+    // }
   },
 
   //点击文章
@@ -245,17 +247,22 @@ Page({
     updates.dayLogs = logs;
 
     // 是否弹出开始学习或者获得成就
-    const flagStart = updates.achieveProcess === 0 && Auth.getLocalAchieve("hideAchieveStart") !== "true" && Auth.getLocalAchieve( `${this.data.albumId}_start_isShowed`) !== "true";;
-    const flagEnd = updates.achieveProcess === 7 && Auth.getLocalAchieve("hideAchieveEnd") !== "true" && Auth.getLocalAchieve( `${this.data.albumId}_end_isShowed`) !== "true"
-    if (updates.didUserPay) {
-      if (flagStart) {
-        updates.hideAchieveTip = false;
-        Auth.setLocalAchieve( `${this.data.albumId}_start_isShowed`, "true")
-      }
-      if (flagEnd) {
-        updates.hideAchieveTip = false;
-        Auth.setLocalAchieve( `${this.data.albumId}_end_isShowed`, "true")
-      }
+    // const flagStart = updates.achieveProcess === 0 && Auth.getLocalKey("hideAchieveStart") !== "true" && Auth.getLocalKey( `${this.data.albumId}_start_isShowed`) !== "true";;
+    // const flagEnd = updates.achieveProcess === 7 && Auth.getLocalKey("hideAchieveEnd") !== "true" && Auth.getLocalKey( `${this.data.albumId}_end_isShowed`) !== "true"
+    // if (updates.didUserPay) {
+    //   if (flagStart) {
+    //     updates.hideAchieveTip = false;
+    //     Auth.setLocalKey( `${this.data.albumId}_start_isShowed`, "true")
+    //   }
+    //   if (flagEnd) {
+    //     updates.hideAchieveTip = false;
+    //     Auth.setLocalKey( `${this.data.albumId}_end_isShowed`, "true")
+    //   }
+    // }
+    const flag =  Auth.getLocalKey( `${this.data.albumId}_hasShownSubscribedWX`) !== "true";
+    if (updates.didUserPay && Auth.getLocalKey('isSubscribedWX') !== "true" && flag) {
+      updates.qrcodeModalHidden = false;
+      Auth.setLocalKey( `${this.data.albumId}_hasShownSubscribedWX`, "true")
     }
 
     updates.posts.forEach((post, index) => {
@@ -312,9 +319,9 @@ Page({
     this.setData({modalShown});
   },
 
-  toggleQrcodeModalShown() {
-    const qrcodeModalShown = !this.data.qrcodeModalShown;
-    this.setData({qrcodeModalShown});
+  toggleqrcodeModalHidden() {
+    const qrcodeModalHidden = !this.data.qrcodeModalHidden;
+    this.setData({qrcodeModalHidden});
   },
 
   toggleAchieveOK() {
@@ -331,10 +338,10 @@ Page({
     const hideAchieveTip = !this.data.hideAchieveTip;
     this.setData({hideAchieveTip});
     if (this.data.achieveProcess === 0) {
-      Auth.setLocalAchieve("hideAchieveStart", "true");
+      Auth.setLocalKey("hideAchieveStart", "true");
     }
     if (this.data.achieveProcess === 7) {
-      Auth.setLocalAchieve("hideAchieveEnd", "true");
+      Auth.setLocalKey("hideAchieveEnd", "true");
     }
   },
 
@@ -344,7 +351,7 @@ Page({
 
   buy() {
     const price = this.data.coupon ? (this.data.price - this.data.coupon.quota) : this.data.price;
-    
+
     // 使用完优惠券是否是0元
     if (price <= 0) {
       this._useCoupon()
@@ -364,7 +371,7 @@ Page({
       return;
     }
 
-    const url = `${baseUrl}/wechat/pay/unifiedorder?from=miniProgram`,
+    const url = `${baseUrl}/wechat/pay/unifiedorder?name=days7`,
           userInfo = Auth.getLocalUserInfo(),
           attrs = userInfo.attributes || {};
 
@@ -405,7 +412,7 @@ Page({
           this.setData({trial: false});
           loadData(this.data.albumId)
             .then(this._onLoadSuccess);
-          
+
           // 判断是否是优惠券购买的
           if (this.data.coupon) {
             this._useCoupon();

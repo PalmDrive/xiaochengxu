@@ -1,5 +1,5 @@
 const _ = require('../vendors/underscore'),
-      clientVersion = '1.9.4';
+      clientVersion = '1.0.0';
 
 //let _header = {};
 
@@ -38,6 +38,9 @@ const request = opts => {
     url += `?client_version=${clientVersion}`;
   } else {
     url += `&client_version=${clientVersion}`;
+  }
+  if (url.indexOf('from=miniProgram') === -1) {
+    url += '&from=miniProgram';
   }
 
   return new Promise((resolve, reject) => {

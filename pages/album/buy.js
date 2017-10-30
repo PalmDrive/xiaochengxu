@@ -23,7 +23,7 @@ Page({
   onLoad(options) {
     const albumId = options.id || '35cb43c0-994b-11e7-83e6-811feeb3ae13';
     request({
-      url: `${baseUrl}/users/${albumId}?fields[users]=id,groupInfo,username&from=miniProgram`
+      url: `${baseUrl}/users/${albumId}?fields[users]=id,groupInfo,username`
     })
       .then(data => {
         const album = data.data.attributes.groupInfo;
@@ -42,7 +42,7 @@ Page({
   },
 
   buy() {
-    const url = `${baseUrl}/wechat/pay/unifiedorder?from=miniProgram`,
+    const url = `${baseUrl}/wechat/pay/unifiedorder`,
           userInfo = Auth.getLocalUserInfo(),
           attrs = userInfo.attributes || {};
 

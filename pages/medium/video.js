@@ -130,7 +130,7 @@ Page({
   _load() {
     const mediumId = this.data.mediumId;
     request({
-      url: `${app.globalData.apiBase}/media/${mediumId}?from=miniProgram`
+      url: `${app.globalData.apiBase}/media/${mediumId}`
     }).then(result => {
       let media = result.data;
 

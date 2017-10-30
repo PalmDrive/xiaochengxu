@@ -125,7 +125,7 @@ Page({
   getTopics: function(pageNumber, cb) {
     const userId = Auth.getLocalUserId();
     request({
-      url: `${app.globalData.apiBase}/users/${userId}/favorite-topics?page[number]=${pageNumber}&from=miniProgram`
+      url: `${app.globalData.apiBase}/users/${userId}/favorite-topics?page[number]=${pageNumber}`
     }).then((res) => {
       const topics = res.data;
       cb(topics);

@@ -7,7 +7,7 @@ let _subscribedTopicIds = null;
 function subscribe(userId, topicId, isForGroup) {
   return request({
     method: 'POST',
-    url: `${app.globalData.apiBase}/topics/${topicId}/subscribe?from=miniProgram`,
+    url: `${app.globalData.apiBase}/topics/${topicId}/subscribe`,
     data: {
       data: {
         attributes: { userId }
@@ -31,7 +31,7 @@ function subscribe(userId, topicId, isForGroup) {
 function unsubscribe(userId, topicId, isForGroup) {
   return request({
       method: 'POST',
-      url: `${app.globalData.apiBase}/topics/${topicId}/unsubscribe?from=miniProgram`,
+      url: `${app.globalData.apiBase}/topics/${topicId}/unsubscribe`,
       data: {
         data: {
           attributes: { userId }
@@ -54,7 +54,7 @@ function unsubscribe(userId, topicId, isForGroup) {
 }
 
 function getGroupSubscribedTopicIds(groupId) {
-  const url = `${app.globalData.apiBase}/users/${groupId}/favorite-topic-ids?from=miniProgram`;
+  const url = `${app.globalData.apiBase}/users/${groupId}/favorite-topic-ids`;
   return request({
           url
         }).then((res) => {
@@ -66,7 +66,7 @@ function getGroupSubscribedTopicIds(groupId) {
 
 function getSubscribedTopicIds(userId, force) {
   if (force || !_subscribedTopicIds) {
-    const url = `${app.globalData.apiBase}/users/${userId}/favorite-topic-ids?from=miniProgram`;
+    const url = `${app.globalData.apiBase}/users/${userId}/favorite-topic-ids`;
     return request({
             url
           }).then((res) => {
