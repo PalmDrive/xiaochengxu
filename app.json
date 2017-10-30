@@ -1,7 +1,7 @@
 {
   "pages":[
-    "pages/my/remind",
     "pages/album/index",
+    "pages/my/remind",
     "pages/album/purchased-list",
     "pages/album/free",
     "pages/album/share",
