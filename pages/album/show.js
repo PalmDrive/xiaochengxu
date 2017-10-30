@@ -164,7 +164,7 @@ Page({
             el: `album_name:${this.data.title},album_id:${this.data.albumId}`,
             ev: 0
           };
-    const key = 'day' + (6 - index + 1);
+    const key = 'day' + (this.data.posts.length - index);
     if (!this.data.dayLogs[key]) {
       this.data.dayLogs[key] = 1;
       this.data.achieveProcess = this.data.achieveProcess + 1;
