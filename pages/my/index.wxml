@@ -7,14 +7,16 @@
     <text class="userinfo-nickname text-bold size-20">{{userInfo.wxUsername}}</text>
   </view>
   <view class="center-view">
-    <view class="center-item row" wx:for="{{items}}" wx:for-item="item" wx:key bindtap="{{item.action}}">
-      <view class="center-item-left row">
-        <image class="center-item-icon" src="/images/paid-group/{{item.icon}}@2x.png"></image>
-        <text class="center-item-text  size-16 text-color2">{{item.title}}</text>
-      </view>
-      <view class="center-item-right row">
-        <text class="center-item-tip  size-12 text-color3">{{item.tip}}</text>
-        <image class="center-item-arrow" src="/images/paid-group/arrow@2x.png"></image>
+    <view class="section" wx:for="{{items}}" wx:for-item="itemArray" wx:key>
+      <view class="center-item row" wx:for="{{itemArray}}" wx:for-item="item" wx:key bindtap="{{item.action}}">
+        <view class="center-item-left row">
+          <image class="center-item-icon" src="/images/paid-group/{{item.icon}}@2x.png"></image>
+        c
+        </view>
+        <view class="center-item-right row">
+          <text class="center-item-tip  size-12 text-color3">{{item.tip}}</text>
+          <image class="center-item-arrow" src="/images/paid-group/arrow@2x.png"></image>
+        </view>
       </view>
     </view>
   </view>

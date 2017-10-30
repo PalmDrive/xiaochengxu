@@ -1,0 +1,8 @@
+<view class="container">
+    <text class="text-center  size-12 text-color3">当前推送时间为</text>
+    <text class="text-center  size-28 text-color1">{{time || '20:00'}</text>
+    <text class="center-item-text  size-16 text-color2">{{item.title}}</text>
+    <view class="times">
+
+    </view>
+</view>
