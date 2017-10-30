@@ -1,6 +1,6 @@
 //app.js
 const env = 'production';
-// const env = 'dev';
+//const env = 'dev';
 const {reloadPage, showHint} = require('utils/util');
 
 const API_BASES = {
@@ -58,9 +58,6 @@ App({
         //page.onLoad();
         .then(page => {
           reloadPage(page);
-          setTimeout(() => { // wait a bit for reloading
-            //showHint();
-          }, 1500);
         });
 
       wx.showToast({title: '登陆成功'});
@@ -74,6 +71,10 @@ App({
             title: '微信登陆出错了, 请稍后再试',
             duration: 3000,
             icon: 'loading'
+          });
+          wx.showModal({
+            title: '出错了',
+            content: JSON.stringify(err)
           });
           console.log('Auth.log err:', err);
         });
@@ -95,6 +96,7 @@ App({
 
   globalData: {
     apiBase,
-    env
+    env,
+    appName: 'days7Xiaochengxu'
   }
 })

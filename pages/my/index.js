@@ -136,7 +136,7 @@ Page({
   getTopics: function(pageNumber, cb) {
     const userId = Auth.getLocalUserId();
     request({
-      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?from=miniProgram&include=media&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&role=paid_group`
+      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/groups?include=media&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&role=paid_group`
     }).then((res) => {
       const topics = res.data;
       cb(topics);

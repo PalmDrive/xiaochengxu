@@ -254,7 +254,7 @@ Page({
   getTabMedia: function(tab, pageNumber, cb) {
     const that = this;
     request({
-      url: `${app.globalData.apiBase}/topics/${that.data.topicId}/media?page[number]=${pageNumber}&page[size]=8&filter[confirmed]=1&filter[contentTypes]=${tab}&sort=-publishedAt&from=miniProgram`
+      url: `${app.globalData.apiBase}/topics/${that.data.topicId}/media?page[number]=${pageNumber}&page[size]=8&filter[confirmed]=1&filter[contentTypes]=${tab}&sort=-publishedAt`
     }).then((res) => {
       const media = res.data;
       cb(media);
@@ -266,7 +266,7 @@ Page({
   //获取动态标签下的文章
   getMedia: function(pageNumber, cb) {
     request({
-      url: `${app.globalData.apiBase}/media/topic/${this.data.topicId}?page[number]=${pageNumber}&page[size]=${this.data.page.size}&sort=-publishedAt&from=miniProgram`
+      url: `${app.globalData.apiBase}/media/topic/${this.data.topicId}?page[number]=${pageNumber}&page[size]=${this.data.page.size}&sort=-publishedAt`
     }).then((res) => {
       const media = res.data;
       cb(media);
@@ -278,7 +278,7 @@ Page({
   _load() {
     const userId = Auth.getLocalUserId(),
       topicId = this.data.topicId,
-      topicUrl = `${app.globalData.apiBase}/topics/${topicId}?from=miniProgram&fields[topics]=name,description,imgUrl,mediaCount,fields,tabs,type&userId=${userId}`;
+      topicUrl = `${app.globalData.apiBase}/topics/${topicId}?fields[topics]=name,description,imgUrl,mediaCount,fields,tabs,type&userId=${userId}`;
     //获取专题数据
     request({
       url: topicUrl
@@ -318,7 +318,7 @@ Page({
 
       if (tabs.indexOf('子专题') > -1) {
         request({
-          url: `${app.globalData.apiBase}/topics/${topicId}/topics?include=media&from=miniProgram`
+          url: `${app.globalData.apiBase}/topics/${topicId}/topics?include=media`
         }).then((result) => {
           const topics = result.data.data;
           const media = result.data.included || [];

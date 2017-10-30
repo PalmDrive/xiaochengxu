@@ -17,6 +17,8 @@ Page({
     mediumId: '',
     nextMediumId: '',
     prevMediumId: '',
+    nextMediumType: '',
+    prevMediumType: '',
     medium: {},
     relatedMedia: [],
     relatedTopics: [],
@@ -108,14 +110,24 @@ Page({
 
   gotoNext() {
     // TODO: add ga tracking
-    const url = `/pages/medium/medium?id=${this.data.nextMediumId}&morningPostId=${morningPostId}&albumId=${albumId}&dayIndex=${index}&mediumIndex=${(parseInt(this.data.mediumIndex) + 1)}&count=${this.data.mediumCount}`;
+    let type = this.data.nextMediumType;
+    if (this.data.nextMediumType !== 'video' && this.data.nextMediumType !== 'audio') {
+      type = 'medium';
+    }
+    const url = `/pages/medium/${type}?id=${this.data.nextMediumId}&morningPostId=${morningPostId}&albumId=${albumId}&dayIndex=${index}&mediumIndex=${(parseInt(this.data.mediumIndex) + 1)}&count=${this.data.mediumCount}`;
 
     wx.redirectTo({url});
   },
 
   gotoPrev() {
     // TODO: add ga tracking
-    const url = `/pages/medium/medium?id=${this.data.prevMediumId}&morningPostId=${morningPostId}&albumId=${albumId}&dayIndex=${index}&mediumIndex=${(parseInt(this.data.mediumIndex) - 1)}&count=${this.data.mediumCount}`;
+
+    let type = this.data.prevMediumType;
+    if (this.data.prevMediumType !== 'video' && this.data.prevMediumType !== 'audio') {
+      type = 'medium';
+    }
+
+    const url = `/pages/medium/${type}?id=${this.data.prevMediumId}&morningPostId=${morningPostId}&albumId=${albumId}&dayIndex=${index}&mediumIndex=${(parseInt(this.data.mediumIndex) - 1)}&count=${this.data.mediumCount}`;
 
     wx.redirectTo({url});
   },
@@ -139,7 +151,7 @@ Page({
   },
 
   _load() {
-    let url =  `${app.globalData.apiBase}/media/${this.data.mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt,metaData&meta[prev]=true&from=miniProgram`;
+    let url =  `${app.globalData.apiBase}/media/${this.data.mediumId}?fields[media]=htmlContent,title,topics,source,sourcePicUrl,author,publishedAt,metaData&meta[prev]=true`;
     if (morningPostId) {
       url += `&morningPostId=${morningPostId}`
     }
@@ -169,6 +181,8 @@ Page({
       this.setData({
         nextMediumId: result.meta && result.meta.next,
         prevMediumId: result.meta && result.meta.prev,
+        nextMediumType: result.meta && result.meta.nextMedium && result.meta.nextMedium.mediumType || '',
+        prevMediumType: result.meta && result.meta.prevMedium &&result.meta.prevMedium.mediumType || '',
         medium,
         loading: false
       });
