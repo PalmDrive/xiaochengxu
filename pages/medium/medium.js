@@ -181,7 +181,7 @@ Page({
       this.setData({
         nextMediumId: result.meta && result.meta.next,
         prevMediumId: result.meta && result.meta.prev,
-        nextMediumType: result.meta && result.meta.prevMedium && result.meta.nextMedium.mediumType || '',
+        nextMediumType: result.meta && result.meta.nextMedium && result.meta.nextMedium.mediumType || '',
         prevMediumType: result.meta && result.meta.prevMedium &&result.meta.prevMedium.mediumType || '',
         medium,
         loading: false
