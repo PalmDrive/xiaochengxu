@@ -121,7 +121,6 @@ Page({
           }
         })
       }).then(res => {
-        console.log(res);
         this.setData({
           shareAlert: {
             alert: true,
@@ -409,7 +408,10 @@ Page({
         params.success = (res) => {
           console.log('wx requestPayment success');
           console.log(res);
-          this.setData({trial: false});
+          this.setData({
+            trial: false,
+            payView: false
+          });
           loadData(this.data.albumId)
             .then(this._onLoadSuccess);
 
@@ -443,9 +445,17 @@ Page({
   showPay () {
     this.findCoupon()
     .then(d => {
-      this.setData({
-        payView: true
-      });
+      if (this.data.coupons.length > 0) {  
+        this.setData({
+          payView: true,
+          couponIndex: 0,
+          coupon: this.data.coupons[0]
+        });
+      } else {
+        this.setData({
+          payView: true
+        });
+      }
     });
   },
   // 隐藏 支付页面
