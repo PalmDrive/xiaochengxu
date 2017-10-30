@@ -192,6 +192,7 @@ page {
   -webkit-line-clamp: 3;
   overflow: hidden;
   flex: 1;
+  text-align: center;
 }
 
 .medium-banner {
