@@ -5,6 +5,44 @@ page {
 
 /* 已购买页面 */
 
+.qrcode-view {
+  align-items:center;
+}
+
+.qrcode-main-view {
+  text-align: center;
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  align-items:center;
+  width:270px;
+}
+
+.model-text1 {
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.modal-qrcode-img {
+  width: 150px;
+  height: 150px;
+  margin: 10px 0px 5px 0px;
+}
+
+.qrcode-button {
+  background: #42BD56;
+  border-radius: 3px;
+  margin-top: 20px;
+  width: 200px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.btn-close {
+  width: 30px;
+  height: 30px;
+}
+
 .unlocked .locker-mask {
   display: none;
 }
