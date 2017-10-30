@@ -1,8 +1,13 @@
 <view class="container">
-    <text class="text-center  size-12 text-color3">当前推送时间为</text>
-    <text class="text-center  size-28 text-color1">{{time || '20:00'}</text>
-    <text class="center-item-text  size-16 text-color2">{{item.title}}</text>
-    <view class="times">
-
+    <text class="text-center size-12 text-color3">当前推送时间为</text>
+    <text class="text-center size-28 text-color1">{{time || '20:00'}}</text>
+    <text class="pingfang-medium size-15 text-color1">设置时间</text>
+    <view class="times row">
+      <text class="box size-22"  wx:for="{{timeArray}}" wx:for-item="time" wx:key="" bindtap="selectTime" style="color: {{index === selectedIndex ? 'white' : '#42BD56'}}; background: {{index === selectedIndex ? '#42BD56' : 'white'}} ">{{time}}</text>
     </view>
+    <view class="column">
+      <text class="pingfang-medium size-15 text-color1">打卡奖励</text>
+      <text class="rule size-13 text-color1">连续打卡10天获得七日辑优惠券</text>
+    </view>
+
 </view>

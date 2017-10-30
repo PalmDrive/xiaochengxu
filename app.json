@@ -1,7 +1,7 @@
 {
   "pages":[
+    "pages/my/remind",
     "pages/album/index",
-    "pages/my/order",
     "pages/album/purchased-list",
     "pages/album/free",
     "pages/album/share",
@@ -23,6 +23,7 @@
     "pages/my/achievements",
     "pages/my/free",
     "pages/my/coupon",
+    "pages/my/order",
     "pages/groups/group",
     "pages/groups/new-group",
     "pages/index/index",

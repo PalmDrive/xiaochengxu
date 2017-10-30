@@ -5,14 +5,9 @@ const app = getApp(),
   {request} = require('../../utils/request');
 Page({
   data: {
-    userInfo: {},
-    userId: null,
-    loading: true,
-    favoriteTopics: [],
-    loaded: false,
-    page: {number: 1, size: 8},
-    noMore: false,
-    items: []
+    time: '20:00',
+    selectedIndex: 0,
+    timeArray: ['9:00', '12:00', '16:00', '19:00', '20:00', '其他']
   },
   //事件处理函数
   goToTopic: Util.goToTopic,
@@ -136,7 +131,7 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      title: '七日辑-我的页面'
+      title: '七日辑-打卡提示时间'
     };
   }
 });
