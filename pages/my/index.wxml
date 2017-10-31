@@ -11,7 +11,7 @@
       <view class="center-item row" wx:for="{{itemArray}}" wx:for-item="item" wx:key bindtap="{{item.action}}">
         <view class="center-item-left row">
           <image class="center-item-icon" src="/images/paid-group/{{item.icon}}@2x.png"></image>
-        c
+          <text class="center-item-text  size-16 text-color2">{{item.title}}</text>
         </view>
         <view class="center-item-right row">
           <text class="center-item-tip  size-12 text-color3">{{item.tip}}</text>
