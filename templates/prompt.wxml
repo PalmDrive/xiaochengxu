@@ -11,7 +11,7 @@
         <image class="close-button" src="/images/close-white.png" bindtap="tempAlertClose" ></image>
       </view>
       <!-- coupon -->
-      <view wx:if="{{tempAlert.type === 'coupon'}}" class="coupon-continer">
+      <view wx:if="{{tempAlert.type === 'coupon'}}" class="coupon-container">
         <view class="title size-24">{{tempAlert.title}}</view>
         <text class="subtitle size-14">{{tempAlert.content}}</text>
         <view class="coupon">

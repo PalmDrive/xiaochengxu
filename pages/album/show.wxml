@@ -222,7 +222,7 @@
 <!-- 支付页面 -->
 <view class="pay" wx:if="{{payView}}">
   <view bindtap="hidePay" class="mask"></view>
-  <view class="pay-continer" bindtap="none">
+  <view class="pay-container" bindtap="none">
     <view class="size-22">{{title}}</view>
     <view class="remarks size-12">备注：</view>
     <view class="line"></view>
