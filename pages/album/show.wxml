@@ -216,7 +216,7 @@
   </view>
   <view wx:if="{{shareAlert.guide}}" class="guide">
     <image mode="widthFix" src="https://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/guide.png"></image>
-    <button bindtap="closeAlert">我知道了</button>
+    <button data-type="guide" bindtap="closeAlert">我知道了</button>
   </view>
 </view>
 <!-- 支付页面 -->

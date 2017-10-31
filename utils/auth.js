@@ -40,6 +40,14 @@ const setLocalKey = (key, value) => {
   wx.setStorageSync(`${nameSpace}:${key}`, value);
 };
 
+const getLocalShowed = () => {
+  return wx.getStorageSync(`${nameSpace}:showed`) || {};
+};
+
+const setLocalShowed = obj => {
+  wx.setStorageSync(`${nameSpace}:showed`, obj);
+};
+
 /**
  * Get code and send to the server
  * The server uses the code to get the basic info
