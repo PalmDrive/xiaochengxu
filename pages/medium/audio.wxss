@@ -36,7 +36,11 @@
 
 .title-text {
   margin-bottom: 5px;
-  flex: 1
+  flex: 1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow:hidden;
 }
 
 .video-view {
