@@ -2,9 +2,22 @@
 <import src="../../templates/loading.wxml"/>
 
 <view class="video-view column">
-  <template is="loading" data="{{loadingStatus}}"></template>
   <view class="column audio-view">
-    <audio poster="{{poster}}" name="{{selectedMedium.attributes.title}}" author="{{selectedMedium.attributes.author}}" src="{{selectedMedium.attributes.video}}" id="myAudio" bindended="endedEvent" controls bindplay="bindplay" bindpause="bindpause"></audio>
+    <view class="audio-container row">
+      <view class="audio-left">
+          <image src="/images/paid-group/{{isPlaying ? 'pause' : 'play' }}.png" class="play-img" mode="aspectFill" bindtap="playOrPause"></image>
+      </view>
+      <view class="audio-right column">
+        <view class="audio-right-line row">
+          <text class="title-text size-15 text-color1">{{selectedMedium.attributes.title || '标题'}}</text>
+          <text class="size-10 text-color2">{{nowTime || '00:00'}}</text>
+        </view>
+        <view class="audio-right-line row">
+          <text class="size-12 text-color2">{{selectedMedium.attributes.author || '作者'}}</text>
+          <text class="size-10 text-color2">{{selectedMedium.attributes.durationString}}</text>
+        </view>
+      </view>
+    </view>
   </view>
 
   <view wx:if="{{media.length > 1}}">

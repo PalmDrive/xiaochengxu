@@ -8,6 +8,37 @@
   background: #FAFAFA;
 }
 
+.audio-container {
+  border: 1px solid #E4E4E4;
+  border-radius: 3px;
+}
+
+.audio-left {
+  background: #E4E4E4;
+}
+
+.play-img {
+  width: 25px;
+  height: 25px;
+  padding: 17px 20px 17px 20px;
+}
+
+.audio-right {
+  flex: 1;
+  padding: 10px 20px 10px 20px;
+  background: white;
+}
+
+.audio-right-line {
+  flex: 1;
+  justify-content: space-between;
+}
+
+.title-text {
+  margin-bottom: 5px;
+  flex: 1
+}
+
 .video-view {
   background: white;
 }

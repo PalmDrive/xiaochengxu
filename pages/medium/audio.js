@@ -6,8 +6,7 @@ const app = getApp(),
       {request} = require('../../utils/request');
 
 let albumId = null,
-    index = null,
-    timer = null;
+    index = null;
 
 function getSelectedMedium(media) {
   return media.filter(m => m.selected)[0];
@@ -26,7 +25,9 @@ Page({
     isAudioShow: true,
     css: '',
     toView: '#',
-    loadingStatus: false
+    isPlaying: false,
+    nowTime: '00:00',
+    totalTime: '00:00'
   },
 
   /**
@@ -58,7 +59,38 @@ Page({
    */
    onReady: function (e) {
      // 使用 wx.createAudioContext 获取 audio 上下文 context
-     this.audioCtx = wx.createAudioContext('myAudio')
+    //  this.audioCtx = wx.createAudioContext('myAudio')
+    let manager = wx.getBackgroundAudioManager();
+    manager.onWaiting(() => {
+      wx.showLoading({
+        title: '加载中..',
+      })
+    })
+
+    manager.onTimeUpdate(() => {
+      wx.hideLoading()
+      this.setData({
+        nowTime: util.convertTime(manager.currentTime)
+        // totalTime: util.convertTime(manager.duration)
+      });
+    })
+    manager.onEnded(() => {
+      this.setData({
+        isPlaying: false
+      });
+
+      const media = this.data.media;
+      let index = media.indexOf(getSelectedMedium(media));
+      if (index >= 0 && index < media.length - 1) {
+        index ++;
+        media.forEach(m => m.selected = m.id === media[index].id);
+        this.setData({
+          media,
+          selectedMedium: media[index]
+        });
+        this.play()
+      }
+    })
    },
 
   /**
@@ -195,19 +227,6 @@ Page({
       console.log('medium page request medium data fail');
     });
   },
-  endedEvent() {
-    const media = this.data.media;
-    let index = media.indexOf(getSelectedMedium(media));
-    if (index >= 0 && index < media.length - 1) {
-      index ++;
-      media.forEach(m => m.selected = m.id === media[index].id);
-      this.setData({
-        media,
-        selectedMedium: media[index]
-      });
-      this.play()
-    }
-  },
   clickText() {
     this.setData({isAudioShow: false});
   },
@@ -228,41 +247,25 @@ Page({
     wx.redirectTo({url});
   },
 
-  bindplay() {
-    // this.audioCtx.play()
-    this.startTimer();
-  },
-
-  bindpause() {
-    this.stopTimer();
-    // this.audioCtx.pause()
+  playOrPause() {
+    let nowState = !this.data.isPlaying;
+    this.setData({
+      isPlaying: nowState
+    });
+    if (nowState) {
+      this.play();
+    } else {
+      wx.pauseBackgroundAudio();
+    }
   },
 
   play() {
-    this.audioCtx.play()
-    this.startTimer();
-  },
-
-  pause() {
-    this.audioCtx.pause()
-    this.stopTimer();
-  },
-
-  startTimer() {
-    timer = setInterval(this.getLoadingState,1000);
-  },
-
-  stopTimer() {
-    //去掉定时器的方法
-    clearInterval(timer);
-  },
-
-  getLoadingState() {
-    let manager = wx.getBackgroundAudioManager();
-    if (manager.paused === false && manager.buffered - manager.current <= 0) {
-      this.setData({loadingStatus: true});
-    } else {
-      this.setData({loadingStatus: false});
-    }
+    let attr = this.data.selectedMedium.attributes;
+    wx.playBackgroundAudio({
+      dataUrl: attr.video,
+      title: attr.title,
+      coverImgUrl: '',
+      singer: attr.author
+    })
   }
 })
