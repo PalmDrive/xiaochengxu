@@ -33,6 +33,18 @@ Page({
     });
   },
 
+  onHide: function () {
+
+  },
+
+  _load: function() {
+    request({
+      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}?fields[users]=dailyReminderTime`
+    }).then(res => {
+      console.log(res);
+    });
+  },
+
   /**
    * 用户点击右上角分享
    */
