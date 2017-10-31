@@ -179,10 +179,14 @@ Page({
   },
 
   _load() {
+    wx.showLoading({
+      title: '加载中..',
+    })
     const mediumId = this.data.mediumId;
     request({
       url: `${app.globalData.apiBase}/media/${mediumId}?fields[media]=mediumType,htmlContent,title,duration,relatedArticles,video,author&meta[prev]=true&css=true`
     }).then(result => {
+      wx.hideLoading()
       let media = result.data,
           css = result.meta.css;
 
