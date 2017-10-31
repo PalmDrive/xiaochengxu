@@ -62,7 +62,7 @@
 .coupon-container {
   position: absolute;
   width: 321px;
-  height: 381px;
+  padding: 0 0 18px 0;
   background: #DD3918;
   margin: 10% auto;
   left: 0;
@@ -86,7 +86,7 @@
   background: #FFFFFF;
   box-shadow: 0 3px 9px 0 rgba(0,0,0,0.15);
   margin: 15px auto;
-  padding: 15px 0;
+  padding: 15px;
 }
 
 .coupon-container .value {
