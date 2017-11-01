@@ -36,6 +36,7 @@ Page({
     subscribers: [],
     subscribersCount: 0,
     price: 0,
+    originalPrice: 4.99,
     picurl: '',
     processing: false,
     editorInfo: {},
@@ -229,6 +230,7 @@ Page({
     this.data.title = res.data.attributes.title
     updates.title = res.data.attributes.title;
     updates.price = res.data.attributes.price;
+    updates.originalPrice = (res.data.attributes.metaData.originalPrice || 4990) / 100;
     updates.picurl = res.data.attributes.picurl;
     updates.editorInfo = res.data.attributes.editorInfo;
     updates.catalog = res.data.attributes.catalog;
@@ -445,7 +447,7 @@ Page({
   showPay () {
     this.findCoupon()
     .then(d => {
-      if (this.data.coupons.length > 0) {  
+      if (this.data.coupons.length > 0) {
         this.setData({
           payView: true,
           couponIndex: 0,

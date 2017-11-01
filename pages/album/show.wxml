@@ -126,7 +126,7 @@
     </view>
     <view class="price-view row">
       <text class="price-tip  size-12">售价</text>
-      <text class="price-tip price-old  size-12">￥49.9 </text>
+      <text class="price-tip price-old  size-12">￥{{originalPrice}} </text>
       <text class="price-now  size-20">￥{{(price / 100)}} </text>
     </view>
     <view class="line-view"></view>
