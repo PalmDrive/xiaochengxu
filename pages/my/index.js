@@ -29,7 +29,6 @@ Page({
       items[0].push({icon: '免费得', title: '免费得', tip: '点击查看详情', action: 'goToFree'});
     }
     this.setData({items: items,userInfo: Auth.getLocalUserInfo().attributes});
-    Auth.getLocalUserId() && this._loadRemindTime();
   },
 
   /**
@@ -41,6 +40,7 @@ Page({
       dp: '%2FwodeTab_XiaoChengXu',
       dt: '我的tab页（小程序）'
     });
+    Auth.getLocalUserId() && this._loadRemindTime();
   },
 
   /**
@@ -65,7 +65,19 @@ Page({
         const h = Math.floor((time / 1000 / 60) / 60)
         hour = h < 10 ? ('0' + h) : h;
       }
-      this.data.items[1].push({icon: '打卡', title: '打卡提示时间', tip: (hour + ":" + min), action: 'goToRemindTime'})
+      let flag = false;
+      for (let i = 0; i < this.data.items[1].length; i++ ) {
+        let obj = this.data.items[1][i];
+        if (obj.title === '打卡提示时间') {
+          obj.tip = (hour + ":" + min);
+          this.data.items[1][i] = obj;
+          flag = true;
+        }
+      }
+      if (!flag) {
+        this.data.items[1].push({icon: '打卡', title: '打卡提示时间', tip: (hour + ":" + min), action: 'goToRemindTime'})
+      }
+
       this.setData({
         items: this.data.items
       })
