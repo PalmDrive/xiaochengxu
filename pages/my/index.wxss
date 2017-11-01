@@ -12,7 +12,6 @@ page {
 
 .userinfo {
   margin-top: 3px;
-  margin-bottom: 10px;
   display: flex;
   background-color: white;
   align-items: center;
@@ -29,6 +28,10 @@ page {
 
 .center-view {
   width: 100%;
+}
+
+.section {
+  margin-top: 10px;
 }
 
 .center-item {
