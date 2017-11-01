@@ -283,5 +283,7 @@ module.exports = {
   decryptData,
   getLocalSessionKey,
   getLocalKey,
-  setLocalKey
+  setLocalKey,
+  getLocalShowed,
+  setLocalShowed
 };

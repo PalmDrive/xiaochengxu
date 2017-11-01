@@ -224,7 +224,7 @@
   <view bindtap="hidePay" class="mask"></view>
   <view class="pay-container" bindtap="none">
     <view class="size-22">{{title}}</view>
-    <view class="remarks size-12">备注：</view>
+    <!-- <view class="remarks size-12">备注：</view> -->
     <view class="line"></view>
     <text class="text size-16">优惠券</text>
     <view wx:if="{{coupons.length !== 0}}" bindtap="gotoChoiceCoupon" style="float: right;">

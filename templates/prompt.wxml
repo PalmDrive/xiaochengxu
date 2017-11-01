@@ -4,11 +4,12 @@
       <!-- popup -->
       <view wx:if="{{tempAlert.type === 'referral'}}" class="container">
         <image class="top-img" src="{{tempAlert.picurl}}"></image>
-        <text class="title size-22">{{tempAlert.title}}</text>
-        <text class="text size-14">
-        {{tempAlert.content}}</text>
-        <navigator url="{{tempAlert.link}}" style="display: inline;" hover-class="navigator-hover"><button bindtap="tempAlertGoList" link >立刻查看</button></navigator>
-        <image class="close-button" src="/images/close-white.png" bindtap="tempAlertClose" ></image>
+        <view class="text-container">
+          <text class="title size-22">{{tempAlert.title}}</text>
+          <text class="text size-14">{{tempAlert.content}}</text>
+          <navigator url="{{tempAlert.link}}" style="display: inline;" hover-class="navigator-hover"><button bindtap="tempAlertGoList" link >立刻查看</button></navigator>
+          <image class="close-button" src="/images/close-white.png" bindtap="tempAlertClose" ></image>
+        </view>
       </view>
       <!-- coupon -->
       <view wx:if="{{tempAlert.type === 'coupon'}}" class="coupon-container">
