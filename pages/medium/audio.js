@@ -62,35 +62,74 @@ Page({
     //  this.audioCtx = wx.createAudioContext('myAudio')
     let manager = wx.getBackgroundAudioManager();
     manager.onWaiting(() => {
-      wx.showLoading({
-        title: '加载中..',
-      })
+      if (this.data.selectedMedium && manager.src === this.data.selectedMedium.attributes.video) {
+        wx.showLoading({
+          mask: true,
+          title: '加载中..',
+        })
+      }
     })
 
     manager.onTimeUpdate(() => {
-      wx.hideLoading()
-      this.setData({
-        nowTime: util.convertTime(manager.currentTime)
-        // totalTime: util.convertTime(manager.duration)
-      });
-    })
-    manager.onEnded(() => {
-      this.setData({
-        isPlaying: false
-      });
 
-      const media = this.data.media;
-      let index = media.indexOf(getSelectedMedium(media));
-      if (index >= 0 && index < media.length - 1) {
-        index ++;
-        media.forEach(m => m.selected = m.id === media[index].id);
+      if (this.data.selectedMedium && manager.src === this.data.selectedMedium.attributes.video) {
+        wx.hideLoading()
         this.setData({
-          media,
-          selectedMedium: media[index]
+          nowTime: util.convertTime(manager.currentTime),
+          isPlaying: true
         });
-        this.play()
       }
     })
+    manager.onEnded(() => {
+      if (this.data.selectedMedium && manager.src === this.data.selectedMedium.attributes.video) {
+        this.setData({
+          isPlaying: false
+        });
+
+        const media = this.data.media;
+        let index = media.indexOf(getSelectedMedium(media));
+        if (index >= 0 && index < media.length - 1) {
+          index ++;
+          media.forEach(m => m.selected = m.id === media[index].id);
+          this.setData({
+            media,
+            selectedMedium: media[index]
+          });
+          this.play()
+        }
+      }
+    })
+    // manager.onPause((e) => {
+    //   console.log(e)
+    //   wx.showLoading({
+    //     title: e,
+    //   })
+    // })
+    //
+    // manager.onStop((e) => {
+    //   wx.showLoading({
+    //     title: e,
+    //   })
+    // })
+    //
+    // manager.onError((e) => {
+    //   wx.showLoading({
+    //     title: e,
+    //   })
+    // })
+    //
+    // wx.onBackgroundAudioPause(() => {
+    //   wx.showLoading({
+    //     title: e
+    //   })
+    // })
+    //
+    // wx.onBackgroundAudioStop(() => {
+    //   wx.showLoading({
+    //     title: e + 'stop'
+    //   })
+    // })
+
    },
 
   /**
@@ -252,18 +291,21 @@ Page({
   },
 
   playOrPause() {
-    let nowState = !this.data.isPlaying;
-    this.setData({
-      isPlaying: nowState
-    });
-    if (nowState) {
-      this.play();
-    } else {
-      wx.pauseBackgroundAudio();
+    if (this.data.selectedMedium) {
+      let nowState = !this.data.isPlaying;
+      this.setData({
+        isPlaying: nowState
+      });
+      if (nowState) {
+        this.play();
+      } else {
+        wx.pauseBackgroundAudio();
+      }
     }
   },
 
   play() {
+
     let attr = this.data.selectedMedium.attributes;
     wx.playBackgroundAudio({
       dataUrl: attr.video,

@@ -52,7 +52,7 @@ Page({
         }
 
         if (d.meta) {
-          Auth.setLocalKey( `isSubscribedWX`, d.meta.isSubscribedWX)
+          Auth.setLocalKey( `isSubscribedWX`, d.meta.isSubscribedWX + "")
         }
       })
     }
