@@ -59,58 +59,58 @@
 }
 
 /* 弹窗 */
-.coupon-continer {
+.coupon-container {
   position: absolute;
   width: 321px;
-  height: 381px;
+  padding: 0 0 18px 0;
   background: #DD3918;
   margin: 10% auto;
   left: 0;
   right: 0;
 }
-.coupon-continer .title {
+.coupon-container .title {
   text-align: center;
   color: #fff;
   margin: 18px 0 7px 0;
   line-height: 42px;
 }
 
-.coupon-continer .subtitle {
+.coupon-container .subtitle {
   display: block;
   text-align: center;
   color: #fff;
 }
 
-.coupon-continer .coupon {
+.coupon-container .coupon {
   width: 276px;
   background: #FFFFFF;
   box-shadow: 0 3px 9px 0 rgba(0,0,0,0.15);
   margin: 15px auto;
-  padding: 15px 0;
+  padding: 15px;
 }
 
-.coupon-continer .value {
+.coupon-container .value {
   font-size: 36px;
   color: #DF0A20;
   text-align: center;
   margin-bottom: 10px;
 }
 
-.coupon-continer .range {
+.coupon-container .range {
   text-align: center;
   padding: 5px 0;
 }
 
-.coupon-continer .prompt {
+.coupon-container .prompt {
   color: rgba(255,255,255,0.6);
   text-align: center;
 }
 
-.coupon-continer .gift {
+.coupon-container .gift {
   text-align: center;
 }
 
-.coupon-continer .gifter {
+.coupon-container .gifter {
   line-height: 21px;
   background: #000;
   color: #fff;

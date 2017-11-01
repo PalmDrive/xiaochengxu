@@ -130,6 +130,8 @@ Page({
         });
       });
     } else {
+      // 显示新手引导
+      this.showGuide();
       init();
     }
   },
@@ -502,17 +504,29 @@ Page({
       // })
     });
   },
-  closeAlert() {
+  closeAlert(options) {
+    if (options.currentTarget.dataset.type === 'guide') {
+      const showed = Auth.getLocalShowed();
+      showed.freeGuide = true
+      Auth.setLocalShowed(showed);
+    }
     this.setData({
       shareAlert: null
     });
   },
   showGuide() {
-    this.setData({
-      shareAlert: {
-        guide: true
-      }
-    });
+    const showed = Auth.getLocalShowed();
+    if (showed.freeGuide) {
+      this.setData({
+        shareAlert: null
+      });
+    } else if (this.data.shareAlert) {
+      this.setData({
+        shareAlert: {
+          guide: true
+        }
+      });
+    }
   },
   // 选择优惠券
   gotoChoiceCoupon() {

@@ -128,7 +128,7 @@ page {
   background: rgba(0,0,0,0.70);
 }
 
-.pay .pay-continer {
+.pay .pay-container {
   /*position: absolute;*/
   /*width: 100%;*/
   padding: 15px;
@@ -155,7 +155,7 @@ page {
 }
 
 /* 领取过 */
-.getOver-continer {
+.getOver-container {
   text-align: center;
   z-index: 11;
 }

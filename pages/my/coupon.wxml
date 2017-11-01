@@ -32,14 +32,14 @@
   </view>
 
   <!-- 领取过 的提示 -->
-  <view class="getOver-continer" style="display: none;">
+  <view class="getOver-container" style="display: none;">
     <view class="getOver size-14">您已经领取过此优惠券，请勿重复领取</view>
   </view>
 
   <!-- 支付页面 -->
   <view class="pay" style="display: none;">
     <view class="mask">
-      <view class="pay-continer">
+      <view class="pay-container">
         <view class="title size-22">手机摄影7日速成</view>
         <view class="remarks size-12">备注：</view>
         <view class="line"></view>

@@ -3,7 +3,7 @@ page {
   background: #fafafa;
 }
 
-.continer {
+.container {
   position: relative;
   padding: 15px;
   margin: 15px;
@@ -71,7 +71,7 @@ button {
   height: 40px;
   border-radius: 20px;
 }
-.friend .friend-continer {
+.friend .friend-container {
   vertical-align: top;
   display: inline-block;
   width: 64%;
