@@ -4,7 +4,7 @@
 
 .slide {
   width: 62%;
-  height: 450px;
+  height: 414.429px;
   margin-left: 19%;
   box-shadow: 0px 2px 8px 2px #eee;
 }
