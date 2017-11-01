@@ -5,8 +5,8 @@
     <view class="times row">
       <text class="box size-22"  wx:for="{{timeArray}}" wx:for-item="timeItem" data-index="{{index}}" wx:key="" bindtap="selectTime" style="color: {{index === selectedIndex ? 'white' : '#42BD56'}}; background: {{index === selectedIndex ? '#42BD56' : 'white'}} ">{{timeItem}}</text>
 
-      <picker mode="time" value="{{time}}" start="09:01" end="21:01" bindchange="bindTimeChange" class="box">
-        <text class="size-22" style="color: {{index === selectedIndex ? 'white' : '#42BD56'}}; background: {{index === selectedIndex ? '#42BD56' : 'white'}} ">其他</text>
+      <picker mode="time" value="{{time}}" start="09:01" end="21:01" bindchange="bindTimeChange" class="box" style="color: {{5 === selectedIndex ? 'white' : '#42BD56'}}; background: {{5 === selectedIndex ? '#42BD56' : 'white'}} ">
+        <text class="size-22">其他</text>
       </picker>
     </view>
     <view class="column">

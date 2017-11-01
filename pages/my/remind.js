@@ -9,14 +9,8 @@ Page({
     selectedIndex: 0,
     timeArray: ['9:00', '12:00', '16:00', '19:00', '20:00']
   },
-  //事件处理函数
-  goToTopic: Util.goToTopic,
 
   onLoad: function (options) {
-    // console.log('onLoad');
-    const that = this;
-
-
     Auth.getLocalUserId() && this._load();
   },
 
@@ -33,15 +27,45 @@ Page({
     });
   },
 
-  onHide: function () {
-
+  onUnload: function () {
+    const times = this.data.time.split(':');
+    const milliseconds = (parseInt(times[0]) * 60 + parseInt(times[1])) * 60 * 1000;
+    const url = `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}`;
+    request({
+      method: 'PUT',
+      url,
+      data: {
+        data: {
+          attributes: {
+            dailyReminderTime: milliseconds
+          }
+        }
+      }
+    }).then(res => {
+      console.log(res)
+    })
   },
 
   _load: function() {
     request({
       url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}?fields[users]=dailyReminderTime`
     }).then(res => {
-      console.log(res);
+      let time = res.data.attributes.dailyReminderTime,
+          min = "00",
+          hour = "20";
+      if (time) {
+        const m = ((time / 1000 / 60) % 60)
+        min = m < 10 ? ('0' + m) : m;
+        const h = Math.floor((time / 1000 / 60) / 60)
+        hour = h < 10 ? ('0' + h) : h;
+      }
+      const result = hour + ":" + min;
+      const index = this.data.timeArray.indexOf(result)
+      const selectedIndex = index !== -1 ? index : 5
+      this.setData({
+        time: result,
+        selectedIndex
+      })
     });
   },
 
@@ -56,7 +80,8 @@ Page({
 
   bindTimeChange: function(e) {
     this.setData({
-      time: e.detail.value
+      time: e.detail.value,
+      selectedIndex: 5
     })
   },
 
