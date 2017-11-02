@@ -2,6 +2,7 @@
 <import src="../../templates/topic-list.wxml"/>
 <import src="../../templates/homepage-topic-section.wxml"/>
 <import src="../../templates/loading.wxml"/>
+<import src="../../templates/prompt.wxml"/>
 <include src="../../includes/hint.wxml"/>
 <import src="../../templates/button-formid.wxml"/>
 
@@ -239,3 +240,5 @@
     <button bindtap="buy" disabled="{{processing}}" loading="{{processing}}">微信支付</button>
   </view>
 </view>
+
+<template is="prompt" data="{{tempAlert}}"></template>
