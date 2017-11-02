@@ -194,7 +194,7 @@
       <image src="/images/paid-group/试读.jpg" class="shidu-img" mode="aspectFill"></image>
       <text class="shidu-text text-color2 size-12">试读</text>
     </view>
-    <view class="free column" bindtap="gotoFree" wx:if="{{userRole==='admin'}}">
+    <view class="free column" bindtap="gotoFree">
       <image src="/images/paid-group/免费@2x.png" class="free-img" mode="aspectFill"></image>
       <text class="free-text text-color2 size-12">免费得</text>
     </view>
