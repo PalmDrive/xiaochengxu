@@ -482,7 +482,6 @@ Page({
     .then(d => {
       let coupons = d[0],
             discount = d[1];
-            discount = 0.5;
       let discountPrice = discount !== null ? this.data.price * discount : this.data.price;
       // 四舍五入到分
       discountPrice = discountPrice.toFixed(0);
