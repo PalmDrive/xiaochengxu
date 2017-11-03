@@ -54,7 +54,11 @@ Page({
     coupon: null,
     // 用于 choice-coupon
     coupons: null,
-    tempAlert: null
+    tempAlert: null,
+    // 折扣 取值范围 0-1
+    discount: null,
+    // 折扣价格
+    discountPrice: 0,
   },
 
   //关闭首次登陆弹窗
@@ -380,8 +384,8 @@ Page({
   },
 
   buy() {
-    const price = this.data.coupon ? (this.data.price - this.data.coupon.quota) : this.data.price;
-
+    let price = this.data.discountPrice || this.data.price;
+    price = this.data.coupon ? (price - this.data.coupon.quota) : price;
     // 使用完优惠券是否是0元
     if (price <= 0) {
       this._useCoupon()
@@ -474,17 +478,27 @@ Page({
 
   // 显示支付的 底部 弹窗
   showPay () {
-    this.findCoupon()
+    Promise.all([this.findCoupon(), this.getDiscount()])
     .then(d => {
+      let coupons = d[0],
+            discount = d[1];
+            discount = 0.5;
+      let discountPrice = discount !== null ? this.data.price * discount : this.data.price;
+      // 四舍五入到分
+      discountPrice = discountPrice.toFixed(0);
       if (this.data.coupons.length > 0) {
         this.setData({
           payView: true,
           couponIndex: 0,
-          coupon: this.data.coupons[0]
+          coupon: this.data.coupons[0],
+          discount: discount,
+          discountPrice: discountPrice
         });
       } else {
         this.setData({
-          payView: true
+          payView: true,
+          discount: discount,
+          discountPrice: discountPrice
         });
       }
     });
@@ -585,7 +599,7 @@ Page({
     });
   },
 
-  // 查账 coupons
+  // 查找 coupons
   findCoupon: function () {
     return request({
       url: `${baseUrl}/user-coupons`,
@@ -615,6 +629,16 @@ Page({
         coupons: couponsData
       });
       return res.data;
+    });
+  },
+
+  // 查找 折扣
+  getDiscount: function () {
+    return request({
+      url: `${baseUrl}/user-checkins/progress`,
+      method: 'GET'
+    }).then(res => {
+      return res && res.data && res.data.discountRate
     });
   },
 
