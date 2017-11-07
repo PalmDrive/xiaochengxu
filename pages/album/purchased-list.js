@@ -7,18 +7,17 @@ Page({
   data: {
     userInfo: {},
     userId: null,
-    loading: false,
     favoriteTopics: [],
     page: {number: 1, size: 10},
-    noMore: false,
-    items: []
+    items: [],
+    loadingStatus: null
   },
   //事件处理函数
   goToTopic: Util.goToTopic,
 
   onLoad: function (options) {
     if (options && options.pullDown) {
-      this.setData({ 'page.number': 1, noMore: false });
+      this.setData({ 'page.number': 1, loadingStatus: 'LOADING' });
     }
     Auth.getLocalUserId() && this._load();
   },
@@ -67,9 +66,9 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-    if (!this.data.loadingMore && !this.data.noMore) {
+    if (this.data.loadingStatus != 'LOADING' && !this.data.loadingStatus != 'LOADED_ALL') {
       const pageNumber = this.data.page.number + 1;
-      this.setData({loadingMore: true, 'page.number': pageNumber});
+      this.setData({loadingMore: 'LOADING_MORE', 'page.number': pageNumber});
       this.getTopics(pageNumber);
     }
   },
@@ -85,13 +84,12 @@ Page({
 
   updateData: function(topics) {
     topics.forEach(Util.formatAlbum);
-
     const data = {
-      loadingMore: false,
+      loadingStatus: 'LOADED',
       favoriteTopics: this.data.favoriteTopics.concat(topics)
     };
     if (topics.length < this.data.page.size) {
-      data.noMore = true;
+      data.loadingStatus = 'LOADED_ALL';
     }
     this.setData(data);
     wx.stopPullDownRefresh();
@@ -102,7 +100,7 @@ Page({
       url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/albums?page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=title,picurl&filter=unlocked`
     }).then((res) => {
       const topics = res.data;
-      this.updateData(topics);
+      this.updateData([]);
     }, () => {
       console.log('my page, getTopics request fail');
     });

@@ -1,7 +1,11 @@
 <!--pages/my/my.wxml-->
 <import src="../../templates/topic-list.wxml"/>
+<import src="../../templates/loading.wxml"/>
 
 <view class="container column">
+  <view class="loading text-center" wx:if="{{favoriteTopics.length === 0}}">
+    <text>没有已购的七日辑</text>
+  </view>
   <view wx:for="{{favoriteTopics}}" wx:for-item="group" wx:key data-group="{{ group }}" bindtap="gotoPaidGroup">
       <image src="{{group.attributes.picurl}}" mode="widthFix" class="paid-group-pic"></image>
       <text class=" size-26 FZRUIZH_CUJW--GB1-0 image-bottom">{{group.attributes.title}}</text>
@@ -11,4 +15,5 @@
       </view>
       <view class="section-break"></view>
   </view>
+  <template is="loading" data="{{loadingStatus}}" wx:if="{{favoriteTopics.length > 0}}"></template>
 </view>
