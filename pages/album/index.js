@@ -52,6 +52,7 @@ Page({
         }
 
         if (d.meta) {
+          // 是否关注了七日辑的服务号
           Auth.setLocalKey( `isSubscribedWX`, d.meta.isSubscribedWX + "")
         }
       })
