@@ -54,7 +54,8 @@ Page({
     coupon: null,
     // 用于 choice-coupon
     coupons: null,
-    tempAlert: null
+    tempAlert: null,
+    programStartAt: 0
   },
 
   //关闭首次登陆弹窗
@@ -260,6 +261,7 @@ Page({
     updates.title = res.data.attributes.title;
     updates.price = res.data.attributes.price;
     updates.originalPrice = (res.data.attributes.metaData.originalPrice || 4990) / 100;
+    updates.programStartAt = res.data.attributes.metaData.programStartAt || 0;
     updates.picurl = res.data.attributes.picurl;
     updates.editorInfo = res.data.attributes.editorInfo;
     updates.catalog = res.data.attributes.catalog;
