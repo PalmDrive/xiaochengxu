@@ -100,7 +100,7 @@ Page({
       url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/albums?page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=title,picurl&filter=unlocked`
     }).then((res) => {
       const topics = res.data;
-      this.updateData([]);
+      this.updateData(topics);
     }, () => {
       console.log('my page, getTopics request fail');
     });
