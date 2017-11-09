@@ -117,76 +117,95 @@
   <template is="loading" data="{{loadingStatus}}"></template>
 </view>
 
+
 <view wx:if="{{(!didUserPay && !trial) && loadingStatus === null}}" class="buy-page">
   <view class="head-view">
     <!-- paid_group -->
     <image src="{{picurl}}" mode="aspectFill"  class="paid-group-pic"></image>
     <view class="title">
       <text class="title-text  size-26">{{title}}</text>
-      <text class="title-type">零基础</text>
+      <!-- <text class="title-type">零基础</text>-->
     </view>
     <view class="price-view row">
-      <text class="price-tip  size-12">售价</text>
-      <text class="price-tip price-old  size-12">￥{{originalPrice}} </text>
       <text class="price-now  size-20">￥{{(price / 100)}} </text>
+      <text class="price-tip price-old  size-12">￥{{originalPrice}} </text>
     </view>
     <view class="line-view"></view>
   </view>
 
   <view class="center-view">
-    <text class="jizhu-tip size-12 text-color2">本期辑主</text>
+    <view class="content-top row">
+      <text class="content-button size-18 pingfang-medium" style="color: {{selectedIndex === 0 ? '#1A1A1A' : '#606060'}}; border-bottom: {{selectedIndex === 0 ? '1px solid #42BD56' : '1px solid #EDEDED'}}">简介</text>
+      <text class="content-button size-18 pingfang-medium" style="color: {{selectedIndex === 1 ? '#1A1A1A' : '#606060'}}; border-bottom: {{selectedIndex === 1 ? '1px solid #42BD56' : '1px solid #EDEDED'}}">目录</text>
+    </view>
+
     <view class="jizhu-view">
       <view class="row">
         <image src="{{editorInfo.profilePicUrl}}" class="jizhu-img"></image>
-        <view class="bottom-left-view column" >
-          <text class="ji-zhu-username  size-14 text-color1">{{editorInfo.username}}</text>
-          <text class="ji-zhu-summary  size-10 text-color2">{{editorInfo.summary || '这是一句话简介'}}</text>
-        </view>
+        <text class="ji-zhu-username  size-20 pingfang-medium text-color1">{{editorInfo.username}}</text>
       </view>
-      <view class="small-line-view"></view>
-      <text class="ji-zhu-description  size-12 text-color2">{{editorInfo.description || '这是详细介绍' }}</text>
+      <text class="ji-zhu-description  size-14 text-color2">{{editorInfo.description || '这是详细介绍' }}</text>
+    </view>
+
+    <view class="line-view"></view>
+
+    <view class="lessons-description">
+      <text class="lesson-tip size-18 text-color1">课程介绍</text>
+      <text class="lessons-description-text size-14 text-color1 column">{{description}}</text>
+      <image src="{{descriptionPicUrl}}" class="lessons-description-img" mode="widthFix"></image>
+    </view>
+
+    <view class="target-audience">
+      <text class="about-qiriji bg-blue size-12">适用人群</text>
+      <text class="text-color1 size-14 content-text column">{{targetAudience}}</text>
+    </view>
+
+    <view class="target-audience">
+      <text class="about-qiriji bg-blue size-12">购买须知</text>
+      <text class="text-color1 size-14 content-text column">{{buyNotes}}</text>
+    </view>
+
+    <view class="qrcode-view-bottom row">
+      <view class="column gz-view">
+        <text class="bg-blue size-16 pingfang-medium text-center gz-text">关注七日辑</text>
+        <text class=" size-12 text-color2 " >即可在子菜单“已购”中随时观看自己购买的课程，已经获得更多关于课程资料，导师互动等信息</text>
+      </view>
+      <image src="../../images/paid-group/qrcode_qiriji.jpg" class="qrcode-img-b"></image>
+    </view>
+
+    <view class="about-view">
+      <text class="about-qiriji bg-blue size-12">关于七日辑</text>
+      <text class="about-qiriji-content size-14">《七日辑》让你用7天的碎片时间，实现一个小目标。
+      每个专辑都由一位相关领域的资深辑主制作，从 200+优质网站、1000+公众号/专栏中精心 挑选 28 篇文章，最终系统整理成辑。
+      </text>
+
+      <view class="about-type row">
+        <text class="about-type-left bg-blue size-12">提示自我</text>
+        <text class="about-type-right text-color2 size-14">你是否想利用碎片时间
+  进行自我提升? </text>
+      </view>
+      <view class="about-type row">
+        <text class="about-type-left bg-blue size-12">为你筛选</text>
+        <text class="about-type-right text-color2 size-14">你是否觉得网上内容太多太杂，
+  自己筛选过滤太浪费时间? </text>
+      </view>
+      <view class="about-type row">
+        <text class="about-type-left bg-blue size-12">为你挖掘</text>
+        <text class="about-type-right text-color2 size-14">你是否想要发掘更多更有趣的公众号/专栏? </text>
+      </view>
     </view>
 
     <view class="lessons">
-      <text class="lesson-tip size-12 text-color2">课程目录</text>
+      <text class="lesson-tip pingfang-medium size-18 text-color1">课程目录</text>
       <view class="lesson column" wx:for="{{catalog}}" wx:key="" wx:for-index="index" wx:for-item="catalogItem">
         <view class="day-top row">
-          <text class="day-index bg-blue size-10">D{{index + 1}}</text>
-          <text class="day-title bg-blue size-13">{{catalogItem.title}}</text>
+          <text class="day-index size-14">D{{index + 1}}</text>
+          <text class="day-title size-18">{{catalogItem.title}}</text>
         </view>
         <view class="day-bottom column">
-            <text class="day-text size-10 text-color1" wx:for="{{catalogItem.bulletpoints}}" wx:key="" wx:for-item="text">{{text.content}}</text>
+            <text class="day-text size-14 text-color1" wx:for="{{catalogItem.bulletpoints}}" wx:key="" wx:for-item="text">{{text.content}}</text>
         </view>
       </view>
-    </view>
-  </view>
-
-  <view class="line-view"></view>
-
-  <view class="about-view">
-    <text class="about-qiriji bg-blue size-12">关于七日辑</text>
-    <text class="about-qiriji-content main-color size-14">《七日辑》让你用7天的碎片时间，实现一个小目标。
-    每个专辑都由一位相关领域的资深辑主制作，从 200+优质网站、1000+公众号/专栏中精心 挑选 28 篇文章，最终系统整理成辑。
-    </text>
-
-    <view class="about-type row">
-      <text class="about-type-left bg-blue size-12">提示自我</text>
-      <text class="about-type-right text-color2 size-14">你是否想利用碎片时间
-进行自我提升? </text>
-    </view>
-    <view class="about-type row">
-      <text class="about-type-left bg-blue size-12">为你筛选</text>
-      <text class="about-type-right text-color2 size-14">你是否觉得网上内容太多太杂，
-自己筛选过滤太浪费时间? </text>
-    </view>
-    <view class="about-type row">
-      <text class="about-type-left bg-blue size-12">为你挖掘</text>
-      <text class="about-type-right text-color2 size-14">你是否想要发掘更多更有趣的公众号/专栏? </text>
-    </view>
-
-    <view class="concat-us column">
-      <text class="concat-us-text text-color3 size-14">如有其它需求请直接联系我们, 微信号: zhixiaobin123</text>
-      <image src="/images/paid-group/职小看.jpg" class="qrcode-img" mode="aspectFill"></image>
     </view>
   </view>
 
