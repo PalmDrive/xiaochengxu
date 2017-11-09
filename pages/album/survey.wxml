@@ -1,0 +1,75 @@
+<view class="container column">
+
+  <!-- 顶部 绿色 -->
+  <view class="row top-view1 bg-main-color">
+    <view class="row">
+      <image src="../../images/servey/日历.png" class="rili"></image>
+      <text class="size-12 text-white ">第五天</text>
+    </view>
+    <text class="size-12 text-white ">查看详情</text>
+  </view>
+
+  <view class="row top-view2 bg-main-color">
+    <view class="column day-box" wx:for="{{dayList}}" wx:for-item="day" wx:key="" style="background: {{selectedIndex === index ? 'white' : '#42BD56'}}">
+      <text class="size-16 pingfang-medium" style="color: {{selectedIndex === index ? '#42BD56' : 'white'}}">{{day}}</text>
+      <image src="../../images/servey/对号.jpg" class="right"></image>
+    </view>
+  </view>
+
+  <!-- 任务 -->
+  <text class="size-12 text-white task-title bg-main-color">任务</text>
+  <view class="section column">
+
+    <text class="size-12 text-color3">下面是今天的任务，带着任务去阅读材料更好哦</text>
+
+    <view class="row task-row1">
+      <view class="row">
+        <image src="{{editorInfo.profilePicUrl}}" class="baby"></image>
+        <text class="size-14 text-color1 pingfang-medium">{{editorInfo.username}}</text>
+      </view>
+      <text class="size-12 text-color2 ">2017.09.12</text>
+    </view>
+
+    <text class="size-14 text-color2 task-row2">{{post.attributes.description || ''}}</text>
+
+    <view class="row bg-gray">
+      <text class="size-14 text-white bg-main-color task-number">1</text>
+      <text class="size-14 text-color1 pingfang-medium">在你的“理想中的钱包”的项目中，根据你对于你的用户的采访结果，总结用户画像。方法：用简易画的方式画出你的用户画像，画出用户的需求特征，感情因素，能体现越多TA的特征越好。</text>
+    </view>
+
+    <view class="row bg-gray">
+      <text class="size-14 text-white bg-main-color task-number">2</text>
+      <text class="size-14 text-color1 pingfang-medium">在你的“理想中的钱包”的项目中，根据你对于你的用户的采访结果，总结用户画像。方法：用简易画的方式画出你的用户画像，画出用户的需求特征，感情因素，能体现越多TA的特征越好。</text>
+    </view>
+  </view>
+  <view class="line-view"></view>
+
+  <!-- 任务攻略 -->
+  <text class="size-12 text-white task-method-title task-title bg-main-color">任务攻略</text>
+  <view class="section column">
+    <text class="size-12 text-color3 second-tip">下面的攻略能够让你更好地完成任务</text>
+
+    <view class="column bg-gray" data-idx="{{index}}" wx:for="{{media}}" wx:for-item="medium" wx:key="">
+      <view class="row method-row">
+        <image src="../../images/servey/{{medium.attributes.mediumType}}.png" class="method-icon"></image>
+        <text class="size-16 text-color2 medium-title">{{medium.attributes.title}}</text>
+      </view>
+      <view class="column method-content">
+        <text class="size-12 text-color3 method-row summary" wx:if="{{medium.attributes.mediumType === 'article'}}">{{medium.attributes.summary}}</text>
+        <text class="size-9 look-detail ">查看详情</text>
+      </view>
+    </view>
+  </view>
+  <view class="line-view"></view>
+
+  <!-- 任务提交 -->
+  <text class="size-12 text-white task-method-title task-title bg-main-color">任务提交</text>
+  <view class="section column">
+    <text class="size-12 text-color3 second-tip">已提交356人，做完后才可查看别人的哦</text>
+    <view class="column center-view">
+      <image src="../../images/servey/宝宝.png" class="baby-big"></image>
+      <text class="size-12 text-white bg-main-color commit-button">提交我的任务</text>
+    </view>
+  </view>
+
+</view>
