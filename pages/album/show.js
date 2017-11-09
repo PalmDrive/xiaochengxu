@@ -60,7 +60,9 @@ Page({
     descriptionPicUrl: '',
     targetAudience: '',
     buyNotes: '',
-    description: ''
+    description: '',
+    toView: '#',
+    screenHeight: 667
   },
 
   //关闭首次登陆弹窗
@@ -120,6 +122,7 @@ Page({
         success(res) {
           updates.bannerImage = {height: res.windowWidth / bannerImageRatio};
           updates.username = Auth.getLocalUserInfo().attributes.wxUsername;
+          updates.screenHeight = res.screenHeight
           that.setData(updates);
           Auth.getLocalUserId() && that._load();
         },
@@ -644,5 +647,19 @@ Page({
   },
   tempAlertGoList: function () {
     this.data.tempAlert = false;
+  },
+  changeTab: function(e) {
+    const type = e.currentTarget.dataset.type;
+    if (type === 'category') {
+      this.setData({
+        toView: 'category',
+        selectedIndex: 1
+      });
+    } else {
+      this.setData({
+        toView: '#',
+        selectedIndex: 0
+      });
+    }
   }
 })

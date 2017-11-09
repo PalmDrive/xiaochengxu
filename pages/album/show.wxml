@@ -117,8 +117,7 @@
   <template is="loading" data="{{loadingStatus}}"></template>
 </view>
 
-
-<view wx:if="{{(!didUserPay && !trial) && loadingStatus === null}}" class="buy-page">
+<scroll-view scroll-y style="height: {{screenHeight}}px" scroll-into-view="{{toView}}" wx:if="{{(!didUserPay && !trial) && loadingStatus === null}}" class="buy-page">
   <view class="head-view">
     <!-- paid_group -->
     <image src="{{picurl}}" mode="aspectFill"  class="paid-group-pic"></image>
@@ -133,10 +132,9 @@
     <view class="line-view"></view>
   </view>
 
-  <view class="center-view">
     <view class="content-top row">
-      <text class="content-button size-18 pingfang-medium" style="color: {{selectedIndex === 0 ? '#1A1A1A' : '#606060'}}; border-bottom: {{selectedIndex === 0 ? '1px solid #42BD56' : '1px solid #EDEDED'}}">简介</text>
-      <text class="content-button size-18 pingfang-medium" style="color: {{selectedIndex === 1 ? '#1A1A1A' : '#606060'}}; border-bottom: {{selectedIndex === 1 ? '1px solid #42BD56' : '1px solid #EDEDED'}}">目录</text>
+      <text class="content-button size-18 pingfang-medium" style="color: {{selectedIndex === 0 ? '#1A1A1A' : '#808080'}}; border-bottom: {{selectedIndex === 0 ? '1px solid #42BD56' : '1px solid #EDEDED'}}" data-type="descroption" bindtap="changeTab">简介</text>
+      <text class="content-button size-18 pingfang-medium" style="color: {{selectedIndex === 1 ? '#1A1A1A' : '#808080'}}; border-bottom: {{selectedIndex === 1 ? '1px solid #42BD56' : '1px solid #EDEDED'}}" data-type="category" bindtap="changeTab">目录</text>
     </view>
 
     <view class="jizhu-view">
@@ -194,8 +192,8 @@
         <text class="about-type-right text-color2 size-14">你是否想要发掘更多更有趣的公众号/专栏? </text>
       </view>
     </view>
-
-    <view class="lessons">
+    <view class="line-view"></view>
+    <view class="lessons" id="category">
       <text class="lesson-tip pingfang-medium size-18 text-color1">课程目录</text>
       <view class="lesson column" wx:for="{{catalog}}" wx:key="" wx:for-index="index" wx:for-item="catalogItem">
         <view class="day-top row">
@@ -207,7 +205,7 @@
         </view>
       </view>
     </view>
-  </view>
+
 
   <view class="btns-container row">
     <view class="shidu column" bindtap="gotoTrial">
@@ -220,7 +218,7 @@
     </view>
     <button bindtap="showPay" class="btn-buy">立刻购买 {{price / 100}}元</button>
   </view>
-</view>
+</scroll-view>
 <!-- shareAlert -->
 <view class="shareAlert" wx:if="{{shareAlert && !didUserPay && loadingStatus !== 'LOADING'}}">
   <view wx:if="{{shareAlert.alert}}" class="masked">
