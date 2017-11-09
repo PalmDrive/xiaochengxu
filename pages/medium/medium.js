@@ -197,7 +197,7 @@ Page({
     });
   },
  scroll: function(e) {
-  if (e.detail.scrollTop < 5) {
+  if (e.detail.scrollTop < 1) {
     this.setData({ current: 0});
   }
    console.log('scroll y: ' + e.detail.scrollTop);

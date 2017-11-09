@@ -55,7 +55,14 @@ Page({
     // 用于 choice-coupon
     coupons: null,
     tempAlert: null,
-    programStartAt: 0
+    programStartAt: 0,
+    selectedIndex: 0,
+    descriptionPicUrl: '',
+    targetAudience: '',
+    buyNotes: '',
+    description: '',
+    toView: '#',
+    screenHeight: 667
   },
 
   //关闭首次登陆弹窗
@@ -115,6 +122,7 @@ Page({
         success(res) {
           updates.bannerImage = {height: res.windowWidth / bannerImageRatio};
           updates.username = Auth.getLocalUserInfo().attributes.wxUsername;
+          updates.screenHeight = res.screenHeight
           that.setData(updates);
           Auth.getLocalUserId() && that._load();
         },
@@ -257,17 +265,20 @@ Page({
 
     updates.current = morningPosts.filter(d => d.meta.unlocked).length;
 
-    this.data.title = res.data.attributes.title
     updates.title = res.data.attributes.title;
+    updates.description = res.data.attributes.description;
     updates.price = res.data.attributes.price;
     updates.originalPrice = (res.data.attributes.metaData.originalPrice || 4990) / 100;
     updates.programStartAt = res.data.attributes.metaData.programStartAt || 0;
+    updates.targetAudience = res.data.attributes.metaData.targetAudience || '目标人群'
+    updates.descriptionPicUrl = res.data.attributes.metaData.descriptionPicUrl || ''
+    updates.buyNotes = res.data.attributes.metaData.buyNotes || ''
     updates.picurl = res.data.attributes.picurl;
     updates.editorInfo = res.data.attributes.editorInfo;
     updates.catalog = res.data.attributes.catalog;
     updates.loadingStatus = null;
     updates.role = role;
-    updates.didUserPay = role === 2 || role === 1;
+    // updates.didUserPay = role === 2 || role === 1;
 
     // 阅读进度
     let logs = res.included[0].userAlbum.data.attributes.logs.days;
@@ -636,5 +647,19 @@ Page({
   },
   tempAlertGoList: function () {
     this.data.tempAlert = false;
+  },
+  changeTab: function(e) {
+    const type = e.currentTarget.dataset.type;
+    if (type === 'category') {
+      this.setData({
+        toView: 'category',
+        selectedIndex: 1
+      });
+    } else {
+      this.setData({
+        toView: '#',
+        selectedIndex: 0
+      });
+    }
   }
 })

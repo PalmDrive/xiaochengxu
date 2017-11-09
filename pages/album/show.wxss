@@ -335,7 +335,6 @@ page {
   margin-left: 20px;
   margin-bottom: 20px;
   margin-top: 10px;
-  align-items: flex-end;
 }
 
 .price-tip {
@@ -349,48 +348,34 @@ page {
 }
 
 .price-now {
-  color: #0090E7;
+  color: #D0021B;
   letter-spacing: 1.25px;
-  margin-left: 25px;
+  margin-right: 25px;
 }
 
 .center-view {
-  padding-left: 20px;
-  padding-right: 20px;
   padding-top: 15px;
 }
 
+.content-button {
+  flex: 1;
+  padding: 15px 0px 5px 0;
+  text-align: center;
+}
+
 .jizhu-view {
-  border-radius: 3px;
-  border: 1px #ffffff solid;
-  box-shadow: 0px 2px 8px 2px #ccc;
-  padding: 20px;
-  margin-bottom: 25px;
-  margin-top: 15px;
+  padding: 25px 20px 30px 20px;
 }
 
 .jizhu-img {
-  border-radius: 16px;
-  height: 32px;
-  width: 32px;
-}
-
-.bottom-left-view {
-  margin-left: 8px;
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  margin-right: 5px;
 }
 
 .ji-zhu-username {
   letter-spacing: 0.34px;
-}
-
-.ji-zhu-summary {
-  color: #505050;
-  letter-spacing: 0.41px;
-}
-
-.small-line-view {
-  margin-bottom: 10px;
-  margin-top: 10px;
 }
 
 .ji-zhu-description {
@@ -400,8 +385,15 @@ page {
   overflow: hidden;
 }
 
+.qrcode-view-bottom {
+  margin: 10px;
+  background: #EDEDED;
+  padding: 10px;
+}
+
 .lesson-tip {
-  margin-bottom: 5px;
+  border-left: 5px #42BD56 solid;
+  padding-left: 10px;
 }
 
 .lesson {
@@ -410,10 +402,52 @@ page {
 
 .lessons {
   padding-bottom: 25px;
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.lessons-description {
+  padding: 20px 20px 10px 20px;
+}
+
+.lessons-description-text {
+  line-height: 24px;
+  margin-top: 15px;
+}
+
+.lessons-description-img {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.target-audience {
+  padding: 30px 20px 0px 20px;
+}
+
+.qrcode-img-b {
+  height: 144px;
+  width: 144px;
+}
+
+.gz-view {
+  align-items: center;
+  margin-right: 10px;
+  width:55%;
+}
+
+.gz-text {
+  padding:5px 10px 5px 10px;
+  width:100px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.content-text {
+  margin-top: 10px;
 }
 
 .bg-blue {
-  background-color: #0090E7;
+  background-color: #42BD56;
   color: white;
 }
 
@@ -422,11 +456,11 @@ page {
   margin-right: 1px;
   padding-top: 8px;
   padding-bottom: 8px;
-  padding-left: 9px;
+  padding-left: 20px;
 }
 
 .day-text {
-  margin-left: 45px;
+  margin-left: 55px;
   margin-bottom: 8px;
 }
 
@@ -464,6 +498,7 @@ page {
   padding-bottom: 25px;
   letter-spacing: 0.48px;
   line-height: 24px;
+  color: #42BD56;
 }
 
 .about-type {
