@@ -6,7 +6,7 @@
     <image class="topic-img" mode="aspectFill" src="{{album.attributes.picurl}}"></image>
     <view class="text-container">
       <text class="size-16 title">{{album.attributes.title}}</text>
-      <text class="size-12 text">已经完成{{album.relationships.referees.length}}/5  去课程里面查看吧</text>
+      <text class="size-12 text">{{album.meta.notes}}</text>
       <view class="head-imgs">
         <image class="head-img" src="{{album.relationships.referees[0].attributes.profilePicUrl}}"></image>
         <image class="head-img" src="{{album.relationships.referees[1].attributes.profilePicUrl}}"></image>
