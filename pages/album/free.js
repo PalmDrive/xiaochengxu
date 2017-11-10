@@ -9,7 +9,7 @@ Page({
     id: null,
     imgUrl: null,
     users: null,
-    referralRules: []
+    referralCopy: {rules: []}
   },
   onLoad(options) {
     this.setData({
@@ -26,10 +26,10 @@ Page({
         productType: 'Album'
       }
     }).then(res => {
-      const referralRulesData = res.included.filter(el => el.type === 'referralRules')[0];
+      const referralCopyData = res.included.filter(el => el.type === 'referralCopy')[0];
       this.setData({
         users: res.data,
-        referralRules: referralRulesData.attributes.referralRules
+        referralCopy: referralCopyData.attributes
       });
     });
   },

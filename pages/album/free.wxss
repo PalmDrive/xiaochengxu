@@ -65,6 +65,7 @@ button {
 
 .friend {
   margin-top: 10px;
+  justify-content: space-between;
 }
 .friend .head {
   width: 40px;
@@ -74,7 +75,6 @@ button {
 .friend .friend-container {
   vertical-align: top;
   display: inline-block;
-  width: 64%;
   height: 40px;
   margin-left: 10px;
 }
@@ -90,7 +90,6 @@ button {
   color: #505050;
 }
 .friend .action {
-  float: right;
   height: 40px;
   line-height: 40px;
 }
