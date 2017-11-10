@@ -11,26 +11,38 @@
         <image src="{{editorInfo.profilePicUrl}}" class="baby"></image>
         <text class="size-14 text-color1 pingfang-medium">{{editorInfo.username}}</text>
       </view>
-      <text class="size-12 text-color2 ">2017.09.12</text>
+      <!--<text class="size-12 text-color2 ">2017.09.12</text> -->
     </view>
 
     <text class="size-14 text-color2 task-row2">{{post.attributes.description || ''}}</text>
 
-    <view class="row bg-gray">
-      <text class="size-14 text-white bg-main-color task-number">1</text>
-      <text class="size-14 text-color1 pingfang-medium">在你的“理想中的钱包”的项目中，根据你对于你的用户的采访结果，总结用户画像。方法：用简易画的方式画出你的用户画像，画出用户的需求特征，感情因素，能体现越多TA的特征越好。</text>
-    </view>
-    <image src="../../images/servey/引号.png" class="quotation"></image>
-    <textarea placeholder="请输入内容" auto-focus/>
+    <view class="column" wx:for="{{questionList}}" wx:for-item="question" wx:key="">
+      <view class="row bg-gray">
+        <text class="size-14 text-white bg-main-color task-number">{{index + 1}}</text>
+        <text class="size-14 text-color1 pingfang-medium">{{question.attributes.content}}</text>
+      </view>
 
-    <view class="row bg-gray">
-      <text class="size-14 text-white bg-main-color task-number">2</text>
-      <text class="size-14 text-color1 pingfang-medium">在你的“理想中的钱包”的项目中，根据你对于你的用户的采访结果，总结用户画像。方法：用简易画的方式画出你的用户画像，画出用户的需求特征，感情因素，能体现越多TA的特征越好。</text>
+      <image src="../../images/servey/引号.png" class="quotation"></image>
+      <textarea class="size-14" placeholder="请输入内容" bindinput="onInput" data-qindex="{{index}}" maxlength="2000"/>
+
+      <view class="pic-view row">
+        <view class="pic-item1" wx:for="{{question.attributes.picurlList}}" wx:for-item="pic" wx:key="" wx:for-index="idx">
+          <image src="../../images/servey/delete.jpg" class="delete" bindtap="delete" data-idx="{{idx}}" data-picid="{{pic.id}}" data-qindex="{{index}}"></image>
+          <image src="{{pic.url}}" class="pic-item"></image>
+        </view>
+      </view>
+
+      <view class="row bottom-view">
+        <view class="row" bindtap="addPic" data-qindex="{{index}}">
+          <image src="../../images/servey/照片.jpg" class="image-icon"></image>
+          <text class="size-14 text-color3">添加图片</text>
+        </view>
+        <text class="size-14 text-color3">{{question.attributes.inputCount}}/2000</text>
+      </view>
     </view>
   </view>
 
   <!-- 任务提交 -->
-  <text class="size-14 text-white bg-main-color commit-button">提交我的任务</text>
+  <text class="size-14 text-white bg-main-color commit-button" bindtap="commit">提交</text>
   <text class="size-14 text-color3 second-tip">同学们完成作业后可看见群内其他优秀同学的打卡任务哦，老师会对优秀作业加精并展示出来</text>
-
 </view>

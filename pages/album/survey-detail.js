@@ -4,18 +4,28 @@ const app = getApp(),
     {request} = require('../../utils/request'),
     baseUrl = app.globalData.apiBase;
 
+let albumId = undefined,
+    postId = undefined,
+    isNew = 'true',
+    picNumber = 0,
+    contentArray = [],
+    isUploading = false;
+
 Page({
   data: {
-    dayList: ['1', '2', '3', '4', '5', '6','7'],
-    selectedIndex: 4,
-    albumAttributes: {},
-    albumId: '',
     editorInfo: {},
     post: {},
-    media: []
+    questionList: [],
+    surveyData: {}
   },
 
   onLoad(options) {
+    wx.setNavigationBarColor({
+      frontColor: '#ffffff',
+      backgroundColor: '#42BD56'
+    })
+    albumId = options.albumId;
+    postId = options.postId;
     Auth.getLocalUserId() && this._load();
   },
 
@@ -23,20 +33,50 @@ Page({
    * 加载数据
    */
   _load() {
+    let url = `${app.globalData.apiBase}/albums/post`;
+    if (albumId && postId) {
+      url += `?postId=${postId}&albumId=${albumId}`
+    }
     request({
-      url: `${app.globalData.apiBase}/albums/today`,
+      url: url,
     }).then(res => {
-      console.log(res);
-
-      const albumAttributes = res.data.attributes;
-      const post = res.data.relationships.post;
-
+      const albumAttributes = res.data.attributes || {},
+            post = res.data.relationships.post.data || {};
+      albumId = res.data.id;
+      postId = post.id;
       this.setData({
-        albumAttributes,
         editorInfo: albumAttributes.editorInfo,
-        post,
-        media: post.relationships.media.data,
-        albumId: res.data.id
+        post
+      })
+
+      // 加载任务
+      this._loadSurvey();
+    });
+  },
+
+  /**
+   * 加载数据
+   */
+  _loadSurvey() {
+    request({
+      url: `${app.globalData.apiBase}/morning-posts/${postId}/survey?albumId=${albumId}`,
+    }).then(res => {
+      let questionList = res.included.filter(res => {
+        return res.type === 'SurveyQuestions';
+      })
+      let answerList = res.included.filter(res => {
+        return res.type === 'userSurveyAnswers';
+      })
+      questionList = questionList.map(res => {
+
+         res.attributes.picurlList = [];
+         res.attributes.inputCount = 0;
+          // ["../../images/paid-group/qrcode.jpg","../../images/paid-group/qrcode.jpg","../../images/paid-group/qrcode.jpg"];
+         return res;
+      })
+      this.setData({
+        questionList: questionList,
+        surveyData: res.data
       })
     });
   },
@@ -45,38 +85,125 @@ Page({
    * 分享给好友 事件
    */
   onShareAppMessage: function () {
-    const title = this.data.title;
     return {
-      title: `七日辑: ${title}`
+      title: `七日辑: ${this.data.albumAttributes.title}`
     };
   },
 
-  //点击文章
-  goToMedium: function(event) {
-    const medium = event.currentTarget.dataset.medium,
-          index = this.data.selectedIndex,
-          idx = event.currentTarget.dataset.index,
-          count = this.data.media.length,
-          userInfo = Auth.getLocalUserInfo(),
-          gaOptions = {
-            cid: Auth.getLocalUserId(),
-            ec: `article_title:${medium.attributes.title},article_id:${medium.id}`,
-            ea: 'click_article_in_albumShowPage',
-            el: `album_name:${this.data.albumAttributes.title},album_id:${this.data.albumId}`,
-            ev: 0
-          };
-    const key = 'day' + (this.data.posts.length - index);
-    if (!this.data.dayLogs[key]) {
-      this.data.dayLogs[key] = 1;
-      this.data.achieveProcess = this.data.achieveProcess + 1;
-      this.setData({achieveProcess: this.data.achieveProcess});
-    }
-    util.goToMedium(event, gaOptions, {
-      dayIndex: key,
-      mediumIndex: idx + 1,
-      count: count,
-      albumId: this.data.albumId,
-      morningPostId: this._getMorningPostId()
+  upload() {
+
+  },
+
+  addPic: function(event) {
+    const that = this,
+          qindex = event.currentTarget.dataset.qindex;
+    wx.chooseImage({
+      success: function(res) {
+
+        let newPicList = [];
+        for (let i = 0; i < res.tempFilePaths.length; i++) {
+          picNumber ++;
+          wx.uploadFile({
+            url: `${app.globalData.apiBase}/surveys/${that.data.surveyData.id}/photo`,
+            filePath: res.tempFilePaths[i],
+            name: 'photo',
+            formData:{
+              isNew: isNew, // 整个survey 答案重置
+              userId: Auth.getLocalUserId(),
+              surveyQuestionId: that.data.questionList[qindex].id,
+              picId: `pic_${picNumber}`
+            },
+            success: function(res){
+              var data = res.data
+              console.log(`upload pic_${picNumber}:  ` + data);
+            }
+          })
+
+          isNew = 'false';
+          that.data.questionList[qindex].attributes.picurlList.push({id: `pic_${picNumber}`, url: res.tempFilePaths[i]});
+        }
+
+        that.setData({
+          questionList: that.data.questionList
+        })
+      }
+    })
+  },
+
+  delete: function(event) {
+    const idx = event.currentTarget.dataset.idx,
+          qindex = event.currentTarget.dataset.qindex,
+          picid = event.currentTarget.dataset.picid;
+    this.data.questionList[qindex].attributes.picurlList.splice(idx,1);
+
+    this.setData({
+      questionList: this.data.questionList
+    })
+
+    request({
+      url: `${app.globalData.apiBase}/surveys/${this.data.surveyData.id}/photo?userId=${Auth.getLocalUserId()}&surveyQuestionId=${this.data.questionList[qindex].id}&picId=${picid}`,
+      method: 'delete',
+    }).then(res => {
+      console.log( `delete ${picid} over`);
     });
   },
+
+  onInput: function(event) {
+    const qindex = event.currentTarget.dataset.qindex;
+
+    this.data.questionList[qindex].attributes.inputCount = event.detail.value.length;
+
+    this.setData({
+      questionList: this.data.questionList
+    })
+    const list = contentArray.filter(res => {
+      return res.key === qindex;
+    })
+    if (list.length === 0) {
+      contentArray.push({key: qindex, value: event.detail.value});
+    } else {
+      contentArray[contentArray.indexOf(list[0])] = {key: qindex, value: event.detail.value};
+    }
+  },
+
+  commit: function() {
+    if (isUploading) {
+      return;
+    }
+    if (contentArray.length === this.data.questionList.length) {
+      isUploading = true;
+
+      let data = {
+        data: [],
+        meta: {
+          userId: Auth.getLocalUserId(),
+          isNew: isNew, // 整个survey 答案重置
+        }
+      }
+      for (let i = 0; i < contentArray.length; i++) {
+        data.data.push({
+          attributes: {
+            surveyQuestionId: this.data.questionList[contentArray[i].key].id,
+            content: contentArray[i].value,
+          }
+        })
+      }
+      request({
+        url: `${app.globalData.apiBase}/surveys/${this.data.surveyData.id}/user-survey-answers`,
+        method: 'post',
+        data
+      }).then(res => {
+        console.log( `upload form over`);
+        isUploading = false;
+      });
+
+      isNew = 'false';
+    } else {
+      wx.showToast({
+        title: '请答完所有题',
+        duration: 1000,
+        image: '../../images/servey/delete.jpg'
+      })
+    }
+  }
 })

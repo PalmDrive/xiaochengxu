@@ -14,10 +14,19 @@ Page({
     albumAttributes: {},
     editorInfo: {},
     post: {},
-    media: []
+    media: [],
+    questionList: [],
+    unlockedDays: 1,
+    userSurveyAnswersCountMsg: '',
+    answerList: [],
+    userInfo: Auth.getLocalUserInfo().attributes
   },
 
   onLoad(options) {
+    wx.setNavigationBarColor({
+      frontColor: '#ffffff',
+      backgroundColor: '#42BD56'
+    })
     albumId = options.albumId;
     postId = options.postId;
     Auth.getLocalUserId() && this._load();
@@ -34,8 +43,6 @@ Page({
     request({
       url: url,
     }).then(res => {
-      console.log(res);
-
       const albumAttributes = res.data.attributes || {},
             post = res.data.relationships.post.data || {},
             postRelationships = post.relationships || {};
@@ -47,7 +54,52 @@ Page({
         post,
         media: postRelationships.media.data,
         selectedIndex: post.attributes.dayIndex,
-        dayList: res.meta.checkinStatus
+        dayList: res.meta.checkinStatus,
+        unlockedDays: res.meta.unlockedDays
+      })
+
+      // 加载任务
+      this._loadSurvey();
+    });
+  },
+
+  /**
+   * 加载数据
+   */
+  _loadSurvey() {
+    request({
+      url: `${app.globalData.apiBase}/morning-posts/${postId}/survey?albumId=${albumId}`,
+    }).then(res => {
+      const count = res.meta.userSurveyAnswersCount;
+      let msg = `已提交${count}人，做完后才可查看别人的哦`;
+      if (count === 0) {
+        msg = '成为第1个提交任务的人吧';
+      }
+
+      let questionList = res.included.filter(res => {
+        return res.type === 'SurveyQuestions';
+      })
+      let answerList = res.included.filter(res => {
+        return res.type === 'userSurveyAnswers';
+      })
+
+      if (answerList.length > 0 ) {
+        answerList = answerList[0].attributes.answers;
+        questionList.map(res => {
+          answerList.filter(answer => {
+             if (answer.surveyQuestionId === res.id) {
+               res.answerPics = answer.pics;
+               res.answerContent = answer.content;
+             }
+          })
+          return res;
+        })
+      }
+
+      this.setData({
+        questionList,
+        answerList,
+        userSurveyAnswersCountMsg: msg
       })
     });
   },
@@ -56,17 +108,23 @@ Page({
    * 分享给好友 事件
    */
   onShareAppMessage: function () {
-    const title = this.data.title;
     return {
-      title: `七日辑: ${title}`
+      title: `七日辑: ${this.data.albumAttributes.title}`
     };
   },
   goToPost: function(event) {
     const index = event.currentTarget.dataset.index,
           newPostId = this.data.albumAttributes.postIds[index]
-    wx.redirectTo({
-      url: `./survey?postId=${newPostId}&albumId=${albumId}`
-    });
+
+    if (index < this.data.unlockedDays && this.data.selectedIndex - 1 !== index) {
+      // wx.redirectTo({
+      //   url: `./survey?postId=${newPostId}&albumId=${albumId}`
+      // });
+
+      postId = newPostId;
+      albumId = albumId;
+      this._load();
+    }
   },
 
   //点击文章
@@ -75,7 +133,6 @@ Page({
           index = this.data.selectedIndex,
           idx = event.currentTarget.dataset.idx,
           count = this.data.media.length,
-          userInfo = Auth.getLocalUserInfo(),
           gaOptions = {
             cid: Auth.getLocalUserId(),
             ec: `article_title:${medium.attributes.title},article_id:${medium.id}`,
@@ -94,8 +151,14 @@ Page({
   },
 
   goToAlbumDetail: function(event) {
-    wx.redirectTo({
+    wx.navigateTo({
       url: `./show?showDetail=true&id=${albumId}`
+    });
+  },
+
+  goToSurveyDetail: function(event) {
+    wx.navigateTo({
+      url: `./survey-detail?postId=${postId}&albumId=${albumId}`
     });
   }
 })
