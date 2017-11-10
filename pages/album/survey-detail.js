@@ -24,7 +24,7 @@ Page({
    */
   _load() {
     request({
-      url: `${app.globalData.apiBase}/albums/post`,
+      url: `${app.globalData.apiBase}/albums/today`,
     }).then(res => {
       console.log(res);
 

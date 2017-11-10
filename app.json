@@ -1,6 +1,7 @@
 {
   "pages":[
     "pages/album/survey",
+    "pages/album/survey-detail",
     "pages/album/index",
     "pages/my/remind",
     "pages/album/purchased-list",
