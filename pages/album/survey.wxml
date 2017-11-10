@@ -4,15 +4,15 @@
   <view class="row top-view1 bg-main-color">
     <view class="row">
       <image src="../../images/servey/日历.png" class="rili"></image>
-      <text class="size-12 text-white ">第五天</text>
+      <text class="size-12 text-white ">第{{selectedIndex}}天</text>
     </view>
-    <text class="size-12 text-white ">查看详情</text>
+    <text class="size-12 text-white" bindtap="goToAlbumDetail">查看详情</text>
   </view>
 
   <view class="row top-view2 bg-main-color">
-    <view class="column day-box" wx:for="{{dayList}}" wx:for-item="day" wx:key="" style="background: {{selectedIndex === index ? 'white' : '#42BD56'}}">
-      <text class="size-16 pingfang-medium" style="color: {{selectedIndex === index ? '#42BD56' : 'white'}}">{{day}}</text>
-      <image src="../../images/servey/对号.jpg" class="right"></image>
+    <view class="column day-box" wx:for="{{dayList}}" wx:for-item="flag" wx:key="" style="background: {{selectedIndex === (index + 1) ? 'white' : '#42BD56'}}" bindtap="goToPost" data-index="{{index}}">
+      <text class="size-16 pingfang-medium" style="color: {{selectedIndex === index + 1 ? '#42BD56' : 'white'}}">{{selectedIndex === (index + 1) ? '今' : (index + 1)}}</text>
+      <image src="../../images/servey/对号.jpg" class="right" wx:if="{{flag}}"></image>
     </view>
   </view>
 
@@ -49,7 +49,7 @@
   <view class="section column">
     <text class="size-12 text-color3 second-tip">下面的攻略能够让你更好地完成任务</text>
 
-    <view class="column bg-gray" data-idx="{{index}}" wx:for="{{media}}" wx:for-item="medium" wx:key="">
+    <view class="column bg-gray" wx:for="{{media}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}" bindtap="goToMedium">
       <view class="row method-row">
         <image src="../../images/servey/{{medium.attributes.mediumType}}.png" class="method-icon"></image>
         <text class="size-16 text-color2 medium-title">{{medium.attributes.title}}</text>
