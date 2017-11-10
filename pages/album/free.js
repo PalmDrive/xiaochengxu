@@ -3,12 +3,13 @@ const app = getApp(),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
     baseUrl = app.globalData.apiBase;
-    
+
 Page({
   data: {
     id: null,
     imgUrl: null,
-    users: null
+    users: null,
+    referralRules: []
   },
   onLoad(options) {
     this.setData({
@@ -25,8 +26,10 @@ Page({
         productType: 'Album'
       }
     }).then(res => {
+      const referralRulesData = res.included.filter(el => el.type === 'referralRules')[0];
       this.setData({
-        users: res.data
+        users: res.data,
+        referralRules: referralRulesData.attributes.referralRules
       });
     });
   },

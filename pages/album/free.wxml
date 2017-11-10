@@ -5,10 +5,9 @@
     <view class="line line-left"></view>
     <view class="line line-right"></view>
     <text class="title size-16">活动细则</text>
-    <text class="text size-12">1、点击下方按钮生成邀请卡
-    2、将邀请卡转发至微信群或朋友圈，邀请小伙伴扫码
-    3、集齐5人扫码，即可免费获得此《七日辑》
-    4、可以在“我的”页面查看进度</text>
+    <text class="text size-12">
+      <text wx:for="{{referralRules}}" wx:key style="display:block">{{index+1}}. {{item}}</text>
+    </text>
     <button bindtap="_gotoShare">生成我的邀请卡</button>
   </view>
   <view wx:if="{{users.length > 0}}" class="users container">
@@ -24,5 +23,5 @@
       <text class="action size-12">帮助了你</text>
     </view>
     <text class="text size-12">只差一点点，课程马上到手</text>
-  </view>  
+  </view>
 </view>
