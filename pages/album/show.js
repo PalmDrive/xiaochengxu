@@ -307,20 +307,20 @@ Page({
     // }
 
     // 购买成功后弹出进群二维码或者服务号二维码
-    const flag =  Auth.getLocalKey( `${this.data.albumId}_hasShownSubscribedWX`) !== "true";
+    const flag =  Auth.getLocalKey( `${this.data.albumId}_hasShownSubscribedWX`) !== 'true';
     if (updates.didUserPay && flag) {
       updates.qrcodeModalHidden = false;
-      Auth.setLocalKey( `${this.data.albumId}_hasShownSubscribedWX`, "true")
+      Auth.setLocalKey( `${this.data.albumId}_hasShownSubscribedWX`, 'true');
       // 关注过服务号, 弹出微信群二维码
-      if (Auth.getLocalKey('isSubscribedWX') === "true") {
+      if (Auth.getLocalKey('isSubscribedWX') === 'true') {
         const metaData = res.data.attributes.metaData,
               groupQrcodes = metaData.groupQrCodeMediaIds || [],
               showWxQrcode = metaData.programStartAt ? true : false,
               newGroupQrcodes = groupQrcodes.filter(item => {
-                return item.active
+                return item.active;
               }),
-              codeUrl = newGroupQrcodes.length > 0 ?  newGroupQrcodes[0].url : '';
-        if (showWxQrcode && codeUrl != '') {
+              codeUrl = newGroupQrcodes.length > 0 ?  newGroupQrcodes[0].url : undefined;
+        if (showWxQrcode && codeUrl) {
           updates.wxQrcodeUrl = codeUrl;
           updates.wxQrcodeMsg = `进群请扫下面的二维码。老师会在群中讲解知识要点、点评每日任务。`;
           updates.wxQrcodeTitle = `报名成功`;
