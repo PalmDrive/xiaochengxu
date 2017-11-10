@@ -62,7 +62,10 @@ Page({
     buyNotes: '',
     description: '',
     toView: '#',
-    screenHeight: 667
+    screenHeight: 667,
+    wxQrcodeUrl: '../../images/paid-group/qrcode_qiriji.jpg',
+    wxQrcodeMsg: '关注微信公众号「七日辑」,我们为您推送更新',
+    wxQrcodeTitle: '开启推送'
   },
 
   //关闭首次登陆弹窗
@@ -278,7 +281,7 @@ Page({
     updates.catalog = res.data.attributes.catalog;
     updates.loadingStatus = null;
     updates.role = role;
-    // updates.didUserPay = role === 2 || role === 1;
+    updates.didUserPay = role === 2 || role === 1;
 
     // 阅读进度
     let logs = res.included[0].userAlbum.data.attributes.logs.days;
@@ -302,10 +305,27 @@ Page({
     //     Auth.setLocalKey( `${this.data.albumId}_end_isShowed`, "true")
     //   }
     // }
-    const flag =  Auth.getLocalKey( `${this.data.albumId}_hasShownSubscribedWX`) !== "true";
-    if (updates.didUserPay && Auth.getLocalKey('isSubscribedWX') !== "true" && flag) {
+
+    // 购买成功后弹出进群二维码或者服务号二维码
+    const flag =  Auth.getLocalKey( `${this.data.albumId}_hasShownSubscribedWX`) !== 'true';
+    if (updates.didUserPay && flag) {
       updates.qrcodeModalHidden = false;
-      Auth.setLocalKey( `${this.data.albumId}_hasShownSubscribedWX`, "true")
+      Auth.setLocalKey( `${this.data.albumId}_hasShownSubscribedWX`, 'true');
+      // 关注过服务号, 弹出微信群二维码
+      if (Auth.getLocalKey('isSubscribedWX') === 'true') {
+        const metaData = res.data.attributes.metaData,
+              groupQrcodes = metaData.groupQrCodeMediaIds || [],
+              showWxQrcode = metaData.programStartAt ? true : false,
+              newGroupQrcodes = groupQrcodes.filter(item => {
+                return item.active;
+              }),
+              codeUrl = newGroupQrcodes.length > 0 ?  newGroupQrcodes[0].url : undefined;
+        if (showWxQrcode && codeUrl) {
+          updates.wxQrcodeUrl = codeUrl;
+          updates.wxQrcodeMsg = `进群请扫下面的二维码。老师会在群中讲解知识要点、点评每日任务。`;
+          updates.wxQrcodeTitle = `报名成功`;
+        }
+      }
     }
 
     updates.posts.forEach((post, index) => {
