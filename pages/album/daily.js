@@ -14,6 +14,7 @@ Page({
     albumAttributes: {},
     editorInfo: {},
     post: {},
+    survey: {},
     media: [],
     questionList: [],
     unlockedDays: 1,
@@ -71,7 +72,7 @@ Page({
       url: `${app.globalData.apiBase}/morning-posts/${postId}/survey?albumId=${albumId}`,
     }).then(res => {
       const count = res.meta.userSurveyAnswersCount;
-      let msg = `已提交${count}人，做完后才可查看别人的哦`;
+      let msg = `已提交${count}人`;
       if (count === 0) {
         msg = '成为第1个提交任务的人吧';
       }
@@ -93,11 +94,21 @@ Page({
       }
 
       this.setData({
+        survey: res.data,
         questionList,
         answerList,
         userSurveyAnswersCountMsg: msg
       });
     });
+  },
+
+/**
+  * 分享给好友 事件
+  */
+ onShareAppMessage: function () {
+    return {
+      title: `七日辑: ${this.data.albumAttributes.title}`
+    };
   },
 
   goToPost: function(event) {

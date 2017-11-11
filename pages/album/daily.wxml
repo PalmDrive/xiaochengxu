@@ -3,7 +3,7 @@
   <!-- 顶部 绿色 -->
   <view class="row top-view1 bg-main-color">
     <view class="row">
-      <image src="../../images/survey/日历.png" class="rili"></image>
+      <image src="../../images/survey/日历.png" class="calendar"></image>
       <text class="size-12 text-white ">第{{selectedIndex}}天</text>
     </view>
     <text class="size-12 text-white" bindtap="goToAlbumDetail">查看详情</text>
@@ -30,7 +30,7 @@
     <!--  <text class="size-12 text-color2 ">2017.09.12</text>-->
     </view>
 
-    <text class="size-14 text-color2 task-row2">{{post.attributes.description || '下面是今天的任务，带着任务去阅读材料更好哦下面是今天的任务，带着任务去阅读材料更好哦下面是今天的任务，带着任务去阅读材料更好哦下面是今天的任务，带着任务去阅读材料更好哦下面是今天的任务，带着任务去阅读材料更好哦'}}</text>
+    <text class="size-14 text-color2 task-row2">{{survey.attributes.description}}</text>
 
     <view class="row bg-gray" wx:for="{{questionList}}" wx:for-item="question" wx:key="">
       <text class="size-14 text-white bg-main-color task-number">{{index + 1}}</text>
