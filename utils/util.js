@@ -412,7 +412,7 @@ function goToAlbum(album) {
       wx.hideLoading();
       if (album.attributes.metaData.programStartAt && albumIdsMap[album.id]) {
         wx.navigateTo({
-          url: `/pages/album/daily?id=${album.id}`
+          url: `/pages/album/daily?albumId=${album.id}`
         });
       } else {
         wx.navigateTo({

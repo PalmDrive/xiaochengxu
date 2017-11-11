@@ -37,12 +37,12 @@ Page({
    * 加载数据
    */
   _load() {
-    let url = `${app.globalData.apiBase}/albums/post`;
-    if (albumId && postId) {
-      url += `?postId=${postId}&albumId=${albumId}`;
-    }
+    const url = `${app.globalData.apiBase}/albums/post`,
+          data = {};
+    if (albumId) data.albumId = albumId;
+    if (postId) data.postId = postId;
     request({
-      url: url,
+      url, data
     }).then(res => {
       const albumAttributes = res.data.attributes || {},
             post = res.data.relationships.post.data || {},
