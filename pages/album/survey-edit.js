@@ -23,7 +23,7 @@ Page({
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
       backgroundColor: '#42BD56'
-    })
+    });
     albumId = options.albumId;
     postId = options.postId;
     Auth.getLocalUserId() && this._load();
@@ -35,7 +35,7 @@ Page({
   _load() {
     let url = `${app.globalData.apiBase}/albums/post`;
     if (albumId && postId) {
-      url += `?postId=${postId}&albumId=${albumId}`
+      url += `?postId=${postId}&albumId=${albumId}`;
     }
     request({
       url: url,
@@ -47,7 +47,7 @@ Page({
       this.setData({
         editorInfo: albumAttributes.editorInfo,
         post
-      })
+      });
 
       // 加载任务
       this._loadSurvey();
@@ -61,37 +61,18 @@ Page({
     request({
       url: `${app.globalData.apiBase}/morning-posts/${postId}/survey?albumId=${albumId}`,
     }).then(res => {
-      let questionList = res.included.filter(res => {
-        return res.type === 'SurveyQuestions';
-      })
-      let answerList = res.included.filter(res => {
-        return res.type === 'userSurveyAnswers';
-      })
+      let questionList = res.included.filter(res => res.type === 'SurveyQuestions');
+      let answerList = res.included.filter(res => res.type === 'userSurveyAnswers');
       questionList = questionList.map(res => {
-
          res.attributes.picurlList = [];
          res.attributes.inputCount = 0;
-          // ["../../images/paid-group/qrcode.jpg","../../images/paid-group/qrcode.jpg","../../images/paid-group/qrcode.jpg"];
          return res;
-      })
+      });
       this.setData({
         questionList: questionList,
         surveyData: res.data
-      })
+      });
     });
-  },
-
-  /**
-   * 分享给好友 事件
-   */
-  onShareAppMessage: function () {
-    return {
-      title: `七日辑: ${this.data.albumAttributes.title}`
-    };
-  },
-
-  upload() {
-
   },
 
   addPic: function(event) {
@@ -114,7 +95,7 @@ Page({
               picId: `pic_${picNumber}`
             },
             success: function(res){
-              var data = res.data
+              var data = res.data;
               console.log(`upload pic_${picNumber}:  ` + data);
             }
           })
@@ -125,7 +106,7 @@ Page({
 
         that.setData({
           questionList: that.data.questionList
-        })
+        });
       }
     })
   },
@@ -138,7 +119,7 @@ Page({
 
     this.setData({
       questionList: this.data.questionList
-    })
+    });
 
     request({
       url: `${app.globalData.apiBase}/surveys/${this.data.surveyData.id}/photo?userId=${Auth.getLocalUserId()}&surveyQuestionId=${this.data.questionList[qindex].id}&picId=${picid}`,
@@ -155,10 +136,8 @@ Page({
 
     this.setData({
       questionList: this.data.questionList
-    })
-    const list = contentArray.filter(res => {
-      return res.key === qindex;
-    })
+    });
+    const list = contentArray.filter(res => res.key === qindex);
     if (list.length === 0) {
       contentArray.push({key: qindex, value: event.detail.value});
     } else {
@@ -179,14 +158,14 @@ Page({
           userId: Auth.getLocalUserId(),
           isNew: isNew, // 整个survey 答案重置
         }
-      }
+      };
       for (let i = 0; i < contentArray.length; i++) {
         data.data.push({
           attributes: {
             surveyQuestionId: this.data.questionList[contentArray[i].key].id,
             content: contentArray[i].value,
           }
-        })
+        });
       }
       request({
         url: `${app.globalData.apiBase}/surveys/${this.data.surveyData.id}/user-survey-answers`,
@@ -200,10 +179,10 @@ Page({
           duration: 1000,
           complete: function() {
             wx.redirectTo({
-              url: `./survey?postId=${postId}&albumId=${albumId}`
+              url: `./daily?postId=${postId}&albumId=${albumId}`
             });
           }
-        })
+        });
       });
 
       isNew = 'false';
@@ -211,8 +190,8 @@ Page({
       wx.showToast({
         title: '请答完所有题',
         duration: 1000,
-        image: '../../images/servey/delete.jpg'
-      })
+        image: '../../images/survey/delete.jpg'
+      });
     }
   }
 })

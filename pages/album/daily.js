@@ -38,7 +38,7 @@ Page({
   _load() {
     let url = `${app.globalData.apiBase}/albums/post`;
     if (albumId && postId) {
-      url += `?postId=${postId}&albumId=${albumId}`
+      url += `?postId=${postId}&albumId=${albumId}`;
     }
     request({
       url: url,
@@ -56,7 +56,7 @@ Page({
         selectedIndex: post.attributes.dayIndex,
         dayList: res.meta.checkinStatus,
         unlockedDays: res.meta.unlockedDays
-      })
+      });
 
       // 加载任务
       this._loadSurvey();
@@ -76,12 +76,8 @@ Page({
         msg = '成为第1个提交任务的人吧';
       }
 
-      let questionList = res.included.filter(res => {
-        return res.type === 'SurveyQuestions';
-      })
-      let answerList = res.included.filter(res => {
-        return res.type === 'userSurveyAnswers';
-      })
+      let questionList = res.included.filter(res => res.type === 'SurveyQuestions');
+      let answerList = res.included.filter(res => res.type === 'userSurveyAnswers');
 
       if (answerList.length > 0 ) {
         answerList = answerList[0].attributes.answers;
@@ -93,34 +89,22 @@ Page({
              }
           })
           return res;
-        })
+        });
       }
 
       this.setData({
         questionList,
         answerList,
         userSurveyAnswersCountMsg: msg
-      })
+      });
     });
   },
 
-  /**
-   * 分享给好友 事件
-   */
-  onShareAppMessage: function () {
-    return {
-      title: `七日辑: ${this.data.albumAttributes.title}`
-    };
-  },
   goToPost: function(event) {
     const index = event.currentTarget.dataset.index,
           newPostId = this.data.albumAttributes.postIds[index]
 
     if (index < this.data.unlockedDays && this.data.selectedIndex - 1 !== index) {
-      // wx.redirectTo({
-      //   url: `./survey?postId=${newPostId}&albumId=${albumId}`
-      // });
-
       postId = newPostId;
       albumId = albumId;
       this._load();
@@ -158,7 +142,7 @@ Page({
 
   goToSurveyDetail: function(event) {
     wx.navigateTo({
-      url: `./survey-detail?postId=${postId}&albumId=${albumId}`
+      url: `./survey-edit?postId=${postId}&albumId=${albumId}`
     });
   }
 })

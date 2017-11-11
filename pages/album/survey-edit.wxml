@@ -22,19 +22,19 @@
         <text class="size-14 text-color1 pingfang-medium">{{question.attributes.content}}</text>
       </view>
 
-      <image src="../../images/servey/引号.png" class="quotation"></image>
+      <image src="../../images/survey/引号.png" class="quotation"></image>
       <textarea class="size-14" placeholder="请输入内容" bindinput="onInput" data-qindex="{{index}}" maxlength="2000"/>
 
       <view class="pic-view row">
         <view class="pic-item1" wx:for="{{question.attributes.picurlList}}" wx:for-item="pic" wx:key="" wx:for-index="idx">
-          <image src="../../images/servey/delete.jpg" class="delete" bindtap="delete" data-idx="{{idx}}" data-picid="{{pic.id}}" data-qindex="{{index}}"></image>
+          <image src="../../images/survey/delete.jpg" class="delete" bindtap="delete" data-idx="{{idx}}" data-picid="{{pic.id}}" data-qindex="{{index}}"></image>
           <image src="{{pic.url}}" class="pic-item"></image>
         </view>
       </view>
 
       <view class="row bottom-view">
         <view class="row" bindtap="addPic" data-qindex="{{index}}">
-          <image src="../../images/servey/照片.jpg" class="image-icon"></image>
+          <image src="../../images/survey/照片.jpg" class="image-icon"></image>
           <text class="size-14 text-color3">添加图片</text>
         </view>
         <text class="size-14 text-color3">{{question.attributes.inputCount}}/2000</text>
