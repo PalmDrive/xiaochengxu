@@ -1,6 +1,6 @@
 page {
   background: #F2F2F2;
-  padding-bottom:40px;
+  padding-bottom:0px;
 }
 
 /* 已购买页面 */
@@ -379,7 +379,7 @@ page {
 }
 
 .ji-zhu-description {
-  margin-left: 40px;
+  margin-left: 45px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;

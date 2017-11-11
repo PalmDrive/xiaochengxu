@@ -9,6 +9,7 @@ let albumId = undefined,
     isNew = 'true',
     picNumber = 0,
     contentArray = [],
+    needInputTextCount = 0,
     isUploading = false;
 
 Page({
@@ -66,6 +67,9 @@ Page({
       questionList = questionList.map(res => {
          res.attributes.picurlList = [];
          res.attributes.inputCount = 0;
+         if (res.attributes.questionType !== 'pic' &&  res.attributes.questionType !== 'desc'){
+           needInputTextCount ++;
+         }
          return res;
       });
       this.setData({
@@ -149,7 +153,7 @@ Page({
     if (isUploading) {
       return;
     }
-    if (contentArray.length === this.data.questionList.length) {
+    if (contentArray.length === needInputTextCount) {
       isUploading = true;
 
       let data = {
