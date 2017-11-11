@@ -8,18 +8,18 @@
     <text class="text size-12">
       <text wx:for="{{referralCopy.rules}}" wx:key style="display:block">{{index+1}}. {{item}}</text>
     </text>
-    <button bindtap="_gotoShare">生成我的邀请卡</button>
+    <button bindtap="_gotoShare">生成</button>
   </view>
   <view wx:if="{{users.length > 0}}" class="users container">
     <view class="line line-left"></view>
     <view class="line line-right"></view>
-    <text class="title size-16">哪些朋友扫码啦</text>
+    <text class="title size-16">哪些朋友扫码了</text>
     <view class="friend row" wx:for="{{users}}" wx:for-item="user" wx:key>
       <view>
-        <image class="head" src="{{user.attributes.profilePicUrl}}"></image>
+        <image class="head" src="{{user.profilePicUrl}}"></image>
         <view class="friend-container">
-          <text class="nickname size-16">{{user.attributes.username || user.attributes.wxUsername}}</text>
-          <text class="time size-10" >10.11 15:21:43</text>
+          <text class="nickname size-16">{{user.wxUsername}}</text>
+          <text class="time size-10">{{user.createdAt}}</text>
         </view>
       </view>
       <text class="action size-12">{{referralCopy.notes}}</text>

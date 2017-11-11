@@ -26,9 +26,21 @@ Page({
         productType: 'Album'
       }
     }).then(res => {
-      const referralCopyData = res.included.filter(el => el.type === 'referralCopy')[0];
+      const referralCopyData = res.included.filter(el => el.type === 'referralCopy')[0],
+            usersMap = res.included
+              .filter(el => el.type === 'Referees')
+              .reduce((memo, el) => {
+                memo[el.id] = el.attributes;
+                return memo;
+              }, {}),
+            users = res.data.map(d => {
+              const refereeId = d.attributes.refereeId,
+                    referee = usersMap[refereeId] || {};
+              d.attributes.createdAt = util.formatTime(new Date(d.attributes.createdAt));
+              return Object.assign(d.attributes, referee);
+            });
       this.setData({
-        users: res.data,
+        users,
         referralCopy: referralCopyData.attributes
       });
     });

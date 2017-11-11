@@ -17,7 +17,7 @@ Page({
       {icon: '订单', title: '订单', tip: '', action: 'goToOrder'},
       {icon: '礼品卡', title: '卡券', tip: '点击查看详情', action: 'goToCoupon'},
       {icon: '成就', title: '成就', tip: '完成一个七日辑就可获得一个成就', action: 'goToAchieve'},
-      {icon: '免费得', title: '免费得', tip: '点击查看详情', action: 'goToFree'}
+      {icon: '免费得', title: '优惠得', tip: '点击查看哪些朋友帮助了你', action: 'goToFree'}
       ],
       [
       // {icon: '打卡', title: '打卡提示时间', tip: '20:00', action: 'goToRemindTime'}
