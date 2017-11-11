@@ -100,7 +100,7 @@ Page({
             },
             success: function(res){
               var data = res.data;
-              console.log(`upload pic_${picNumber}:  ` + data);
+              //console.log(`upload pic_${picNumber}:  ` + data);
             }
           })
 
@@ -129,7 +129,7 @@ Page({
       url: `${app.globalData.apiBase}/surveys/${this.data.surveyData.id}/photo?userId=${Auth.getLocalUserId()}&surveyQuestionId=${this.data.questionList[qindex].id}&picId=${picid}`,
       method: 'delete',
     }).then(res => {
-      console.log( `delete ${picid} over`);
+      //console.log( `delete ${picid} over`);
     });
   },
 
@@ -176,7 +176,7 @@ Page({
         method: 'post',
         data
       }).then(res => {
-        console.log( `upload form over`);
+        //console.log( `upload form over`);
         isUploading = false;
         wx.showToast({
           title: '提交成功',

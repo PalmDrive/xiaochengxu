@@ -6,7 +6,7 @@
   <view class="loading text-center" wx:if="{{favoriteTopics.length === 0}}">
     <text>没有已购的七日辑</text>
   </view>
-  <view wx:for="{{favoriteTopics}}" wx:for-item="group" wx:key data-group="{{ group }}" bindtap="gotoPaidGroup">
+  <view wx:for="{{albums}}" wx:for-item="group" wx:key data-group="{{ group }}" bindtap="gotoPaidGroup">
       <image src="{{group.attributes.picurl}}" mode="widthFix" class="paid-group-pic"></image>
       <text class=" size-26 FZRUIZH_CUJW--GB1-0 image-bottom">{{group.attributes.title}}</text>
       <text class=" size-12 image-bottom">{{'已经解锁到第' + (group.attributes.index) + '天'}}</text>

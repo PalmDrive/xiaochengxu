@@ -102,43 +102,21 @@ Page({
   },
 
   /**
-   * 进入Group
-   */
-  gotoGroup(event) {
-    const userId = event.currentTarget.dataset.group.id,
-          name = event.currentTarget.dataset.group.attributes.username,
-          userInfo = Auth.getLocalUserInfo().attributes || {};
-    util.gaEvent({
-      cid: Auth.getLocalUserId(),
-      ev: 0,
-      ea: 'click_toutiao_in_toutiaoTab',
-      ec: `toutiao_name:${name},toutiao_id:${userId}`,
-      el: `user_name:${userInfo.wxUsername},user_id:${userId}`
-    });
-    wx.navigateTo({
-      url: `../groups/group?id=${userId}`
-    });
-  },
-
-  /**
    * 进入七日辑
    */
   gotoPaidGroup(event) {
-    const group = event.currentTarget.dataset.group,
-          id = group.id,
-          name = group.username,
-          userInfo = Auth.getLocalUserInfo().attributes || {};
-    util.gaEvent({
-      cid: Auth.getLocalUserId(),
-      ev: 0,
-      ea: 'click_qiriji_in_toutiaoTab',
-      ec: `qiriji_name:${name},toutiao_id:${id}`,
-      el: `user_name:${userInfo.wxUsername},user_id:${id}`
-    });
+    const album = event.currentTarget.dataset.group;
+          //name = event.currentTarget.dataset.group.attributes.username,
+          //userInfo = Auth.getLocalUserInfo().attributes || {};
+    // util.gaEvent({
+    //   cid: Auth.getLocalUserId(),
+    //   ev: 0,
+    //   ea: 'click_toutiao_in_toutiaoTab',
+    //   ec: `toutiao_name:${name},toutiao_id:${albumId}`,
+    //   el: `user_name:${userInfo.wxUsername},user_id:${albumId}`
+    // });
 
-    wx.navigateTo({
-      url: `../album/show?id=${id}`
-    });
+    util.goToAlbum(album);
   },
 
   /**

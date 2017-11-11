@@ -2,6 +2,7 @@ const app = getApp(),
     util = require('../../utils/util'),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
+    {addAlbumId} = require('../../utils/user'),
     baseUrl = app.globalData.apiBase;
 
 function loadData(id) {
@@ -421,8 +422,9 @@ Page({
     if (price <= 0) {
       this._useCoupon()
       .then(res => {
-        return this._unlockAlubm()
+        return this._unlockAlubm();
       }).then(res => {
+        addAlbumId(this.data.albumId);
         loadData(this.data.albumId)
           .then(this._onLoadSuccess)
           .then(res => {
@@ -468,8 +470,8 @@ Page({
           paySign: data.data.paySign
         };
 
-        console.log('params:');
-        console.log(params);
+        // console.log('params:');
+        // console.log(params);
 
         params.success = (res) => {
           console.log('wx requestPayment success');
@@ -478,6 +480,7 @@ Page({
             trial: false,
             payView: false
           });
+          addAlbumId(this.data.albumId);
           loadData(this.data.albumId)
             .then(this._onLoadSuccess);
 

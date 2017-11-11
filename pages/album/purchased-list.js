@@ -2,14 +2,19 @@
 const app = getApp(),
   Util = require('../../utils/util'),
   Auth = require('../../utils/auth'),
-  {request} = require('../../utils/request');
+  {request} = require('../../utils/request'),
+  {getPurchasedAlbums} = require('../../utils/user');
+
+const page = {
+  number: 1,
+  size: 5
+};
+
 Page({
   data: {
+    albums: [],
     userInfo: {},
     userId: null,
-    favoriteTopics: [],
-    page: {number: 1, size: 10},
-    items: [],
     loadingStatus: null
   },
   //事件处理函数
@@ -17,7 +22,7 @@ Page({
 
   onLoad: function (options) {
     if (options && options.pullDown) {
-      this.setData({ 'page.number': 1, loadingStatus: 'LOADING' });
+      this.setData({loadingStatus: 'LOADING' });
     }
     Auth.getLocalUserId() && this._load();
   },
@@ -58,7 +63,6 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    this.setData({favoriteTopics: []});
     this.onLoad({pullDown: true});
   },
 
@@ -67,9 +71,9 @@ Page({
    */
   onReachBottom: function () {
     if (this.data.loadingStatus != 'LOADING' && !this.data.loadingStatus != 'LOADED_ALL') {
-      const pageNumber = this.data.page.number + 1;
-      this.setData({loadingMore: 'LOADING_MORE', 'page.number': pageNumber});
-      this.getTopics(pageNumber);
+      page.number = page.number + 1;
+      this.setData({loadingMore: 'LOADING_MORE'});
+      this.getPurchasedAlbums();
     }
   },
 
@@ -82,27 +86,30 @@ Page({
     };
   },
 
-  updateData: function(topics) {
-    topics.forEach(Util.formatAlbum);
+  updateData: function(albums) {
+    albums.forEach(Util.formatAlbum);
     const data = {
       loadingStatus: 'LOADED',
-      favoriteTopics: this.data.favoriteTopics.concat(topics)
+      albums: this.data.albums.concat(albums)
     };
-    if (topics.length < this.data.page.size) {
+    if (albums.length < page.size) {
       data.loadingStatus = 'LOADED_ALL';
     }
     this.setData(data);
     wx.stopPullDownRefresh();
   },
 
-  getTopics: function(pageNumber) {
-    request({
-      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/albums?page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=title,picurl&filter=unlocked`
-    }).then((res) => {
-      const topics = res.data;
-      this.updateData(topics);
+  getPurchasedAlbums: function() {
+    getPurchasedAlbums(Auth.getLocalUserId(), {
+      page: {
+        number: page.number,
+        size: page.size
+      }
+    })
+    .then(res => {
+      this.updateData(res);
     }, () => {
-      console.log('my page, getTopics request fail');
+      console.log('my page, getPurchasedAlbums request fail');
     });
   },
   /**
@@ -121,10 +128,9 @@ Page({
       el: `user_name:${userInfo.wxUsername},user_id:${id}`
     });
 
-    wx.navigateTo({
-      url: `../album/show?id=${id}`
-    });
+    Util.goToAlbum(group);
   },
+
   _load() {
     const userId = Auth.getLocalUserId();
     const data = {
@@ -132,6 +138,6 @@ Page({
       userId
     };
     this.setData(data);
-    this.getTopics(1);
+    this.getPurchasedAlbums();
   }
 })

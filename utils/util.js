@@ -401,6 +401,28 @@ function mediumPageOnShow(params) {
   }
 }
 
+function goToAlbum(album) {
+  const {getPurchasedAlbumIdsMap} = require('user');
+  wx.showLoading({
+    title: '跳转中...',
+    mask: true
+  });
+  getPurchasedAlbumIdsMap()
+    .then(albumIdsMap => {
+      wx.hideLoading();
+      if (album.attributes.metaData.programStartAt && albumIdsMap[album.id]) {
+        wx.navigateTo({
+          url: `/pages/album/daily?id=${album.id}`
+        });
+      } else {
+        wx.navigateTo({
+          url: `/pages/album/show?id=${album.id}`
+        });
+      }
+    })
+    .catch(err => wx.hideLoading());
+}
+
 module.exports = {
   formatTime,
   formatDateToDay,
@@ -411,6 +433,7 @@ module.exports = {
   formatMedium,
   goToMedium,
   goToTopic,
+  goToAlbum,
   ga,
   gaEvent,
   trimMediumTitle,

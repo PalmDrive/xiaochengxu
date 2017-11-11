@@ -117,17 +117,15 @@ Page({
           id = group.id,
           name = group.username,
           userInfo = Auth.getLocalUserInfo().attributes || {};
-    Util.gaEvent({
-      cid: Auth.getLocalUserId(),
-      ev: 0,
-      ea: 'click_qiriji_in_toutiaoTab',
-      ec: `qiriji_name:${name},toutiao_id:${id}`,
-      el: `user_name:${userInfo.wxUsername},user_id:${id}`
-    });
+    // Util.gaEvent({
+    //   cid: Auth.getLocalUserId(),
+    //   ev: 0,
+    //   ea: 'click_qiriji_in_toutiaoTab',
+    //   ec: `qiriji_name:${name},toutiao_id:${id}`,
+    //   el: `user_name:${userInfo.wxUsername},user_id:${id}`
+    // });
 
-    wx.navigateTo({
-      url: `../album/show?id=${id}`
-    });
+    Util.goToAlbum(group);
   },
   _load() {
     const userId = Auth.getLocalUserId();
