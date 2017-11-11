@@ -1,5 +1,7 @@
 {
   "pages":[
+    "pages/album/daily",
+    "pages/survey/edit",
     "pages/album/index",
     "pages/my/remind",
     "pages/album/purchased-list",

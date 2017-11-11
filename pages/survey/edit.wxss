@@ -1,0 +1,103 @@
+.container {
+  background: white;
+  font-family: PingFangSC-Regular;
+}
+
+.section {
+  padding: 15px 15px 30px 15px;
+}
+
+.task-title {
+  padding: 2px 10px 2px 20px;
+  margin-top: 20px;
+  width:25px;
+}
+
+.task-row1 {
+  margin: 20px 0px 15px 0px;
+  justify-content: space-between;
+}
+
+.baby {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.second-tip {
+  margin-bottom: 5px;
+}
+
+.task-row2 {
+  padding-bottom: 20px;
+}
+
+.bg-gray {
+  background: #F5F5F5;
+  align-items: flex-start;
+  padding: 8px 15px 8px 15px;
+  margin-top: 10px;
+}
+
+.task-number {
+  padding: 0px 7px 0px 7px;
+  margin-right: 15px;
+}
+
+.quotation {
+  width: 25px;
+  height: 15px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+textarea {
+
+}
+.pic-item1 {
+  position: relative;
+}
+.pic-item {
+  width:50px;
+  height:50px;
+  background-size:cover;
+  margin-right: 10px;
+}
+
+.delete {
+  padding: 20px;
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  left: 25px;
+  top: -25px;
+}
+
+.picture {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.bottom-view {
+  padding: 10px 0px 5px 0px;
+  justify-content: space-between;
+}
+
+.image-icon {
+  width: 22px;
+  height: 17px;
+  margin-right: 5px;
+}
+
+.commit-button {
+  border-radius: 3px;
+  padding: 15px 0px 15px 0px;
+  text-align: center;
+  margin: 20px 15px 10px 15px;
+}
+
+.second-tip {
+  margin: 0px 15px 30px 15px;
+}

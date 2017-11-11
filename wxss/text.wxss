@@ -50,6 +50,10 @@
   color: #0090E7
 }
 
+.bg-main-color {
+  background: #42BD56;
+}
+
 /* font-size */
 
 .size-9 {

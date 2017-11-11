@@ -1,0 +1,91 @@
+<view class="container column">
+
+  <!-- 顶部 绿色 -->
+  <view class="row top-view1 bg-main-color">
+    <view class="row">
+      <image src="../../images/survey/日历.png" class="rili"></image>
+      <text class="size-12 text-white ">第{{selectedIndex}}天</text>
+    </view>
+    <text class="size-12 text-white" bindtap="goToAlbumDetail">查看详情</text>
+  </view>
+
+  <view class="row top-view2 bg-main-color">
+    <view class="column day-box" wx:for="{{dayList}}" wx:for-item="flag" wx:key="" style="background: {{selectedIndex === (index + 1) ? 'white' : '#42BD56'}}" bindtap="goToPost" data-index="{{index}}">
+      <text class="size-16 pingfang-medium" style="color: {{selectedIndex === index + 1 ? '#42BD56' : 'white'}};opacity:{{(index + 1) <= unlockedDays ? 1 : 0.5}}">{{unlockedDays === (index + 1) ? '今' : (index + 1)}}</text>
+      <image src="../../images/survey/对号.jpg" class="right" wx:if="{{flag}}"></image>
+    </view>
+  </view>
+
+  <!-- 任务 -->
+  <text class="size-12 text-white task-title bg-main-color">任务</text>
+  <view class="section column">
+
+    <text class="size-12 text-color3">下面是今天的任务，带着任务去阅读材料更好哦</text>
+
+    <view class="row task-row1">
+      <view class="row">
+        <image src="{{editorInfo.profilePicUrl}}" class="baby"></image>
+        <text class="size-14 text-color1 pingfang-medium">{{editorInfo.username}}</text>
+      </view>
+    <!--  <text class="size-12 text-color2 ">2017.09.12</text>-->
+    </view>
+
+    <text class="size-14 text-color2 task-row2">{{post.attributes.description || '下面是今天的任务，带着任务去阅读材料更好哦下面是今天的任务，带着任务去阅读材料更好哦下面是今天的任务，带着任务去阅读材料更好哦下面是今天的任务，带着任务去阅读材料更好哦下面是今天的任务，带着任务去阅读材料更好哦'}}</text>
+
+    <view class="row bg-gray" wx:for="{{questionList}}" wx:for-item="question" wx:key="">
+      <text class="size-14 text-white bg-main-color task-number">{{index + 1}}</text>
+      <text class="size-14 text-color1 pingfang-medium">{{question.attributes.content}}</text>
+    </view>
+  </view>
+  <view class="line-view"></view>
+
+  <!-- 任务攻略 -->
+  <text class="size-12 text-white task-method-title task-title bg-main-color">任务攻略</text>
+  <view class="section column">
+    <text class="size-12 text-color3 second-tip">下面的攻略能够让你更好地完成任务</text>
+
+    <view class="column bg-gray" wx:for="{{media}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}" bindtap="goToMedium">
+      <view class="row method-row">
+        <image src="../../images/survey/{{medium.attributes.mediumType}}.png" class="method-icon"></image>
+        <text class="size-16 text-color2 medium-title">{{medium.attributes.title}}</text>
+      </view>
+      <view class="column method-content">
+        <text class="size-12 text-color3 method-row summary" wx:if="{{medium.attributes.mediumType === 'article'}}">{{medium.attributes.summary}}</text>
+        <text class="size-9 look-detail ">查看详情</text>
+      </view>
+    </view>
+  </view>
+  <view class="line-view"></view>
+
+  <!-- 任务提交 -->
+  <text class="size-12 text-white task-method-title task-title bg-main-color">任务提交</text>
+  <view class="section column">
+    <text class="size-12 text-color3 second-tip">{{userSurveyAnswersCountMsg}}</text>
+
+    <!-- 任务提交 -->
+    <view class="column center-view" wx:if="{{answerList.length === 0}}">
+      <image src="../../images/survey/宝宝.png" class="baby-big"></image>
+      <text class="size-12 text-white bg-main-color commit-button" bindtap="goToSurveyDetail">提交我的任务</text>
+    </view>
+
+    <!-- 答案显示 -->
+    <view class="column answer-view" wx:if="{{answerList.length > 0}}">
+      <view class="row userinfo" wx:if="{{userInfo}}">
+        <image class="userinfo-avatar" src="{{userInfo.profilePicUrl}}" background-size="cover"></image>
+        <text class="size-14">{{userInfo.wxUsername}}</text>
+      </view>
+
+      <view class="question-view" wx:for="{{questionList}}" wx:for-item="question" wx:key="">
+        <view class="row question-title">
+          <text class="size-14 text-color3">{{index + 1}}、</text>
+          <text class="size-14 text-color3 question-title1">{{question.attributes.content}}</text>
+        </view>
+
+        <image class="answer-img column" wx:for="{{question.answerPics}}" wx:for-item="pic" wx:key="" src="{{pic.url}}" mode="widthFix"></image>
+        <text class="size-14 text-color1">{{question.answerContent}}</text>
+      </view>
+
+    </view>
+  </view>
+
+</view>

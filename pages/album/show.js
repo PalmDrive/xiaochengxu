@@ -65,7 +65,8 @@ Page({
     screenHeight: 667,
     wxQrcodeUrl: '../../images/paid-group/qrcode_qiriji.jpg',
     wxQrcodeMsg: '关注微信公众号「七日辑」,我们为您推送更新',
-    wxQrcodeTitle: '开启推送'
+    wxQrcodeTitle: '开启推送',
+    showDetail: false // 只是展示七日辑详情 (购买页面没有底部的bar)
   },
 
   //关闭首次登陆弹窗
@@ -110,7 +111,8 @@ Page({
           that = this;
 
     this.setData({
-      userRole: Auth.getLocalUserInfo().attributes.role
+      userRole: Auth.getLocalUserInfo().attributes.role,
+      showDetail: options.showDetail
     });
     function init() {
       //console.log(getCurrentPages()[1]);
