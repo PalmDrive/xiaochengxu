@@ -78,10 +78,10 @@
       <view class="question-view" wx:for="{{questionList}}" wx:for-item="question" wx:key="">
         <view class="row question-title">
           <text class="size-14 text-color3">{{index + 1}}、</text>
-          <text class="size-14 text-color3">{{question.attributes.content}}</text>
+          <text class="size-14 text-color3 question-title1">{{question.attributes.content}}</text>
         </view>
 
-        <image class="answer-img" wx:for="{{question.answerPics}}" wx:for-item="pic" wx:key="" src="{{pic.url}}" mode="widthFix"></image>
+        <image class="answer-img column" wx:for="{{question.answerPics}}" wx:for-item="pic" wx:key="" src="{{pic.url}}" mode="widthFix"></image>
         <text class="size-14 text-color1">{{question.answerContent}}</text>
       </view>
 

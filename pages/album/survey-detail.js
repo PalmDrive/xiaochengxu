@@ -195,6 +195,15 @@ Page({
       }).then(res => {
         console.log( `upload form over`);
         isUploading = false;
+        wx.showToast({
+          title: '提交成功',
+          duration: 1000,
+          complete: function() {
+            wx.redirectTo({
+              url: `./survey?postId=${postId}&albumId=${albumId}`
+            });
+          }
+        })
       });
 
       isNew = 'false';

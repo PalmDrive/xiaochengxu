@@ -147,6 +147,13 @@
   margin-bottom: 10px;
 }
 
+.question-title1 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow:hidden;
+}
+
 .answer-img {
   width: 90%;
 }
