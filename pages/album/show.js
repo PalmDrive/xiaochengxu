@@ -127,7 +127,7 @@ Page({
         success(res) {
           updates.bannerImage = {height: res.windowWidth / bannerImageRatio};
           updates.username = Auth.getLocalUserInfo().attributes.wxUsername;
-          updates.screenHeight = res.screenHeight
+          updates.screenHeight = res.windowHeight
           that.setData(updates);
           Auth.getLocalUserId() && that._load();
         },

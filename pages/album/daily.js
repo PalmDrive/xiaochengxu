@@ -116,6 +116,9 @@ Page({
           newPostId = this.data.albumAttributes.postIds[index]
 
     if (index < this.data.unlockedDays && this.data.selectedIndex - 1 !== index) {
+      this.setData({
+        selectedIndex: index + 1
+      })
       postId = newPostId;
       albumId = albumId;
       this._load();
