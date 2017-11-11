@@ -1,7 +1,5 @@
 {
   "pages":[
-    "pages/album/daily",
-    "pages/survey/edit",
     "pages/album/index",
     "pages/my/remind",
     "pages/album/purchased-list",
@@ -29,6 +27,8 @@
     "pages/groups/group",
     "pages/groups/new-group",
     "pages/index/index",
+    "pages/album/daily",
+    "pages/survey/edit",
     "pages/topics/select-topics"
   ],
   "window":{
