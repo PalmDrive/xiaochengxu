@@ -4,7 +4,7 @@
   <text class="size-12 text-white task-title bg-main-color">任务</text>
   <view class="section column">
 
-    <text class="size-12 text-color3">下面是今天的任务，带着任务去阅读材料更好哦</text>
+    <text class="size-12 text-color3">下面是今天的任务，如果还没有完全准备好，可以再去读一读攻略</text>
 
     <view class="row task-row1">
       <view class="row">

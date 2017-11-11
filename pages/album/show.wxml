@@ -41,7 +41,7 @@
       <text class=" size-22 pingfang-medium text-center model-text1">{{wxQrcodeTitle}}</text>
       <text class=" size-14 text-color1 model-text2" >{{wxQrcodeMsg}}</text>
       <image src="{{wxQrcodeUrl}}" class="modal-qrcode-img"></image>
-      <text class=" size-12 text-color3 model-text3" >或截图保存，用微信扫描</text>
+      <text class=" size-12 text-color3 model-text3" >截图保存，用微信扫描</text>
       <text class="size-16 text-white qrcode-button" bindtap="toggleqrcodeModalHidden">知道了</text>
     </view>
     <image src="../../images/paid-group/close.png" class="btn-close" bindtap="toggleqrcodeModalHidden"></image>

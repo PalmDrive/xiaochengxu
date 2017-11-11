@@ -123,7 +123,7 @@ Page({
               trial: options.trial,
               loadingStatus: 'LOADING'
             };
-      console.log(this);
+      //console.log(this);
       wx.getSystemInfo({
         success(res) {
           updates.bannerImage = {height: res.windowWidth / bannerImageRatio};
@@ -420,22 +420,30 @@ Page({
 
     // 使用完优惠券是否是0元
     if (price <= 0) {
-      this._useCoupon()
+      return this._useCoupon()
       .then(res => {
-        return this._unlockAlubm();
-      }).then(res => {
-        addAlbumId(this.data.albumId);
-        loadData(this.data.albumId)
-          .then(this._onLoadSuccess)
-          .then(res => {
-            this.setData({
-              trial: false,
-              processing: false,
-              payView: false,
-            });
+        return Promise.all([
+          this._unlockAlubm(),
+          addAlbumId(this.data.albumId)
+        ]);
+      })
+      .then(res => {
+        if (this.data.programStartAt) {
+          wx.redirectTo({
+            url: `/pages/album/daily?albumId=${this.data.albumId}`
           });
+        } else {
+          loadData(this.data.albumId)
+            .then(this._onLoadSuccess)
+            .then(res => {
+              this.setData({
+                trial: false,
+                processing: false,
+                payView: false,
+              });
+            });
+        }
       });
-      return;
     }
 
     const url = `${baseUrl}/wechat/pay/unifiedorder?name=days7`,
@@ -480,14 +488,20 @@ Page({
             trial: false,
             payView: false
           });
-          addAlbumId(this.data.albumId);
-          loadData(this.data.albumId)
-            .then(this._onLoadSuccess);
-
-          // 判断是否是优惠券购买的
-          if (this.data.coupon) {
-            this._useCoupon();
-          }
+          Promise.all([
+            this.data.coupon && this._useCoupon(),
+            addAlbumId(this.data.albumId)
+          ])
+            .then(() => {
+              if (this.data.programStartAt) {
+                wx.redirectTo({
+                  url: `/pages/album/daily?albumId=${this.data.albumId}`
+                });
+              } else {
+                loadData(this.data.albumId)
+                  .then(this._onLoadSuccess);
+              }
+            });
         };
         params.fail = (err) => {
           console.log('wx requestPayment fail');

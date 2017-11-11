@@ -53,8 +53,8 @@ Page({
         albumAttributes,
         editorInfo: albumAttributes.editorInfo,
         post,
-        media: postRelationships.media.data,
-        selectedIndex: post.attributes.dayIndex,
+        media: postRelationships.media ? postRelationships.media.data : [],
+        selectedIndex: post.attributes && post.attributes.dayIndex,
         dayList: res.meta.checkinStatus,
         unlockedDays: res.meta.unlockedDays
       });
@@ -71,14 +71,14 @@ Page({
     request({
       url: `${app.globalData.apiBase}/morning-posts/${postId}/survey?albumId=${albumId}`,
     }).then(res => {
-      const count = res.meta.userSurveyAnswersCount;
+      const count = res.meta ? res.meta.userSurveyAnswersCount : 0;
       let msg = `已提交${count}人`;
       if (count === 0) {
         msg = '成为第1个提交任务的人吧';
       }
 
-      let questionList = res.included.filter(res => res.type === 'SurveyQuestions');
-      let answerList = res.included.filter(res => res.type === 'userSurveyAnswers');
+      let questionList = res.included ? res.included.filter(res => res.type === 'SurveyQuestions') : [];
+      let answerList = res.included ? res.included.filter(res => res.type === 'userSurveyAnswers') : [];
 
       if (answerList.length > 0 ) {
         answerList = answerList[0].attributes.answers;
