@@ -142,7 +142,7 @@ Page({
 
   goToSurveyDetail: function(event) {
     wx.navigateTo({
-      url: `./survey-edit?postId=${postId}&albumId=${albumId}`
+      url: `../survey/edit?postId=${postId}&albumId=${albumId}`
     });
   }
 })

@@ -179,7 +179,7 @@ Page({
           duration: 1000,
           complete: function() {
             wx.redirectTo({
-              url: `./daily?postId=${postId}&albumId=${albumId}`
+              url: `../album/daily?postId=${postId}&albumId=${albumId}`
             });
           }
         });

@@ -132,7 +132,7 @@
 }
 
 .answer-view {
-  margin: 30px 15px 30px 15px;
+  margin: 30px 0px 30px 0px;
   padding: 10px 15px 10px 15px;
   background: #F5F5F5;
   border-radius: 2px;
