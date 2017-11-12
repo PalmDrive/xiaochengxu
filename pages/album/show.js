@@ -424,7 +424,7 @@ Page({
       .then(res => {
         return Promise.all([
           this._unlockAlubm(),
-          addAlbumId(this.data.albumId)
+          addAlbumId(this.data.albumId) // important, update the _albumIdsMap cache
         ]);
       })
       .then(res => {
@@ -490,7 +490,7 @@ Page({
           });
           Promise.all([
             this.data.coupon && this._useCoupon(),
-            addAlbumId(this.data.albumId)
+            addAlbumId(this.data.albumId) // important, update the _albumIdsMap cache
           ])
             .then(() => {
               if (this.data.programStartAt) {

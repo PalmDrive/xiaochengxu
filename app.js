@@ -34,24 +34,23 @@ AV.init({
 
 App({
   onShow(options) {
-    console.log('app onShow options:', options);
+    const app = this,
+          {getPurchasedAlbumIdsMap} = require('utils/user'),
+          Auth = require('utils/auth');
+    //console.log('app onShow options:', options);
     // for testing
     //options.shareTicket = '20071b2b-df8b-4422-8ed7-4ed9c1f7b526';
     if (options.shareTicket) {
       this.globalData.shareTicket = options.shareTicket;
     }
 
-    const that = this;
-    const Auth = require('utils/auth');
-
     console.log('app on show');
     // Auth.setLocalJWT(null);
     // Auth.setLocalUserInfo(null);
 
     const _afterLogin = () => {
-      const {getSubscribedTopicIds} = require('utils/topic');
       // Async fetch the user's subscribed topic ids
-      getSubscribedTopicIds(Auth.getLocalUserId(), true);
+      getPurchasedAlbumIdsMap.call(app, true);
       getPage()
         //page.onLoad() do not work in the ios and android device
         //while working in the simulator
@@ -64,7 +63,7 @@ App({
     };
 
     const _login = () => {
-      Auth.login.call(that)
+      Auth.login.call(app)
         .then(_afterLogin)
         .catch(err => {
           wx.showToast({
@@ -86,8 +85,10 @@ App({
     if (!Auth.getLocalUserId() || !Auth.getLocalJWT() || !userAttrs.wxOpenId) {
       _login();
     } else if (env !== 'dev') {
+      getPurchasedAlbumIdsMap.call(this, true);
       wx.checkSession({
-        fail() {
+        fail(err) {
+          console.log('wx checkSession failed:', err);
           _login();
         }
       });

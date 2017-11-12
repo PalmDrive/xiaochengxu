@@ -1,13 +1,13 @@
-const app = getApp(),
-      {request} = require('./request'),
+const {request} = require('./request'),
       Auth = require('auth');
 
 let _albumIdsMap = null,
     _albums = null;
 
-function getPurchasedAlbumIdsMap() {
-  const userId = Auth.getLocalUserId();
-  if (_albumIdsMap) {
+function getPurchasedAlbumIdsMap(force) {
+  const app = getApp() || this,
+        userId = Auth.getLocalUserId();
+  if (_albumIdsMap && !force) {
     return new Promise(resolve => resolve(_albumIdsMap));
   } else {
     return request({
@@ -26,6 +26,7 @@ function getPurchasedAlbumIdsMap() {
 };
 
 function getPurchasedAlbums(userId, options={page: {size:5,number:1}}) {
+  const app = getApp();
   userId = userId || Auth.getLocalUserId();
   return request({
     url: `${app.globalData.apiBase}/users/${userId}/relationships/albums?page[size]=${options.page.size}&page[number]=${options.page.number}&fields[albums]=title,picurl&filter=unlocked`
