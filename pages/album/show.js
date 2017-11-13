@@ -54,6 +54,7 @@ Page({
     // 用于 choice-coupon
     coupons: null,
     tempAlert: null,
+    payView: false,
     programStartAt: 0,
     selectedIndex: 0,
     // descriptionPicUrl: '',

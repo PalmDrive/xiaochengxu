@@ -29,7 +29,7 @@
 <view class="line-view"></view>
 
 <view class="lessons-description">
-  <text class="lesson-tip size-18 text-color1">课程介绍</text>
+  <text class="lesson-tip size-18 text-color1">项目介绍</text>
   <text class="lessons-description-text size-14 text-color1 column">{{albumAttributes.description}}</text>
   <image src="{{metaData.descriptionPicUrl}}" class="lessons-description-img" mode="widthFix"></image>
 </view>
@@ -47,16 +47,17 @@
 <view class="qrcode-view-bottom row">
   <view class="column gz-view">
     <text class="bg-blue size-16 pingfang-medium text-center gz-text">关注七日辑</text>
-    <text class=" size-12 text-color2 " >即可在子菜单“已购”中随时观看自己购买的课程，已经获得更多关于课程资料，导师互动等信息</text>
+    <text class=" size-12 text-color2 gz-content">接收每日项目完成提醒
+获取七日辑更新的最新资讯
+获取最新课程资料和导师互动等信息</text>
   </view>
   <image src="../../images/paid-group/qrcode_qiriji.jpg" class="qrcode-img-b"></image>
 </view>
 
 <view class="about-view">
   <text class="about-qiriji bg-blue size-12">关于七日辑</text>
-  <text class="about-qiriji-content size-14">《七日辑》让你用7天的碎片时间，实现一个小目标。
-  每个专辑都由一位相关领域的资深辑主制作，从 200+优质网站、1000+公众号/专栏中精心 挑选 28 篇文章，最终系统整理成辑。
-  </text>
+  <text class="about-qiriji-content size-14">《七日辑》让你用7天的碎片时间，成就一个小目标。
+</text>
 
   <view class="about-type row">
     <text class="about-type-left bg-blue size-12">提示自我</text>
@@ -69,13 +70,13 @@
 自己筛选过滤太浪费时间? </text>
   </view>
   <view class="about-type row">
-    <text class="about-type-left bg-blue size-12">为你挖掘</text>
-    <text class="about-type-right text-color2 size-14">你是否想要发掘更多更有趣的公众号/专栏? </text>
+    <text class="about-type-left bg-blue size-12">项目实践</text>
+    <text class="about-type-right text-color2 size-14">你是否觉得传统课程难以坚持、效果不好？项目式学习手把手带你体会真实情境 </text>
   </view>
 </view>
 <view class="line-view"></view>
 <view class="lessons" id="category">
-  <text class="lesson-tip pingfang-medium size-18 text-color1">课程目录</text>
+  <text class="lesson-tip pingfang-medium size-18 text-color1">项目安排</text>
   <view class="lesson column" wx:for="{{catalog}}" wx:key="" wx:for-index="index" wx:for-item="catalogItem">
     <view class="day-top row">
       <text class="day-index size-14">D{{index + 1}}</text>
