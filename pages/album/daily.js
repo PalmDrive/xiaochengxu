@@ -21,7 +21,8 @@ Page({
     userSurveyAnswersCountMsg: '',
     answerList: [],
     userInfo: Auth.getLocalUserInfo().attributes,
-    trial: false
+    trial: false,
+    albumId: ''
   },
 
   onLoad(options) {
@@ -33,6 +34,7 @@ Page({
     postId = options.postId;
     this.setData({trial: options.trial === 'true' ? true : false});
     Auth.getLocalUserId() && this._load();
+    this.setData({albumId: albumId});
   },
 
   /**

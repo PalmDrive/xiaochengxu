@@ -1,0 +1,24 @@
+<import src="../../templates/prompt.wxml"/>
+<!-- 支付页面 -->
+<view class="pay" wx:if="{{payView}}">
+  <view bindtap="hidePay" class="mask"></view>
+  <view class="pay-container" bindtap="none">
+    <view class="size-22">{{title}}</view>
+    <!-- <view class="remarks size-12">备注：</view> -->
+    <view class="line"></view>
+    <text class="text size-16">优惠券</text>
+    <view wx:if="{{coupons.length !== 0}}" bindtap="gotoChoiceCoupon" style="float: right;">
+      <text wx:if="{{(coupons.length !== 0) && !coupon}}" class="size-12" style="background: #DF0A20;border-radius: 3px;color: #fff;height: 21px;width: 44px;display: inline-block;line-height: 21px;text-align: center;vertical-align: middle;margin-right: 5px;">有卡券</text>
+      <text class="size-16">{{couponIndex === -1 ? '还未选择优惠卡券' : coupon.name}}</text>
+    </view>
+    <view wx:else class="size-16" style="float: right;color: #B0B0B9;">没有可以抵用的优惠券</view>
+    <view class="line"></view>
+    <text class="text size-16">支付金额</text>
+    <text class="size-18" style="float: right;">￥{{(coupon ? ((price - coupon.quota) > 0 ? (price - coupon.quota) : 0) : price) / 100}}</text>
+    <view class="line"></view>
+    <button bindtap="buy" disabled="{{processing}}" loading="{{processing}}">微信支付</button>
+  </view>
+</view>
+
+<template is="prompt" data="{{tempAlert}}"></template>
+<text bindtap="showPay" class="btn-buy btns-container">立刻购买 {{albumAttributes.price / 100}}元</text>
