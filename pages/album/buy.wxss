@@ -401,9 +401,9 @@ page {
 }
 
 .lessons {
-  padding-bottom: 25px;
   margin-left: 20px;
   margin-top: 10px;
+  margin-bottom:80px;
 }
 
 .lessons-description {

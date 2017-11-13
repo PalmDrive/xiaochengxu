@@ -27,6 +27,8 @@ Page({
     });
     albumId = options.albumId;
     postId = options.postId;
+    contentArray = [];
+    needInputTextCount = 0;
     Auth.getLocalUserId() && this._load();
   },
 
