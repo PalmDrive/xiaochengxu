@@ -1,14 +1,14 @@
 <!-- picurl, title, originalPrice,  selectedIndex, editorInfo, description, descriptionPicUrl etc -->
 <view class="head-view">
   <!-- paid_group -->
-  <image src="{{picurl}}" mode="aspectFill"  class="paid-group-pic"></image>
+  <image src="{{albumAttributes.picurl}}" mode="aspectFill"  class="paid-group-pic"></image>
   <view class="title">
-    <text class="title-text  size-26">{{title}}</text>
+    <text class="title-text  size-26">{{albumAttributes.title}}</text>
     <!-- <text class="title-type">零基础</text>-->
   </view>
   <view class="price-view row">
-    <text class="price-now  size-20">￥{{(price / 100)}} </text>
-    <text class="price-tip price-old  size-12">￥{{originalPrice}} </text>
+    <text class="price-now  size-20">￥{{(albumAttributes.price / 100)}} </text>
+    <text class="price-tip price-old  size-12">￥{{(metaData.originalPrice || 4990) / 100}} </text>
   </view>
   <view class="line-view"></view>
 </view>
@@ -30,18 +30,18 @@
 
 <view class="lessons-description">
   <text class="lesson-tip size-18 text-color1">课程介绍</text>
-  <text class="lessons-description-text size-14 text-color1 column">{{description}}</text>
-  <image src="{{descriptionPicUrl}}" class="lessons-description-img" mode="widthFix"></image>
+  <text class="lessons-description-text size-14 text-color1 column">{{albumAttributes.description}}</text>
+  <image src="{{metaData.descriptionPicUrl}}" class="lessons-description-img" mode="widthFix"></image>
 </view>
 
 <view class="target-audience">
   <text class="about-qiriji bg-blue size-12">适用人群</text>
-  <text class="text-color1 size-14 content-text column">{{targetAudience}}</text>
+  <text class="text-color1 size-14 content-text column">{{metaData.targetAudience}}</text>
 </view>
 
 <view class="target-audience">
   <text class="about-qiriji bg-blue size-12">购买须知</text>
-  <text class="text-color1 size-14 content-text column">{{buyNotes}}</text>
+  <text class="text-color1 size-14 content-text column">{{metaData.buyNotes}}</text>
 </view>
 
 <view class="qrcode-view-bottom row">

@@ -22,11 +22,11 @@ const PAID_USER_ROLE = 2;
 Page({
   data: {
     userRole: null,
-    title: null, // group or toutiao name actually
     albumId: null,
     album: {},
+    albumAttributes: {},
+    metaData: {},
     loadingStatus: 'LOADING', // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
-    posts: [],
     didUserPay: false, // 用户是否已经购买
     groupInfo: {},
     showHint: false,
@@ -37,17 +37,11 @@ Page({
     author: {},
     subscribers: [],
     subscribersCount: 0,
-    price: 0,
-    originalPrice: 4.99,
-    picurl: '',
     processing: false,
     editorInfo: {},
     catalog: [],
     trial: false,
     role: 0,
-    hideAchieveTip: true,
-    achieveProcess: 0,
-    hideAchieveCard: true,
     username: '',
     dayLogs: {},
     shareAlert: false,
@@ -59,15 +53,8 @@ Page({
     tempAlert: null,
     programStartAt: 0,
     selectedIndex: 0,
-    descriptionPicUrl: '',
-    targetAudience: '',
-    buyNotes: '',
-    description: '',
     toView: '#',
     screenHeight: 667,
-    wxQrcodeUrl: '../../images/paid-group/qrcode_qiriji.jpg',
-    wxQrcodeMsg: '关注微信公众号「七日辑」,我们为您推送更新',
-    wxQrcodeTitle: '开启推送',
     showDetail: false // 只是展示七日辑详情 (购买页面没有底部的bar)
   },
 
@@ -180,54 +167,13 @@ Page({
   },
 
   onShow(e) {
-    if (this.data.title) {
+    if (this.data.albumAttributes.title) {
       util.ga({
         cid: Auth.getLocalUserId(),
         dp: '%2FalbumShowPage_XiaoChengXu',
-        dt: `album_name:${this.data.title},album_id:${this.data.albumId}`
+        dt: `album_name:${this.data.albumAttributes.title},album_id:${this.data.albumId}`
       });
     }
-
-    // 开始学习 获得成就
-    // if (this.data.achieveProcess === 7 && Auth.getLocalKey( `${this.data.albumId}_end_isShowed`) !== "true") {
-    //   this.setData({hideAchieveTip: false});
-    //   Auth.setLocalKey( `${this.data.albumId}_end_isShowed`, "true")
-    // }
-  },
-
-  //点击文章
-  goToMedium: function(event) {
-    const medium = event.currentTarget.dataset.medium,
-          index = event.currentTarget.dataset.index,
-          idx = event.currentTarget.dataset.idx,
-          count = event.currentTarget.dataset.count,
-          userInfo = Auth.getLocalUserInfo(),
-          gaOptions = {
-            cid: Auth.getLocalUserId(),
-            ec: `article_title:${medium.attributes.title},article_id:${medium.id}`,
-            ea: 'click_article_in_albumShowPage',
-            el: `album_name:${this.data.title},album_id:${this.data.albumId}`,
-            ev: 0
-          };
-    const key = 'day' + (this.data.posts.length - index);
-    if (!this.data.dayLogs[key]) {
-      this.data.dayLogs[key] = 1;
-      this.data.achieveProcess = this.data.achieveProcess + 1;
-      this.setData({achieveProcess: this.data.achieveProcess});
-    }
-    util.goToMedium(event, gaOptions, {
-      dayIndex: key,
-      mediumIndex: idx + 1,
-      count: count,
-      albumId: this.data.albumId,
-      morningPostId: this._getMorningPostId()
-    });
-  },
-
-  _getMorningPostId() {
-    const posts = this.data.posts,
-          index = posts.length - this.data.current;
-    return posts[index].id;
   },
 
   /**
@@ -258,83 +204,19 @@ Page({
     let updates = {
       posts: morningPosts
     };
-    const getHintMsg = (post, postIndex) => {
-      let msg = ' ';
-      if (!updates.didUserPay) {
-        if (postIndex > 1) {
-          msg = `还未解锁。解锁只需${updates.price/100}元`;
-        }
-      } else if (!post.meta.unlocked) {
-        msg = '还未解锁，一天解锁一课哦';
-      }
-      return '';
-    };
 
+    const attributes = res.data.attributes,
+          metaData = attributes.metaData;
     updates.current = morningPosts.filter(d => d.meta.unlocked).length;
     updates.album = res.data;
-    updates.title = res.data.attributes.title;
-    updates.description = res.data.attributes.description;
-    updates.price = res.data.attributes.price;
-    updates.originalPrice = (res.data.attributes.metaData.originalPrice || 4990) / 100;
-    updates.programStartAt = res.data.attributes.metaData.programStartAt || 0;
-    updates.targetAudience = res.data.attributes.metaData.targetAudience || '目标人群'
-    updates.descriptionPicUrl = res.data.attributes.metaData.descriptionPicUrl || ''
-    updates.buyNotes = res.data.attributes.metaData.buyNotes || ''
-    updates.picurl = res.data.attributes.picurl;
-    updates.editorInfo = res.data.attributes.editorInfo;
-    updates.catalog = res.data.attributes.catalog;
+    updates.albumAttributes = attributes;
+    updates.metaData = metaData;
+    updates.programStartAt = metaData.programStartAt || 0;
+    updates.editorInfo = attributes.editorInfo;
+    updates.catalog = attributes.catalog;
     updates.loadingStatus = null;
     updates.role = role;
     updates.didUserPay = role === 2 || role === 1;
-
-    // 阅读进度
-    let logs = res.included[0].userAlbum.data.attributes.logs.days;
-    let length = 0;
-    for(var key in logs) {
-      length = length + 1;
-    }
-    updates.achieveProcess = length;
-    updates.dayLogs = logs;
-
-    // 是否弹出开始学习或者获得成就
-    // const flagStart = updates.achieveProcess === 0 && Auth.getLocalKey("hideAchieveStart") !== "true" && Auth.getLocalKey( `${this.data.albumId}_start_isShowed`) !== "true";;
-    // const flagEnd = updates.achieveProcess === 7 && Auth.getLocalKey("hideAchieveEnd") !== "true" && Auth.getLocalKey( `${this.data.albumId}_end_isShowed`) !== "true"
-    // if (updates.didUserPay) {
-    //   if (flagStart) {
-    //     updates.hideAchieveTip = false;
-    //     Auth.setLocalKey( `${this.data.albumId}_start_isShowed`, "true")
-    //   }
-    //   if (flagEnd) {
-    //     updates.hideAchieveTip = false;
-    //     Auth.setLocalKey( `${this.data.albumId}_end_isShowed`, "true")
-    //   }
-    // }
-
-    // 购买成功后弹出进群二维码或者服务号二维码
-    const flag =  Auth.getLocalKey( `${this.data.albumId}_hasShownSubscribedWX`) !== 'true';
-    if (updates.didUserPay && flag) {
-      updates.qrcodeModalHidden = false;
-      Auth.setLocalKey( `${this.data.albumId}_hasShownSubscribedWX`, 'true');
-      // 关注过服务号, 弹出微信群二维码
-      if (Auth.getLocalKey('isSubscribedWX') === 'true') {
-        const metaData = res.data.attributes.metaData,
-              groupQrcodes = metaData.groupQrCodeMediaIds || [],
-              showWxQrcode = metaData.programStartAt ? true : false,
-              newGroupQrcodes = groupQrcodes.filter(item => {
-                return item.active;
-              }),
-              codeUrl = newGroupQrcodes.length > 0 ?  newGroupQrcodes[0].url : undefined;
-        if (showWxQrcode && codeUrl) {
-          updates.wxQrcodeUrl = codeUrl;
-          updates.wxQrcodeMsg = `进群请扫下面的二维码。老师会在群中讲解知识要点、点评每日任务。`;
-          updates.wxQrcodeTitle = `报名成功`;
-        }
-      }
-    }
-
-    updates.posts.forEach((post, index) => {
-      post.hint = getHintMsg(post, updates.posts.length - index);
-    });
 
     this.setData(updates);
 
@@ -350,7 +232,7 @@ Page({
     util.ga({
       cid: Auth.getLocalUserId(),
       dp: gaName,
-      dt: `album_name:${this.data.title},album_id:${this.data.albumId}`
+      dt: `album_name:${this.data.albumAttributes.title},album_id:${this.data.albumId}`
     });
   },
 
@@ -358,66 +240,14 @@ Page({
    * 分享给好友 事件
    */
   onShareAppMessage: function () {
-    const title = this.data.title;
+    const title = this.data.albumAttributes.title;
     return {
       title: `七日辑: ${title}`
     };
   },
 
-  copyWechatId() {
-    const wechatId = 'zhixiaobin123';
-    wx.setClipboardData({
-      data: wechatId,
-      success() {
-        wx.showToast({
-          title: '复制成功'
-        });
-      },
-      fail() {
-        wx.showToast({
-          title: '哎呀，复制失败了。麻烦手动复制吧。'
-        });
-      }
-    })
-  },
-
-  toggleModalShown() {
-    const modalShown = !this.data.modalShown;
-    this.setData({modalShown});
-  },
-
-  toggleqrcodeModalHidden() {
-    const qrcodeModalHidden = !this.data.qrcodeModalHidden;
-    this.setData({qrcodeModalHidden});
-  },
-
-  toggleAchieveOK() {
-    const hideAchieveTip = !this.data.hideAchieveTip;
-    this.setData({hideAchieveTip});
-  },
-
-  toggleAchieveCardOK() {
-    const hideAchieveCard = !this.data.hideAchieveCard;
-    this.setData({hideAchieveCard});
-  },
-
-  toggleAchieveNoMore() {
-    const hideAchieveTip = !this.data.hideAchieveTip;
-    this.setData({hideAchieveTip});
-    if (this.data.achieveProcess === 0) {
-      Auth.setLocalKey("hideAchieveStart", "true");
-    }
-    if (this.data.achieveProcess === 7) {
-      Auth.setLocalKey("hideAchieveEnd", "true");
-    }
-  },
-
-  listenSwiper(e) {
-    this.setData({current: this.data.posts.length - e.detail.current});
-  },
-
   buy() {
-    const price = this.data.coupon ? (this.data.price - this.data.coupon.quota) : this.data.price;
+    const price = this.data.coupon ? (this.data.albumAttributes.price - this.data.coupon.quota) : this.data.albumAttributes.price;
 
     // 使用完优惠券是否是0元
     if (price <= 0) {
@@ -463,7 +293,7 @@ Page({
       data: {
         data: {
           totalFee: price,
-          name: this.data.title,
+          name: this.data.albumAttributes.title,
           openid: attrs.wxOpenId,
           productId: this.data.albumId,
           productType: 'Album'
@@ -554,18 +384,18 @@ Page({
   },
 
   gotoTrial() {
-    const albumId = this.data.album.id;
+    const albumId = this.data.albumId;
     let url = `../album/show?id=${albumId}&trial=${true}`;
 
     if (this.data.album.attributes.metaData.programStartAt) {
-      url = `../album/daily?albumId=${albumId}`;
+      url = `../album/daily?albumId=${albumId}&trial=${true}`;
     }
     wx.navigateTo({url});
   },
 
   gotoFree() {
     wx.navigateTo({
-      url: `../album/free?id=${this.data.albumId}&imgUrl=${this.data.picurl}`
+      url: `../album/free?id=${this.data.albumId}&imgUrl=${this.data.albumAttributes.picurl}`
     });
   },
 

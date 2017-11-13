@@ -19,7 +19,7 @@
       <image src="/images/paid-group/免费@2x.png" class="free-img" mode="aspectFill"></image>
       <text class="free-text text-color2 size-12">免费得</text>
     </view>
-    <button bindtap="showPay" class="btn-buy">立刻购买 {{price / 100}}元</button>
+    <button bindtap="showPay" class="btn-buy">立刻购买 {{albumAttributes.price / 100}}元</button>
   </view>
 </scroll-view>
 <!-- shareAlert -->
