@@ -1,5 +1,6 @@
 const nameSpace = 'qiriji_xiaochengxu',
       _ = require('../vendors/underscore');
+let _iv, _encryptedData;
 
 const {request} = require('request');
 
@@ -109,7 +110,8 @@ const _getWechatBaseUserInfo = function() {
  * @notes: DO NOT use es6 =>, because the context 'this' needs to be passed
  */
 const login = function() {
-  const userInfo = {};
+  const userInfo = {},
+        that = this;
   let result = false;
   return _getWechatBaseUserInfo.call(this)
     .then(data => {
@@ -119,11 +121,14 @@ const login = function() {
       return new Promise((resolve, reject) => {
         // Ask user info
         wx.getUserInfo({
+          withCredentials: true,
           success(res) {
             const fetchedUserInfo = res.userInfo;
             userInfo.wxUsername = fetchedUserInfo.nickName;
             userInfo.gender = fetchedUserInfo.gender;
             userInfo.profilePicUrl = fetchedUserInfo.avatarUrl;
+            _iv = res.iv;
+            _encryptedData = res.encryptedData;
             result = true;
           },
           fail(err) { // 用户没有授权获取用户信息
@@ -133,20 +138,39 @@ const login = function() {
           complete() {
             console.log('getUserInfo complete called');
             if (result) {
-              _loginRequest.call(this, userInfo)
-                .then(resolve, reject);
+              resolve(userInfo);
+              // _loginRequest.call(this, userInfo)
+              //   .then(resolve, reject);
             } else {
               openTip().then(r => {
                 userInfo.wxUsername = r.wxUsername;
                 userInfo.gender = r.gender;
                 userInfo.profilePicUrl = r.profilePicUrl;
-                _loginRequest.call(this, userInfo)
-                  .then(resolve, reject);
+                resolve(userInfo);
+                // _loginRequest.call(this, userInfo)
+                //   .then(resolve, reject);
               });
             }
           }
         })
-      });
+      })
+    })
+    .then(userInfo => {
+      // decrypt decryptData to get unionId
+      let promise = new Promise(resolve => resolve(userInfo));
+      if (!userInfo.wxUnionId && _iv && _encryptedData) {
+      //if (_iv && _encryptedData) {
+        promise = decryptData(_encryptedData, _iv, getLocalSessionKey())
+        .then(res => {
+          userInfo.wxUnionId = res.data.unionId;
+          console.log(`unionId from descrypted data: ${res.data.unionId}`);
+          return userInfo;
+        });
+      }
+      return promise;
+    })
+    .then(userInfo => {
+      return _loginRequest.call(that, userInfo);
     });
 };
 
@@ -176,11 +200,14 @@ const openSetting = function() {
           const userInfo = {};
           let result = false;
           wx.getUserInfo({
+            withCredentials: true,
             success(res) {
               const fetchedUserInfo = res.userInfo;
               userInfo.wxUsername = fetchedUserInfo.nickName;
               userInfo.gender = fetchedUserInfo.gender;
               userInfo.profilePicUrl = fetchedUserInfo.avatarUrl;
+              _iv = res.iv;
+              _encryptedData = res.encryptedData;
               result = true;
             },
             fail(err) { // 用户没有授权获取用户信息
@@ -263,7 +290,7 @@ const decryptData = (encryptedData, iv, sessionKey) => {
   return promise
   .then(sessionKey => {
     return request({
-      url: `${apiBase}/wechat/xiaochengxu/decrypt&name=days7`,
+      url: `${apiBase}/wechat/xiaochengxu/decrypt?name=days7`,
       data: {
         encryptedData,
         iv,
@@ -271,7 +298,7 @@ const decryptData = (encryptedData, iv, sessionKey) => {
       }
     });
   });
-}
+};
 
 module.exports = {
   login,
