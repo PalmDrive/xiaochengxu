@@ -20,7 +20,8 @@ Page({
     unlockedDays: 1,
     userSurveyAnswersCountMsg: '',
     answerList: [],
-    userInfo: Auth.getLocalUserInfo().attributes
+    userInfo: Auth.getLocalUserInfo().attributes,
+    trial: false
   },
 
   onLoad(options) {
@@ -30,6 +31,7 @@ Page({
     })
     albumId = options.albumId;
     postId = options.postId;
+    trial = options.trial;
     Auth.getLocalUserId() && this._load();
   },
 

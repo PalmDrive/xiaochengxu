@@ -6,11 +6,11 @@
 <include src="../../includes/hint.wxml"/>
 <import src="../../templates/button-formid.wxml"/>
 
-<scroll-view scroll-y style="height: {{screenHeight}}px" scroll-into-view="{{toView}}" wx:if="{{((!didUserPay && !trial) || showDetail === 'true') && loadingStatus === null}}" class="buy-page">
+<scroll-view scroll-y style="height: {{screenHeight}}px" scroll-into-view="{{toView}}" wx:if="{{loadingStatus === null}}" class="buy-page">
 
   <include src="../../includes/album-intro.wxml" />
 
-  <view class="btns-container row" wx:if="{{showDetail !== 'true'}}">
+  <view class="btns-container row" wx:if="{{!showDetail}}">
     <view class="shidu column" bindtap="gotoTrial">
       <image src="/images/paid-group/试读.jpg" class="shidu-img" mode="aspectFill"></image>
       <text class="shidu-text text-color2 size-12">试读</text>

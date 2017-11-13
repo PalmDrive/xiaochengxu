@@ -51,7 +51,7 @@
 
 <template is="loading" data="{{loadingStatus}}"></template>
 
-<view class="container" lower-threshold="200" wx:if="{{(didUserPay || trial) && showDetail !== 'true' && loadingStatus === null}}">
+<view class="container" lower-threshold="200" wx:if="{{loadingStatus === null}}">
   <view wx:if="{{loadingStatus !== 'LOADING'}}" class="top-view column">
     <text class=" size-26 text-color1 FZRUIZH_CUJW--GB1-0 top-title">{{albumAttributes.title}}</text>
   </view>

@@ -65,8 +65,7 @@ Page({
       url: '../../images/paid-group/qrcode_qiriji.jpg',
       msg: '关注微信公众号「七日辑」,我们为您推送更新',
       title: '开启推送'
-    },
-    showDetail: false // 只是展示七日辑详情 (购买页面没有底部的bar)
+    }
   },
 
   //关闭首次登陆弹窗
@@ -111,8 +110,7 @@ Page({
           that = this;
 
     this.setData({
-      userRole: Auth.getLocalUserInfo().attributes.role,
-      showDetail: options.showDetail
+      userRole: Auth.getLocalUserInfo().attributes.role
     });
     function init() {
       //console.log(getCurrentPages()[1]);
@@ -282,7 +280,9 @@ Page({
     updates.loadingStatus = null;
     updates.role = role;
     updates.didUserPay = role === 2 || role === 1;
-
+    if (!updates.didUserPay) {
+      updates.trial = true;
+    }
     // 阅读进度
     let logs = res.included[0].userAlbum.data.attributes.logs.days;
     let length = 0;

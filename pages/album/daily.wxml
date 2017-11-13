@@ -6,7 +6,7 @@
       <image src="../../images/survey/日历.png" class="calendar"></image>
       <text class="size-12 text-white ">第{{selectedIndex}}天</text>
     </view>
-    <text class="size-12 text-white" bindtap="goToAlbumDetail">查看详情</text>
+    <text class="size-12 text-white" bindtap="goToAlbumDetail" wx:if="{{!trial}}">查看详情</text>
   </view>
 
   <view class="row top-view2 bg-main-color">
@@ -84,7 +84,6 @@
         <image class="answer-img column" wx:for="{{question.answerPics}}" wx:for-item="pic" wx:key="" src="{{pic.url}}" mode="widthFix"></image>
         <text class="size-14 text-color1">{{question.answerContent}}</text>
       </view>
-
     </view>
   </view>
 
