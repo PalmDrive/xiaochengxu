@@ -410,15 +410,17 @@ function goToAlbum(album) {
   getPurchasedAlbumIdsMap()
     .then(albumIdsMap => {
       wx.hideLoading();
-      if (album.attributes.metaData.programStartAt && albumIdsMap[album.id]) {
-        wx.navigateTo({
-          url: `/pages/album/daily?albumId=${album.id}`
-        });
-      } else {
-        wx.navigateTo({
-          url: `/pages/album/show?id=${album.id}`
-        });
+
+      let url = `/pages/album/buy?id=${album.id}`;
+      if (albumIdsMap[album.id]) {
+        if (album.attributes.metaData.programStartAt) {
+          url = `/pages/album/daily?albumId=${album.id}`;
+        } else {
+          url = `/pages/album/show?id=${album.id}`;
+        }
       }
+      wx.navigateTo({url});
+
     })
     .catch(err => wx.hideLoading());
 }

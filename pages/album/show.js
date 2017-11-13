@@ -22,8 +22,9 @@ const PAID_USER_ROLE = 2;
 Page({
   data: {
     userRole: null,
-    title: null, // group or toutiao name actually
     albumId: null,
+    album: {},
+    albumAttributes: {},
     loadingStatus: 'LOADING', // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
     posts: [],
     didUserPay: false, // 用户是否已经购买
@@ -36,12 +37,9 @@ Page({
     author: {},
     subscribers: [],
     subscribersCount: 0,
-    price: 0,
-    originalPrice: 4.99,
-    picurl: '',
     processing: false,
     editorInfo: {},
-    catalog: [],
+    // catalog: [],
     trial: false,
     role: 0,
     hideAchieveTip: true,
@@ -56,18 +54,19 @@ Page({
     // 用于 choice-coupon
     coupons: null,
     tempAlert: null,
+    payView: false,
     programStartAt: 0,
     selectedIndex: 0,
-    descriptionPicUrl: '',
-    targetAudience: '',
-    buyNotes: '',
-    description: '',
+    // descriptionPicUrl: '',
+    // targetAudience: '',
+    // buyNotes: '',
     toView: '#',
     screenHeight: 667,
-    wxQrcodeUrl: '../../images/paid-group/qrcode_qiriji.jpg',
-    wxQrcodeMsg: '关注微信公众号「七日辑」,我们为您推送更新',
-    wxQrcodeTitle: '开启推送',
-    showDetail: false // 只是展示七日辑详情 (购买页面没有底部的bar)
+    wxQrcode: {
+      url: '../../images/paid-group/qrcode_qiriji.jpg',
+      msg: '关注微信公众号「七日辑」,我们为您推送更新',
+      title: '开启推送'
+    }
   },
 
   //关闭首次登陆弹窗
@@ -112,8 +111,7 @@ Page({
           that = this;
 
     this.setData({
-      userRole: Auth.getLocalUserInfo().attributes.role,
-      showDetail: options.showDetail
+      userRole: Auth.getLocalUserInfo().attributes.role
     });
     function init() {
       //console.log(getCurrentPages()[1]);
@@ -179,11 +177,11 @@ Page({
   },
 
   onShow(e) {
-    if (this.data.title) {
+    if (this.data.albumAttributes.title) {
       util.ga({
         cid: Auth.getLocalUserId(),
         dp: '%2FalbumShowPage_XiaoChengXu',
-        dt: `album_name:${this.data.title},album_id:${this.data.albumId}`
+        dt: `album_name:${this.data.albumAttributes.title},album_id:${this.data.albumId}`
       });
     }
 
@@ -205,7 +203,7 @@ Page({
             cid: Auth.getLocalUserId(),
             ec: `article_title:${medium.attributes.title},article_id:${medium.id}`,
             ea: 'click_article_in_albumShowPage',
-            el: `album_name:${this.data.title},album_id:${this.data.albumId}`,
+            el: `album_name:${this.data.albumAttributes.title},album_id:${this.data.albumId}`,
             ev: 0
           };
     const key = 'day' + (this.data.posts.length - index);
@@ -261,31 +259,31 @@ Page({
       let msg = ' ';
       if (!updates.didUserPay) {
         if (postIndex > 1) {
-          msg = `还未解锁。解锁只需${updates.price/100}元`;
+          msg = `还未解锁。解锁只需${updates.albumAttributes.price/100}元`;
         }
       } else if (!post.meta.unlocked) {
         msg = '还未解锁，一天解锁一课哦';
       }
       return '';
     };
-
+    const attributes = res.data.attributes,
+          metaData = attributes.metaData;
     updates.current = morningPosts.filter(d => d.meta.unlocked).length;
-
-    updates.title = res.data.attributes.title;
-    updates.description = res.data.attributes.description;
-    updates.price = res.data.attributes.price;
-    updates.originalPrice = (res.data.attributes.metaData.originalPrice || 4990) / 100;
-    updates.programStartAt = res.data.attributes.metaData.programStartAt || 0;
-    updates.targetAudience = res.data.attributes.metaData.targetAudience || '目标人群'
-    updates.descriptionPicUrl = res.data.attributes.metaData.descriptionPicUrl || ''
-    updates.buyNotes = res.data.attributes.metaData.buyNotes || ''
-    updates.picurl = res.data.attributes.picurl;
-    updates.editorInfo = res.data.attributes.editorInfo;
-    updates.catalog = res.data.attributes.catalog;
+    updates.album = res.data;
+    updates.albumAttributes = attributes;
+    updates.programStartAt = metaData.programStartAt || 0;
+    // updates.targetAudience = metaData.targetAudience || '目标人群'
+    // updates.descriptionPicUrl = metaData.descriptionPicUrl || ''
+    // updates.buyNotes = metaData.buyNotes || ''
+    // updates.picurl = res.data.attributes.picurl;
+    updates.editorInfo = attributes.editorInfo;
+    // updates.catalog = attributes.catalog;
     updates.loadingStatus = null;
     updates.role = role;
     updates.didUserPay = role === 2 || role === 1;
-
+    if (!updates.didUserPay) {
+      updates.trial = true;
+    }
     // 阅读进度
     let logs = res.included[0].userAlbum.data.attributes.logs.days;
     let length = 0;
@@ -316,17 +314,16 @@ Page({
       Auth.setLocalKey( `${this.data.albumId}_hasShownSubscribedWX`, 'true');
       // 关注过服务号, 弹出微信群二维码
       if (Auth.getLocalKey('isSubscribedWX') === 'true') {
-        const metaData = res.data.attributes.metaData,
-              groupQrcodes = metaData.groupQRCodeMediaIds || [],
+        const groupQrcodes = metaData.groupQrCodeMediaIds || [],
               showWxQrcode = metaData.programStartAt ? true : false,
               newGroupQrcodes = groupQrcodes.filter(item => {
                 return item.active;
               }),
               codeUrl = newGroupQrcodes.length > 0 ?  newGroupQrcodes[0].url : undefined;
         if (showWxQrcode && codeUrl) {
-          updates.wxQrcodeUrl = codeUrl;
-          updates.wxQrcodeMsg = `进群请扫下面的二维码。老师会在群中讲解知识要点、点评每日任务。`;
-          updates.wxQrcodeTitle = `报名成功`;
+          updates.wxQrcode.url = codeUrl;
+          updates.wxQrcode.msg = `进群请扫下面的二维码。老师会在群中讲解知识要点、点评每日任务。`;
+          updates.wxQrcode.title = `报名成功`;
         }
       }
     }
@@ -349,7 +346,7 @@ Page({
     util.ga({
       cid: Auth.getLocalUserId(),
       dp: gaName,
-      dt: `album_name:${this.data.title},album_id:${this.data.albumId}`
+      dt: `album_name:${this.data.albumAttributes.title},album_id:${this.data.albumId}`
     });
   },
 
@@ -357,7 +354,7 @@ Page({
    * 分享给好友 事件
    */
   onShareAppMessage: function () {
-    const title = this.data.title;
+    const title = this.data.albumAttributes.title;
     return {
       title: `七日辑: ${title}`
     };
@@ -416,7 +413,7 @@ Page({
   },
 
   buy() {
-    const price = this.data.coupon ? (this.data.price - this.data.coupon.quota) : this.data.price;
+    const price = this.data.coupon ? (this.data.albumAttributes.price - this.data.coupon.quota) : this.data.albumAttributes.price;
 
     // 使用完优惠券是否是0元
     if (price <= 0) {
@@ -462,7 +459,7 @@ Page({
       data: {
         data: {
           totalFee: price,
-          name: this.data.title,
+          name: this.data.albumAttributes.title,
           openid: attrs.wxOpenId,
           productId: this.data.albumId,
           productType: 'Album'
@@ -493,14 +490,8 @@ Page({
             addAlbumId(this.data.albumId) // important, update the _albumIdsMap cache
           ])
             .then(() => {
-              if (this.data.programStartAt) {
-                wx.redirectTo({
-                  url: `/pages/album/daily?albumId=${this.data.albumId}`
-                });
-              } else {
-                loadData(this.data.albumId)
-                  .then(this._onLoadSuccess);
-              }
+              loadData(this.data.albumId)
+                .then(this._onLoadSuccess);
             });
         };
         params.fail = (err) => {
@@ -552,37 +543,6 @@ Page({
     return null;
   },
 
-  gotoTrial() {
-    const userId = this.data.albumId;
-    wx.navigateTo({
-      url: `../album/show?id=${userId}&trial=${true}`
-    });
-  },
-
-  gotoFree() {
-    wx.navigateTo({
-      url: `../album/free?id=${this.data.albumId}&imgUrl=${this.data.picurl}`
-    });
-  },
-
-  _getFromId(e) {
-    const tap = this[e.currentTarget.dataset.tap],
-          formId = e.detail.formId;
-
-    request({
-      method: 'POST',
-      url: `${baseUrl}/user-album/formid`,
-      data: {
-        userId: Auth.getLocalUserId(),
-        albumId: this.data.albumId,
-        formid: formId
-      }
-    }).then((d) => {
-      // wx.showToast({
-      //   title: formId || 'null'
-      // })
-    });
-  },
   closeAlert(options) {
     if (options.currentTarget.dataset.type === 'guide') {
       const showed = Auth.getLocalShowed();
@@ -687,6 +647,7 @@ Page({
   tempAlertGoList: function () {
     this.data.tempAlert = false;
   },
+
   changeTab: function(e) {
     const type = e.currentTarget.dataset.type;
     if (type === 'category') {
@@ -700,5 +661,36 @@ Page({
         selectedIndex: 0
       });
     }
-  }
+  },
+  gotoTrial() {
+    const userId = this.data.albumId;
+    wx.navigateTo({
+      url: `../album/show?id=${userId}&trial=${true}`
+    });
+  },
+
+  gotoFree() {
+    wx.navigateTo({
+      url: `../album/free?id=${this.data.albumId}&imgUrl=${this.data.albumAttributes.picurl}`
+    });
+  },
+
+  _getFromId(e) {
+    const tap = this[e.currentTarget.dataset.tap],
+          formId = e.detail.formId;
+
+    request({
+      method: 'POST',
+      url: `${baseUrl}/user-album/formid`,
+      data: {
+        userId: Auth.getLocalUserId(),
+        albumId: this.data.albumId,
+        formid: formId
+      }
+    }).then((d) => {
+      // wx.showToast({
+      //   title: formId || 'null'
+      // })
+    });
+  },
 })
