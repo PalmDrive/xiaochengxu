@@ -18,6 +18,9 @@ Page({
     survey: {},
     media: [],
     questionList: [],
+    questionTextList: [],
+    questionSelectList: [],
+    questionSelectCompleted: false,// 单选题是否都完成了
     unlockedDays: 1,
     userSurveyAnswersCountMsg: '',
     answerList: [],
@@ -114,7 +117,7 @@ Page({
       const role = res.data.relationships.userAlbum.data.attributes.role;
       updates.didUserPay = role === 2 || role === 1;
 
-      /*  */
+      /* 购买成功后弹窗 */
       const flag =  Auth.getLocalKey( `${albumId}_hasShownSubscribedWX`) !== 'true';
       if (updates.didUserPay && flag) {
         updates.qrcodeModalHidden = false;
@@ -137,11 +140,18 @@ Page({
         }
       }
 
+      let media = postRelationships.media ? postRelationships.media.data : [];
+      media = media.map(medium => {
+        let duration = medium.attributes.duration || 0;
+        medium.attributes.durationString = util.convertTime(duration);
+        return medium;
+      });
+
       const updatesData = {
         albumAttributes,
         editorInfo: albumAttributes.editorInfo,
         post,
-        media: postRelationships.media ? postRelationships.media.data : [],
+        media,
         selectedIndex: post.attributes && post.attributes.dayIndex,
         dayList: res.meta.checkinStatus,
         unlockedDays: res.meta.unlockedDays,
@@ -162,33 +172,54 @@ Page({
     request({
       url: `${app.globalData.apiBase}/morning-posts/${postId}/survey?albumId=${albumId}`,
     }).then(res => {
-      const count = res.meta ? res.meta.userSurveyAnswersCount : 0;
-      let msg = `已提交${count}人`;
-      if (count === 0) {
-        msg = '成为第1个提交任务的人吧';
-      }
 
       let questionList = res.included ? res.included.filter(res => res.type === 'SurveyQuestions') : [];
       let answerList = res.included ? res.included.filter(res => res.type === 'userSurveyAnswers') : [];
 
-      if (answerList.length > 0 ) {
+      let questionTextList = questionList.filter(res => res.attributes.questionType !== 'multi-select' && res.attributes.questionType !== 'single-select');
+
+      questionTextList = questionTextList.map(res => {
+        res.attributes.completed = true;
+        return res;
+      });
+
+      if (answerList.length > 0) {
         answerList = answerList[0].attributes.answers;
-        questionList.map(res => {
-          answerList.filter(answer => {
-             if (answer.surveyQuestionId === res.id) {
-               res.answerPics = answer.pics;
-               res.answerContent = answer.content;
-             }
-          })
-          return res;
-        });
       }
+      let selectedAnwserList = [];
+      let questionSelectList = questionList.filter(res =>{
+        if (res.attributes.questionType === 'multi-select' || res.attributes.questionType === 'single-select') {
+           res.attributes.answer = answerList.filter(answer => { // 拿到已选择的答案列表
+
+            if (answer.surveyQuestionId === res.id) {
+
+              res.attributes.options = res.attributes.options.map(option => {
+
+                answer.content.map(ans => {
+                  if (option.value === ans.value) { // question.options 里选择的答案selected = true
+                    option.selected = true;
+                  }
+                })
+                return option;
+              });
+              return answer;
+            }
+          });
+          return res;
+        }
+      });
+
+      let questionSelectCompletedList = questionSelectList.filter(res => {
+        res.attributes.completed ===false;
+        return res;
+      });
 
       this.setData({
         survey: res.data,
         questionList,
-        answerList,
-        userSurveyAnswersCountMsg: msg
+        questionTextList,
+        questionSelectList,
+        questionSelectCompleted: questionSelectCompletedList.length > 0
       });
     });
   },
@@ -241,13 +272,26 @@ Page({
 
   goToAlbumDetail: function(event) {
     wx.navigateTo({
-      url: `./show?showDetail=true&id=${albumId}`
+      url: `./buy?showDetail=true&id=${albumId}`
     });
   },
 
   goToSurveyDetail: function(event) {
     wx.navigateTo({
       url: `../survey/edit?postId=${postId}&albumId=${albumId}`
+    });
+  },
+
+  goToTextQuestion: function(event) {
+    const question = event.currentTarget.dataset.question;
+    wx.navigateTo({
+      url: `../survey/question?postId=${postId}&albumId=${albumId}&question=${question}`
+    });
+  },
+
+  goToSelectQuestion: function(event) {
+    wx.navigateTo({
+      url: `../survey/select-question?surveyId=${this.data.survey.id}&questionList=${JSON.stringify(this.data.questionSelectList)}&qindex=0`
     });
   },
 

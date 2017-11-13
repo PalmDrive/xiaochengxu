@@ -30,6 +30,7 @@
     "pages/album/daily",
     "pages/survey/edit",
     "pages/survey/text-answer",
+    "pages/survey/select-question",
     "pages/topics/select-topics"
   ],
   "window":{

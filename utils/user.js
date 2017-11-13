@@ -2,7 +2,20 @@ const {request} = require('./request'),
       Auth = require('auth');
 
 let _albumIdsMap = null,
-    _albums = null;
+    _albums = null,
+
+    /*
+     * index by ${postId}_${albumId},
+     * the value is:
+     * {
+         id, attributes: {}, type: 'surveys',
+         relationships: {
+           surveyQuestions: {data: [{id, attributes: {}}, ]},
+           userSurveyAnswer: {data: {id, attributes: {}}} // optional
+         }
+       }
+     */ 
+    _surveysMap = {};
 
 function getPurchasedAlbumIdsMap(force) {
   const app = getApp() || this,
@@ -40,8 +53,39 @@ function addAlbumId(id) {
     .then(map => map[id] = 1);
 }
 
+function getSurveyAndAnswers(postId, albumId, force) {
+  const app = getApp(),
+        url = `${app.globalData.apiBase}/morning-posts/${postId}/survey`,
+        key = `${postId}_${albumId}`;
+
+  if (_surveysMap[key] && !force) {
+    return new Promise(resolve => resolve(_surveysMap[key]));
+  } else {
+    return request({
+      url,
+      data: {albumId}
+    })
+    .then(res => {
+      const data = res.data;
+      // Add question attributes from included data
+      data.relationships.surveyQuestions.data.forEach(q => {
+        const question = res.included.filter(d => d.type === 'SurveyQuestions' && d.id === q.id)[0];
+        q.attributes = question.attributes;
+      });
+      const userSurveyAnswer = res.included.filter(d => d.type === 'userSurveyAnswers')[0];
+      if (userSurveyAnswer) {
+        data.relationships.userSurveyAnswer = {data: userSurveyAnswer};
+      }
+      // add to _surveysMap
+      _surveysMap[key] = data;
+      return data;
+    });
+  }
+}
+
 module.exports = {
   getPurchasedAlbums,
   getPurchasedAlbumIdsMap,
-  addAlbumId
+  addAlbumId,
+  getSurveyAndAnswers
 }

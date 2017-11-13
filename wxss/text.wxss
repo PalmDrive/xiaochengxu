@@ -50,6 +50,10 @@
   color: #0090E7
 }
 
+.main-color-green {
+  color: #42BD56
+}
+
 .bg-main-color {
   background: #42BD56;
 }

@@ -54,43 +54,47 @@
 
     <view class="column bg-gray" wx:for="{{media}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}" bindtap="goToMedium">
       <view class="row method-row">
-        <image src="../../images/survey/{{medium.attributes.mediumType}}.png" class="method-icon"></image>
-        <text class="size-16 text-color2 medium-title">{{medium.attributes.title}}</text>
+        <view class="row method-row-innner">
+          <image src="../../images/survey/{{medium.attributes.mediumType}}.png" class="method-icon"></image>
+          <text class="size-16 text-color2 medium-title">{{medium.attributes.title}}</text>
+        </view>
+        <text class="size-9 look-detail">查看详情</text>
       </view>
       <view class="column method-content">
         <text class="size-12 text-color3 method-row summary" wx:if="{{medium.attributes.mediumType === 'article'}}">{{medium.attributes.summary}}</text>
-        <text class="size-9 look-detail ">查看详情</text>
+        <text class="size-9" wx:if="{{medium.attributes.mediumType !== 'article'}}">{{medium.attributes.durationString}}</text>
       </view>
     </view>
   </view>
   <view class="line-view"></view>
 
-  <!-- 任务提交 -->
-  <text class="size-12 text-white task-method-title task-title bg-main-color">任务提交</text>
+  <!-- 我的任务 -->
+  <text class="size-12 text-white task-method-title task-title bg-main-color">我的任务</text>
   <view class="section column">
-    <text class="size-12 text-color3 second-tip">{{userSurveyAnswersCountMsg}}</text>
-
-    <!-- 任务提交 -->
-    <view class="column center-view" wx:if="{{answerList.length === 0}}">
-      <image src="../../images/survey/宝宝.png" class="baby-big"></image>
-      <text class="size-12 text-white bg-main-color commit-button" bindtap="goToSurveyDetail">提交我的任务</text>
+    <text class="size-12 text-color3 second-tip">任务来袭, 等你闯关</text>
+    <view class="column bg-gray" bindtap="goToSelectQuestion" wx:if="{{questionSelectList.length > 0}}">
+      <view class="row method-row">
+        <view class="row method-row-innner">
+          <image src="../../images/survey/选择题{{questionSelectCompleted ? '完成' : ''}}.png" class="question-icon"></image>
+          <text class="size-16 text-color2 medium-title">选择题</text>
+        </view>
+        <text class="size-9 look-detail" style="color: {{questionSelectCompleted ? '#B0B0B0' : '#4A90E2'}}">{{questionSelectCompleted ? '已完成' : '查看详情'}}</text>
+      </view>
+      <view class="column question-content">
+        <text class="size-12 text-color3 method-row summary">小试牛刀</text>
+      </view>
     </view>
 
-    <!-- 答案显示 -->
-    <view class="column answer-view" wx:if="{{answerList.length > 0}}">
-      <view class="row userinfo" wx:if="{{userInfo}}">
-        <image class="userinfo-avatar" src="{{userInfo.profilePicUrl}}" background-size="cover"></image>
-        <text class="size-14">{{userInfo.wxUsername}}</text>
-      </view>
-
-      <view class="question-view" wx:for="{{questionList}}" wx:for-item="question" wx:key="">
-        <view class="row question-title">
-          <text class="size-14 text-color3">{{index + 1}}、</text>
-          <text class="size-14 text-color3 question-title1">{{question.attributes.content}}</text>
+    <view class="column bg-gray" wx:for="{{questionTextList}}" wx:for-item="question" wx:key="" data-question="{{question}}" data-idx="{{index}}" bindtap="goToTextQuestion">
+      <view class="row method-row">
+        <view class="row method-row-innner">
+          <image src="../../images/survey/应用题{{question.attributes.completed ? '完成' : '完成'}}.png" class="question-icon"></image>
+          <text class="size-16 text-color2 medium-title">{{question.attributes.questionType === 'desc' ? '思考题（无需提交答案)' : '问答题'}}</text>
         </view>
-
-        <image class="answer-img column" wx:for="{{question.answerPics}}" wx:for-item="pic" wx:key="" src="{{pic.url}}" mode="widthFix"></image>
-        <text class="size-14 text-color1">{{question.answerContent}}</text>
+        <text class="size-9 look-detail" style="color: {{question.attributes.completed ? '#B0B0B0' : '#4A90E2'}}">{{question.attributes.questionType === 'desc' ? '' : (question.attributes.completed ? '已完成' : '查看详情')}}</text>
+      </view>
+      <view class="column question-content">
+        <text class="size-12 text-color3 method-row summary">{{question.attributes.content}}</text>
       </view>
     </view>
   </view>
