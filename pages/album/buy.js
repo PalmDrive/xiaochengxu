@@ -329,8 +329,9 @@ Page({
                   url: `/pages/album/daily?albumId=${this.data.albumId}`
                 });
               } else {
-                loadData(this.data.albumId)
-                  .then(this._onLoadSuccess);
+                wx.redirectTo({
+                  url: `/pages/album/show?id=${this.data.albumId}`
+                });
               }
             });
         };

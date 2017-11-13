@@ -44,7 +44,7 @@
 <view class="pay" wx:if="{{payView}}">
   <view bindtap="hidePay" class="mask"></view>
   <view class="pay-container" bindtap="none">
-    <view class="size-22">{{title}}</view>
+    <view class="size-22">{{albumAttributes.title}}</view>
     <!-- <view class="remarks size-12">备注：</view> -->
     <view class="line"></view>
     <text class="text size-16">优惠券</text>
@@ -55,7 +55,7 @@
     <view wx:else class="size-16" style="float: right;color: #B0B0B9;">没有可以抵用的优惠券</view>
     <view class="line"></view>
     <text class="text size-16">支付金额</text>
-    <text class="size-18" style="float: right;">￥{{(coupon ? ((price - coupon.quota) > 0 ? (price - coupon.quota) : 0) : price) / 100}}</text>
+    <text class="size-18" style="float: right;">￥{{(coupon ? ((albumAttributes.price - coupon.quota) > 0 ? (albumAttributes.price - coupon.quota) : 0) : albumAttributes.price) / 100}}</text>
     <view class="line"></view>
     <button bindtap="buy" disabled="{{processing}}" loading="{{processing}}">微信支付</button>
   </view>

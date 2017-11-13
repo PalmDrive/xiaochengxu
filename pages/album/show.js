@@ -490,14 +490,8 @@ Page({
             addAlbumId(this.data.albumId) // important, update the _albumIdsMap cache
           ])
             .then(() => {
-              if (this.data.programStartAt) {
-                wx.redirectTo({
-                  url: `/pages/album/daily?albumId=${this.data.albumId}`
-                });
-              } else {
-                loadData(this.data.albumId)
-                  .then(this._onLoadSuccess);
-              }
+              loadData(this.data.albumId)
+                .then(this._onLoadSuccess);
             });
         };
         params.fail = (err) => {

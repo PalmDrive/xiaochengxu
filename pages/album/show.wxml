@@ -117,7 +117,7 @@
   <template is="loading" data="{{loadingStatus}}"></template>
 </view>
 
-!-- shareAlert -->
+<!-- shareAlert -->
 <view class="shareAlert" wx:if="{{shareAlert && !didUserPay && loadingStatus !== 'LOADING'}}">
   <view wx:if="{{shareAlert.alert}}" class="masked">
     <view class="alert">
