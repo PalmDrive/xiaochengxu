@@ -241,7 +241,7 @@ Page({
 
   goToAlbumDetail: function(event) {
     wx.navigateTo({
-      url: `./show?showDetail=true&id=${albumId}`
+      url: `./buy?showDetail=true&id=${albumId}`
     });
   },
 
