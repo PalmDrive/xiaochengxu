@@ -317,7 +317,7 @@ Page({
       // 关注过服务号, 弹出微信群二维码
       if (Auth.getLocalKey('isSubscribedWX') === 'true') {
         const metaData = res.data.attributes.metaData,
-              groupQrcodes = metaData.groupQrCodeMediaIds || [],
+              groupQrcodes = metaData.groupQRCodeMediaIds || [],
               showWxQrcode = metaData.programStartAt ? true : false,
               newGroupQrcodes = groupQrcodes.filter(item => {
                 return item.active;
