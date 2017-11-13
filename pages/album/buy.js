@@ -388,7 +388,7 @@ Page({
     let url = `../album/show?id=${albumId}&trial=${true}`;
 
     if (this.data.album.attributes.metaData.programStartAt) {
-      url = `../album/daily?albumId=${albumId}&trial=${true}`;
+      url = `../album/daily?albumId=${albumId}&trial=true`;
     }
     wx.navigateTo({url});
   },

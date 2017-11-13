@@ -31,7 +31,7 @@ Page({
     })
     albumId = options.albumId;
     postId = options.postId;
-    trial = options.trial;
+    this.setData({trial: options.trial === 'true' ? true : false});
     Auth.getLocalUserId() && this._load();
   },
 
@@ -43,6 +43,7 @@ Page({
           data = {};
     if (albumId) data.albumId = albumId;
     if (postId) data.postId = postId;
+    if (this.data.trial) data.isTrial = true;
     request({
       url, data
     }).then(res => {

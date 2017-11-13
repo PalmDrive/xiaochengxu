@@ -548,37 +548,6 @@ Page({
     return null;
   },
 
-  gotoTrial() {
-    const userId = this.data.albumId;
-    wx.navigateTo({
-      url: `../album/show?id=${userId}&trial=${true}`
-    });
-  },
-
-  gotoFree() {
-    wx.navigateTo({
-      url: `../album/free?id=${this.data.albumId}&imgUrl=${this.data.albumAttributes.picurl}`
-    });
-  },
-
-  _getFromId(e) {
-    const tap = this[e.currentTarget.dataset.tap],
-          formId = e.detail.formId;
-
-    request({
-      method: 'POST',
-      url: `${baseUrl}/user-album/formid`,
-      data: {
-        userId: Auth.getLocalUserId(),
-        albumId: this.data.albumId,
-        formid: formId
-      }
-    }).then((d) => {
-      // wx.showToast({
-      //   title: formId || 'null'
-      // })
-    });
-  },
   closeAlert(options) {
     if (options.currentTarget.dataset.type === 'guide') {
       const showed = Auth.getLocalShowed();
@@ -683,6 +652,7 @@ Page({
   tempAlertGoList: function () {
     this.data.tempAlert = false;
   },
+
   changeTab: function(e) {
     const type = e.currentTarget.dataset.type;
     if (type === 'category') {
@@ -696,5 +666,36 @@ Page({
         selectedIndex: 0
       });
     }
-  }
+  },
+  gotoTrial() {
+    const userId = this.data.albumId;
+    wx.navigateTo({
+      url: `../album/show?id=${userId}&trial=${true}`
+    });
+  },
+
+  gotoFree() {
+    wx.navigateTo({
+      url: `../album/free?id=${this.data.albumId}&imgUrl=${this.data.albumAttributes.picurl}`
+    });
+  },
+
+  _getFromId(e) {
+    const tap = this[e.currentTarget.dataset.tap],
+          formId = e.detail.formId;
+
+    request({
+      method: 'POST',
+      url: `${baseUrl}/user-album/formid`,
+      data: {
+        userId: Auth.getLocalUserId(),
+        albumId: this.data.albumId,
+        formid: formId
+      }
+    }).then((d) => {
+      // wx.showToast({
+      //   title: formId || 'null'
+      // })
+    });
+  },
 })

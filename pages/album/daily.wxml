@@ -1,3 +1,5 @@
+<import src="../../templates/prompt.wxml"/>
+
 <view class="container column">
 
   <!-- 顶部 绿色 -->
@@ -17,10 +19,7 @@
   </view>
 
   <!-- 任务 -->
-  <text class="size-12 text-white task-title bg-main-color">任务</text>
   <view class="section column">
-
-    <text class="size-12 text-color3">下面是今天的任务，理解任务后记得阅读攻略</text>
 
     <view class="row task-row1">
       <view class="row">
@@ -30,12 +29,7 @@
     <!--  <text class="size-12 text-color2 ">2017.09.12</text>-->
     </view>
 
-    <text class="size-14 text-color2 task-row2">{{survey.attributes.description}}</text>
-
-    <view class="row bg-gray" wx:for="{{questionList}}" wx:for-item="question" wx:key="">
-      <text class="size-14 text-white bg-main-color task-number">{{index + 1}}</text>
-      <text class="size-14 text-color1 pingfang-medium">{{question.attributes.content}}</text>
-    </view>
+    <text class="size-14 text-color2">{{survey.attributes.description}}</text>
   </view>
   <view class="line-view"></view>
 
@@ -86,5 +80,49 @@
       </view>
     </view>
   </view>
+  <!-- 购买按钮 -->
+  <text bindtap="showPay" class="btn-buy btns-container">立刻购买 {{albumAttributes.price / 100}}元</text>
+
+
+  <!-- shareAlert -->
+  <view class="shareAlert" wx:if="{{shareAlert && !didUserPay && loadingStatus !== 'LOADING'}}">
+    <view wx:if="{{shareAlert.alert}}" class="masked">
+      <view class="alert">
+        <view class="container">
+          <text class="title size-22">看来你和{{shareAlert && shareAlert.username}}志同道合</text>
+          <text class="text size-16">
+          “集齐5人免费看”活动全场适用，快来逛逛吧！</text>
+          <button bindtap="showGuide" >立刻参加</button>
+          <image class="close-button" src="/images/close-white.png" bindtap="closeAlert" ></image>
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{shareAlert.guide}}" class="guide">
+      <image mode="widthFix" src="https://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/guide.png"></image>
+      <button data-type="guide" bindtap="closeAlert">我知道了</button>
+    </view>
+  </view>
+  <!-- 支付页面 -->
+  <view class="pay" wx:if="{{payView}}">
+    <view bindtap="hidePay" class="mask"></view>
+    <view class="pay-container" bindtap="none">
+      <view class="size-22">{{title}}</view>
+      <!-- <view class="remarks size-12">备注：</view> -->
+      <view class="line"></view>
+      <text class="text size-16">优惠券</text>
+      <view wx:if="{{coupons.length !== 0}}" bindtap="gotoChoiceCoupon" style="float: right;">
+        <text wx:if="{{(coupons.length !== 0) && !coupon}}" class="size-12" style="background: #DF0A20;border-radius: 3px;color: #fff;height: 21px;width: 44px;display: inline-block;line-height: 21px;text-align: center;vertical-align: middle;margin-right: 5px;">有卡券</text>
+        <text class="size-16">{{couponIndex === -1 ? '还未选择优惠卡券' : coupon.name}}</text>
+      </view>
+      <view wx:else class="size-16" style="float: right;color: #B0B0B9;">没有可以抵用的优惠券</view>
+      <view class="line"></view>
+      <text class="text size-16">支付金额</text>
+      <text class="size-18" style="float: right;">￥{{(coupon ? ((price - coupon.quota) > 0 ? (price - coupon.quota) : 0) : price) / 100}}</text>
+      <view class="line"></view>
+      <button bindtap="buy" disabled="{{processing}}" loading="{{processing}}">微信支付</button>
+    </view>
+  </view>
+
+  <template is="prompt" data="{{tempAlert}}"></template>
 
 </view>
