@@ -2,7 +2,8 @@ const app = getApp(),
     util = require('../../utils/util'),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
-    baseUrl = app.globalData.apiBase;
+    baseUrl = app.globalData.apiBase,
+    {addAlbumId} = require('../../utils/user');
 
 let albumId = undefined,
     postId = undefined;
@@ -127,14 +128,16 @@ Page({
                 }),
                 codeUrl = newGroupQrcodes.length > 0 ?  newGroupQrcodes[0].url : undefined;
           if (showWxQrcode && codeUrl) {
-            updates.wxQrcode.url = codeUrl;
-            updates.wxQrcode.msg = `进群请扫下面的二维码。老师会在群中讲解知识要点、点评每日任务。`;
-            updates.wxQrcode.title = `报名成功`;
+            updates.wxQrcode = {
+              url: codeUrl,
+              msg: `进群请扫下面的二维码。老师会在群中讲解知识要点、点评每日任务。`,
+              title: `报名成功`
+            };
           }
         }
       }
 
-      this.setData({
+      const updatesData = {
         albumAttributes,
         editorInfo: albumAttributes.editorInfo,
         post,
@@ -142,8 +145,10 @@ Page({
         selectedIndex: post.attributes && post.attributes.dayIndex,
         dayList: res.meta.checkinStatus,
         unlockedDays: res.meta.unlockedDays,
-        updates
-      });
+        ...updates
+      };
+
+      this.setData(updatesData);
 
       // 加载任务
       this._loadSurvey();

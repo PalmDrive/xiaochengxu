@@ -95,7 +95,7 @@ Page({
         }
 
         if (d.meta) {
-          Auth.setLocalKey( `isSubscribedWX`, d.meta.isSubscribedWX + "")
+          Auth.setLocalKey(`isSubscribedWX`, String(d.meta.isSubscribedWX));
         }
       })
     }
@@ -311,7 +311,7 @@ Page({
     const flag =  Auth.getLocalKey( `${this.data.albumId}_hasShownSubscribedWX`) !== 'true';
     if (updates.didUserPay && flag) {
       updates.qrcodeModalHidden = false;
-      Auth.setLocalKey( `${this.data.albumId}_hasShownSubscribedWX`, 'true');
+      Auth.setLocalKey(`${this.data.albumId}_hasShownSubscribedWX`, 'true');
       // 关注过服务号, 弹出微信群二维码
       if (Auth.getLocalKey('isSubscribedWX') === 'true') {
         const groupQrcodes = metaData.groupQrCodeMediaIds || [],
@@ -321,9 +321,11 @@ Page({
               }),
               codeUrl = newGroupQrcodes.length > 0 ?  newGroupQrcodes[0].url : undefined;
         if (showWxQrcode && codeUrl) {
-          updates.wxQrcode.url = codeUrl;
-          updates.wxQrcode.msg = `进群请扫下面的二维码。老师会在群中讲解知识要点、点评每日任务。`;
-          updates.wxQrcode.title = `报名成功`;
+          updates.wxQrcode = {
+            url: codeUrl,
+            msg: `进群请扫下面的二维码。老师会在群中讲解知识要点、点评每日任务。`,
+            title: `报名成功`
+          };
         }
       }
     }
