@@ -30,7 +30,14 @@ Page({
     coupons: null,
     tempAlert: null,
     payView: false,
-    processing: false
+    processing: false,
+    wxQrcode: {
+      url: '../../images/paid-group/qrcode_qiriji.jpg',
+      msg: '关注微信公众号「七日辑」,我们为您推送更新',
+      title: '开启推送'
+    },
+    qrcodeModalHidden: true,
+    didUserPay: false
   },
 
   onLoad(options) {
@@ -96,10 +103,37 @@ Page({
       url, data
     }).then(res => {
       const albumAttributes = res.data.attributes || {},
+            metaData = albumAttributes.metaData || {},
             post = res.data.relationships.post.data || {},
             postRelationships = post.relationships || {};
       albumId = res.data.id;
       postId = post.id;
+
+      let updates = {};
+      const role = res.data.relationships.userAlbum.data.attributes.role;
+      updates.didUserPay = role === 2 || role === 1;
+
+      /*  */
+      const flag =  Auth.getLocalKey( `${albumId}_hasShownSubscribedWX`) !== 'true';
+      if (updates.didUserPay && flag) {
+        updates.qrcodeModalHidden = false;
+        Auth.setLocalKey( `${albumId}_hasShownSubscribedWX`, 'true');
+        // 关注过服务号, 弹出微信群二维码
+        if (Auth.getLocalKey('isSubscribedWX') === 'true') {
+          const groupQrcodes = metaData.groupQrCodeMediaIds || [],
+                showWxQrcode = metaData.programStartAt ? true : false,
+                newGroupQrcodes = groupQrcodes.filter(item => {
+                  return item.active;
+                }),
+                codeUrl = newGroupQrcodes.length > 0 ?  newGroupQrcodes[0].url : undefined;
+          if (showWxQrcode && codeUrl) {
+            updates.wxQrcode.url = codeUrl;
+            updates.wxQrcode.msg = `进群请扫下面的二维码。老师会在群中讲解知识要点、点评每日任务。`;
+            updates.wxQrcode.title = `报名成功`;
+          }
+        }
+      }
+
       this.setData({
         albumAttributes,
         editorInfo: albumAttributes.editorInfo,
@@ -107,7 +141,8 @@ Page({
         media: postRelationships.media ? postRelationships.media.data : [],
         selectedIndex: post.attributes && post.attributes.dayIndex,
         dayList: res.meta.checkinStatus,
-        unlockedDays: res.meta.unlockedDays
+        unlockedDays: res.meta.unlockedDays,
+        updates
       });
 
       // 加载任务
@@ -211,239 +246,243 @@ Page({
     });
   },
 
+  toggleqrcodeModalHidden() {
+    const qrcodeModalHidden = !this.data.qrcodeModalHidden;
+    this.setData({qrcodeModalHidden});
+  },
 
-    buy() {
-      const price = this.data.coupon ? (this.data.albumAttributes.price - this.data.coupon.quota) : this.data.albumAttributes.price;
+  buy() {
+    const price = this.data.coupon ? (this.data.albumAttributes.price - this.data.coupon.quota) : this.data.albumAttributes.price;
 
-      // 使用完优惠券是否是0元
-      if (price <= 0) {
-        return this._useCoupon()
-        .then(res => {
-          return Promise.all([
-            this._unlockAlubm(),
-            addAlbumId(albumId) // important, update the _albumIdsMap cache
-          ]);
-        })
-        .then(res => {
-          if (this.data.albumAttributes.metaData.programStartAt) {
-            wx.redirectTo({
-              url: `/pages/album/daily?albumId=${albumId}`
-            });
-          } else {
-            loadData(albumId)
-              .then(this._onLoadSuccess)
-              .then(res => {
-                this.setData({
-                  trial: false,
-                  processing: false,
-                  payView: false,
-                });
-              });
-          }
-        });
-      }
-
-      const url = `${baseUrl}/wechat/pay/unifiedorder?name=days7`,
-            userInfo = Auth.getLocalUserInfo(),
-            attrs = userInfo.attributes || {};
-
-      if (this.data.processing) {
-        return;
-      }
-
-      this.setData({processing: true});
-
-      request({
-        method: 'POST',
-        url,
-        data: {
-          data: {
-            totalFee: price,
-            name: this.data.albumAttributes.title,
-            openid: attrs.wxOpenId,
-            productId: albumId,
-            productType: 'Album'
-          }
-        }
+    // 使用完优惠券是否是0元
+    if (price <= 0) {
+      return this._useCoupon()
+      .then(res => {
+        return Promise.all([
+          this._unlockAlubm(),
+          addAlbumId(albumId) // important, update the _albumIdsMap cache
+        ]);
       })
-        .then(data => {
-          const params = {
-            timeStamp: data.data.timeStamp,
-            nonceStr: data.data.nonce_str,
-            package: `prepay_id=${data.data.prepay_id}`,
-            signType: 'MD5',
-            paySign: data.data.paySign
-          };
-
-          // console.log('params:');
-          // console.log(params);
-
-          params.success = (res) => {
-            console.log('wx requestPayment success');
-            console.log(res);
-            this.setData({
-              trial: false,
-              payView: false
-            });
-            Promise.all([
-              this.data.coupon && this._useCoupon(),
-              addAlbumId(albumId) // important, update the _albumIdsMap cache
-            ])
-              .then(() => {
-                this._load();
-              });
-          };
-          params.fail = (err) => {
-            console.log('wx requestPayment fail');
-            console.log(err);
-          };
-          params.complete = () => {
-            console.log('wx requestPayment complete');
-            this.setData({processing: false});
-          };
-          wx.requestPayment(params);
-        })
-        .catch(err => {
-          console.log('wechat unifiedorder request err:');
-          console.log(err);
-          wx.showToast({
-            title: '哎呀，出错了',
-            icon: 'loading'
-          });
-          this.setData({processing: false});
-        });
-    },
-
-    // 显示支付的 底部 弹窗
-    showPay () {
-      this.findCoupon()
-      .then(d => {
-        if (this.data.coupons.length > 0) {
-          this.setData({
-            payView: true,
-            couponIndex: 0,
-            coupon: this.data.coupons[0]
+      .then(res => {
+        if (this.data.albumAttributes.metaData.programStartAt) {
+          wx.redirectTo({
+            url: `/pages/album/daily?albumId=${albumId}`
           });
         } else {
-          this.setData({
-            payView: true
-          });
+          loadData(albumId)
+            .then(this._onLoadSuccess)
+            .then(res => {
+              this.setData({
+                trial: false,
+                processing: false,
+                payView: false,
+              });
+            });
         }
       });
-    },
-    // 隐藏 支付页面
-    hidePay () {
-      this.setData({
-        payView: false
-      });
-    },
-    none (event) {
-      console.log(event);
-      return null;
-    },
+    }
 
-    closeAlert(options) {
-      if (options.currentTarget.dataset.type === 'guide') {
-        const showed = Auth.getLocalShowed();
-        showed.freeGuide = true
-        Auth.setLocalShowed(showed);
+    const url = `${baseUrl}/wechat/pay/unifiedorder?name=days7`,
+          userInfo = Auth.getLocalUserInfo(),
+          attrs = userInfo.attributes || {};
+
+    if (this.data.processing) {
+      return;
+    }
+
+    this.setData({processing: true});
+
+    request({
+      method: 'POST',
+      url,
+      data: {
+        data: {
+          totalFee: price,
+          name: this.data.albumAttributes.title,
+          openid: attrs.wxOpenId,
+          productId: albumId,
+          productType: 'Album'
+        }
       }
+    })
+      .then(data => {
+        const params = {
+          timeStamp: data.data.timeStamp,
+          nonceStr: data.data.nonce_str,
+          package: `prepay_id=${data.data.prepay_id}`,
+          signType: 'MD5',
+          paySign: data.data.paySign
+        };
+
+        // console.log('params:');
+        // console.log(params);
+
+        params.success = (res) => {
+          console.log('wx requestPayment success');
+          console.log(res);
+          this.setData({
+            trial: false,
+            payView: false
+          });
+          Promise.all([
+            this.data.coupon && this._useCoupon(),
+            addAlbumId(albumId) // important, update the _albumIdsMap cache
+          ])
+            .then(() => {
+              this._load();
+            });
+        };
+        params.fail = (err) => {
+          console.log('wx requestPayment fail');
+          console.log(err);
+        };
+        params.complete = () => {
+          console.log('wx requestPayment complete');
+          this.setData({processing: false});
+        };
+        wx.requestPayment(params);
+      })
+      .catch(err => {
+        console.log('wechat unifiedorder request err:');
+        console.log(err);
+        wx.showToast({
+          title: '哎呀，出错了',
+          icon: 'loading'
+        });
+        this.setData({processing: false});
+      });
+  },
+
+  // 显示支付的 底部 弹窗
+  showPay () {
+    this.findCoupon()
+    .then(d => {
+      if (this.data.coupons.length > 0) {
+        this.setData({
+          payView: true,
+          couponIndex: 0,
+          coupon: this.data.coupons[0]
+        });
+      } else {
+        this.setData({
+          payView: true
+        });
+      }
+    });
+  },
+  // 隐藏 支付页面
+  hidePay () {
+    this.setData({
+      payView: false
+    });
+  },
+  none (event) {
+    console.log(event);
+    return null;
+  },
+
+  closeAlert(options) {
+    if (options.currentTarget.dataset.type === 'guide') {
+      const showed = Auth.getLocalShowed();
+      showed.freeGuide = true
+      Auth.setLocalShowed(showed);
+    }
+    this.setData({
+      shareAlert: null
+    });
+  },
+  showGuide() {
+    const showed = Auth.getLocalShowed();
+    if (showed.freeGuide) {
       this.setData({
         shareAlert: null
       });
-    },
-    showGuide() {
-      const showed = Auth.getLocalShowed();
-      if (showed.freeGuide) {
-        this.setData({
-          shareAlert: null
-        });
-      } else if (this.data.shareAlert) {
-        this.setData({
-          shareAlert: {
-            guide: true
-          }
-        });
-      }
-    },
-    // 选择优惠券
-    gotoChoiceCoupon() {
-      wx.navigateTo({
-        url: `../album/choice-coupon?coupons=${JSON.stringify(this.data.coupons)}`
-      });
-    },
-    // 使用优惠券
-    _useCoupon() {
-      return request({
-        url: `${app.globalData.apiBase}/user-coupons/${this.data.coupon.userCouponId}/redeem`,
-        method: 'POST',
-        data: {
-          albumId: albumId
-        }
-      }).then(res => {
-        console.log(res);
-      });
-    },
-    // 解锁
-    _unlockAlubm() {
-      return request({
-        url: `${app.globalData.apiBase}/albums/${albumId}/unlock`,
-        method: 'POST',
-        data: {
-        }
-      }).then(res => {
-        console.log(res);
-      });
-    },
-
-    // 查账 coupons
-    findCoupon: function () {
-      return request({
-        url: `${baseUrl}/user-coupons`,
-        data: {
-          redeemedAt: true,
-          albumId: albumId
-        },
-        method: 'GET'
-      }).then(res => {
-        const coupons = {};
-        res.included && res.included.map(c => {
-          if (c.type = 'Coupons') {
-            coupons[c.id] = c;
-          }
-        });
-        const couponsData = res.data.map(d => {
-          return {
-            couponId: coupons[d.relationships.coupon.data.id].id,
-            userCouponId: d.id,
-            quota: coupons[d.relationships.coupon.data.id].attributes.value,
-            name: d.attributes.displayName,
-            validityTerm: `有效期至${this._formatDateToDay(new Date(coupons[d.relationships.coupon.data.id].attributes.expiredAt))}`,
-            range: coupons[d.relationships.coupon.data.id].attributes.albumId ? `仅限购买“${coupons[d.relationships.coupon.data.id].attributes.albumId}”` : '全场通用，最高折扣50元',
-          }
-        });
-        this.setData({
-          coupons: couponsData
-        });
-        return res.data;
-      });
-    },
-
-    /**
-     * @return 'xxxx年x月x日'
-     */
-    _formatDateToDay(date) {
-      const year = date.getFullYear(),
-            month = date.getMonth() + 1,
-            day = date.getDate();
-      return year + '-' + month + '-' + day;
-    },
-    tempAlertClose: function () {
+    } else if (this.data.shareAlert) {
       this.setData({
-        tempAlert: null
+        shareAlert: {
+          guide: true
+        }
       });
-    },
-    tempAlertGoList: function () {
-      this.data.tempAlert = false;
     }
+  },
+  // 选择优惠券
+  gotoChoiceCoupon() {
+    wx.navigateTo({
+      url: `../album/choice-coupon?coupons=${JSON.stringify(this.data.coupons)}`
+    });
+  },
+  // 使用优惠券
+  _useCoupon() {
+    return request({
+      url: `${app.globalData.apiBase}/user-coupons/${this.data.coupon.userCouponId}/redeem`,
+      method: 'POST',
+      data: {
+        albumId: albumId
+      }
+    }).then(res => {
+      console.log(res);
+    });
+  },
+  // 解锁
+  _unlockAlubm() {
+    return request({
+      url: `${app.globalData.apiBase}/albums/${albumId}/unlock`,
+      method: 'POST',
+      data: {
+      }
+    }).then(res => {
+      console.log(res);
+    });
+  },
+
+  // 查账 coupons
+  findCoupon: function () {
+    return request({
+      url: `${baseUrl}/user-coupons`,
+      data: {
+        redeemedAt: true,
+        albumId: albumId
+      },
+      method: 'GET'
+    }).then(res => {
+      const coupons = {};
+      res.included && res.included.map(c => {
+        if (c.type = 'Coupons') {
+          coupons[c.id] = c;
+        }
+      });
+      const couponsData = res.data.map(d => {
+        return {
+          couponId: coupons[d.relationships.coupon.data.id].id,
+          userCouponId: d.id,
+          quota: coupons[d.relationships.coupon.data.id].attributes.value,
+          name: d.attributes.displayName,
+          validityTerm: `有效期至${this._formatDateToDay(new Date(coupons[d.relationships.coupon.data.id].attributes.expiredAt))}`,
+          range: coupons[d.relationships.coupon.data.id].attributes.albumId ? `仅限购买“${coupons[d.relationships.coupon.data.id].attributes.albumId}”` : '全场通用，最高折扣50元',
+        }
+      });
+      this.setData({
+        coupons: couponsData
+      });
+      return res.data;
+    });
+  },
+
+  /**
+   * @return 'xxxx年x月x日'
+   */
+  _formatDateToDay(date) {
+    const year = date.getFullYear(),
+          month = date.getMonth() + 1,
+          day = date.getDate();
+    return year + '-' + month + '-' + day;
+  },
+  tempAlertClose: function () {
+    this.setData({
+      tempAlert: null
+    });
+  },
+  tempAlertGoList: function () {
+    this.data.tempAlert = false;
+  }
 })

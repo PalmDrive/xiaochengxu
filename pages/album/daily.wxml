@@ -2,6 +2,20 @@
 
 <view class="container column">
 
+  <view class="modal-container" hidden="{{qrcodeModalHidden}}">
+    <view class="modal column qrcode-view">
+      <view class="column qrcode-main-view">
+        <text class=" size-22 pingfang-medium text-center model-text1">{{wxQrcode.title}}</text>
+        <text class=" size-14 text-color1 model-text2" >{{wxQrcode.msg}}</text>
+        <image src="{{wxQrcode.url}}" class="modal-qrcode-img"></image>
+        <text class=" size-12 text-color3 model-text3" >截图保存，用微信扫描</text>
+        <text class="size-16 text-white qrcode-button" bindtap="toggleqrcodeModalHidden">知道了</text>
+      </view>
+      <image src="../../images/paid-group/close.png" class="btn-close" bindtap="toggleqrcodeModalHidden"></image>
+    </view>
+    <view class="modal-drop"></view>
+  </view>
+
   <!-- 顶部 绿色 -->
   <view class="row top-view1 bg-main-color">
     <view class="row">
