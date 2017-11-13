@@ -29,6 +29,7 @@
     "pages/index/index",
     "pages/album/daily",
     "pages/survey/edit",
+    "pages/survey/text-answer",
     "pages/topics/select-topics"
   ],
   "window":{
