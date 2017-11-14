@@ -284,9 +284,11 @@ Page({
 
   goToTextQuestion: function(event) {
     const question = event.currentTarget.dataset.question;
-    wx.navigateTo({
-      url: `../survey/question?postId=${postId}&albumId=${albumId}&question=${question}`
-    });
+    if (question.questionType !== 'desc') {
+      wx.navigateTo({
+        url: `../survey/question?postId=${postId}&albumId=${albumId}&question=${question}`
+      });
+    }
   },
 
   goToSelectQuestion: function(event) {
