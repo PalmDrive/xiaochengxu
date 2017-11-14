@@ -40,7 +40,7 @@ Page({
     });
 
     const rightAnwser = attributes.options.filter((res, i) => res.isRight === true);
-    const selectedAnwser = attributes.answer ? attributes.answer[0].content : [];
+    const selectedAnwser = attributes.answer.length > 0 ? attributes.answer[0].content : [];
     console.log(list);
 
     let nextButtonDisable = false;
