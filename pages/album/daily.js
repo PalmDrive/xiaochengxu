@@ -191,7 +191,7 @@ Page({
         if (res.attributes.questionType === 'multi-select' || res.attributes.questionType === 'single-select') {
            res.attributes.answer = answerList.filter(answer => { // 拿到已选择的答案列表
 
-            if (answer.surveyQuestionId === res.id) {
+            if (answer !== null && answer.surveyQuestionId === res.id) {
 
               res.attributes.options = res.attributes.options.map(option => {
 
