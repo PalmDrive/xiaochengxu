@@ -101,7 +101,7 @@ Page({
     _isUploading = true;
     data.data.push({
       attributes: {
-        surveyQuestionId: answer.surveyQuestionId,
+        surveyQuestionId: this.data.question.id,
         content: answer.content,
         createdAt: now,
         updatedAt: now
