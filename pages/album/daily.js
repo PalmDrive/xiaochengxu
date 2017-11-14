@@ -182,7 +182,7 @@ Page({
         answerList = answerList[0].attributes.answers;
 
         questionList.forEach(res => {
-          res.attributes.completed = answerList.filter(a => a.surveyQuestionId === res.id).length > 0;
+          res.attributes.completed = answerList.filter(a => a && a.surveyQuestionId === res.id).length > 0;
         });
       }
 

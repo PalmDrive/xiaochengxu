@@ -57,9 +57,10 @@ Page({
         console.log('question:', question);
 
         if (userSurveyAnswer) {
-          updates.answer = getAnswerForQuestion(userSurveyAnswer, questionId);
-          if (updates.answer) {
+          const answer = getAnswerForQuestion(userSurveyAnswer, questionId);
+          if (answer) {
             this._afterSave();
+            updates.answer = answer;
           }
         }
         this.setData(updates);
