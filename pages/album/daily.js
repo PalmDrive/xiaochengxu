@@ -284,7 +284,7 @@ Page({
 
   goToTextQuestion: function(event) {
     const question = event.currentTarget.dataset.question;
-    if (question.questionType !== 'desc') {
+    if (question.attributes.questionType !== 'desc') {
       wx.navigateTo({
         url: `../survey/question?postId=${postId}&albumId=${albumId}&question=${question}`
       });
