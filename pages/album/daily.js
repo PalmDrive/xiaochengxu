@@ -178,28 +178,25 @@ Page({
 
       let questionTextList = questionList.filter(res => res.attributes.questionType !== 'multi-select' && res.attributes.questionType !== 'single-select');
 
-      questionTextList = questionTextList.map(res => {
-        res.attributes.completed = true;
-        return res;
-      });
-
       if (answerList.length > 0) {
         answerList = answerList[0].attributes.answers;
+
+        questionList.forEach(res => {
+          res.attributes.completed = answerList.filter(a => a.surveyQuestionId === res.id).length > 0;
+        });
       }
+
       let selectedAnwserList = [];
-      let questionSelectList = questionList.filter(res =>{
+      let questionSelectList = questionList.filter(res => {
         if (res.attributes.questionType === 'multi-select' || res.attributes.questionType === 'single-select') {
            res.attributes.answer = answerList.filter(answer => { // 拿到已选择的答案列表
-
-            if (answer && answer.surveyQuestionId === res.id) {
-
+            if (answer && answer.surveyQuestionId === res.id && Array.isArray(answer.content)) {
               res.attributes.options = res.attributes.options.map(option => {
-
                 answer.content.map(ans => {
                   if (option.value === ans.value) { // question.options 里选择的答案selected = true
                     option.selected = true;
                   }
-                })
+                });
                 return option;
               });
               return answer;
@@ -209,17 +206,12 @@ Page({
         }
       });
 
-      let questionSelectCompletedList = questionSelectList.filter(res => {
-        res.attributes.completed ===false;
-        return res;
-      });
-
       this.setData({
         survey: res.data,
         questionList,
         questionTextList,
         questionSelectList,
-        questionSelectCompleted: questionSelectCompletedList.length > 0
+        questionSelectCompleted: questionSelectList.filter(res => res.attributes.completed).length > 0
       });
     });
   },
@@ -286,7 +278,7 @@ Page({
     const question = event.currentTarget.dataset.question;
     if (question.attributes.questionType !== 'desc') {
       wx.navigateTo({
-        url: `../survey/question?postId=${postId}&albumId=${albumId}&question=${question}`
+        url: `../survey/text-question?postId=${postId}&albumId=${albumId}&surveyQuestionId=${question.id}`
       });
     }
   },
