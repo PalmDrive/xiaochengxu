@@ -1,0 +1,41 @@
+<view class="container column">
+  <text class="size-18 pingfang-medium text-color1 top-tip">解答完题，我们帮你生成用户访谈问卷</text>
+  <view class="column bg-gray">
+    <text class="size-12 main-color-green">第 {{qindex + 1}}/{{questionList.length}} 题 {{attributes.questionType === 'single-select' ? '(单选)' : '(多选)'}}</text>
+    <text class="size-14 text-color1 pingfang-medium title">{{qindex + 1}}、 {{attributes.content}}</text>
+    <text class="size-12 text-color3 description">{{attributes.description}}</text>
+  </view>
+
+  <view class="column section">
+    <view class="row select-view-row" wx:for="{{attributes.options}}" wx:for-item="option" wx:key="" data-idx="{{index}}" bindtap="bindClick">
+      <image src="../../images/survey/{{attributes.questionType === 'single-select' ? '单选' : '复选'}}{{option.selected ? '选中' : ''}}.png" class="question-icon"></image>
+      <text class="size-15 question-text" style="color: {{option.selected ? '#42BD56' : '#505050'}}">{{option.value}}  {{option.label}}</text>
+    </view>
+  </view>
+
+  <view class="column answer-view" wx:if="{{committed}}">
+    <view class="row">
+      <text class="size-15 text-color2">已选答案： </text>
+      <text class="size-15 text-color2" wx:for="{{selectedAnwser}}" wx:for-item="anwser" wx:key="">{{anwser.value}}</text>
+    </view>
+    <view class="row">
+      <text class="size-15 main-color-green">正确答案： </text>
+      <text class="size-15 main-color-green" wx:for="{{rightAnwser}}" wx:for-item="anwser" wx:key="">{{anwser.value}}</text>
+    </view>
+  </view>
+
+  <view class="column bg-gray section" wx:if="{{committed}}">
+    <view class="row explain-view">
+      <image src="../../images/survey/解析.png" class="explain-icon"></image>
+      <text class="size-16 text-color3">解析</text>
+    </view>
+
+    <text class="size-15 text-color1" wx:for="{{rightAnwser}}" wx:for-item="anwser" wx:key="">{{anwser.completionHint}}</text>
+  </view>
+
+  <!-- 任务提交 -->
+  <view class="row button-row">
+    <text class="size-14 text-white button pre-button" style="background: {{preButtonDisable ? '#EDEDED' : '#42BD56'}}" bindtap="prePage">上一题</text>
+    <text class="size-14 text-white button" style="background: {{committed && nextButtonDisable ? '#EDEDED' : '#42BD56'}}" bindtap="commit">{{committed ? '下一题' : '提交'}}</text>
+  </view>
+</view>
