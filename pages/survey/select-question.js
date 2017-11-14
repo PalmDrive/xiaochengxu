@@ -31,7 +31,7 @@ Page({
           attributes = list[qindex].attributes;
 
     let committed = false;
-    list[0].attributes.options = attributes.options.map(res => {
+    list[qindex].attributes.options = attributes.options.map(res => {
       res.selected = res.selected ? res.selected : false;
       if (res.selected) {
         committed = true;
@@ -77,8 +77,9 @@ Page({
     this.data.attributes.options[index].selected = !this.data.attributes.options[index].selected;
 
     const selectedAnwser = this.data.attributes.options.filter((res, i) => res.selected === true);
-
+    this.data.questionList[this.data.qindex].attributes = this.data.attributes;
     this.setData({
+      questionList: this.data.questionList,
       attributes: this.data.attributes,
       selectedAnwser
     });
@@ -92,6 +93,9 @@ Page({
   },
 
   changePage(index) {
+    this.data.questionList[this.data.qindex].attributes.answer = [{
+      content: this.data.selectedAnwser
+    }];
     this.onLoad({
       surveyId: surveyId,
       questionList: JSON.stringify(this.data.questionList),
