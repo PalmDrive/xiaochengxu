@@ -35,9 +35,7 @@
 
 .bg-gray {
   background: #F5F5F5;
-  align-items: flex-start;
-  padding: 8px 15px 8px 15px;
-  margin-top: 10px;
+  color: #161616;
 }
 
 .task-number {
@@ -49,12 +47,9 @@
   width: 25px;
   height: 15px;
   margin-top: 15px;
-  margin-bottom: 10px;
+  margin-left: 15px;
 }
 
-textarea {
-
-}
 .pic-item1 {
   position: relative;
 }
@@ -81,7 +76,7 @@ textarea {
 }
 
 .bottom-view {
-  padding: 10px 0px 5px 0px;
+  padding: 10px 15px 5px 15px;
   justify-content: space-between;
 }
 
@@ -100,4 +95,54 @@ textarea {
 
 .second-tip {
   margin: 0px 15px 30px 15px;
+}
+
+.input-ans {
+  margin: 15px 0;
+  padding: 0 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.section {
+  padding: 15px;
+}
+
+.section.peer {
+  margin-top: 30px;
+}
+
+.section.hint {
+  margin: 0 -15px 25px -15px;
+}
+
+.user-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  margin-right: 10px;
+}
+
+.answer-content {
+  display: block;
+  line-height: 180%;
+  margin-top: 15px;
+}
+
+.answer-date {
+  display: block;
+  margin-top: 15px;
+}
+
+.today-ans {
+  background-color: #42BD56;
+  margin-left: -15px;
+  color: white;
+  padding-left: 15px;
+  padding-right: 8px;
+}
+
+.today-ans-subtitle {
+  display: block;
+  margin: 15px 0;
 }

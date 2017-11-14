@@ -54,6 +54,10 @@
   color: #42BD56
 }
 
+.text-blue {
+  color: #0090E7;
+}
+
 .bg-main-color {
   background: #42BD56;
 }

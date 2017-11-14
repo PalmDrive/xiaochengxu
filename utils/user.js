@@ -14,7 +14,7 @@ let _albumIdsMap = null,
            userSurveyAnswer: {data: {id, attributes: {}}} // optional
          }
        }
-     */ 
+     */
     _surveysMap = {};
 
 function getPurchasedAlbumIdsMap(force) {
@@ -83,9 +83,37 @@ function getSurveyAndAnswers(postId, albumId, force) {
   }
 }
 
+function getPeerAnswers(postId, albumId, page) {
+  const defaultPage = {
+    number: 1, size: 5
+  },
+       url = `${getApp().globalData.apiBase}/user-survey-answers/peers`;
+  Object.assign(defaultPage, page || {});
+  return request({
+    url,
+    data: {
+      postId,
+      albumId,
+      include: 'users',
+      'page[size]': defaultPage.size,
+      'page[number]': defaultPage.number
+    }
+  })
+  .then(res => {
+    // add user attributes
+    res.data.forEach(d => {
+      const user = d.relationships.user.data,
+            includedUser = res.included.filter(obj => obj.type === 'Users' && obj.id === user.id)[0];
+      user.attributes = includedUser ? includedUser.attributes : {};
+    });
+    return res;
+  });
+}
+
 module.exports = {
   getPurchasedAlbums,
   getPurchasedAlbumIdsMap,
   addAlbumId,
-  getSurveyAndAnswers
+  getSurveyAndAnswers,
+  getPeerAnswers
 }

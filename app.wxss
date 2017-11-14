@@ -58,6 +58,21 @@ view {
   background-position: center;
 }
 
+.btn-block {
+  display: block;
+  border-radius: 0;
+  padding: 9px;
+}
+
+.btn-success {
+  background-color: #42BD56;
+  color: white;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
 /* modal */
 .modal {
   position: fixed;
