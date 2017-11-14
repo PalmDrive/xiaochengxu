@@ -47,7 +47,7 @@ Page({
             question: {},
             answer: {}
           };
-    User.getSurveyAndAnswers(_postId, _albumId)
+    User.getSurveyAndAnswers(_postId, _albumId, true /* set false when getSurveyAndAnswers is used in daily.js*/)
       .then(data => {
         _survey = data;
         const question = data.relationships.surveyQuestions.data.filter(d => d.id === questionId)[0];
@@ -132,7 +132,7 @@ Page({
       })
         .then(res => {
           const updates = {};
-          updates.userSurveyAnswersCount = res.meta.userSurveyAnswersCount;
+          //updates.userSurveyAnswersCount = res.meta.userSurveyAnswersCount;
           const peerAnsweers = res.data.map(d => {
             const ans = getAnswerForQuestion(d, this.data.question.id);
             // add user
@@ -143,6 +143,7 @@ Page({
           })
             .filter(el => el && el.user && el.user.id !== Auth.getLocalUserId());
           updates.peerAnsweers = this.data.peerAnsweers.concat(peerAnsweers);
+          updates.userSurveyAnswersCount = updates.peerAnsweers.length;
 
           this.setData(updates);
 

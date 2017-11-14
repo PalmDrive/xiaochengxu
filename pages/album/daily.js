@@ -3,7 +3,7 @@ const app = getApp(),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
     baseUrl = app.globalData.apiBase,
-    {addAlbumId} = require('../../utils/user');
+    {addAlbumId, getSurveyAndAnswers} = require('../../utils/user');
 
 let albumId = undefined,
     postId = undefined;
@@ -94,6 +94,14 @@ Page({
     }
   },
 
+  onShow() {
+    // 解决从答题页面返回数据不刷新问题
+    if (albumId && postId) { // page loaded
+      console.log('call _load in onShow');
+      this._loadSurvey();
+    }
+  },
+
   /**
    * 加载数据
    */
@@ -169,6 +177,7 @@ Page({
    * 加载数据
    */
   _loadSurvey() {
+    // @TODO: use getSurveyAndAnswers
     request({
       url: `${app.globalData.apiBase}/morning-posts/${postId}/survey?albumId=${albumId}`,
     }).then(res => {
