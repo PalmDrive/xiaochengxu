@@ -63,7 +63,7 @@
       <view class="topic">
         <view class="locker-mask column">
           <view class="row">
-            <image src="../../images/paid-group/锁@2x.png" class="lock-img"></image>
+            <image src="../../images/paid-group/lock.png" class="lock-img"></image>
             <text class="size-16 text-color3">{{didUserPay ? '还未解锁，一天解锁一课哦' : '本课还未解锁'}}</text>
           </view>
           <text class="size-12 text-white buy-button" bindtap="showPay" wx:if="{{trial}}">购买：{{albumAttributes.price / 100}}元</text>
