@@ -13,7 +13,7 @@
 
 <image src="../../images/survey/引号.png" class="quotation" wx:if="{{(question.attributes.questionType === 'text' || question.attributes.questionType === 'text & pic') && mode !== 'read'}}"></image>
 
-<view hidden="{{mode === 'edit'}}" class="section">
+<view hidden="{{mode === 'edit'}}" class="section container-view">
   <view class="section">
     <view class="row space-between">
       <view class="row">
