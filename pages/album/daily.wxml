@@ -19,7 +19,7 @@
   <!-- 顶部 绿色 -->
   <view class="row top-view1 bg-main-color">
     <view class="row">
-      <image src="../../images/survey/日历.png" class="calendar"></image>
+      <image src="../../images/survey/calendar.png" class="calendar"></image>
       <text class="size-12 text-white ">第{{selectedIndex}}天</text>
     </view>
     <text class="size-12 text-white" bindtap="goToAlbumDetail" wx:if="{{!trial}}">查看详情</text>
@@ -28,7 +28,7 @@
   <view class="row top-view2 bg-main-color">
     <view class="column day-box" wx:for="{{dayList}}" wx:for-item="flag" wx:key="" style="background: {{selectedIndex === (index + 1) ? 'white' : '#42BD56'}}" bindtap="goToPost" data-index="{{index}}">
       <text class="size-16 pingfang-medium" style="color: {{selectedIndex === index + 1 ? '#42BD56' : 'white'}};opacity:{{(index + 1) <= unlockedDays ? 1 : 0.5}}">{{unlockedDays === (index + 1) ? '今' : (index + 1)}}</text>
-      <image src="../../images/survey/对号.jpg" class="right" wx:if="{{flag}}"></image>
+      <image src="../../images/survey/right.jpg" class="right" wx:if="{{flag}}"></image>
     </view>
   </view>
 
@@ -75,7 +75,7 @@
     <view class="column bg-gray" bindtap="goToSelectQuestion" wx:if="{{questionSelectList.length > 0}}">
       <view class="row method-row">
         <view class="row method-row-innner">
-          <image src="../../images/survey/选择题{{questionSelectCompleted ? '完成' : ''}}.png" class="question-icon"></image>
+          <image src="../../images/survey/select_question{{questionSelectCompleted ? '_complete' : ''}}.png" class="question-icon"></image>
           <text class="size-16 text-color2 medium-title">选择题</text>
         </view>
         <text class="size-9 look-detail" style="color: {{questionSelectCompleted ? '#B0B0B0' : '#4A90E2'}}">{{questionSelectCompleted ? '已完成' : '查看详情'}}</text>
@@ -88,7 +88,7 @@
     <view class="column bg-gray" wx:for="{{questionTextList}}" wx:for-item="question" wx:key="" data-question="{{question}}" data-idx="{{index}}" bindtap="goToTextQuestion">
       <view class="row method-row">
         <view class="row method-row-innner">
-          <image src="../../images/survey/应用题{{question.attributes.completed ? '完成' : ''}}.png" class="question-icon"></image>
+          <image src="../../images/survey/apply_question{{question.attributes.completed ? '_complete' : ''}}.png" class="question-icon"></image>
           <text class="size-16 text-color2 medium-title">{{question.attributes.questionType === 'desc' ? '思考题（无需提交答案)' : '问答题'}}</text>
         </view>
         <text class="size-9 look-detail" style="color: {{question.attributes.completed ? '#B0B0B0' : '#4A90E2'}}">{{question.attributes.questionType === 'desc' ? '' : (question.attributes.completed ? '已完成' : '查看详情')}}</text>

@@ -8,7 +8,7 @@
 
   <view class="column section">
     <view class="row select-view-row" wx:for="{{attributes.options}}" wx:for-item="option" wx:key="" data-idx="{{index}}" bindtap="bindClick">
-      <image src="../../images/survey/{{attributes.questionType === 'single-select' ? '单选' : '复选'}}{{option.selected ? '选中' : ''}}.png" class="question-icon"></image>
+      <image src="../../images/survey/{{attributes.questionType === 'single-select' ? 'single' : 'multiple'}}{{option.selected ? '_select' : ''}}.png" class="question-icon"></image>
       <text class="size-15 question-text" style="color: {{option.selected ? '#42BD56' : '#505050'}}">{{option.value}}  {{option.label}}</text>
     </view>
   </view>
@@ -26,7 +26,7 @@
 
   <view class="column bg-gray section" wx:if="{{committed}}">
     <view class="row explain-view">
-      <image src="../../images/survey/解析.png" class="explain-icon"></image>
+      <image src="../../images/survey/analysis.png" class="explain-icon"></image>
       <text class="size-16 text-color3">解析</text>
     </view>
 
