@@ -26,8 +26,7 @@ let _survey,
     _albumId,
     _peerAnswersPageNumber = 1,
     _peerAnswersPageSize = 50, // @todo: 暂时没有分页加载，最多就加载50条
-    _finishedLoadPeerAnswers = false,
-    userAnswer = {content: ''};
+    _finishedLoadPeerAnswers = false;
 
 Page({
   data: {
@@ -40,7 +39,6 @@ Page({
   },
 
   onLoad(options) {
-    userAnswer = {content: ''};
     _postId = options.postId; //67048f40-c7f0-11e7-a5a5-61b12f2788b2
     _albumId = options.albumId; //7dd578b0-c7f0-11e7-a5a5-61b12f2788b2
     const questionId = options.surveyQuestionId,
@@ -72,8 +70,7 @@ Page({
   onInput: _.debounce(function(event) {
     const //questionId = event.currentTarget.dataset.qid,
           content = event.detail.value;
-    userAnswer.content = content;
-    // this.data.answer.content = content;
+    this.data.answer.content = content;
 
     // this.setData({
     //   question: this.data.question,
@@ -94,7 +91,7 @@ Page({
                isNew: 'false', // 这样不会把整个survey 答案重置
              }
           },
-          answer = userAnswer,
+          answer = this.data.answer,
           that = this,
           now = +new Date();
 
@@ -110,11 +107,9 @@ Page({
         updatedAt: now
       }
     });
-
     this.setData({
-      answer: userAnswer
+      answer: this.data.answer
     });
-
     request({
       url,
       method: 'post',
