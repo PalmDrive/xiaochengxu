@@ -208,7 +208,7 @@ Page({
             filePath: res.tempFilePaths[i],
             name: 'photo',
             formData:{
-              isNew: false, // 整个survey 答案重置
+              isNew: 'false', // 整个survey 答案重置
               userId: Auth.getLocalUserId(),
               surveyQuestionId: qid,
               picId: `pic_${_picNumber}`
