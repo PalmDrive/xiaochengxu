@@ -67,7 +67,7 @@ Page({
         _survey = data;
         const question = data.relationships.surveyQuestions.data.filter(d => d.id === questionId)[0];
         const userSurveyAnswer = data.relationships.userSurveyAnswer && data.relationships.userSurveyAnswer.data;
-
+        question.attributes.picurlList = [];
         if (userSurveyAnswer) {
           const answer = getAnswerForQuestion(userSurveyAnswer, questionId);
           if (answer) {
@@ -81,7 +81,7 @@ Page({
           }
         }
         updates.question = question;
-        if (question.attributes.content || question.attributes.picurlList.length > 0) {
+        if (updates.answer.content || question.attributes.picurlList.length > 0) {
           updates.committed = true;
         }
         this.setData(updates);
@@ -197,6 +197,9 @@ Page({
     wx.chooseImage({
       sizeType: 'compressed',
       success: function(res) {
+        wx.showLoading({
+          title: '上传中...'
+        });
         let newPicList = [];
         for (let i = 0; i < res.tempFilePaths.length; i++) {
           _picNumber ++;
@@ -214,7 +217,10 @@ Page({
             },
             fail: function(res){
             },
-            complete: function(res){
+            complete: function(data){
+              if (i === res.tempFilePaths.length - 1) {
+                wx.hideLoading();
+              }
             },
           })
 
