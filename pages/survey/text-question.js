@@ -26,7 +26,8 @@ let _survey,
     _albumId,
     _peerAnswersPageNumber = 1,
     _peerAnswersPageSize = 50, // @todo: 暂时没有分页加载，最多就加载50条
-    _finishedLoadPeerAnswers = false;
+    _finishedLoadPeerAnswers = false,
+    userAnswer = {content: ''};
 
 Page({
   data: {
@@ -39,6 +40,7 @@ Page({
   },
 
   onLoad(options) {
+    userAnswer = {content: ''};
     _postId = options.postId; //67048f40-c7f0-11e7-a5a5-61b12f2788b2
     _albumId = options.albumId; //7dd578b0-c7f0-11e7-a5a5-61b12f2788b2
     const questionId = options.surveyQuestionId,
@@ -54,7 +56,7 @@ Page({
         const userSurveyAnswer = data.relationships.userSurveyAnswer && data.relationships.userSurveyAnswer.data;
         updates.question = question;
 
-        console.log('question:', question);
+        //console.log('question:', question);
 
         if (userSurveyAnswer) {
           const answer = getAnswerForQuestion(userSurveyAnswer, questionId);
@@ -70,12 +72,13 @@ Page({
   onInput: _.debounce(function(event) {
     const //questionId = event.currentTarget.dataset.qid,
           content = event.detail.value;
-    this.data.answer.content = content;
+    userAnswer.content = content;
+    // this.data.answer.content = content;
 
-    this.setData({
-      question: this.data.question,
-      answer: this.data.answer
-    });
+    // this.setData({
+    //   question: this.data.question,
+    //   answer: this.data.answer
+    // });
   }, 600),
 
   gotoEdit() {
@@ -91,7 +94,7 @@ Page({
                isNew: 'false', // 这样不会把整个survey 答案重置
              }
           },
-          answer = this.data.answer,
+          answer = userAnswer,
           that = this,
           now = +new Date();
 
@@ -107,6 +110,11 @@ Page({
         updatedAt: now
       }
     });
+
+    this.setData({
+      answer: userAnswer
+    });
+
     request({
       url,
       method: 'post',

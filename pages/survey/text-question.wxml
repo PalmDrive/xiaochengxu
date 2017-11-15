@@ -19,7 +19,10 @@
   </view>
 
   <view class="bg-gray section" wx:if="{{question.attributes.meta && question.attributes.meta.completionHint}}">
-    <text class="size-16 text-gray">解析</text>
+    <view class="row explain-view">
+      <image src="../../images/survey/解析.png" class="explain-icon"></image>
+      <text class="size-16 text-color3">解析</text>
+    </view>
     <text class="answer-content size-15">{{question.attributes.meta.completionHint}}</text>
   </view>
   <view wx:if="{{userSurveyAnswersCount}}">
