@@ -116,6 +116,16 @@
   margin: 0 -15px 25px -15px;
 }
 
+.explain-view {
+  margin-bottom: 20px;
+}
+
+.explain-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
 .user-photo {
   width: 40px;
   height: 40px;

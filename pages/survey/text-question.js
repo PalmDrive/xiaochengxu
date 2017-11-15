@@ -54,7 +54,7 @@ Page({
         const userSurveyAnswer = data.relationships.userSurveyAnswer && data.relationships.userSurveyAnswer.data;
         updates.question = question;
 
-        console.log('question:', question);
+        //console.log('question:', question);
 
         if (userSurveyAnswer) {
           const answer = getAnswerForQuestion(userSurveyAnswer, questionId);
@@ -72,10 +72,10 @@ Page({
           content = event.detail.value;
     this.data.answer.content = content;
 
-    this.setData({
-      question: this.data.question,
-      answer: this.data.answer
-    });
+    // this.setData({
+    //   question: this.data.question,
+    //   answer: this.data.answer
+    // });
   }, 600),
 
   gotoEdit() {
@@ -106,6 +106,9 @@ Page({
         createdAt: now,
         updatedAt: now
       }
+    });
+    this.setData({
+      answer: this.data.answer
     });
     request({
       url,
