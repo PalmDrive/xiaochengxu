@@ -12,11 +12,11 @@
 
   <view class="btns-container row" wx:if="{{!showDetail}}">
     <view class="shidu column" bindtap="gotoTrial">
-      <image src="/images/paid-group/试读.jpg" class="shidu-img" mode="aspectFill"></image>
+      <image src="/images/paid-group/probation.jpg" class="shidu-img" mode="aspectFill"></image>
       <text class="shidu-text text-color2 size-12">试读</text>
     </view>
     <view class="free column" bindtap="gotoFree">
-      <image src="/images/paid-group/免费@2x.png" class="free-img" mode="aspectFill"></image>
+      <image src="/images/paid-group/free.png" class="free-img" mode="aspectFill"></image>
       <text class="free-text text-color2 size-12">免费得</text>
     </view>
     <button bindtap="showPay" class="btn-buy">立刻购买 {{albumAttributes.price / 100}}元</button>

@@ -11,7 +11,7 @@
   <text class="size-12 text-color3 description">{{attributes.description}}</text>
 </view>
 
-<image src="../../images/survey/引号.png" class="quotation" wx:if="{{(question.attributes.questionType === 'text' || question.attributes.questionType === 'text & pic') && mode !== 'read'}}"></image>
+<image src="../../images/survey/quote.png" class="quotation" wx:if="{{(question.attributes.questionType === 'text' || question.attributes.questionType === 'text & pic') && mode !== 'read'}}"></image>
 
 <view hidden="{{mode === 'edit'}}" class="section">
   <view class="section">
@@ -21,7 +21,7 @@
         <text class="size-14">{{user.attributes.wxUsername}}</text>
       </view>
       <view class="row" bindtap="gotoEdit">
-        <image src="../../images/survey/修改.png" class="edit-icon"></image>
+        <image src="../../images/survey/modify.png" class="edit-icon"></image>
         <text class="size-12 text-blue">编辑</text>
       </view>
     </view>
@@ -34,7 +34,7 @@
 
   <view class="bg-gray section" wx:if="{{question.attributes.metaData && question.attributes.metaData.completionHint}}">
     <view class="row explain-view">
-      <image src="../../images/survey/解析.png" class="explain-icon"></image>
+      <image src="../../images/survey/analysis.png" class="explain-icon"></image>
       <text class="size-16 text-color3">解析</text>
     </view>
     <text class="answer-content size-15">{{question.attributes.metaData.completionHint}}</text>
@@ -68,7 +68,7 @@
 
   <view class="row bottom-view">
     <view class="row" bindtap="addPic" data-qid="{{question.id}}" wx:if="{{question.attributes.questionType === 'pic' || question.attributes.questionType === 'text & pic'}}">
-      <image src="../../images/survey/照片.jpg" class="image-icon"></image>
+      <image src="../../images/survey/photo.jpg" class="image-icon"></image>
       <text class="size-14 text-color3">添加图片</text>
     </view>
     <!-- <text class="size-14 text-color3" wx:if="{{question.attributes.questionType === 'text' || question.attributes.questionType === 'text & pic'}}">{{answer.content ? answer.content.length : 0}}/2000</text> -->
