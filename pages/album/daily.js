@@ -3,7 +3,8 @@ const app = getApp(),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
     baseUrl = app.globalData.apiBase,
-    {addAlbumId, getSurveyAndAnswers} = require('../../utils/user');
+    {addAlbumId, getSurveyAndAnswers} = require('../../utils/user'),
+    User = require('../../utils/user');
 
 let albumId = undefined,
     postId = undefined;
@@ -96,7 +97,7 @@ Page({
 
   onShow() {
     // 解决从答题页面返回数据不刷新问题
-    if (albumId && postId) { // page loaded
+    if (albumId) { // page loaded
       console.log('call _load in onShow');
       this._loadSurvey();
     }
@@ -111,9 +112,13 @@ Page({
     if (albumId) data.albumId = albumId;
     if (postId) data.postId = postId;
     if (this.data.trial) data.isTrial = true;
+    wx.showLoading({
+      title: '加载中',
+    });
     request({
       url, data
     }).then(res => {
+      wx.hideLoading();
       const albumAttributes = res.data.attributes || {},
             metaData = albumAttributes.metaData || {},
             post = res.data.relationships.post.data || {},
@@ -178,49 +183,33 @@ Page({
    */
   _loadSurvey() {
     // @TODO: use getSurveyAndAnswers
-    request({
-      url: `${app.globalData.apiBase}/morning-posts/${postId}/survey?albumId=${albumId}`,
-    }).then(res => {
-
-      let questionList = res.included ? res.included.filter(res => res.type === 'SurveyQuestions') : [];
-      let answerList = res.included ? res.included.filter(res => res.type === 'userSurveyAnswers') : [];
+    User.getSurveyAndAnswers(postId, albumId, true /* set false when getSurveyAndAnswers is used in daily.js*/)
+      .then(res => {
+      let questionList = res.relationships.surveyQuestions.data;
+      let answerList = res.relationships.userSurveyAnswer ? [res.relationships.userSurveyAnswer] : [];
 
       let questionTextList = questionList.filter(res => res.attributes.questionType !== 'multi-select' && res.attributes.questionType !== 'single-select');
 
       if (answerList.length > 0) {
-        answerList = answerList[0].attributes.answers;
+        answerList = answerList[0].data.attributes.answers;
 
         questionList.forEach(res => {
           res.attributes.completed = answerList.filter(a => a && a.surveyQuestionId === res.id).length > 0;
         });
       }
 
-      let selectedAnwserList = [];
       let questionSelectList = questionList.filter(res => {
         if (res.attributes.questionType === 'multi-select' || res.attributes.questionType === 'single-select') {
-           res.attributes.answer = answerList.filter(answer => { // 拿到已选择的答案列表
-            if (answer && answer.surveyQuestionId === res.id && Array.isArray(answer.content)) {
-              res.attributes.options = res.attributes.options.map(option => {
-                answer.content.map(ans => {
-                  if (option.value === ans.value) { // question.options 里选择的答案selected = true
-                    option.selected = true;
-                  }
-                });
-                return option;
-              });
-              return answer;
-            }
-          });
           return res;
         }
       });
 
       this.setData({
-        survey: res.data,
+        survey: res,
         questionList,
         questionTextList,
         questionSelectList,
-        questionSelectCompleted: questionSelectList.filter(res => res.attributes.completed).length > 0
+        questionSelectCompleted: questionSelectList.filter(res => res.attributes.completed).length === questionSelectList.length
       });
     });
   },
@@ -269,6 +258,14 @@ Page({
       albumId: albumId,
       morningPostId: postId
     });
+
+    this.data.media[idx].attributes.lastViewedAt = (new Date()).getTime();
+    const that = this;
+    setTimeout(function(){
+      that.setData({
+        media: that.data.media
+      });
+    }, 1000);
   },
 
   goToAlbumDetail: function(event) {
@@ -287,14 +284,14 @@ Page({
     const question = event.currentTarget.dataset.question;
     if (question.attributes.questionType !== 'desc') {
       wx.navigateTo({
-        url: `../survey/text-question?postId=${postId}&albumId=${albumId}&surveyQuestionId=${question.id}`
+        url: `../survey/text-question?postId=${postId}&albumId=${albumId}&surveyQuestionId=${question.id}&dayIndex=${this.data.selectedIndex}`
       });
     }
   },
 
   goToSelectQuestion: function(event) {
     wx.navigateTo({
-      url: `../survey/select-question?surveyId=${this.data.survey.id}&questionList=${JSON.stringify(this.data.questionSelectList)}&qindex=0`
+      url: `../survey/select-question?postId=${postId}&albumId=${albumId}&surveyId=${this.data.survey.id}&qindex=0`
     });
   },
 

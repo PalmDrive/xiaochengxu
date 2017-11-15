@@ -102,9 +102,11 @@ function getPeerAnswers(postId, albumId, page) {
   .then(res => {
     // add user attributes
     res.data.forEach(d => {
-      const user = d.relationships.user.data,
-            includedUser = res.included.filter(obj => obj.type === 'Users' && obj.id === user.id)[0];
-      user.attributes = includedUser ? includedUser.attributes : {};
+      const user = d.relationships.user.data;
+      if (user) {
+        const includedUser = res.included.filter(obj => obj.type === 'Users' && obj.id === user.id)[0];
+        user.attributes = includedUser ? includedUser.attributes : {};
+      }
     });
     return res;
   });

@@ -2,9 +2,12 @@ const app = getApp(),
     util = require('../../utils/util'),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
-    baseUrl = app.globalData.apiBase;
+    baseUrl = app.globalData.apiBase,
+    User = require('../../utils/user');
 
 let surveyId = undefined,
+    albumId = undefined,
+    postId = undefined,
     isUploading = false;
 
 Page({
@@ -25,42 +28,78 @@ Page({
       backgroundColor: '#42BD56'
     });
     surveyId = options.surveyId;
+    postId = options.postId;
+    albumId = options.albumId;
 
-    const qindex = parseInt(options.qindex),
-          list = JSON.parse(options.questionList),
-          attributes = list[qindex].attributes;
+    const qindex = parseInt(options.qindex);
+    this._loadSurvey(qindex);
+  },
 
-    let committed = false;
-    list[qindex].attributes.options = attributes.options.map(res => {
-      res.selected = res.selected ? res.selected : false;
-      if (res.selected) {
-        committed = true;
+  _loadSurvey(qindex) {
+    User.getSurveyAndAnswers(postId, albumId, false)
+      .then(res => {
+
+      let questionList = res.relationships.surveyQuestions.data;
+      let answerList = res.relationships.userSurveyAnswer ? [res.relationships.userSurveyAnswer] : [];
+
+      if (answerList.length > 0) {
+        answerList = answerList[0].data.attributes.answers;
       }
-      return res;
-    });
 
-    const rightAnwser = attributes.options.filter((res, i) => res.isRight === true);
-    const selectedAnwser = attributes.answer.length > 0 ? attributes.answer[0].content : [];
-    console.log(list);
+      let list = questionList.filter(res => {
+        if (res.attributes.questionType === 'multi-select' || res.attributes.questionType === 'single-select') {
+           res.attributes.answer = answerList.filter(answer => { // 拿到已选择的答案列表
+            if (answer && answer.surveyQuestionId === res.id && Array.isArray(answer.content)) {
+              res.attributes.options = res.attributes.options.map(option => {
+                answer.content.map(ans => {
+                  if (option.value === ans.value) { // question.options 里选择的答案selected = true
+                    option.selected = true;
+                  }
+                });
+                return option;
+              });
+              return answer;
+            }
+          });
+          return res;
+        }
+      });
 
-    let nextButtonDisable = false;
-    let preButtonDisable = false;
-    if (qindex === list.length - 1) {
-      nextButtonDisable = true;
-    }
-    if (qindex === 0) {
-      preButtonDisable = true;
-    }
+      const attributes = list[qindex].attributes;
+      let committed = false;
 
-    this.setData({
-      questionList: list,
-      qindex,
-      attributes,
-      rightAnwser,
-      preButtonDisable,
-      nextButtonDisable,
-      selectedAnwser: selectedAnwser,
-      committed: committed
+      list[qindex].attributes.options = attributes.options.map(res => {
+        res.selected = res.selected ? res.selected : false;
+        if (res.selected) {
+          committed = true;
+        }
+        return res;
+      });
+
+      const rightAnwser = attributes.options.filter((res, i) => res.isRight === true);
+      const selectedAnwser = attributes.answer.length > 0 ? attributes.answer[0].content : [];
+      console.log(list);
+
+      let nextButtonDisable = false;
+      let preButtonDisable = false;
+      if (qindex === list.length - 1) {
+        nextButtonDisable = true;
+      }
+      if (qindex === 0) {
+        preButtonDisable = true;
+      }
+
+      this.setData({
+        questionList: list,
+        qindex,
+        attributes,
+        rightAnwser,
+        preButtonDisable,
+        nextButtonDisable,
+        selectedAnwser: selectedAnwser,
+        committed: committed
+      });
+
     });
   },
 
@@ -98,7 +137,8 @@ Page({
     }];
     this.onLoad({
       surveyId: surveyId,
-      questionList: JSON.stringify(this.data.questionList),
+      postId: postId,
+      albumId: albumId,
       qindex: index
     })
   },
@@ -108,6 +148,10 @@ Page({
     if (this.data.committed) {
       if (this.data.qindex + 1 < this.data.questionList.length) {
         this.changePage(this.data.qindex + 1);
+      } else {
+        wx.navigateBack({
+          delta: 1
+        })
       }
       return;
     }

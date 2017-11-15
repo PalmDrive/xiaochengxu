@@ -26,7 +26,9 @@ let _survey,
     _albumId,
     _peerAnswersPageNumber = 1,
     _peerAnswersPageSize = 50, // @todo: 暂时没有分页加载，最多就加载50条
-    _finishedLoadPeerAnswers = false;
+    _finishedLoadPeerAnswers = false,
+    _picNumber = 1,
+    _dayIndex;
 
 Page({
   data: {
@@ -39,30 +41,45 @@ Page({
   },
 
   onLoad(options) {
+
+    // 设置导航栏背景色
+    wx.setNavigationBarColor({
+      frontColor: '#ffffff',
+      backgroundColor: '#42BD56'
+    });
+
+    // 初始化全局参数
+    _isUploading = false;
+    _picNumber = 1;
+    _finishedLoadPeerAnswers = false;
     _postId = options.postId; //67048f40-c7f0-11e7-a5a5-61b12f2788b2
-    _albumId = options.albumId; //7dd578b0-c7f0-11e7-a5a5-61b12f2788b2
+    _albumId = options.albumId;
+    _dayIndex = options.dayIndex; //7dd578b0-c7f0-11e7-a5a5-61b12f2788b2
     const questionId = options.surveyQuestionId,
           updates = {
             user: Auth.getLocalUserInfo(),
             question: {},
             answer: {}
           };
-    User.getSurveyAndAnswers(_postId, _albumId, true /* set false when getSurveyAndAnswers is used in daily.js*/)
+    User.getSurveyAndAnswers(_postId, _albumId, false /* set false when getSurveyAndAnswers is used in daily.js*/)
       .then(data => {
         _survey = data;
         const question = data.relationships.surveyQuestions.data.filter(d => d.id === questionId)[0];
         const userSurveyAnswer = data.relationships.userSurveyAnswer && data.relationships.userSurveyAnswer.data;
-        updates.question = question;
-
-        //console.log('question:', question);
 
         if (userSurveyAnswer) {
           const answer = getAnswerForQuestion(userSurveyAnswer, questionId);
           if (answer) {
             this._afterSave();
             updates.answer = answer;
+            question.attributes.picurlList = answer.pics || [];
+            if (answer.pics.length > 0) {
+              const pic = answer.pics[answer.pics.length - 1];
+              _picNumber = parseInt(pic.id.substr(4,1));
+            }
           }
         }
+        updates.question = question;
         this.setData(updates);
       });
   },
@@ -139,7 +156,7 @@ Page({
           const peerAnsweers = res.data.map(d => {
             const ans = getAnswerForQuestion(d, this.data.question.id);
             // add user
-            if (ans) {
+            if (ans && d.relationships.user.data) {
               ans.user = d.relationships.user.data.attributes;
             }
             return ans;
@@ -160,5 +177,78 @@ Page({
     this.setData({mode: 'read'});
     _peerAnswersPageNumber = 1;
     return this._loadPeerAnswers();
+  },
+
+  addPic: function(event) {
+    const that = this,
+          qid = event.currentTarget.dataset.qid;
+    wx.chooseImage({
+      success: function(res) {
+
+        let newPicList = [];
+        for (let i = 0; i < res.tempFilePaths.length; i++) {
+          _picNumber ++;
+          wx.uploadFile({
+            url: `${app.globalData.apiBase}/surveys/${_survey.id}/photo`,
+            filePath: res.tempFilePaths[i],
+            name: 'photo',
+            formData:{
+              isNew: false, // 整个survey 答案重置
+              userId: Auth.getLocalUserId(),
+              surveyQuestionId: qid,
+              picId: `pic_${_picNumber}`
+            },
+            success: function(res){
+              var data = res.data;
+            }
+          })
+
+          that.data.question.attributes.picurlList.push({id: `pic_${_picNumber}`, url: res.tempFilePaths[i]});
+        }
+
+        that.setData({
+          question: that.data.question
+        });
+      }
+    })
+  },
+
+  delete: function(event) {
+    const idx = event.currentTarget.dataset.idx,
+          picid = event.currentTarget.dataset.picid;
+    this.data.question.attributes.picurlList.splice(idx,1);
+
+    this.setData({
+      question: this.data.question
+    });
+
+    request({
+      url: `${app.globalData.apiBase}/surveys/${_survey.id}/photo?userId=${Auth.getLocalUserId()}&surveyQuestionId=${this.data.question.id}&picId=${picid}`,
+      method: 'delete',
+    }).then(res => {
+      //console.log( `delete ${picid} over`);
+    });
+  },
+
+  gotoMedium: function(event) {
+    const medium = event.currentTarget.dataset.medium,
+          gaOptions = {
+            cid: Auth.getLocalUserId(),
+            ec: `article_title:${medium.attributes.title},article_id:${medium.id}`,
+            ea: 'click_article_in_albumShowPage',
+            el: `album_name:${_survey.attributes.title},album_id:${_albumId}`,
+            ev: 0
+          },
+          metaData = this.data.question.attributes.metaData || {},
+          relatedMedium = metaData.relatedMedium;
+    if (relatedMedium) {
+      Util.goToMedium(event, gaOptions, {
+        dayIndex: 'day' + _dayIndex,
+        mediumIndex: relatedMedium.index + 1,
+        count: relatedMedium.mediaCount,
+        albumId: _albumId,
+        morningPostId: _postId
+      });
+    }
   }
 });
