@@ -58,7 +58,7 @@
           <image src="../../images/survey/{{medium.attributes.mediumType}}.png" class="method-icon"></image>
           <text class="size-16 text-color2 medium-title">{{medium.attributes.title}}</text>
         </view>
-        <text class="size-9 look-detail">查看详情</text>
+        <text class="size-9 look-detail" style="color: {{medium.attributes.lastViewedAt ? '#B0B0B0' : '#4A90E2'}}">{{medium.attributes.lastViewedAt ? '已完成' : '查看详情'}}</text>
       </view>
       <view class="column method-content">
         <text class="size-12 text-color3 method-row summary" wx:if="{{medium.attributes.mediumType === 'article'}}">{{medium.attributes.summary}}</text>
