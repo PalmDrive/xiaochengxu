@@ -162,6 +162,10 @@ page {
   padding-right: 8px;
 }
 
+.today-tip {
+  margin-top: 30px;
+}
+
 .today-ans-subtitle {
   display: block;
   margin: 15px 0;
@@ -179,6 +183,7 @@ page {
 
 .answer-img {
   width: 100%;
+  margin-top: 20px;
 }
 
 .top-tip {

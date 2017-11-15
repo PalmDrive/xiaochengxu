@@ -32,6 +32,10 @@
   padding-top: 3px;
 }
 
+.question-text {
+  width: 88%;
+}
+
 .section {
   padding: 30px;
 }

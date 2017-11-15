@@ -185,6 +185,7 @@ Page({
     // @TODO: use getSurveyAndAnswers
     User.getSurveyAndAnswers(postId, albumId, true /* set false when getSurveyAndAnswers is used in daily.js*/)
       .then(res => {
+      if (!res.relationships) return;
       let questionList = res.relationships.surveyQuestions.data;
       let answerList = res.relationships.userSurveyAnswer ? [res.relationships.userSurveyAnswer] : [];
 

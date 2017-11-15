@@ -66,15 +66,18 @@ function getSurveyAndAnswers(postId, albumId, force) {
       data: {albumId}
     })
     .then(res => {
-      const data = res.data;
+      const data = res.data,
+            relationships = data.relationships;
       // Add question attributes from included data
-      data.relationships.surveyQuestions.data.forEach(q => {
-        const question = res.included.filter(d => d.type === 'SurveyQuestions' && d.id === q.id)[0];
-        q.attributes = question.attributes;
-      });
-      const userSurveyAnswer = res.included.filter(d => d.type === 'userSurveyAnswers')[0];
-      if (userSurveyAnswer) {
-        data.relationships.userSurveyAnswer = {data: userSurveyAnswer};
+      if (relationships) {
+        relationships.surveyQuestions.data.forEach(q => {
+          const question = res.included.filter(d => d.type === 'SurveyQuestions' && d.id === q.id)[0];
+          q.attributes = question.attributes;
+        });
+        const userSurveyAnswer = res.included.filter(d => d.type === 'userSurveyAnswers')[0];
+        if (userSurveyAnswer) {
+          relationships.userSurveyAnswer = {data: userSurveyAnswer};
+        }
       }
       // add to _surveysMap
       _surveysMap[key] = data;

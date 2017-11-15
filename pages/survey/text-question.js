@@ -37,7 +37,8 @@ Page({
     mode: 'edit', //read
     user: {},
     peerAnsweers: [],
-    userSurveyAnswersCount: null
+    userSurveyAnswersCount: null,
+    committed: false
   },
 
   onLoad(options) {
@@ -80,6 +81,9 @@ Page({
           }
         }
         updates.question = question;
+        if (question.attributes.content || question.attributes.picurlList.length > 0) {
+          updates.committed = true;
+        }
         this.setData(updates);
       });
   },
@@ -96,10 +100,17 @@ Page({
   }, 600),
 
   gotoEdit() {
-    this.setData({mode: 'edit'});
+    this.setData({mode: 'edit', committed: false});
   },
 
   save() {
+    if (this.data.committed) {
+      wx.navigateBack({
+        delta: 1
+      })
+      return ;
+    }
+
     const url =  `${app.globalData.apiBase}/surveys/${_survey.id}/user-survey-answers`,
           data = {
              data: [],
@@ -125,6 +136,7 @@ Page({
       }
     });
     this.setData({
+      committed: true,
       answer: this.data.answer
     });
     request({
@@ -183,8 +195,8 @@ Page({
     const that = this,
           qid = event.currentTarget.dataset.qid;
     wx.chooseImage({
+      sizeType: 'compressed',
       success: function(res) {
-
         let newPicList = [];
         for (let i = 0; i < res.tempFilePaths.length; i++) {
           _picNumber ++;
@@ -199,8 +211,11 @@ Page({
               picId: `pic_${_picNumber}`
             },
             success: function(res){
-              var data = res.data;
-            }
+            },
+            fail: function(res){
+            },
+            complete: function(res){
+            },
           })
 
           that.data.question.attributes.picurlList.push({id: `pic_${_picNumber}`, url: res.tempFilePaths[i]});
