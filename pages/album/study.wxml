@@ -1,0 +1,16 @@
+<import src="../../templates/loading.wxml"/>
+<include src="../../includes/hint.wxml"/>
+<import src="../../templates/prompt.wxml"/>
+
+<view class="pingfang-regular">
+  <view class="row" wx:for="{{groups}}" wx:for-item="group" wx:key class="groups" data-group="{{ group }}" bindtap="gotoPaidGroup">
+    <image src="{{group.attributes.picurl}}" mode="aspectFill" class="paid-group-pic"></image>
+    <view class="column">
+      <text class="title-text  size-17">{{group.attributes.title}}</text>
+      <text class="title-text  size-12">{{group.attributes.title}}</text>
+    </view>
+  </view>
+
+  
+</view>
+<template is="loading" data="{{loadingStatus}}"></template>

@@ -20,50 +20,18 @@ Page({
 
   onLoad(options) {
     const userId = Auth.getLocalUserId();
-    //console.log('groups page on load called. userId:', userId);
+
     this.setData({
       loadingStatus: 'LOADING'
     });
     if (userId) {
-      //console.log('calling _load');
       this._load('paid_group')
         .then(this._loadPaidGroupOver);
     }
   },
 
   onShow() {
-    /* 免费得七日辑 start */
-    this.data.tempAlert && this.setData({
-      tempAlert: null
-    });
-    if (this.data.tempAlert === false) {
-      this.setData({
-        tempAlert: false
-      });
-    } else {
-      request({
-        url: `${baseUrl}/users/temp-alert`,
-      }).then(d => {
-        // d = {data:{title:"恭喜你!",content:"已经有5位朋友帮助了你\n恭喜免费获取\n《7天告别爵士乐小白》",link:"/pages/album/show?id=1b259840-b23c-11e7-8905-3f3cfcde362a","type":"referral","picurl":"http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/%E7%95%99%E5%AD%A6%E5%B0%8F%E7%99%BD%E5%A6%82%E4%BD%95%E5%8F%98%E8%BA%AB%E8%80%81%E5%8F%B8%E6%9C%BA/banner%E5%9B%BE.jpg"}}
-        if (d.data) {
-          this.setData({
-            tempAlert: d.data
-          });
-        }
 
-        if (d.meta) {
-          // 是否关注了七日辑的服务号
-          Auth.setLocalKey( `isSubscribedWX`, d.meta.isSubscribedWX + "")
-        }
-      })
-    }
-    /* 免费得七日辑 end */
-
-    util.ga({
-      cid: Auth.getLocalUserId(),
-      dp: '%2FtoutiaoTab_XiaoChengXu',
-      dt: '群头条tab页（小程序）'
-    });
   },
 
   /**
@@ -72,26 +40,6 @@ Page({
   _load(type) {
     return request({
       url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=title,description,picurl,price,editorInfo,id,metaData&app_name=${app.globalData.appName}`,
-    });
-  },
-
-  /**
-   * paidGroup 数据加载 成功 回调
-   */
-  _loadPaidGroupOver(res) {
-    this.data.page.number ++;
-    // console.log('=============')
-    // console.log(res.data);
-    // console.log('=============')
-    let loadingStatus;
-    if (!res.data.length) {
-      loadingStatus = 'LOADED_ALL';
-    } else {
-      loadingStatus = null;
-    }
-    this.setData({
-      groups: this.data.groups.concat(res.data),
-      loadingStatus: loadingStatus
     });
   },
 
@@ -108,7 +56,7 @@ Page({
    */
   onShareAppMessage() {
     return {
-      title: '七日辑'
+      title: '七日辑 - 学习页面'
     };
   },
   /**
@@ -133,6 +81,23 @@ Page({
       console.log('LOADING_MORE');
       this._load('paid_group').then(this._loadPaidGroupOver);
     }
+  },
+
+  /**
+   * paidGroup 数据加载 成功 回调
+   */
+  _loadPaidGroupOver(res) {
+    this.data.page.number ++;
+    let loadingStatus;
+    if (!res.data.length) {
+      loadingStatus = 'LOADED_ALL';
+    } else {
+      loadingStatus = null;
+    }
+    this.setData({
+      groups: this.data.groups.concat(res.data),
+      loadingStatus: loadingStatus
+    });
   },
 
   tempAlertClose: function () {

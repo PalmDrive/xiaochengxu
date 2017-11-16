@@ -1,5 +1,6 @@
 {
   "pages":[
+    "pages/album/study",
     "pages/album/index",
     "pages/my/remind",
     "pages/album/purchased-list",
