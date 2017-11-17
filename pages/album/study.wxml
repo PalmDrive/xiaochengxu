@@ -1,16 +1,23 @@
 <import src="../../templates/loading.wxml"/>
-<include src="../../includes/hint.wxml"/>
-<import src="../../templates/prompt.wxml"/>
 
-<view class="pingfang-regular">
-  <view class="row" wx:for="{{groups}}" wx:for-item="group" wx:key class="groups" data-group="{{ group }}" bindtap="gotoPaidGroup">
-    <image src="{{group.attributes.picurl}}" mode="aspectFill" class="paid-group-pic"></image>
-    <view class="column">
+<view class="row select-view">
+  <view class="column select-item" data-mode="studying" bindtap="changeMode">
+    <text class="size-16" style="color: {{mode === 'studying' ? '#42BD56' : '#1A1A1A'}}">正在进行</text>
+    <view class="line" style="background: {{mode === 'studying' ? '#42BD56' : '#ffffff'}}"></view>
+  </view>
+  <view class="column select-item" data-mode="studied" bindtap="changeMode">
+    <text class="size-16" style="color: {{mode === 'studied' ? '#42BD56' : '#1A1A1A'}}">已经完结</text>
+    <view class="line" style="background: {{mode === 'studied' ? '#42BD56' : '#ffffff'}}"></view>
+  </view>
+</view>
+
+<view class="studying">
+  <view class="row album" wx:for="{{groups[mode]}}" wx:for-item="group" wx:key data-group="{{ group }}" bindtap="gotoPaidGroup">
+    <image src="{{group.attributes.picurl}}" mode="aspectFill" class="album-img" style="height: {{(screenWidth - 40) / 4}}px"></image>
+    <view class="column right-row" style="height: {{(screenWidth - 40) / 4}}px">
       <text class="title-text  size-17">{{group.attributes.title}}</text>
-      <text class="title-text  size-12">{{group.attributes.title}}</text>
+      <text class="title-text  size-12">任务完成</text>
     </view>
   </view>
-
-  
 </view>
 <template is="loading" data="{{loadingStatus}}"></template>

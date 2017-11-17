@@ -7,39 +7,31 @@ const app = getApp(),
 Page({
   data: {
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
-    dateList: [],
-    showHint: false,
-    page: {number: 1, size: 5},
-    groups: [],
-    tempAlert: null
-  },
-  //关闭首次登陆弹窗
-  closeHint() {
-    util.closeHint(this);
+    page: {
+      studying: {number: 1, size: 5},
+      studied: {number: 1, size: 5}
+    },
+    groups: {
+      studying: [],
+      studied: []
+    },
+    mode: 'studying'  // 1: studying  2: studied
   },
 
   onLoad(options) {
     const userId = Auth.getLocalUserId();
-
-    this.setData({
-      loadingStatus: 'LOADING'
-    });
     if (userId) {
-      this._load('paid_group')
-        .then(this._loadPaidGroupOver);
+      this.loadData();
     }
-  },
 
-  onShow() {
-
-  },
-
-  /**
-   * 加载数据
-   */
-  _load(type) {
-    return request({
-      url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=title,description,picurl,price,editorInfo,id,metaData&app_name=${app.globalData.appName}`,
+    const that = this;
+    wx.getSystemInfo({
+      success(res) {
+        that.setData({screenWidth: res.windowWidth});
+      },
+      fail() {
+        that.setData({screenWidth: 375});
+      }
     });
   },
 
@@ -63,12 +55,9 @@ Page({
    * 下拉刷新
    */
   onPullDownRefresh() {
-    this.data.page.number = 1;
-    this.data.groups = [];
-    this._load('paid_group').then(res => {
-      wx.stopPullDownRefresh();
-      return this._loadPaidGroupOver(res);
-    });
+    this.data.page[this.data.mode].number = 1;
+    this.data.groups[this.data.mode] = [];
+    this.loadData();
   },
   /**
    * 上拉加载
@@ -78,35 +67,44 @@ Page({
       this.setData({
         loadingStatus: 'LOADING_MORE'
       })
-      console.log('LOADING_MORE');
-      this._load('paid_group').then(this._loadPaidGroupOver);
+      this.loadData();
     }
   },
 
-  /**
-   * paidGroup 数据加载 成功 回调
-   */
-  _loadPaidGroupOver(res) {
-    this.data.page.number ++;
-    let loadingStatus;
-    if (!res.data.length) {
-      loadingStatus = 'LOADED_ALL';
-    } else {
-      loadingStatus = null;
+  loadData() {
+
+    const status = this.data.mode === 'studying' ? 1 : 2;
+
+    this.setData({
+      loadingStatus: 'LOADING'
+    });
+    request({
+      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/albums?include=media,post&page[size]=${this.data.page[this.data.mode].size}&page[number]=${this.data.page[this.data.mode].number}&fields[albums]=title,picurl,metaData&app_name=${app.globalData.appName}&filter=unlocked&filter[status]=${status}`,
+    }).then(res => {
+      this.data.page[this.data.mode].number ++;
+      let loadingStatus;
+      if (!res.data.length) {
+        loadingStatus = 'LOADED_ALL';
+      } else {
+        loadingStatus = null;
+      }
+      this.data.groups[this.data.mode] = this.data.groups[this.data.mode].concat(res.data);
+      this.setData({
+        groups: this.data.groups,
+        loadingStatus: loadingStatus
+      });
+      wx.stopPullDownRefresh();
+    });
+  },
+
+  changeMode(event) {
+    const mode = event.currentTarget.dataset.mode;
+
+    if (mode !== this.data.mode) {
+      this.setData({mode: mode});
+      if (this.data.groups[mode].length === 0) {
+        this.loadData();
+      }
     }
-    this.setData({
-      groups: this.data.groups.concat(res.data),
-      loadingStatus: loadingStatus
-    });
-  },
-
-  tempAlertClose: function () {
-    this.setData({
-      tempAlert: null
-    });
-  },
-
-  tempAlertGoList: function () {
-    this.data.tempAlert = false;
   }
 });

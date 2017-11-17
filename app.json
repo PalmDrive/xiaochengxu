@@ -48,7 +48,7 @@
     "position": "bottom",
     "list": [
       {
-        "pagePath": "pages/album/index",
+        "pagePath": "pages/album/study",
         "text": "首页",
         "iconPath": "images/tabIcons/home.png",
         "selectedIconPath": "images/tabIcons/home_selected.png"
