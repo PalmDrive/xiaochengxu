@@ -11,17 +11,19 @@ Page({
       studying: {number: 1, size: 5},
       studied: {number: 1, size: 5}
     },
-    groups: {
+    albums: {
       studying: [],
       studied: []
     },
-    mode: 'studying'  // 1: studying  2: studied
+    mode: 'studying',  // 1: studying  2: studied
+    groups: []
   },
 
   onLoad(options) {
     const userId = Auth.getLocalUserId();
     if (userId) {
       this.loadData();
+      this.loadSuggestAlbum();
     }
 
     const that = this;
@@ -56,7 +58,7 @@ Page({
    */
   onPullDownRefresh() {
     this.data.page[this.data.mode].number = 1;
-    this.data.groups[this.data.mode] = [];
+    this.data.albums[this.data.mode] = [];
     this.loadData();
   },
   /**
@@ -88,12 +90,26 @@ Page({
       } else {
         loadingStatus = null;
       }
-      this.data.groups[this.data.mode] = this.data.groups[this.data.mode].concat(res.data);
+      const data = res.data.map(album => {
+        album.completedDays = Object.keys(album.relationships.userAlbum.data.attributes.logs.days).length;
+        return album;
+      })
+      this.data.albums[this.data.mode] = this.data.albums[this.data.mode].concat(data);
       this.setData({
-        groups: this.data.groups,
+        albums: this.data.albums,
         loadingStatus: loadingStatus
       });
       wx.stopPullDownRefresh();
+    });
+  },
+
+  loadSuggestAlbum() {
+    request({
+      url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=1&page[number]=1&fields[albums]=title,description,picurl,price,editorInfo,id,metaData&app_name=${app.globalData.appName}`,
+    }).then(res => {
+      this.setData({
+        groups: res.data
+      });
     });
   },
 
@@ -102,7 +118,7 @@ Page({
 
     if (mode !== this.data.mode) {
       this.setData({mode: mode});
-      if (this.data.groups[mode].length === 0) {
+      if (this.data.albums[mode].length === 0) {
         this.loadData();
       }
     }

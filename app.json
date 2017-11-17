@@ -54,8 +54,8 @@
         "selectedIconPath": "images/tabIcons/home_selected.png"
       },
       {
-        "pagePath": "pages/album/purchased-list",
-        "text": "已购",
+        "pagePath": "pages/album/index",
+        "text": "探索",
         "iconPath": "images/tabIcons/buy.png",
         "selectedIconPath": "images/tabIcons/buy_selected.png"
       },
