@@ -43,7 +43,7 @@
     <text class="size-12 today-ans">今日提交</text>
     <text class="size-12 text-gray today-ans-subtitle">来看看别人的吧</text>
 
-    <view wx:for="{{peerAnsweers}}" wx:key class="section bg-gray peer">
+    <view wx:for="{{peerAnsweers}}" wx:key class="section bg-gray peer" wx:if="{{item.content || (item.pics && item.pics.length > 0)}}">
       <view class="row space-between">
         <view class="row">
           <image src="{{item.user.profilePicUrl}}" class="user-photo"></image>
