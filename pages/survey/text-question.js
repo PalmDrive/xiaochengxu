@@ -28,7 +28,8 @@ let _survey,
     _peerAnswersPageSize = 50, // @todo: 暂时没有分页加载，最多就加载50条
     _finishedLoadPeerAnswers = false,
     _picNumber = 1,
-    _dayIndex;
+    _dayIndex,
+    _completeAmount = 0;;
 
 Page({
   data: {
@@ -38,7 +39,8 @@ Page({
     user: {},
     peerAnsweers: [],
     userSurveyAnswersCount: null,
-    committed: false
+    committed: false,
+    allQuestionList: []
   },
 
   onLoad(options) {
@@ -50,6 +52,7 @@ Page({
     });
 
     // 初始化全局参数
+    _completeAmount = parseInt(options.completeAmount);
     _isUploading = false;
     _picNumber = 1;
     _finishedLoadPeerAnswers = false;
@@ -60,7 +63,8 @@ Page({
           updates = {
             user: Auth.getLocalUserInfo(),
             question: {},
-            answer: {}
+            answer: {},
+            allQuestionList: []
           };
     User.getSurveyAndAnswers(_postId, _albumId, false /* set false when getSurveyAndAnswers is used in daily.js*/)
       .then(data => {
@@ -84,6 +88,7 @@ Page({
         if (updates.answer.content || question.attributes.picurlList.length > 0) {
           updates.committed = true;
         }
+        updates.allQuestionList = data.relationships.surveyQuestions.data;
         this.setData(updates);
       });
   },
@@ -153,6 +158,12 @@ Page({
           that._afterSave();
         }
       });
+
+      if (_completeAmount >= this.data.allQuestionList.length - 1) {
+        wx.navigateTo({
+          url: `../album/share?imgUrl=xxx`
+        });
+      }
     });
   },
 
