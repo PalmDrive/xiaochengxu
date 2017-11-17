@@ -50,7 +50,8 @@
           <text class="size-14">{{item.user.wxUsername}}</text>
         </view>
       </view>
-      <text class="answer-content size-14">{{item.content}}</text>
+      <text class="answer-content size-14">{{item.content ? item.content : ''}}</text>
+      <image wx:for="{{item.pics}}" wx:for-item="pic" wx:key="" src="{{pic.url}}" class="answer-img" mode="widthFix"></image>
       <text class="size-12 text-gray answer-date">{{item.displayedUpdatedAt}}</text>
     </view>
   </view>
