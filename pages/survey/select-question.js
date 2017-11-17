@@ -9,7 +9,8 @@ let surveyId = undefined,
     albumId = undefined,
     postId = undefined,
     isUploading = false,
-    completeAmount = 0;
+    completeAmount = 0,
+    cardImageUrl = '';
 
 Page({
   data: {
@@ -46,6 +47,7 @@ Page({
       let answerList = res.relationships.userSurveyAnswer ? [res.relationships.userSurveyAnswer] : [];
 
       if (answerList.length > 0) {
+        cardImageUrl = answerList[0].data.attributes.cardImageUrl;
         answerList = answerList[0].data.attributes.answers;
       }
 
@@ -198,7 +200,7 @@ Page({
 
         if (completeAmount >= this.data.allQuestionList.length - 1) {
           wx.navigateTo({
-            url: `../album/share?imgUrl=xxx`
+            url: `../album/share?imgUrl=${cardImageUrl}`
           });
         }
       });
