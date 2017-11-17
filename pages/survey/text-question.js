@@ -72,9 +72,9 @@ Page({
         _survey = data;
         const question = data.relationships.surveyQuestions.data.filter(d => d.id === questionId)[0];
         const userSurveyAnswer = data.relationships.userSurveyAnswer && data.relationships.userSurveyAnswer.data;
-        _cardImageUrl = userSurveyAnswer.attributes.cardImageUrl;
         question.attributes.picurlList = [];
         if (userSurveyAnswer) {
+          _cardImageUrl = userSurveyAnswer.attributes.cardImageUrl;
           const answer = getAnswerForQuestion(userSurveyAnswer, questionId);
           if (answer) {
             this._afterSave();
@@ -160,8 +160,8 @@ Page({
           that._afterSave();
         }
       });
-
-      if (_completeAmount >= this.data.allQuestionList.length - 1) {
+      const list = this.data.allQuestionList.filter(res => res.attributes.questionType !== 'desc');
+      if (_completeAmount === list.length - 1) {
         wx.navigateTo({
           url: `../album/share?imgUrl=${_cardImageUrl}`
         });

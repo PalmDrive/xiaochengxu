@@ -197,14 +197,13 @@ Page({
         this.setData({
           committed: true
         })
-
-        if (completeAmount >= this.data.allQuestionList.length - 1) {
+        const list = this.data.allQuestionList.filter(res => res.attributes.questionType !== 'desc');
+        if (completeAmount === list.length - 1) {
           wx.navigateTo({
             url: `../album/share?imgUrl=${cardImageUrl}`
           });
         }
       });
-
     } else {
       wx.showToast({
         title: '请先答完这道题',
