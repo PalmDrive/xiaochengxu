@@ -1,5 +1,5 @@
 const _ = require('../vendors/underscore'),
-      clientVersion = '1.8.0';
+      clientVersion = '1.8.1';
 
 //let _header = {};
 
