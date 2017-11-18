@@ -8,7 +8,7 @@
 <view class="column bg-gray section">
   <!--<text class="size-14 text-white bg-main-color task-number">{{index + 1}}</text>-->
   <text class="size-14 text-color1 pingfang-medium">{{question.attributes.content}}</text>
-  <text class="size-12 text-color3 description">{{attributes.description}}</text>
+  <text class="size-12 text-color3 description">{{question.attributes.description}}</text>
 </view>
 
 <image src="../../images/survey/quote.png" class="quotation" wx:if="{{(question.attributes.questionType === 'text' || question.attributes.questionType === 'text & pic') && mode !== 'read'}}"></image>
