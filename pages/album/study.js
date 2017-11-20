@@ -16,14 +16,14 @@ Page({
       studied: []
     },
     mode: 'studying',  // 1: studying  2: studied
-    groups: []
+    groups: [],
+    showSuggestAlbum: false
   },
 
   onLoad(options) {
     const userId = Auth.getLocalUserId();
     if (userId) {
       this.loadData();
-      this.loadSuggestAlbum();
     }
 
     const that = this;
@@ -81,7 +81,7 @@ Page({
       loadingStatus: 'LOADING'
     });
     request({
-      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/albums?include=media,post&page[size]=${this.data.page[this.data.mode].size}&page[number]=${this.data.page[this.data.mode].number}&fields[albums]=title,picurl,metaData&app_name=${app.globalData.appName}&filter=unlocked&filter[status]=${status}`,
+      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/albums?include=media,post&page[size]=${this.data.page[this.data.mode].size}&page[number]=${this.data.page[this.data.mode].number}&fields[albums]=title,picurl,metaData&app_name=${app.globalData.appName}&filter[unlocked]=true&filter[status]=${status}`,
     }).then(res => {
       this.data.page[this.data.mode].number ++;
       let loadingStatus;
@@ -100,6 +100,8 @@ Page({
         loadingStatus: loadingStatus
       });
       wx.stopPullDownRefresh();
+
+      this.loadSuggestAlbum();
     });
   },
 
@@ -107,8 +109,17 @@ Page({
     request({
       url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=1&page[number]=1&fields[albums]=title,description,picurl,price,editorInfo,id,metaData&app_name=${app.globalData.appName}`,
     }).then(res => {
+
+      let showSuggestAlbum = false;
+      const studingCount = this.data.albums["studying"].filter(r => r.id === res.data[0].id).length;
+      const studiedCount = this.data.albums["studied"].filter(r => r.id === res.data[0].id).length;
+      if (studingCount + studiedCount === 0) {
+        showSuggestAlbum = true;
+      }
+
       this.setData({
-        groups: res.data
+        groups: res.data,
+        showSuggestAlbum
       });
     });
   },
