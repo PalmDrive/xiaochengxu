@@ -89,7 +89,7 @@
       <view class="row method-row">
         <view class="row method-row-innner">
           <image src="../../images/survey/apply_question{{question.attributes.completed ? '_complete' : ''}}.png" class="question-icon"></image>
-          <text class="size-16 text-color2 medium-title">{{question.attributes.questionType === 'desc' ? '思考题（无需提交答案)' : '问答题'}}</text>
+          <text class="size-16 text-color2 medium-title">{{question.attributes.questionType === 'desc' ? '线下任务（无需提交答案)' : '问答题'}}</text>
         </view>
         <text class="size-9 look-detail" style="color: {{question.attributes.completed ? '#B0B0B0' : '#4A90E2'}}">{{question.attributes.questionType === 'desc' ? '' : (question.attributes.completed ? '已完成' : '查看详情')}}</text>
       </view>

@@ -50,14 +50,14 @@
       {
         "pagePath": "pages/album/study",
         "text": "首页",
-        "iconPath": "images/tabIcons/home.png",
-        "selectedIconPath": "images/tabIcons/home_selected.png"
+        "iconPath": "images/tabIcons/study.png",
+        "selectedIconPath": "images/tabIcons/study_selected.png"
       },
       {
         "pagePath": "pages/album/index",
         "text": "探索",
-        "iconPath": "images/tabIcons/buy.png",
-        "selectedIconPath": "images/tabIcons/buy_selected.png"
+        "iconPath": "images/tabIcons/discover.png",
+        "selectedIconPath": "images/tabIcons/discover_selected.png"
       },
       {
         "pagePath": "pages/my/index",
