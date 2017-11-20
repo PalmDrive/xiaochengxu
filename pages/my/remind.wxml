@@ -1,5 +1,5 @@
 <view class="container">
-    <text class="text-center size-12 text-color3">当前推送时间为</text>
+    <text class="text-center size-12 text-color3">当前提醒时间为</text>
     <text class="text-center size-28 text-color1">{{time || '20:00'}}</text>
     <text class="pingfang-medium size-15 text-color1">设置时间</text>
     <view class="times row">
@@ -9,6 +9,7 @@
         <text class="size-22">其他</text>
       </picker>
     </view>
+    <!--
     <view class="column">
       <text class="pingfang-medium size-15 text-color1">打卡奖励</text>
       <text class="rule size-13 text-color1">连续打卡10天-任意《七日辑》9折购买
@@ -16,4 +17,5 @@
 连续打卡60天-任意《七日辑》7折购买
 连续打卡100天及以上-任意《七日辑》6折购买</text>
     </view>
+    -->
 </view>

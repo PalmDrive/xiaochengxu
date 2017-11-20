@@ -14,14 +14,12 @@ Page({
     const items = [
       [
       // {icon: '礼品卡', title: '礼品卡', tip: '你还有50个礼品卡', action: ''},
-      {icon: '订单', title: '订单', tip: '', action: 'goToOrder'},
-      {icon: '礼品卡', title: '卡券', tip: '点击查看详情', action: 'goToCoupon'},
-      {icon: '成就', title: '成就', tip: '完成一个七日辑就可获得一个成就', action: 'goToAchieve'},
-      {icon: '免费得', title: '优惠得', tip: '点击查看哪些朋友帮助了你', action: 'goToFree'}
+      {icon: 'my_order', title: '订单', tip: '', action: 'goToOrder'},
+      {icon: 'my_card', title: '卡券', tip: '点击查看详情', action: 'goToCoupon'},
+      {icon: 'my_achieve', title: '成就', tip: '完成一个七日辑就可获得一个成就', action: 'goToAchieve'},
+      {icon: 'my_free', title: '优惠得', tip: '点击查看哪些朋友帮助了你', action: 'goToFree'}
       ],
       [
-      // {icon: '打卡', title: '打卡提示时间', tip: '20:00', action: 'goToRemindTime'}
-      // ,
       // {icon: '客服', title: '在线', tip: '周一至周五 10:00-20:00', action: ''}
       ],
     ];
@@ -65,14 +63,14 @@ Page({
       let flag = false;
       for (let i = 0; i < this.data.items[1].length; i++ ) {
         let obj = this.data.items[1][i];
-        if (obj.title === '打卡提示时间') {
+        if (obj.title === '学习提醒时间') {
           obj.tip = (hour + ":" + min);
           this.data.items[1][i] = obj;
           flag = true;
         }
       }
       if (!flag) {
-        this.data.items[1].push({icon: '打卡', title: '打卡提示时间', tip: (hour + ":" + min), action: 'goToRemindTime'})
+        this.data.items[1].push({icon: 'my_time', title: '学习提醒时间', tip: (hour + ":" + min), action: 'goToRemindTime'})
       }
 
       this.setData({
