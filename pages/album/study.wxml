@@ -1,0 +1,37 @@
+<import src="../../templates/loading.wxml"/>
+
+<view class="row select-view">
+  <view class="column select-item" data-mode="studying" bindtap="changeMode">
+    <text class="size-16" style="color: {{mode === 'studying' ? '#42BD56' : '#1A1A1A'}}">正在进行</text>
+    <view class="line" style="background: {{mode === 'studying' ? '#42BD56' : '#ffffff'}}"></view>
+  </view>
+  <view class="column select-item" data-mode="studied" bindtap="changeMode">
+    <text class="size-16" style="color: {{mode === 'studied' ? '#42BD56' : '#1A1A1A'}}">已经完结</text>
+    <view class="line" style="background: {{mode === 'studied' ? '#42BD56' : '#ffffff'}}"></view>
+  </view>
+</view>
+
+<view class="studying">
+  <view class="row album" wx:for="{{albums[mode]}}" wx:for-item="group" wx:key data-group="{{ group }}" bindtap="gotoPaidGroup">
+    <image src="{{group.attributes.picurl}}" mode="aspectFill" class="album-img" style="height: {{(screenWidth - 40) / 4}}px"></image>
+    <view class="column right-row" style="height: {{(screenWidth - 40) / 4}}px">
+      <text class="title-text  size-17">{{group.attributes.title}}</text>
+      <text class="size-12" style="color: {{mode === 'studied' ? '#85858D' : (group.completedDays >= group.meta.unlockedDays ? '#85858D' : '#42BD56')}}">{{mode === 'studied' ? '已经结营' : (group.completedDays >= group.meta.unlockedDays ? '今日已学习' : '有新任务')}}</text>
+    </view>
+  </view>
+
+  <view class="column" wx:if="{{loadingStatus !== 'LOADING' && albums[mode].length === 0}}">
+    <view class="column blank-view">
+      <image src="../../images/survey/空状态.png" mode="aspectFill" class="blank-img"></image>
+      <text class="text-color1 size-16">您还没有{{mode === studying ? '正在进行' : '已完结'}}的课程</text>
+      <text class="size-12 text-color3">再忙也要学习哦</text>
+    </view>
+    <view class="column" wx:if="{{showSuggestAlbum}}">
+      <view class="row suggest-tip">
+        <text class="size-14 text-color2">为你推荐精品训练营</text>
+      </view>
+      <include src="../../includes/album-item.wxml"/>
+    </view>
+  </view>
+</view>
+<template is="loading" data="{{loadingStatus}}" wx:if="{{!(loadingStatus === 'LOADED_ALL' && albums[mode].length === 0)}}"></template>

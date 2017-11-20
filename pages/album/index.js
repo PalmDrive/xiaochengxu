@@ -95,27 +95,11 @@ Page({
     });
   },
 
-  gotoNewGroup() {
-    wx.navigateTo({
-      url: '../groups/new-group'
-    });
-  },
-
   /**
    * 进入七日辑
    */
   gotoPaidGroup(event) {
     const album = event.currentTarget.dataset.group;
-          //name = event.currentTarget.dataset.group.attributes.username,
-          //userInfo = Auth.getLocalUserInfo().attributes || {};
-    // util.gaEvent({
-    //   cid: Auth.getLocalUserId(),
-    //   ev: 0,
-    //   ea: 'click_toutiao_in_toutiaoTab',
-    //   ec: `toutiao_name:${name},toutiao_id:${albumId}`,
-    //   el: `user_name:${userInfo.wxUsername},user_id:${albumId}`
-    // });
-
     util.goToAlbum(album);
   },
 
@@ -150,24 +134,13 @@ Page({
       this._load('paid_group').then(this._loadPaidGroupOver);
     }
   },
-  //点击文章
-  goToMedium: function(event) {
-    const medium = event.currentTarget.dataset.medium,
-          userInfo = Auth.getLocalUserInfo(),
-          gaOptions = {
-            cid: Auth.getLocalUserId(),
-            ec: `article_title:${medium.attributes.title},article_id:${medium.id}`,
-            ea: 'click_article_in_groupListPage',
-            el: `toutiao_name:${this.data.userName},toutiao_id:${this.data.groupId}`,
-            ev: 0
-          };
-    util.goToMedium(event, gaOptions);
-  },
+
   tempAlertClose: function () {
     this.setData({
       tempAlert: null
     });
   },
+
   tempAlertGoList: function () {
     this.data.tempAlert = false;
   }

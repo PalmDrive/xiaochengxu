@@ -1,0 +1,171 @@
+page {
+  background: white;
+}
+
+.select-view {
+  height: 50px;
+  margin-bottom: 30px;
+  padding-top: 14px;
+}
+
+.select-item {
+  justify-content: space-between;
+  width: 50%;
+  align-items:center;
+  height: 100%;
+}
+
+.line {
+  height: 2px;
+  width: 64px;
+}
+
+.album {
+  padding-right: 20px;
+  padding-left: 20px;
+  margin-bottom: 40px;
+  align-items: center;
+}
+
+.album-img {
+  width: 25%;
+  margin-right: 15px;
+}
+
+.right-row {
+  width: 70%;
+  justify-content:space-between;
+}
+
+.blank-view {
+  background: #F1F3F4;
+  height: 180px;
+  padding: 40px 0px 30px 0px;
+  align-items:center;
+}
+
+.blank-img {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 20px;
+}
+
+.suggest-tip {
+  padding: 20px 0px 20px 0px;
+  justify-content: center;
+}
+
+
+/* 推荐七日辑 */
+
+.groups {
+  width: 100%;
+}
+
+.paid-group-pic {
+  width: 100%;
+  height: 160px;
+  position: relative;
+}
+
+.description {
+  height: 20px;
+  width: 100%;
+  background: rgba(0,0,0,0.60);
+  position: absolute;
+  margin-top: -26px;
+}
+
+.description-text {
+  color: #FFFFFF;
+  letter-spacing: 0.34px;
+  margin-left: 20px;
+  margin-top: 3px;
+  position: absolute;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+
+.title {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: row;
+  margin-left: 20px;
+}
+
+.title-text {
+  font-family: FZRUIZH_CUJW--GB1-0;
+  color: #161616;
+  letter-spacing: 0.9px;
+  max-width: 85%;
+}
+
+.title-type {
+  background: #505050;
+  border-radius: 3px;
+  font-size: 9px;
+  color: #FFFFFF;
+  letter-spacing: 0.31px;
+  height: 16px;
+  width: 36px;
+  text-align: center;
+  padding-top: 2px;
+  margin-left: 3px;
+  margin-top: 6px;
+}
+
+.head-img {
+  border-radius: 16px;
+  height: 32px;
+  width: 32px;
+}
+
+.bottom-view {
+  margin-left: 20px;
+  margin-top: 10px;
+  align-items: flex-end;
+}
+
+.bottom-left-view {
+  margin-left: 8px;
+}
+
+.bottom-right-view {
+  padding-right: 25px;
+  flex: 1;
+  text-align: right;
+}
+
+.ji-zhu-text {
+  color: #B0B0B9;
+  letter-spacing: 0.34px;
+}
+
+.ji-zhu-name {
+  color: #505050;
+  letter-spacing: 0.41px;
+}
+
+.price-tip {
+  color: #767676;
+  letter-spacing: 0.41px;
+  line-height: 16px;
+}
+
+.price-old {
+  text-decoration:line-through;
+}
+
+.price-now {
+  color: #0090E7;
+  letter-spacing: 1.25px;
+  margin-left: 25px;
+}
+
+.line-view {
+  height: 15px;
+  margin-top:15px;
+  background: white;
+}

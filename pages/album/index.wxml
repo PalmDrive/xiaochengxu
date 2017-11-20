@@ -1,5 +1,4 @@
 <import src="../../templates/loading.wxml"/>
-<include src="../../includes/hint.wxml"/>
 <import src="../../templates/prompt.wxml"/>
 
 <view scroll-y bindscrolltolower="onReachBottom" lower-threshold="20" class="pingfang-regular">
@@ -7,32 +6,7 @@
     <image src="/images/paid-group/type_background@3x.png" class="type-background"></image>
     <text class=" size-12 qi-title">七日辑　　挑三拣四，让你达到小预期</text>
   </view>
-  <view wx:for="{{groups}}" wx:for-item="group" wx:key class="groups" data-group="{{ group }}" bindtap="gotoPaidGroup">
-    <!-- paid_group -->
-    <image src="{{group.attributes.picurl}}" mode="aspectFill" class="paid-group-pic"></image>
-    <!--
-    <view class="description">
-      <text class="description-text  size-10">{{group.attributes.description}}</text>
-    </view>
-    -->
-    <view class="title">
-      <text class="title-text  size-26">{{group.attributes.title}}</text>
-      <text class="title-type">零基础</text>
-    </view>
-    <view class="bottom-view row">
-        <image src="{{group.attributes.editorInfo.profilePicUrl}}" class="head-img"></image>
-        <view class="bottom-left-view column" >
-          <text class="ji-zhu-text  size-10">辑主</text>
-          <text class="ji-zhu-name  size-12">{{group.attributes.editorInfo.username}}</text>
-        </view>
-        <view class="bottom-right-view">
-          <text class="price-tip  size-12">售价</text>
-          <text class="price-tip price-old  size-12">￥{{(group.attributes.metaData.originalPrice || 4990) / 100}} </text>
-          <text class="price-now  size-20">{{(group.attributes.price === 0 ? '限时免费' : '￥' + (group.attributes.price / 100))}} </text>
-        </view>
-    </view>
-    <view class="line-view"></view>
-  </view>
+  <include src="../../includes/album-item.wxml"/>
 </view>
 <template is="loading" data="{{loadingStatus}}"></template>
 <template is="prompt" data="{{tempAlert}}"></template>
