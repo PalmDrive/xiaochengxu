@@ -1,5 +1,4 @@
 <import src="../../templates/loading.wxml"/>
-<import src="../../templates/prompt.wxml"/>
 
 <view scroll-y bindscrolltolower="onReachBottom" lower-threshold="20" class="pingfang-regular">
   <view class="type-view">
@@ -9,4 +8,3 @@
   <include src="../../includes/album-item.wxml"/>
 </view>
 <template is="loading" data="{{loadingStatus}}"></template>
-<template is="prompt" data="{{tempAlert}}"></template>
