@@ -30,7 +30,7 @@ let _survey,
     _picNumber = 1,
     _dayIndex,
     _completeAmount = 0,
-    _cardImageUrl = '';
+    _picurl = '';
 
 Page({
   data: {
@@ -74,7 +74,7 @@ Page({
         const userSurveyAnswer = data.relationships.userSurveyAnswer && data.relationships.userSurveyAnswer.data;
         question.attributes.picurlList = [];
         if (userSurveyAnswer) {
-          _cardImageUrl = userSurveyAnswer.attributes.cardImageUrl;
+          _picurl = userSurveyAnswer.attributes.picurl;
           const answer = getAnswerForQuestion(userSurveyAnswer, questionId);
           if (answer) {
             this._afterSave();
@@ -163,7 +163,7 @@ Page({
       const list = this.data.allQuestionList.filter(res => res.attributes.questionType !== 'desc');
       if (_completeAmount === list.length - 1) {
         wx.navigateTo({
-          url: `../album/share?imgUrl=${_cardImageUrl}`
+          url: `../album/share?imgUrl=${_picurl}`
         });
       }
     });

@@ -10,7 +10,7 @@ let surveyId = undefined,
     postId = undefined,
     isUploading = false,
     completeAmount = 0,
-    cardImageUrl = '';
+    picurl = '';
 
 Page({
   data: {
@@ -47,7 +47,7 @@ Page({
       let answerList = res.relationships.userSurveyAnswer ? [res.relationships.userSurveyAnswer] : [];
 
       if (answerList.length > 0) {
-        cardImageUrl = answerList[0].data.attributes.cardImageUrl;
+        picurl = answerList[0].data.attributes.picurl;
         answerList = answerList[0].data.attributes.answers;
       }
 
@@ -200,7 +200,7 @@ Page({
         const list = this.data.allQuestionList.filter(res => res.attributes.questionType !== 'desc');
         if (completeAmount === list.length - 1) {
           wx.navigateTo({
-            url: `../album/share?imgUrl=${cardImageUrl}`
+            url: `../album/share?imgUrl=${picurl}`
           });
         }
       });
