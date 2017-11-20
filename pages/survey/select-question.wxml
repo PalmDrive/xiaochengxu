@@ -2,7 +2,7 @@
   <!--<text class="size-18 pingfang-medium text-color1 top-tip">解答完题，我们帮你生成用户访谈问卷</text>-->
   <view class="column bg-gray">
     <text class="size-12 main-color-green">第 {{qindex + 1}}/{{questionList.length}} 题 {{attributes.questionType === 'single-select' ? '(单选)' : '(多选)'}}</text>
-    <text class="size-14 text-color1 pingfang-medium title">{{qindex + 1}}、 {{attributes.content}}</text>
+    <text class="size-17 text-color1 pingfang-medium title">{{qindex + 1}}、 {{attributes.content}}</text>
     <text class="size-12 text-color3 description">{{attributes.description}}</text>
   </view>
 

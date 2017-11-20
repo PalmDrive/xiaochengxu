@@ -7,7 +7,7 @@
 
 <view class="column bg-gray section">
   <!--<text class="size-14 text-white bg-main-color task-number">{{index + 1}}</text>-->
-  <text class="size-14 text-color1 pingfang-medium">{{question.attributes.content}}</text>
+  <text class="size-17 text-color1 pingfang-medium">{{question.attributes.content}}</text>
   <text class="size-12 text-color3 description">{{question.attributes.description}}</text>
 </view>
 
