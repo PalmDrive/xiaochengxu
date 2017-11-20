@@ -49,7 +49,7 @@
     "list": [
       {
         "pagePath": "pages/album/study",
-        "text": "学习",
+        "text": "首页",
         "iconPath": "images/tabIcons/study.png",
         "selectedIconPath": "images/tabIcons/study_selected.png"
       },
