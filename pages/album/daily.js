@@ -7,7 +7,8 @@ const app = getApp(),
     User = require('../../utils/user');
 
 let albumId = undefined,
-    postId = undefined;
+    postId = undefined,
+    completeAmount = 0;
 
 Page({
   data: {
@@ -182,6 +183,7 @@ Page({
    * 加载数据
    */
   _loadSurvey() {
+    completeAmount = 0;
     // @TODO: use getSurveyAndAnswers
     User.getSurveyAndAnswers(postId, albumId, true /* set false when getSurveyAndAnswers is used in daily.js*/)
       .then(res => {
@@ -196,6 +198,9 @@ Page({
 
         questionList.forEach(res => {
           res.attributes.completed = answerList.filter(a => a && a.surveyQuestionId === res.id).length > 0;
+          if (res.attributes.completed) {
+            completeAmount ++;
+          }
         });
       }
 
@@ -285,14 +290,14 @@ Page({
     const question = event.currentTarget.dataset.question;
     if (question.attributes.questionType !== 'desc') {
       wx.navigateTo({
-        url: `../survey/text-question?postId=${postId}&albumId=${albumId}&surveyQuestionId=${question.id}&dayIndex=${this.data.selectedIndex}`
+        url: `../survey/text-question?postId=${postId}&albumId=${albumId}&surveyQuestionId=${question.id}&dayIndex=${this.data.selectedIndex}&completeAmount=${completeAmount}`
       });
     }
   },
 
   goToSelectQuestion: function(event) {
     wx.navigateTo({
-      url: `../survey/select-question?postId=${postId}&albumId=${albumId}&surveyId=${this.data.survey.id}&qindex=0`
+      url: `../survey/select-question?postId=${postId}&albumId=${albumId}&surveyId=${this.data.survey.id}&qindex=0&completeAmount=${completeAmount}`
     });
   },
 

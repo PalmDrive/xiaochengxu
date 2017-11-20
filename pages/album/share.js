@@ -20,6 +20,13 @@ Page({
 
   onLoad(options) {
     console.log(options);
+
+    if (!options.id && options.imgUrl) {
+      this.setData({
+        imgUrl: options.imgUrl.replace('http:','https:')
+      });
+      return;
+    }
     wx.showLoading({
       title: '生成中',
       mask: true
@@ -30,7 +37,7 @@ Page({
       data: {
         data: {
           productId: options.id,
-          productType: 'Album' 
+          productType: 'Album'
         }
       }
     }).then(res => {
@@ -68,7 +75,7 @@ Page({
       onError(err);
     });
   },
-  
+
   cancel() {
     wx.navigateBack();
   }

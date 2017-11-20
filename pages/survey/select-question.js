@@ -8,7 +8,9 @@ const app = getApp(),
 let surveyId = undefined,
     albumId = undefined,
     postId = undefined,
-    isUploading = false;
+    isUploading = false,
+    completeAmount = 0,
+    picurl = '';
 
 Page({
   data: {
@@ -19,7 +21,8 @@ Page({
     rightAnwser: [],
     committed: false,
     preButtonDisable: false,
-    nextButtonDisable: false
+    nextButtonDisable: false,
+    allQuestionList: []
   },
 
   onLoad(options) {
@@ -30,6 +33,7 @@ Page({
     surveyId = options.surveyId;
     postId = options.postId;
     albumId = options.albumId;
+    completeAmount = parseInt(options.completeAmount);
 
     const qindex = parseInt(options.qindex);
     this._loadSurvey(qindex);
@@ -43,6 +47,7 @@ Page({
       let answerList = res.relationships.userSurveyAnswer ? [res.relationships.userSurveyAnswer] : [];
 
       if (answerList.length > 0) {
+        picurl = answerList[0].data.attributes.picurl;
         answerList = answerList[0].data.attributes.answers;
       }
 
@@ -97,7 +102,8 @@ Page({
         preButtonDisable,
         nextButtonDisable,
         selectedAnwser: selectedAnwser,
-        committed: committed
+        committed: committed,
+        allQuestionList: questionList
       });
 
     });
@@ -191,8 +197,13 @@ Page({
         this.setData({
           committed: true
         })
+        const list = this.data.allQuestionList.filter(res => res.attributes.questionType !== 'desc');
+        if (completeAmount === list.length - 1) {
+          wx.navigateTo({
+            url: `../album/share?imgUrl=${picurl}`
+          });
+        }
       });
-
     } else {
       wx.showToast({
         title: '请先答完这道题',
