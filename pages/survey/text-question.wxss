@@ -198,3 +198,7 @@ page {
 .container-view {
   padding-bottom:70px;
 }
+
+textarea {
+  height: 200px;
+}

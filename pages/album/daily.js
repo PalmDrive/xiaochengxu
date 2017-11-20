@@ -8,7 +8,8 @@ const app = getApp(),
 
 let albumId = undefined,
     postId = undefined,
-    completeAmount = 0;
+    completeAmount = 0,
+    picurl = '';
 
 Page({
   data: {
@@ -43,7 +44,8 @@ Page({
       title: '开启推送'
     },
     qrcodeModalHidden: true,
-    didUserPay: false
+    didUserPay: false,
+    completedAll: false
   },
 
   onLoad(options) {
@@ -194,8 +196,8 @@ Page({
       let questionTextList = questionList.filter(res => res.attributes.questionType !== 'multi-select' && res.attributes.questionType !== 'single-select');
 
       if (answerList.length > 0) {
+        picurl = answerList[0].data.attributes.picurl;
         answerList = answerList[0].data.attributes.answers;
-
         questionList.forEach(res => {
           res.attributes.completed = answerList.filter(a => a && a.surveyQuestionId === res.id).length > 0;
           if (res.attributes.completed) {
@@ -210,7 +212,14 @@ Page({
         }
       });
 
+      let completedAll = false;
+      const list = questionList.filter(res => res.attributes.questionType !== 'desc');
+      if (completeAmount === list.length) {
+        completedAll = true;
+      }
+
       this.setData({
+        completedAll,
         survey: res,
         questionList,
         questionTextList,
@@ -532,12 +541,22 @@ Page({
           day = date.getDate();
     return year + '-' + month + '-' + day;
   },
+
   tempAlertClose: function () {
     this.setData({
       tempAlert: null
     });
   },
+
   tempAlertGoList: function () {
     this.data.tempAlert = false;
+  },
+
+  gotoCard: function(event) {
+    if (this.data.completedAll) {
+      wx.navigateTo({
+        url: `../album/share?imgUrl=${picurl}`
+      });
+    }
   }
 })

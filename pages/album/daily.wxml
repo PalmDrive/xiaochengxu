@@ -71,7 +71,10 @@
   <!-- 我的任务 -->
   <text class="size-12 text-white task-method-title task-title bg-main-color">我的任务</text>
   <view class="section column">
-    <text class="size-12 text-color3 second-tip">任务来袭, 等你闯关</text>
+    <view class="row space-between">
+      <text class="size-12 text-color3 second-tip">任务来袭, 等你闯关</text>
+      <text class="size-12 text-color3 second-tip" style="color: {{completedAll ? '#0090E7' : '#B7B7B7'}}" bindtap="gotoCard">{{completedAll ? '打卡完成' : '打卡未完成'}}</text>
+    </view>
     <view class="column bg-gray" bindtap="goToSelectQuestion" wx:if="{{questionSelectList.length > 0}}">
       <view class="row method-row">
         <view class="row method-row-innner">
