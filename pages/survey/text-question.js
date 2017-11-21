@@ -161,10 +161,24 @@ Page({
         }
       });
       const list = this.data.allQuestionList.filter(res => res.attributes.questionType !== 'desc');
-      if (_completeAmount === list.length - 1) {
-        wx.navigateTo({
-          url: `../album/share?imgUrl=${_picurl}`
-        });
+      if (_completeAmount >= list.length - 1) {
+        if (!_picurl) {
+          User.getSurveyAndAnswers(_postId, _albumId, true)
+            .then(res => {
+            if (!res.relationships) return;
+            let answerList = res.relationships.userSurveyAnswer ? [res.relationships.userSurveyAnswer] : [];
+            if (answerList.length > 0) {
+              _picurl = answerList[0].data.attributes.picurl;
+            }
+            wx.navigateTo({
+              url: `../album/share?imgUrl=${_picurl}`
+            });
+          });
+        } else {
+          wx.navigateTo({
+            url: `../album/share?imgUrl=${_picurl}`
+          });
+        }
       }
     });
   },

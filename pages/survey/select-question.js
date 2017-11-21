@@ -199,9 +199,23 @@ Page({
         })
         const list = this.data.allQuestionList.filter(res => res.attributes.questionType !== 'desc');
         if (completeAmount === list.length - 1) {
-          wx.navigateTo({
-            url: `../album/share?imgUrl=${picurl}`
-          });
+          if (!picurl) {
+            User.getSurveyAndAnswers(postId, albumId, true)
+              .then(res => {
+              if (!res.relationships) return;
+              let answerList = res.relationships.userSurveyAnswer ? [res.relationships.userSurveyAnswer] : [];
+              if (answerList.length > 0) {
+                picurl = answerList[0].data.attributes.picurl;
+              }
+              wx.navigateTo({
+                url: `../album/share?imgUrl=${picurl}`
+              });
+            });
+          } else {
+            wx.navigateTo({
+              url: `../album/share?imgUrl=${picurl}`
+            });
+          }
         }
       });
     } else {
