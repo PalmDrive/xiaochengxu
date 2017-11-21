@@ -18,6 +18,7 @@ Page({
     albumAttributes: {},
     editorInfo: {},
     post: {},
+    posts: [],
     survey: {},
     media: [],
     questionList: [],
@@ -103,6 +104,13 @@ Page({
     if (albumId) { // page loaded
       console.log('call _load in onShow');
       this._loadSurvey();
+
+      if (this.data.albumAttributes.postIds && this.data.unlockedDays > this.data.albumAttributes.postIds.length) {
+        // 加载filter 问题及答案
+        User.getFilterQuestions(albumId,true).then(res => {
+
+        });
+      }
     }
   },
 
@@ -163,14 +171,24 @@ Page({
         return medium;
       });
 
+      let dayList = res.meta.checkinStatus,
+          unlockedDays = res.meta.unlockedDays,
+          selectedIndex = post.attributes && post.attributes.dayIndex;
+
+      // unlockedDays = 8;
+      if (unlockedDays > albumAttributes.postIds.length) {
+        selectedIndex = albumAttributes.postIds.length + 1;
+        dayList.push(true);
+        this._loadAlbum();
+      }
       const updatesData = {
         albumAttributes,
         editorInfo: albumAttributes.editorInfo,
         post,
         media,
-        selectedIndex: post.attributes && post.attributes.dayIndex,
-        dayList: res.meta.checkinStatus,
-        unlockedDays: res.meta.unlockedDays,
+        selectedIndex,
+        dayList,
+        unlockedDays,
         ...updates
       };
 
@@ -181,6 +199,18 @@ Page({
     });
   },
 
+  _loadAlbum() {
+    wx.showLoading({
+      title: '加载中',
+    });
+    request({
+      url: `${app.globalData.apiBase}/albums/${albumId}?app_name=${app.globalData.appName}`,
+    }).then(res => {
+      wx.hideLoading();
+      this.setData({posts: res.data.relationships.posts.data});
+      // post.relationships.media.data
+    });
+  },
   /**
    * 加载数据
    */
@@ -240,15 +270,17 @@ Page({
 
   goToPost: function(event) {
     const index = event.currentTarget.dataset.index,
-          newPostId = this.data.albumAttributes.postIds[index]
-
+          postIds = this.data.albumAttributes.postIds,
+          newPostId = postIds[index];
     if (index < this.data.unlockedDays && this.data.selectedIndex - 1 !== index) {
       this.setData({
         selectedIndex: index + 1
       })
-      postId = newPostId;
-      albumId = albumId;
-      this._load();
+      if (index <= postIds.length - 1) {
+        postId = newPostId;
+        albumId = albumId;
+        this._load();
+      }
     }
   },
 
@@ -558,5 +590,9 @@ Page({
         url: `../album/share?imgUrl=${picurl}`
       });
     }
+  },
+
+  goToDetailReport: function(event) {
+
   }
 })

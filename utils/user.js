@@ -15,7 +15,8 @@ let _albumIdsMap = null,
          }
        }
      */
-    _surveysMap = {};
+    _surveysMap = {},
+    _filterQuestionsMap = {};
 
 function getPurchasedAlbumIdsMap(force) {
   const app = getApp() || this,
@@ -86,6 +87,39 @@ function getSurveyAndAnswers(postId, albumId, force) {
   }
 }
 
+function getFilterQuestions(albumId, force) {
+  const app = getApp(),
+        url = `${app.globalData.apiBase}/morning-posts/${postId}/survey`,
+        key = `${albumId}`;
+
+  if (_filterQuestionsMap[key] && !force) {
+    return new Promise(resolve => resolve(_filterQuestionsMap[key]));
+  } else {
+    return request({
+      url,
+      data: {albumId}
+    })
+    .then(res => {
+      const data = res.data,
+            relationships = data.relationships;
+      // Add question attributes from included data
+      if (relationships) {
+        relationships.surveyQuestions.data.forEach(q => {
+          const question = res.included.filter(d => d.type === 'SurveyQuestions' && d.id === q.id)[0];
+          q.attributes = question.attributes;
+        });
+        const userSurveyAnswer = res.included.filter(d => d.type === 'userSurveyAnswers')[0];
+        if (userSurveyAnswer) {
+          relationships.userSurveyAnswer = {data: userSurveyAnswer};
+        }
+      }
+      // add to _filterQuestionsMap
+      _filterQuestionsMap[key] = data;
+      return data;
+    });
+  }
+}
+
 function getPeerAnswers(postId, albumId, page) {
   const defaultPage = {
     number: 1, size: 5
@@ -120,5 +154,6 @@ module.exports = {
   getPurchasedAlbumIdsMap,
   addAlbumId,
   getSurveyAndAnswers,
-  getPeerAnswers
+  getPeerAnswers,
+  getFilterQuestions
 }
