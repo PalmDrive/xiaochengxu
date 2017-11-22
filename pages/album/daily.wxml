@@ -35,7 +35,6 @@
 
   <!-- 任务 -->
   <view class="section column">
-
     <view class="row task-row1">
       <view class="row">
         <image src="{{editorInfo.profilePicUrl}}" class="baby"></image>
