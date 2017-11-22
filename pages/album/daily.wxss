@@ -65,6 +65,13 @@
   justify-content: space-around;
 }
 
+.top-tip {
+  background: #4A90E2;
+  text-align: center;
+  width: 100%;
+  padding: 12px 0px 12px 0px;
+}
+
 .day-box {
   width: 35px;
   height: 50px;
@@ -357,4 +364,14 @@
   background: #0BB908;
   border-radius: 3px;
   color: #fff;
+}
+
+/* 第8天 */
+
+.green-view {
+  padding: 0px 15px 50px 15px;
+}
+
+.green-tip {
+  margin-bottom: 5px;
 }

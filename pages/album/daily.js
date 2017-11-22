@@ -9,7 +9,9 @@ const app = getApp(),
 let albumId = undefined,
     postId = undefined,
     completeAmount = 0,
-    picurl = '';
+    picurl = '',
+    sumUp = '',
+    reportPicurl = '';
 
 Page({
   data: {
@@ -18,6 +20,7 @@ Page({
     albumAttributes: {},
     editorInfo: {},
     post: {},
+    posts: [],
     survey: {},
     media: [],
     questionList: [],
@@ -45,7 +48,8 @@ Page({
     },
     qrcodeModalHidden: true,
     didUserPay: false,
-    completedAll: false
+    completedAll: false,
+    questions: []
   },
 
   onLoad(options) {
@@ -103,6 +107,13 @@ Page({
     if (albumId) { // page loaded
       console.log('call _load in onShow');
       this._loadSurvey();
+
+      if (this.data.albumAttributes.postIds && this.data.unlockedDays > this.data.albumAttributes.postIds.length) {
+        // 加载filter 问题及答案
+        User.getFilterQuestions(albumId, true).then(res => {
+
+        });
+      }
     }
   },
 
@@ -128,6 +139,7 @@ Page({
             postRelationships = post.relationships || {};
       albumId = res.data.id;
       postId = post.id;
+      sumUp = metaData.sumUp;
 
       let updates = {};
       const role = res.data.relationships.userAlbum.data.attributes.role;
@@ -163,14 +175,24 @@ Page({
         return medium;
       });
 
+      let dayList = res.meta.checkinStatus,
+          unlockedDays = res.meta.unlockedDays,
+          selectedIndex = post.attributes && post.attributes.dayIndex;
+
+      // unlockedDays = 8;
+      if (unlockedDays > albumAttributes.postIds.length) {
+        selectedIndex = albumAttributes.postIds.length + 1;
+        dayList.push(true);
+        this._loadAlbum();
+      }
       const updatesData = {
         albumAttributes,
         editorInfo: albumAttributes.editorInfo,
         post,
         media,
-        selectedIndex: post.attributes && post.attributes.dayIndex,
-        dayList: res.meta.checkinStatus,
-        unlockedDays: res.meta.unlockedDays,
+        selectedIndex,
+        dayList,
+        unlockedDays,
         ...updates
       };
 
@@ -181,6 +203,32 @@ Page({
     });
   },
 
+  _loadAlbum() {
+    wx.showLoading({
+      title: '加载中',
+    });
+    request({
+      url: `${app.globalData.apiBase}/albums/${albumId}?app_name=${app.globalData.appName}`,
+    }).then(res => {
+      wx.hideLoading();
+      this.setData({posts: res.data.relationships.posts.data});
+      // post.relationships.media.data
+      // 加载filter 问题及答案
+      User.getFilterQuestions(albumId, true).then(res => {
+        this.setData({questions: res.questions});
+      });
+      reportPicurl = res.included[0].userAlbum.data.attributes.metaData.picurl;
+
+      // 如果是第一次看到结营页面，则显示结营报告页面
+      const flag =  Auth.getLocalKey( `${albumId}_hasShownReport`) !== 'true';
+      if (flag) {
+        Auth.setLocalKey( `${albumId}_hasShownReport`, 'true');
+        wx.navigateTo({
+          url: `../album/share?imgUrl=${reportPicurl}`
+        });
+      }
+    });
+  },
   /**
    * 加载数据
    */
@@ -240,15 +288,17 @@ Page({
 
   goToPost: function(event) {
     const index = event.currentTarget.dataset.index,
-          newPostId = this.data.albumAttributes.postIds[index]
-
+          postIds = this.data.albumAttributes.postIds,
+          newPostId = postIds[index];
     if (index < this.data.unlockedDays && this.data.selectedIndex - 1 !== index) {
       this.setData({
         selectedIndex: index + 1
       })
-      postId = newPostId;
-      albumId = albumId;
-      this._load();
+      if (index <= postIds.length - 1) {
+        postId = newPostId;
+        albumId = albumId;
+        this._load();
+      }
     }
   },
 
@@ -558,5 +608,17 @@ Page({
         url: `../album/share?imgUrl=${picurl}`
       });
     }
+  },
+
+  goToDetailReport: function(event) {
+    wx.navigateTo({
+      url: `../album/report?sumUp=${sumUp}&albumId=${albumId}`
+    });
+  },
+
+  gotoReportCard: function(event) {
+    wx.navigateTo({
+      url: `../album/share?imgUrl=${reportPicurl}`
+    });
   }
 })

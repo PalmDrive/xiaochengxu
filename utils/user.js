@@ -15,7 +15,8 @@ let _albumIdsMap = null,
          }
        }
      */
-    _surveysMap = {};
+    _surveysMap = {},
+    _filterQuestionsMap = {};
 
 function getPurchasedAlbumIdsMap(force) {
   const app = getApp() || this,
@@ -86,6 +87,40 @@ function getSurveyAndAnswers(postId, albumId, force) {
   }
 }
 
+function getFilterQuestions(albumId, force) {
+  const app = getApp(),
+        url = `${app.globalData.apiBase}/albums/${albumId}/relationships/surveys`,
+        key = `${albumId}`;
+
+  if (_filterQuestionsMap[key] && !force) {
+    return new Promise(resolve => resolve(_filterQuestionsMap[key]));
+  } else {
+    return request({
+      url,
+      data: {albumId}
+    })
+    .then(res => {
+      let data = res.data;
+      let answers = {};
+      data.map(d => {
+        if (d.type === 'UserSurveyAnswers') {
+          for (var i in d.attributes.answers) {
+            answers[i] = d.attributes.answers[i];
+          }
+        }
+      });
+      let questions = data.filter(d => d.type === 'SurveyQuestions');
+
+      let newData = {
+        questions,
+        answers
+      };
+      _filterQuestionsMap[key] = newData;
+      return newData;
+    });
+  }
+}
+
 function getPeerAnswers(postId, albumId, page) {
   const defaultPage = {
     number: 1, size: 5
@@ -120,5 +155,6 @@ module.exports = {
   getPurchasedAlbumIdsMap,
   addAlbumId,
   getSurveyAndAnswers,
-  getPeerAnswers
+  getPeerAnswers,
+  getFilterQuestions
 }

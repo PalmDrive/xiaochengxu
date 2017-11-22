@@ -27,14 +27,14 @@
 
   <view class="row top-view2 bg-main-color">
     <view class="column day-box" wx:for="{{dayList}}" wx:for-item="flag" wx:key="" style="background: {{selectedIndex === (index + 1) ? 'white' : '#42BD56'}}" bindtap="goToPost" data-index="{{index}}">
-      <text class="size-16 pingfang-medium" style="color: {{selectedIndex === index + 1 ? '#42BD56' : 'white'}};opacity:{{(index + 1) <= unlockedDays ? 1 : 0.5}}">{{unlockedDays === (index + 1) ? '今' : (index + 1)}}</text>
+      <text class="size-16 pingfang-medium" style="color: {{selectedIndex === index + 1 ? '#42BD56' : 'white'}};opacity:{{(index + 1) <= unlockedDays ? 1 : 0.5}}">{{index === albumAttributes.postIds.length ? '结' : (  unlockedDays === (index + 1) ? '今' : (index + 1))}}</text>
       <image src="../../images/survey/right.jpg" class="right" wx:if="{{flag}}"></image>
     </view>
   </view>
+  <text class="top-tip text-white size-12" bindtap="gotoReportCard">hi，{{userInfo.wxUsername}}，查看你的结营报告吧</text>
 
   <!-- 任务 -->
   <view class="section column">
-
     <view class="row task-row1">
       <view class="row">
         <image src="{{editorInfo.profilePicUrl}}" class="baby"></image>
@@ -43,67 +43,110 @@
     <!--  <text class="size-12 text-color2 ">2017.09.12</text>-->
     </view>
 
-    <text class="size-14 text-color2">{{survey.attributes.description}}</text>
+    <text class="size-14 text-color2">{{unlockedDays <= albumAttributes.postIds.length ? survey.attributes.description : albumAttributes.metaData.endRemark}}</text>
   </view>
-  <view class="line-view"></view>
 
-  <!-- 任务攻略 -->
-  <text class="size-12 text-white task-method-title task-title bg-main-color">任务攻略</text>
-  <view class="section column">
-    <text class="size-12 text-color3 second-tip">下面的攻略能够帮助你更好地完成任务</text>
+  <!-- 小于等于7天正常显示， 第8天显示结营 -->
+  <view class="column" wx:if="{{selectedIndex <= albumAttributes.postIds.length}}">
+    <view class="line-view"></view>
 
-    <view class="column bg-gray" wx:for="{{media}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}" bindtap="goToMedium">
-      <view class="row method-row">
-        <view class="row method-row-innner">
-          <image src="../../images/survey/{{medium.attributes.mediumType}}.png" class="method-icon"></image>
-          <text class="size-16 text-color2 medium-title">{{medium.attributes.title}}</text>
+    <!-- 任务攻略 -->
+    <text class="size-12 text-white task-method-title task-title bg-main-color">任务攻略</text>
+    <view class="section column">
+      <text class="size-12 text-color3 second-tip">下面的攻略能够帮助你更好地完成任务</text>
+
+      <view class="column bg-gray" wx:for="{{media}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}" bindtap="goToMedium">
+        <view class="row method-row">
+          <view class="row method-row-innner">
+            <image src="../../images/survey/{{medium.attributes.mediumType}}.png" class="method-icon"></image>
+            <text class="size-16 text-color2 medium-title">{{medium.attributes.title}}</text>
+          </view>
+          <text class="size-9 look-detail" style="color: {{medium.attributes.lastViewedAt ? '#B0B0B0' : '#4A90E2'}}">{{medium.attributes.lastViewedAt ? '已完成' : '查看详情'}}</text>
         </view>
-        <text class="size-9 look-detail" style="color: {{medium.attributes.lastViewedAt ? '#B0B0B0' : '#4A90E2'}}">{{medium.attributes.lastViewedAt ? '已完成' : '查看详情'}}</text>
+        <view class="column method-content">
+          <text class="size-12 text-color3 method-row summary" wx:if="{{medium.attributes.mediumType === 'article'}}">{{medium.attributes.summary}}</text>
+          <text class="size-9" wx:if="{{medium.attributes.mediumType !== 'article'}}">{{medium.attributes.durationString}}</text>
+        </view>
       </view>
-      <view class="column method-content">
-        <text class="size-12 text-color3 method-row summary" wx:if="{{medium.attributes.mediumType === 'article'}}">{{medium.attributes.summary}}</text>
-        <text class="size-9" wx:if="{{medium.attributes.mediumType !== 'article'}}">{{medium.attributes.durationString}}</text>
+    </view>
+    <view class="line-view"></view>
+
+    <!-- 我的任务 -->
+    <text class="size-12 text-white task-method-title task-title bg-main-color">我的任务</text>
+    <view class="section column">
+      <view class="row space-between">
+        <text class="size-12 text-color3 second-tip">任务来袭, 等你闯关</text>
+        <text class="size-12 text-color3 second-tip" style="color: {{completedAll ? '#0090E7' : '#B7B7B7'}}" bindtap="gotoCard">{{completedAll ? '打卡完成' : '打卡未完成'}}</text>
+      </view>
+      <view class="column bg-gray" bindtap="goToSelectQuestion" wx:if="{{questionSelectList.length > 0}}">
+        <view class="row method-row">
+          <view class="row method-row-innner">
+            <image src="../../images/survey/select_question{{questionSelectCompleted ? '_complete' : ''}}.png" class="question-icon"></image>
+            <text class="size-16 text-color2 medium-title">选择题</text>
+          </view>
+          <text class="size-9 look-detail" style="color: {{questionSelectCompleted ? '#B0B0B0' : '#4A90E2'}}">{{questionSelectCompleted ? '已完成' : '查看详情'}}</text>
+        </view>
+        <view class="column question-content">
+          <text class="size-12 text-color3 method-row summary">小试牛刀</text>
+        </view>
+      </view>
+
+      <view class="column bg-gray" wx:for="{{questionTextList}}" wx:for-item="question" wx:key="" data-question="{{question}}" data-idx="{{index}}" bindtap="goToTextQuestion">
+        <view class="row method-row">
+          <view class="row method-row-innner">
+            <image src="../../images/survey/apply_question{{question.attributes.completed ? '_complete' : ''}}.png" class="question-icon"></image>
+            <text class="size-16 text-color2 medium-title">{{question.attributes.questionType === 'desc' ? '线下任务（无需提交答案)' : '问答题'}}</text>
+          </view>
+          <text class="size-9 look-detail" style="color: {{question.attributes.completed ? '#B0B0B0' : '#4A90E2'}}">{{question.attributes.questionType === 'desc' ? '' : (question.attributes.completed ? '已完成' : '查看详情')}}</text>
+        </view>
+        <view class="column question-content">
+          <text class="size-12 text-color3 method-row summary">{{question.attributes.content}}</text>
+        </view>
       </view>
     </view>
   </view>
-  <view class="line-view"></view>
 
-  <!-- 我的任务 -->
-  <text class="size-12 text-white task-method-title task-title bg-main-color">我的任务</text>
-  <view class="section column">
-    <view class="row space-between">
-      <text class="size-12 text-color3 second-tip">任务来袭, 等你闯关</text>
-      <text class="size-12 text-color3 second-tip" style="color: {{completedAll ? '#0090E7' : '#B7B7B7'}}" bindtap="gotoCard">{{completedAll ? '打卡完成' : '打卡未完成'}}</text>
-    </view>
-    <view class="column bg-gray" bindtap="goToSelectQuestion" wx:if="{{questionSelectList.length > 0}}">
-      <view class="row method-row">
-        <view class="row method-row-innner">
-          <image src="../../images/survey/select_question{{questionSelectCompleted ? '_complete' : ''}}.png" class="question-icon"></image>
-          <text class="size-16 text-color2 medium-title">选择题</text>
+  <!-- 小于等于7天正常显示， 第8天显示结营 -->
+  <view class="column" wx:if="{{selectedIndex > albumAttributes.postIds.length}}">
+    <view class="green-view">
+      <text class="main-color-green size-12 green-tip">学习历程</text>
+      <view class="column bg-gray" bindtap="goToDetailReport">
+        <view class="row method-row">
+          <view class="row method-row-innner">
+            <image src="../../images/survey/article.png" class="method-icon"></image>
+            <text class="size-16 text-color2 medium-title">文稿 I 您有一份报告请查收</text>
+          </view>
+          <text class="size-9 look-detail main-color">查看详情</text>
         </view>
-        <text class="size-9 look-detail" style="color: {{questionSelectCompleted ? '#B0B0B0' : '#4A90E2'}}">{{questionSelectCompleted ? '已完成' : '查看详情'}}</text>
-      </view>
-      <view class="column question-content">
-        <text class="size-12 text-color3 method-row summary">小试牛刀</text>
+        <view class="column method-content">
+          <text class="size-12 text-color3 method-row summary">您的结营报告敬请查收</text>
+          <text class="size-14 text-color2" wx:for="{{questions}}" wx:for-item="question" wx:key="">· {{question.attributes.metaData.shortTitle}}</text>
+        </view>
       </view>
     </view>
 
-    <view class="column bg-gray" wx:for="{{questionTextList}}" wx:for-item="question" wx:key="" data-question="{{question}}" data-idx="{{index}}" bindtap="goToTextQuestion">
-      <view class="row method-row">
-        <view class="row method-row-innner">
-          <image src="../../images/survey/apply_question{{question.attributes.completed ? '_complete' : ''}}.png" class="question-icon"></image>
-          <text class="size-16 text-color2 medium-title">{{question.attributes.questionType === 'desc' ? '线下任务（无需提交答案)' : '问答题'}}</text>
+    <view class="column green-view" wx:for="{{posts}}" wx:for-item="postItem" wx:key="">
+      <text class="main-color-green size-12 green-tip">第{{index + 1}}天</text>
+      <view class="column bg-gray" wx:for="{{postItem.relationships.media.data}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}" bindtap="goToMedium">
+        <view class="row method-row">
+          <view class="row method-row-innner">
+            <image src="../../images/survey/{{medium.attributes.mediumType}}.png" class="method-icon"></image>
+            <text class="size-16 text-color2 medium-title">{{medium.attributes.title}}</text>
+          </view>
+          <text class="size-9 look-detail" style="color: {{medium.attributes.lastViewedAt ? '#B0B0B0' : '#4A90E2'}}">{{medium.attributes.lastViewedAt ? '已完成' : '查看详情'}}</text>
         </view>
-        <text class="size-9 look-detail" style="color: {{question.attributes.completed ? '#B0B0B0' : '#4A90E2'}}">{{question.attributes.questionType === 'desc' ? '' : (question.attributes.completed ? '已完成' : '查看详情')}}</text>
-      </view>
-      <view class="column question-content">
-        <text class="size-12 text-color3 method-row summary">{{question.attributes.content}}</text>
+        <view class="column method-content">
+          <text class="size-12 text-color3 method-row summary" wx:if="{{medium.attributes.mediumType === 'article'}}">{{medium.attributes.summary}}</text>
+          <text class="size-9" wx:if="{{medium.attributes.mediumType !== 'article'}}">{{medium.attributes.durationString}}</text>
+        </view>
       </view>
     </view>
+
+
   </view>
+
   <!-- 购买按钮 -->
   <text bindtap="showPay" class="btn-buy btns-container"  wx:if="{{trial}}">立刻购买 {{albumAttributes.price / 100}}元</text>
-
 
   <!-- shareAlert -->
   <view class="shareAlert" wx:if="{{shareAlert && !didUserPay && loadingStatus !== 'LOADING'}}">
