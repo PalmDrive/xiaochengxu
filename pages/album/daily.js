@@ -107,13 +107,6 @@ Page({
     if (albumId) { // page loaded
       console.log('call _load in onShow');
       this._loadSurvey();
-
-      if (this.data.albumAttributes.postIds && this.data.unlockedDays > this.data.albumAttributes.postIds.length) {
-        // 加载filter 问题及答案
-        User.getFilterQuestions(albumId, true).then(res => {
-
-        });
-      }
     }
   },
 
