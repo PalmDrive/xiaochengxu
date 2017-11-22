@@ -31,6 +31,7 @@
       <image src="../../images/survey/right.jpg" class="right" wx:if="{{flag}}"></image>
     </view>
   </view>
+  <text class="top-tip text-white size-12" bindtap="gotoReportCard">hi，{{userInfo.wxUsername}}，查看你的结营报告吧</text>
 
   <!-- 任务 -->
   <view class="section column">
@@ -120,6 +121,7 @@
         </view>
         <view class="column method-content">
           <text class="size-12 text-color3 method-row summary">您的结营报告敬请查收</text>
+          <text class="size-14 text-color2" wx:for="{{questions}}" wx:for-item="question" wx:key="">· {{question.attributes.metaData.shortTitle}}</text>
         </view>
       </view>
     </view>

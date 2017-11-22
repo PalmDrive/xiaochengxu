@@ -1,0 +1,21 @@
+<view class="column user-view">
+  <image src="{{userInfo.attributes.profilePicUrl}}" class="user-img"></image>
+  <text class="size-18 text-color1 pingfang-medium">{{userInfo.attributes.wxUsername}}</text>
+</view>
+
+<view class="row sum-up">
+  <text class="size-18 text-color2">七天的学习让{{userInfo.attributes.wxUsername}}同学 get 了以下技能：
+  {{sumUp}}</text>
+</view>
+
+<view class="column" wx:for="{{questions}}" wx:for-item="question" wx:key="" wx:if="{{answers[question.id].content || (answers[question.id].pics && answers[question.id].pics.length > 0)}}">
+  <view class="row bg-gray">
+    <image src="../../images/survey/complete.png" class="complete-img"></image>
+    <text class="size-14 text-color1 pingfang-medium short-title">{{question.attributes.metaData.shortTitle}}</text>
+  </view>
+  <view class="answer-view column">
+    <text class="size-18 text-color2 answer-text" wx:if="{{answers[question.id].content}}">{{answers[question.id].content ? answers[question.id].content : ''}}</text>
+    <image wx:for="{{answers[question.id].pics}}" wx:for-item="pic" wx:key="" src="{{pic.url}}" class="answer-img" mode="widthFix"></image>
+    <text class="text-color3 size-16 sub-title">{{userInfo.attributes.wxUsername}}的{{question.attributes.metaData.subTitle}}</text>
+  </view>
+</view>

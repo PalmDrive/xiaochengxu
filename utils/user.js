@@ -89,7 +89,7 @@ function getSurveyAndAnswers(postId, albumId, force) {
 
 function getFilterQuestions(albumId, force) {
   const app = getApp(),
-        url = `${app.globalData.apiBase}/morning-posts/${postId}/survey`,
+        url = `${app.globalData.apiBase}/albums/${albumId}/relationships/surveys`,
         key = `${albumId}`;
 
   if (_filterQuestionsMap[key] && !force) {
@@ -100,22 +100,23 @@ function getFilterQuestions(albumId, force) {
       data: {albumId}
     })
     .then(res => {
-      const data = res.data,
-            relationships = data.relationships;
-      // Add question attributes from included data
-      if (relationships) {
-        relationships.surveyQuestions.data.forEach(q => {
-          const question = res.included.filter(d => d.type === 'SurveyQuestions' && d.id === q.id)[0];
-          q.attributes = question.attributes;
-        });
-        const userSurveyAnswer = res.included.filter(d => d.type === 'userSurveyAnswers')[0];
-        if (userSurveyAnswer) {
-          relationships.userSurveyAnswer = {data: userSurveyAnswer};
+      let data = res.data;
+      let answers = {};
+      data.map(d => {
+        if (d.type === 'UserSurveyAnswers') {
+          for (var i in d.attributes.answers) {
+            answers[i] = d.attributes.answers[i];
+          }
         }
-      }
-      // add to _filterQuestionsMap
-      _filterQuestionsMap[key] = data;
-      return data;
+      });
+      let questions = data.filter(d => d.type === 'SurveyQuestions');
+
+      let newData = {
+        questions,
+        answers
+      };
+      _filterQuestionsMap[key] = newData;
+      return newData;
     });
   }
 }
