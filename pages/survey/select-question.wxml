@@ -3,7 +3,7 @@
   <view class="column bg-gray">
     <text class="size-12 main-color-green">第 {{qindex + 1}}/{{questionList.length}} 题 {{attributes.questionType === 'single-select' ? '(单选)' : '(多选)'}}</text>
     <text class="size-17 text-color1 pingfang-medium title">{{qindex + 1}}、 {{attributes.content}}</text>
-    <text class="size-12 text-color3 description">{{attributes.description}}</text>
+    <text class="size-12 text-color3 description">{{attributes.description || ''}}</text>
   </view>
 
   <view class="column section">
