@@ -23,7 +23,7 @@ Page({
     })
     albumId = options.albumId;
 
-    this.setData({sumUp: options.sumUp, userInfo: Auth.getLocalUserInfo()});
+    this.setData({userInfo: Auth.getLocalUserInfo()});
 
     // 加载filter 问题及答案
     User.getFilterQuestions(albumId, false).then(res => {

@@ -375,3 +375,11 @@
 .green-tip {
   margin-bottom: 5px;
 }
+
+.report-tip {
+  margin-bottom: 25px;
+}
+
+.report-title {
+  margin-bottom: 20px;
+}

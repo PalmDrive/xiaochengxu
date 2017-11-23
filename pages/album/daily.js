@@ -10,7 +10,6 @@ let albumId = undefined,
     postId = undefined,
     completeAmount = 0,
     picurl = '',
-    sumUp = '',
     reportPicurl = '';
 
 Page({
@@ -132,7 +131,6 @@ Page({
             postRelationships = post.relationships || {};
       albumId = res.data.id;
       postId = post.id;
-      sumUp = metaData.sumUp;
 
       let updates = {};
       const role = res.data.relationships.userAlbum.data.attributes.role;
@@ -172,7 +170,7 @@ Page({
           unlockedDays = res.meta.unlockedDays,
           selectedIndex = post.attributes && post.attributes.dayIndex;
 
-      // unlockedDays = 8;
+      unlockedDays = 8;
       if (unlockedDays > albumAttributes.postIds.length) {
         selectedIndex = albumAttributes.postIds.length + 1;
         dayList.push(true);
@@ -605,7 +603,7 @@ Page({
 
   goToDetailReport: function(event) {
     wx.navigateTo({
-      url: `../album/report?sumUp=${sumUp}&albumId=${albumId}`
+      url: `../album/report?albumId=${albumId}`
     });
   },
 
