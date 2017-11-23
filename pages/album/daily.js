@@ -170,7 +170,7 @@ Page({
           unlockedDays = res.meta.unlockedDays,
           selectedIndex = post.attributes && post.attributes.dayIndex;
 
-      unlockedDays = 8;
+      // unlockedDays = 8;
       if (unlockedDays > albumAttributes.postIds.length) {
         selectedIndex = albumAttributes.postIds.length + 1;
         dayList.push(true);

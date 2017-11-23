@@ -383,3 +383,8 @@
 .report-title {
   margin-bottom: 20px;
 }
+
+.bottom-view {
+  height: 40px;
+  width: 100%;
+}
