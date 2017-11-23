@@ -377,7 +377,7 @@
 }
 
 .report-tip {
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 }
 
 .report-title {
