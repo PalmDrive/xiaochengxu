@@ -36,7 +36,7 @@ findCoupon: function () {
         quota: coupons[d.relationships.coupon.data.id].attributes.value,
         name: d.attributes.displayName,
         validityTerm: `有效期至${this._formatDateToDay(new Date(coupons[d.relationships.coupon.data.id].attributes.expiredAt))}`,
-        range: coupons[d.relationships.coupon.data.id].attributes.albumId ? `仅限购买“${coupons[d.relationships.coupon.data.id].attributes.albumId}”` : `全场通用，最高折扣${coupons[d.relationships.coupon.data.id].attributes.value/100}元`,
+        range: coupons[d.relationships.coupon.data.id].attributes.albumId ? `仅限购买“${coupons[d.relationships.coupon.data.id].attributes.albumTitle}”` : `全场通用，最高折扣${coupons[d.relationships.coupon.data.id].attributes.value/100}元`,
         redeemedAt: d.attributes.redeemedAt
       }
     });
