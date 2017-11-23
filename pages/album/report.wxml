@@ -17,6 +17,6 @@
   <view class="answer-view column">
     <text class="size-18 text-color2 answer-text" wx:if="{{answers[question.id].content}}">{{answers[question.id].content ? answers[question.id].content : ''}}</text>
     <image wx:for="{{answers[question.id].pics}}" wx:for-item="pic" wx:key="" src="{{pic.url}}" class="answer-img" mode="widthFix"></image>
-    <text class="text-color3 size-16 sub-title">{{userInfo.attributes.wxUsername}}的{{question.attributes.metaData.subTitle}}</text>
+    <text class="text-color3 size-16 sub-title">by {{userInfo.attributes.wxUsername}}</text>
   </view>
 </view>
