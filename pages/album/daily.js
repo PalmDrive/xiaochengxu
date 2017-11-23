@@ -320,6 +320,9 @@ Page({
       index = event.currentTarget.dataset.pindex;
       key = 'day' + (parseInt(index) + 1);
       newPostId = this.data.posts[index].id
+      this.data.posts[index].relationships.media.data[idx].attributes.lastViewedAt = (new Date()).getTime();
+    } else {
+      this.data.media[idx].attributes.lastViewedAt = (new Date()).getTime();
     }
 
     util.goToMedium(event, gaOptions, {
@@ -329,12 +332,11 @@ Page({
       albumId: albumId,
       morningPostId: newPostId
     });
-
-    this.data.media[idx].attributes.lastViewedAt = (new Date()).getTime();
     const that = this;
     setTimeout(function(){
       that.setData({
-        media: that.data.media
+        media: that.data.media,
+        posts: that.data.posts
       });
     }, 1000);
   },

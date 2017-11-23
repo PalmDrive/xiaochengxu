@@ -31,7 +31,7 @@
       <image src="../../images/survey/right.jpg" class="right" wx:if="{{flag}}"></image>
     </view>
   </view>
-  <text class="top-tip text-white size-12" bindtap="gotoReportCard" wx:if="{{selectedIndex > albumAttributes.postIds.length}}">Hi，{{userInfo.wxUsername}}，查看你的七日辑成就吧</text>
+  <text class="top-tip text-white size-12" bindtap="gotoReportCard" wx:if="{{selectedIndex > albumAttributes.postIds.length}}">Hi，{{userInfo.wxUsername}}，点击查看你的七日辑成就吧</text>
 
   <!-- 任务 -->
   <view class="section column">
@@ -141,9 +141,8 @@
         </view>
       </view>
     </view>
-
-
   </view>
+  <view class="bottom-view"></view>
 
   <!-- 购买按钮 -->
   <text bindtap="showPay" class="btn-buy btns-container"  wx:if="{{trial}}">立刻购买 {{albumAttributes.price / 100}}元</text>
