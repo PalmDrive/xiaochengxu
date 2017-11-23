@@ -16,7 +16,7 @@
   <view class="column answer-view" wx:if="{{committed}}">
     <view class="row">
       <text class="size-15 text-color2">已选答案： </text>
-      <text class="size-15 text-color2" wx:for="{{selectedAnwser}}" wx:for-item="anwser" wx:key="">{{anwser.value}}{{index !== selectedAnwser.length - 1 ? '、' : ' '}} </text>
+      <text class="size-15 text-color2" wx:for="{{selectedAnwser}}" wx:for-item="anwser" wx:key="">{{anwser}}{{index !== selectedAnwser.length - 1 ? '、' : ' '}} </text>
     </view>
     <view class="row">
       <text class="size-15 main-color-green">正确答案： </text>

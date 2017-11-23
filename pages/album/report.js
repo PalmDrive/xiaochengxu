@@ -10,10 +10,11 @@ let albumId = undefined;
 
 Page({
   data: {
-    sumUp: '一堆技能',
+    sumUp: '',
     userInfo: {},
     questions: [],
-    answers: []
+    answers: [],
+    sumUpList: []
   },
 
   onLoad(options) {
@@ -23,7 +24,7 @@ Page({
     })
     albumId = options.albumId;
 
-    this.setData({sumUp: options.sumUp, userInfo: Auth.getLocalUserInfo()});
+    this.setData({userInfo: Auth.getLocalUserInfo()});
 
     // 加载filter 问题及答案
     User.getFilterQuestions(albumId, false).then(res => {

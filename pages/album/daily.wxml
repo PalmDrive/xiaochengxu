@@ -31,7 +31,7 @@
       <image src="../../images/survey/right.jpg" class="right" wx:if="{{flag}}"></image>
     </view>
   </view>
-  <text class="top-tip text-white size-12" bindtap="gotoReportCard">hi，{{userInfo.wxUsername}}，查看你的结营报告吧</text>
+  <text class="top-tip text-white size-12" bindtap="gotoReportCard" wx:if="{{selectedIndex > albumAttributes.postIds.length}}">Hi，{{userInfo.wxUsername}}，查看你的七日辑成就吧</text>
 
   <!-- 任务 -->
   <view class="section column">
@@ -87,7 +87,7 @@
           <text class="size-9 look-detail" style="color: {{questionSelectCompleted ? '#B0B0B0' : '#4A90E2'}}">{{questionSelectCompleted ? '已完成' : '查看详情'}}</text>
         </view>
         <view class="column question-content">
-          <text class="size-12 text-color3 method-row summary">小试牛刀</text>
+          <text class="size-12 text-color3 method-row">小试牛刀</text>
         </view>
       </view>
 
@@ -97,10 +97,10 @@
             <image src="../../images/survey/apply_question{{question.attributes.completed ? '_complete' : ''}}.png" class="question-icon"></image>
             <text class="size-16 text-color2 medium-title">{{question.attributes.questionType === 'desc' ? '线下任务（无需提交答案)' : '问答题'}}</text>
           </view>
-          <text class="size-9 look-detail" style="color: {{question.attributes.completed ? '#B0B0B0' : '#4A90E2'}}">{{question.attributes.questionType === 'desc' ? '' : (question.attributes.completed ? '已完成' : '查看详情')}}</text>
+          <text class="size-9 look-detail" style="color: {{question.attributes.completed ? '#B0B0B0' : '#4A90E2'}}">{{question.attributes.completed ? '已完成' : '查看详情'}}</text>
         </view>
         <view class="column question-content">
-          <text class="size-12 text-color3 method-row summary">{{question.attributes.content}}</text>
+          <text class="size-12 text-color3 method-row">{{question.attributes.content}}</text>
         </view>
       </view>
     </view>
@@ -119,8 +119,8 @@
           <text class="size-9 look-detail main-color">查看详情</text>
         </view>
         <view class="column method-content">
-          <text class="size-12 text-color3 method-row summary">您的结营报告敬请查收</text>
-          <text class="size-14 text-color2" wx:for="{{questions}}" wx:for-item="question" wx:key="">· {{question.attributes.metaData.shortTitle}}</text>
+          <text class="size-12 text-color3 report-tip">您的结营报告敬请查收</text>
+          <!-- <text class="size-14 text-color2 report-title" wx:for="{{questions}}" wx:for-item="question" wx:key="">· {{question.attributes.metaData.shortTitle}}</text> -->
         </view>
       </view>
     </view>

@@ -1,6 +1,6 @@
 
 <view class="row space-between top-tip">
-  <text class="text-color1 size-18">应用题</text>
+  <text class="text-color1 size-18">{{question.attributes.questionType === 'desc' ? '线下任务（无需提交答案)' : '问答题'}}</text>
   <text class="main-color size-14" bindtap="gotoMedium" data-medium="{{question.attributes.metaData.relatedMedium.medium}}" wx:if="{{question.attributes.metaData && question.attributes.metaData.relatedMedium}}">查看知识点</text>
   <!-- wx:if="{{question.attributes.metaData && question.attributes.metaData.relatedMediumId}}" -->
 </view>

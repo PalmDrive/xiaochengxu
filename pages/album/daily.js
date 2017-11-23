@@ -10,7 +10,6 @@ let albumId = undefined,
     postId = undefined,
     completeAmount = 0,
     picurl = '',
-    sumUp = '',
     reportPicurl = '';
 
 Page({
@@ -107,13 +106,6 @@ Page({
     if (albumId) { // page loaded
       console.log('call _load in onShow');
       this._loadSurvey();
-
-      if (this.data.albumAttributes.postIds && this.data.unlockedDays > this.data.albumAttributes.postIds.length) {
-        // 加载filter 问题及答案
-        User.getFilterQuestions(albumId, true).then(res => {
-
-        });
-      }
     }
   },
 
@@ -139,7 +131,6 @@ Page({
             postRelationships = post.relationships || {};
       albumId = res.data.id;
       postId = post.id;
-      sumUp = metaData.sumUp;
 
       let updates = {};
       const role = res.data.relationships.userAlbum.data.attributes.role;
@@ -347,11 +338,9 @@ Page({
 
   goToTextQuestion: function(event) {
     const question = event.currentTarget.dataset.question;
-    if (question.attributes.questionType !== 'desc') {
-      wx.navigateTo({
-        url: `../survey/text-question?postId=${postId}&albumId=${albumId}&surveyQuestionId=${question.id}&dayIndex=${this.data.selectedIndex}&completeAmount=${completeAmount}`
-      });
-    }
+    wx.navigateTo({
+      url: `../survey/text-question?postId=${postId}&albumId=${albumId}&surveyQuestionId=${question.id}&dayIndex=${this.data.selectedIndex}&completeAmount=${completeAmount}`
+    });
   },
 
   goToSelectQuestion: function(event) {
@@ -612,7 +601,7 @@ Page({
 
   goToDetailReport: function(event) {
     wx.navigateTo({
-      url: `../album/report?sumUp=${sumUp}&albumId=${albumId}`
+      url: `../album/report?albumId=${albumId}`
     });
   },
 

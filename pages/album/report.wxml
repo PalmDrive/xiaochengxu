@@ -3,9 +3,10 @@
   <text class="size-18 text-color1 pingfang-medium">{{userInfo.attributes.wxUsername}}</text>
 </view>
 
-<view class="row sum-up">
+<view class="column sum-up">
   <text class="size-18 text-color2">七天的学习让{{userInfo.attributes.wxUsername}}同学 get 了以下技能：
-  {{sumUp}}</text>
+  </text>
+  <text class="size-18 text-color2" wx:for="{{sumUpList}}" wx:for-item="sumUp" wx:key="" >· {{sumUp.content}}</text>
 </view>
 
 <view class="column" wx:for="{{questions}}" wx:for-item="question" wx:key="" wx:if="{{answers[question.id].content || (answers[question.id].pics && answers[question.id].pics.length > 0)}}">
