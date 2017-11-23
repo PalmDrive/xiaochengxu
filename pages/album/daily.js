@@ -202,7 +202,7 @@ Page({
       url: `${app.globalData.apiBase}/albums/${albumId}?app_name=${app.globalData.appName}`,
     }).then(res => {
       wx.hideLoading();
-      this.setData({posts: res.data.relationships.posts.data});
+      this.setData({posts: res.data.relationships.posts.data.reverse()});
       // post.relationships.media.data
       // 加载filter 问题及答案
       User.getFilterQuestions(albumId, true).then(res => {
@@ -304,7 +304,6 @@ Page({
   //点击文章
   goToMedium: function(event) {
     const medium = event.currentTarget.dataset.medium,
-          index = this.data.selectedIndex,
           idx = event.currentTarget.dataset.idx,
           count = this.data.media.length,
           gaOptions = {
@@ -314,13 +313,21 @@ Page({
             el: `album_name:${this.data.albumAttributes.title},album_id:${this.data.albumId}`,
             ev: 0
           };
-    const key = 'day' + index;
+    let index = this.data.selectedIndex,
+      key = 'day' + index,
+      newPostId = postId;
+    if (event.currentTarget.dataset.pindex >= 0) {
+      index = event.currentTarget.dataset.pindex;
+      key = 'day' + (parseInt(index) + 1);
+      newPostId = this.data.posts[index].id
+    }
+
     util.goToMedium(event, gaOptions, {
       dayIndex: key,
       mediumIndex: idx + 1,
       count: count,
       albumId: albumId,
-      morningPostId: postId
+      morningPostId: newPostId
     });
 
     this.data.media[idx].attributes.lastViewedAt = (new Date()).getTime();

@@ -125,9 +125,9 @@
       </view>
     </view>
 
-    <view class="column green-view" wx:for="{{posts}}" wx:for-item="postItem" wx:key="">
-      <text class="main-color-green size-12 green-tip">第{{index + 1}}天</text>
-      <view class="column bg-gray" wx:for="{{postItem.relationships.media.data}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}" bindtap="goToMedium">
+    <view class="column green-view" wx:for="{{posts}}" wx:for-item="postItem" wx:key="" wx:for-index="pindex">
+      <text class="main-color-green size-12 green-tip">第{{pindex + 1}}天</text>
+      <view class="column bg-gray" wx:for="{{postItem.relationships.media.data}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}"  data-pindex="{{pindex}}" bindtap="goToMedium">
         <view class="row method-row">
           <view class="row method-row-innner">
             <image src="../../images/survey/{{medium.attributes.mediumType}}.png" class="method-icon"></image>
