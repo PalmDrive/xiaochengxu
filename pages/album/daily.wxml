@@ -31,7 +31,7 @@
       <image src="../../images/survey/right.jpg" class="right" wx:if="{{flag}}"></image>
     </view>
   </view>
-  <text class="top-tip text-white size-12" bindtap="gotoReportCard" wx:if="{{selectedIndex > albumAttributes.postIds.length}}">Hi，{{userInfo.wxUsername}}，查看你的七日辑成就吧</text>
+  <text class="top-tip text-white size-12" bindtap="gotoReportCard" wx:if="{{selectedIndex > albumAttributes.postIds.length}}">Hi，{{userInfo.wxUsername}}，点击查看你的七日辑成就吧</text>
 
   <!-- 任务 -->
   <view class="section column">
