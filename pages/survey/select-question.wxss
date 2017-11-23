@@ -11,7 +11,7 @@
 .bg-gray {
   background: #F5F5F5;
   align-items: flex-start;
-  padding: 8px 15px 8px 15px;
+  padding: 8px 15px 0px 15px;
   margin-top: 10px;
   padding: 30px;
 }

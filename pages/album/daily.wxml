@@ -109,25 +109,25 @@
   <!-- 小于等于7天正常显示， 第8天显示结营 -->
   <view class="column" wx:if="{{selectedIndex > albumAttributes.postIds.length}}">
     <view class="green-view">
-      <text class="main-color-green size-12 green-tip">学习历程</text>
+      <text class="main-color-green size-12 green-tip">成就报告</text>
       <view class="column bg-gray" bindtap="goToDetailReport">
         <view class="row method-row">
           <view class="row method-row-innner">
             <image src="../../images/survey/article.png" class="method-icon"></image>
-            <text class="size-16 text-color2 medium-title">文稿 I 您有一份报告请查收</text>
+            <text class="size-16 text-color2 medium-title">7天一个小目标，查看我的成就报告</text>
           </view>
           <text class="size-9 look-detail main-color">查看详情</text>
         </view>
         <view class="column method-content">
-          <text class="size-12 text-color3 report-tip">您的结营报告敬请查收</text>
+          <!-- <text class="size-12 text-color3 report-tip">您的结营报告敬请查收</text>
           <!-- <text class="size-14 text-color2 report-title" wx:for="{{questions}}" wx:for-item="question" wx:key="">· {{question.attributes.metaData.shortTitle}}</text> -->
         </view>
       </view>
     </view>
 
-    <view class="column green-view" wx:for="{{posts}}" wx:for-item="postItem" wx:key="">
-      <text class="main-color-green size-12 green-tip">第{{index + 1}}天</text>
-      <view class="column bg-gray" wx:for="{{postItem.relationships.media.data}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}" bindtap="goToMedium">
+    <view class="column green-view" wx:for="{{posts}}" wx:for-item="postItem" wx:key="" wx:for-index="pindex">
+      <text class="main-color-green size-12 green-tip">第{{pindex + 1}}天</text>
+      <view class="column bg-gray" wx:for="{{postItem.relationships.media.data}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}"  data-pindex="{{pindex}}" bindtap="goToMedium">
         <view class="row method-row">
           <view class="row method-row-innner">
             <image src="../../images/survey/{{medium.attributes.mediumType}}.png" class="method-icon"></image>
