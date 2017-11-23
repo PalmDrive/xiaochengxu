@@ -281,14 +281,22 @@ Page({
     const index = event.currentTarget.dataset.index,
           postIds = this.data.albumAttributes.postIds,
           newPostId = postIds[index];
-    if (index < this.data.unlockedDays && this.data.selectedIndex - 1 !== index) {
-      this.setData({
-        selectedIndex: index + 1
-      })
-      if (index <= postIds.length - 1) {
-        postId = newPostId;
-        albumId = albumId;
-        this._load();
+    if (this.data.selectedIndex - 1 !== index) {
+      if (index < this.data.unlockedDays) {
+        this.setData({
+          selectedIndex: index + 1
+        })
+        if (index <= postIds.length - 1) {
+          postId = newPostId;
+          albumId = albumId;
+          this._load();
+        }
+      } else {
+        wx.showToast({
+          title: '不可以点击哦',
+          duration: 1000,
+          image: '../../images/survey/delete.jpg'
+        })
       }
     }
   },
