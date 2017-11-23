@@ -18,6 +18,7 @@ function loadUserData(id) {
 }
 
 const PAID_USER_ROLE = 2;
+let _showPaymentModal = false;
 
 Page({
   data: {
@@ -64,6 +65,7 @@ Page({
   },
 
   onLoad(options) {
+    _showPaymentModal = options.showPaymentModal === 'true';
     /* 免费得七日辑 start */
     this.data.tempAlert && this.setData({
       tempAlert: null
@@ -234,6 +236,10 @@ Page({
       dp: gaName,
       dt: `album_name:${this.data.albumAttributes.title},album_id:${this.data.albumId}`
     });
+
+    if (_showPaymentModal) {
+      this.showPay();
+    }
   },
 
   /**
