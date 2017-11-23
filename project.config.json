@@ -36,10 +36,10 @@
 					"scene": "1008"
 				},
 				{
-					"id": -1,
+					"id": 3,
 					"name": "Album buy",
 					"pathName": "pages/album/buy",
-					"query": "id=35cb43c0-994b-11e7-83e6-811feeb3ae13",
+					"query": "id=68625905-db73-4ea4-93f7-5a675f8977c9",
 					"scene": "1008"
 				},
 				{
