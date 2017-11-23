@@ -170,7 +170,7 @@ Page({
           unlockedDays = res.meta.unlockedDays,
           selectedIndex = post.attributes && post.attributes.dayIndex;
 
-      unlockedDays = 8;
+      // unlockedDays = 8;
       if (unlockedDays > albumAttributes.postIds.length) {
         selectedIndex = albumAttributes.postIds.length + 1;
         dayList.push(true);
@@ -338,11 +338,9 @@ Page({
 
   goToTextQuestion: function(event) {
     const question = event.currentTarget.dataset.question;
-    if (question.attributes.questionType !== 'desc') {
-      wx.navigateTo({
-        url: `../survey/text-question?postId=${postId}&albumId=${albumId}&surveyQuestionId=${question.id}&dayIndex=${this.data.selectedIndex}&completeAmount=${completeAmount}`
-      });
-    }
+    wx.navigateTo({
+      url: `../survey/text-question?postId=${postId}&albumId=${albumId}&surveyQuestionId=${question.id}&dayIndex=${this.data.selectedIndex}&completeAmount=${completeAmount}`
+    });
   },
 
   goToSelectQuestion: function(event) {

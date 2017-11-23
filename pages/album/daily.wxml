@@ -87,7 +87,7 @@
           <text class="size-9 look-detail" style="color: {{questionSelectCompleted ? '#B0B0B0' : '#4A90E2'}}">{{questionSelectCompleted ? '已完成' : '查看详情'}}</text>
         </view>
         <view class="column question-content">
-          <text class="size-12 text-color3 method-row summary">小试牛刀</text>
+          <text class="size-12 text-color3 method-row">小试牛刀</text>
         </view>
       </view>
 
@@ -97,10 +97,10 @@
             <image src="../../images/survey/apply_question{{question.attributes.completed ? '_complete' : ''}}.png" class="question-icon"></image>
             <text class="size-16 text-color2 medium-title">{{question.attributes.questionType === 'desc' ? '线下任务（无需提交答案)' : '问答题'}}</text>
           </view>
-          <text class="size-9 look-detail" style="color: {{question.attributes.completed ? '#B0B0B0' : '#4A90E2'}}">{{question.attributes.questionType === 'desc' ? '' : (question.attributes.completed ? '已完成' : '查看详情')}}</text>
+          <text class="size-9 look-detail" style="color: {{question.attributes.completed ? '#B0B0B0' : '#4A90E2'}}">{{question.attributes.completed ? '已完成' : '查看详情'}}</text>
         </view>
         <view class="column question-content">
-          <text class="size-12 text-color3 method-row summary">{{question.attributes.content}}</text>
+          <text class="size-12 text-color3 method-row">{{question.attributes.content}}</text>
         </view>
       </view>
     </view>

@@ -87,7 +87,7 @@ Page({
           }
         }
         updates.question = question;
-        if (updates.answer.content || question.attributes.picurlList.length > 0) {
+        if (updates.answer.content || question.attributes.picurlList.length > 0 || question.attributes.questionType === 'desc') {
           updates.committed = true;
         }
         updates.allQuestionList = data.relationships.surveyQuestions.data;
