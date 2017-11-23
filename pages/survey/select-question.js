@@ -57,7 +57,7 @@ Page({
             if (answer && answer.surveyQuestionId === res.id && Array.isArray(answer.content)) {
               res.attributes.options = res.attributes.options.map(option => {
                 answer.content.map(ans => {
-                  if (option.value === ans.value) { // question.options 里选择的答案selected = true
+                  if (option.value === ans) { // question.options 里选择的答案selected = true
                     option.selected = true;
                   }
                 });
@@ -121,7 +121,12 @@ Page({
 
     this.data.attributes.options[index].selected = !this.data.attributes.options[index].selected;
 
-    const selectedAnwser = this.data.attributes.options.filter((res, i) => res.selected === true);
+    let selectedAnwser = this.data.attributes.options.map((res, i) => {
+      if (res.selected) {
+        return res.value;
+      }
+    });
+    selectedAnwser = selectedAnwser.filter(res => res);
     this.data.questionList[this.data.qindex].attributes = this.data.attributes;
     this.setData({
       questionList: this.data.questionList,
