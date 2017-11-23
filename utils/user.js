@@ -113,7 +113,8 @@ function getFilterQuestions(albumId, force) {
 
       let newData = {
         questions,
-        answers
+        answers,
+        sumUpList: res.meta.bulletpoints
       };
       _filterQuestionsMap[key] = newData;
       return newData;

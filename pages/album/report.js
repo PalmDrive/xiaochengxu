@@ -10,10 +10,11 @@ let albumId = undefined;
 
 Page({
   data: {
-    sumUp: '一堆技能',
+    sumUp: '',
     userInfo: {},
     questions: [],
-    answers: []
+    answers: [],
+    sumUpList: []
   },
 
   onLoad(options) {
