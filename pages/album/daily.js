@@ -172,7 +172,9 @@ Page({
 
       // unlockedDays = 8;
       if (unlockedDays > albumAttributes.postIds.length) {
-        selectedIndex = albumAttributes.postIds.length + 1;
+        if (!selectedIndex) {
+          selectedIndex = albumAttributes.postIds.length + 1;
+        }
         dayList.push(true);
         this._loadAlbum();
       }
