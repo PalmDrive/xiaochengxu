@@ -19,7 +19,7 @@
       <image src="/images/paid-group/free.png" class="free-img" mode="aspectFill"></image>
       <text class="free-text text-color2 size-12">优惠得</text>
     </view>
-    <button bindtap="showPay" class="btn-buy">立刻购买 {{albumAttributes.price / 100}}元</button>
+    <button bindtap="showPay" class="btn-buy" disabled="{{didUserPay}}">{{didUserPay ? '已购买' : '立刻购买 '+ albumAttributes.price / 100 + '元'}}</button>
   </view>
 </scroll-view>
 <!-- shareAlert -->
