@@ -169,9 +169,8 @@ Page({
       let dayList = res.meta.checkinStatus,
           unlockedDays = res.meta.unlockedDays,
           selectedIndex = post.attributes && post.attributes.dayIndex;
-
-      // unlockedDays = 8;
-      if (unlockedDays > albumAttributes.postIds.length) {
+      // unlockedDays = 7
+      if (unlockedDays > albumAttributes.postIds.length || dayList[albumAttributes.postIds.length - 1]) {
         if (!selectedIndex) {
           selectedIndex = albumAttributes.postIds.length + 1;
         }
@@ -213,13 +212,13 @@ Page({
       reportPicurl = res.included[0].userAlbum.data.attributes.metaData.picurl;
 
       // 如果是第一次看到结营页面，则显示结营报告页面
-      const flag =  Auth.getLocalKey( `${albumId}_hasShownReport`) !== 'true';
-      if (flag) {
-        Auth.setLocalKey( `${albumId}_hasShownReport`, 'true');
-        wx.navigateTo({
-          url: `../album/share?imgUrl=${reportPicurl}`
-        });
-      }
+      // const flag =  Auth.getLocalKey( `${albumId}_hasShownReport`) !== 'true';
+      // if (flag) {
+      //   Auth.setLocalKey( `${albumId}_hasShownReport`, 'true');
+      //   wx.navigateTo({
+      //     url: `../album/share?imgUrl=${reportPicurl}`
+      //   });
+      // }
     });
   },
   /**
@@ -239,7 +238,7 @@ Page({
       if (answerList.length > 0) {
         picurl = answerList[0].data.attributes.picurl;
         answerList = answerList[0].data.attributes.answers;
-        questionList.forEach(res => {
+        questionList.forEach((res) => {
           res.attributes.completed = answerList.filter(a => a && a.surveyQuestionId === res.id).length > 0;
           if (res.attributes.completed) {
             completeAmount ++;
@@ -257,9 +256,13 @@ Page({
       const list = questionList.filter(res => res.attributes.questionType !== 'desc');
       if (completeAmount === list.length) {
         completedAll = true;
+        if (this.data.albumAttributes.postIds.length === this.data.dayList.length) {
+          this.data.dayList.push(true);
+        }
       }
 
       this.setData({
+        dayList: this.data.dayList,
         completedAll,
         survey: res,
         questionList,
@@ -293,6 +296,11 @@ Page({
           albumId = albumId;
           this._load();
         }
+      } else if (index === this.data.albumAttributes.postIds.length) {
+        this.setData({
+          selectedIndex: index + 1
+        })
+        this._loadAlbum();
       } else {
         wx.showToast({
           title: '不可以点击哦',

@@ -27,7 +27,7 @@
 
   <view class="row top-view2 bg-main-color">
     <view class="column day-box" wx:for="{{dayList}}" wx:for-item="flag" wx:key="" style="background: {{selectedIndex === (index + 1) ? 'white' : '#42BD56'}}" bindtap="goToPost" data-index="{{index}}">
-      <text class="size-16 pingfang-medium" style="color: {{selectedIndex === index + 1 ? '#42BD56' : 'white'}};opacity:{{(index + 1) <= unlockedDays ? 1 : 0.5}}">{{index === albumAttributes.postIds.length ? '结' : (  unlockedDays === (index + 1) ? '今' : (index + 1))}}</text>
+      <text class="size-16 pingfang-medium" style="color: {{selectedIndex === index + 1 ? '#42BD56' : 'white'}};opacity:{{albumAttributes.postIds.length === index ? 1 : ((index + 1) <= unlockedDays ? 1 : 0.5)}}">{{index === albumAttributes.postIds.length ? '结' : (  unlockedDays === (index + 1) ? '今' : (index + 1))}}</text>
       <image src="../../images/survey/right.jpg" class="right" wx:if="{{flag}}"></image>
     </view>
   </view>
