@@ -388,3 +388,33 @@
   height: 40px;
   width: 100%;
 }
+
+.banner-mask {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(50, 50, 50, 0.4);
+}
+
+.banner-img {
+  height: 180px;
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  margin-top:20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.start-study {
+  background: #42BD56;
+  border-radius: 100px;
+  padding: 10px 20px 10px 20px;
+  position: relative;
+  z-index: 10;
+}

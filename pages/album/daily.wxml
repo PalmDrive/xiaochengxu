@@ -51,25 +51,33 @@
     <view class="line-view"></view>
 
     <!-- 任务攻略 -->
-    <text class="size-12 text-white task-method-title task-title bg-main-color">任务攻略</text>
-    <view class="section column">
-      <text class="size-12 text-color3 second-tip">下面的攻略能够帮助你更好地完成任务</text>
+    <view class="column" wx:if="{{!isNewStyle}}">
+      <text class="size-12 text-white task-method-title task-title bg-main-color">任务攻略</text>
+      <view class="section column">
+        <text class="size-12 text-color3 second-tip">下面的攻略能够帮助你更好地完成任务</text>
 
-      <view class="column bg-gray" wx:for="{{media}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}" bindtap="goToMedium">
-        <view class="row method-row">
-          <view class="row method-row-innner">
-            <image src="../../images/survey/{{medium.attributes.mediumType}}.png" class="method-icon"></image>
-            <text class="size-16 text-color2 medium-title">{{medium.attributes.title}}</text>
+        <view class="column bg-gray" wx:for="{{media}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}" bindtap="goToMedium">
+          <view class="row method-row">
+            <view class="row method-row-innner">
+              <image src="../../images/survey/{{medium.attributes.mediumType}}.png" class="method-icon"></image>
+              <text class="size-16 text-color2 medium-title">{{medium.attributes.title}}</text>
+            </view>
+            <text class="size-9 look-detail" style="color: {{medium.attributes.lastViewedAt ? '#B0B0B0' : '#4A90E2'}}">{{medium.attributes.lastViewedAt ? '已完成' : '查看详情'}}</text>
           </view>
-          <text class="size-9 look-detail" style="color: {{medium.attributes.lastViewedAt ? '#B0B0B0' : '#4A90E2'}}">{{medium.attributes.lastViewedAt ? '已完成' : '查看详情'}}</text>
-        </view>
-        <view class="column method-content">
-          <text class="size-12 text-color3 method-row summary" wx:if="{{medium.attributes.mediumType === 'article'}}">{{medium.attributes.summary}}</text>
-          <text class="size-9" wx:if="{{medium.attributes.mediumType !== 'article'}}">{{medium.attributes.durationString}}</text>
+          <view class="column method-content">
+            <text class="size-12 text-color3 method-row summary" wx:if="{{medium.attributes.mediumType === 'article'}}">{{medium.attributes.summary}}</text>
+            <text class="size-9" wx:if="{{medium.attributes.mediumType !== 'article'}}">{{medium.attributes.durationString}}</text>
+          </view>
         </view>
       </view>
+      <view class="line-view"></view>
     </view>
-    <view class="line-view"></view>
+
+    <!-- 文章卡片网页链接 -->
+    <view class="row banner-img" wx:if="{{isNewStyle}}" style="background-image: url('{{post.attributes.picUrl}}')">
+      <view class="banner-mask"></view>
+      <text class="text-white size-12 start-study" bindtap="startStudy">△  {{viewedMediumCount > 0 ? viewedMediumCount + ' / ' + media.length : '开始'}}</text>
+    </view>
 
     <!-- 我的任务 -->
     <text class="size-12 text-white task-method-title task-title bg-main-color">我的任务</text>
