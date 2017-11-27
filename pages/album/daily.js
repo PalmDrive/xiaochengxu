@@ -48,7 +48,9 @@ Page({
     qrcodeModalHidden: true,
     didUserPay: false,
     completedAll: false,
-    questions: []
+    questions: [],
+    isNewStyle: true,
+    viewedMediumCount: 0
   },
 
   onLoad(options) {
@@ -159,10 +161,12 @@ Page({
         }
       }
 
-      let media = postRelationships.media ? postRelationships.media.data : [];
+      let media = postRelationships.media ? postRelationships.media.data : [],
+      viewedMediumCount = 0;
       media = media.map(medium => {
         let duration = medium.attributes.duration || 0;
         medium.attributes.durationString = util.convertTime(duration);
+        if (medium.attributes.lastViewedAt) viewedMediumCount++;
         return medium;
       });
 
@@ -177,6 +181,9 @@ Page({
         dayList.push(true);
         this._loadAlbum();
       }
+
+      updates.isNewStyle = new Date(albumAttributes.programPromoteAt).getTime() > new Date('2017-11-27').getTime();
+
       const updatesData = {
         albumAttributes,
         editorInfo: albumAttributes.editorInfo,
@@ -185,7 +192,8 @@ Page({
         selectedIndex,
         dayList,
         unlockedDays,
-        ...updates
+        ...updates,
+        viewedMediumCount
       };
 
       this.setData(updatesData);
@@ -203,13 +211,17 @@ Page({
       url: `${app.globalData.apiBase}/albums/${albumId}?app_name=${app.globalData.appName}`,
     }).then(res => {
       wx.hideLoading();
-      this.setData({posts: res.data.relationships.posts.data.reverse()});
+
       // post.relationships.media.data
       // 加载filter 问题及答案
       User.getFilterQuestions(albumId, true).then(res => {
         this.setData({questions: res.questions});
       });
       reportPicurl = res.included[0].userAlbum.data.attributes.metaData.picurl;
+
+      this.setData({
+        posts: res.data.relationships.posts.data.reverse()
+      });
 
       // 如果是第一次看到结营页面，则显示结营报告页面
       // const flag =  Auth.getLocalKey( `${albumId}_hasShownReport`) !== 'true';
@@ -635,6 +647,12 @@ Page({
   gotoReportCard: function(event) {
     wx.navigateTo({
       url: `../album/share?imgUrl=${reportPicurl}`
+    });
+  },
+
+  startStudy: function(event) {
+    wx.navigateTo({
+      url: `../album/study-web?albumId=${albumId}&postId=${postId}`
     });
   }
 })
