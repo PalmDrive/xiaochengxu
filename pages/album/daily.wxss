@@ -418,3 +418,9 @@
   position: relative;
   z-index: 10;
 }
+
+.start-icon {
+  width: 13px;
+  height: 16px;
+  margin-right: 5px;
+}

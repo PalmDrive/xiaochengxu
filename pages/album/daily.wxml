@@ -74,9 +74,12 @@
     </view>
 
     <!-- 文章卡片网页链接 -->
-    <view class="row banner-img" wx:if="{{isNewStyle}}" style="background-image: url('{{post.attributes.picUrl}}')">
+    <view class="row banner-img" wx:if="{{isNewStyle}}" style="background-image: url('{{post.attributes.picUrl}}')" bindtap="startStudy">
       <view class="banner-mask"></view>
-      <text class="text-white size-12 start-study" bindtap="startStudy">{{viewedMediumCount > 0 ? viewedMediumCount + ' / ' + media.length : '开始'}}</text>
+      <view class="row start-study">
+        <image src="../../images/survey/start.png" class="start-icon"></image>
+        <text class="text-white size-12">  {{viewedMediumCount > 0 ? viewedMediumCount + ' / ' + media.length : '开始'}}</text>
+      </view>
     </view>
 
     <!-- 我的任务 -->
