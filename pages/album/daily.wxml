@@ -76,7 +76,7 @@
     <!-- 文章卡片网页链接 -->
     <view class="row banner-img" wx:if="{{isNewStyle}}" style="background-image: url('{{post.attributes.picUrl}}')">
       <view class="banner-mask"></view>
-      <text class="text-white size-12 start-study" bindtap="startStudy">△  {{viewedMediumCount > 0 ? viewedMediumCount + ' / ' + media.length : '开始'}}</text>
+      <text class="text-white size-12 start-study" bindtap="startStudy">{{viewedMediumCount > 0 ? viewedMediumCount + ' / ' + media.length : '开始'}}</text>
     </view>
 
     <!-- 我的任务 -->

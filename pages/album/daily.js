@@ -182,7 +182,7 @@ Page({
         this._loadAlbum();
       }
 
-      updates.isNewStyle = new Date(albumAttributes.programPromoteAt).getTime() > new Date('2017-11-27').getTime();
+      updates.isNewStyle = new Date(albumAttributes.programPromoteAt).getTime() > new Date('2017-11-21').getTime();
 
       const updatesData = {
         albumAttributes,
