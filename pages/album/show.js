@@ -271,7 +271,7 @@ Page({
     updates.current = morningPosts.filter(d => d.meta.unlocked).length;
     updates.album = res.data;
     updates.albumAttributes = attributes;
-    updates.programStartAt = metaData.programStartAt || 0;
+    updates.programStartAt = attributes.programStartAt || 0;
     // updates.targetAudience = metaData.targetAudience || '目标人群'
     // updates.descriptionPicUrl = metaData.descriptionPicUrl || ''
     // updates.buyNotes = metaData.buyNotes || ''
@@ -315,7 +315,7 @@ Page({
       // 关注过服务号, 弹出微信群二维码
       if (Auth.getLocalKey('isSubscribedWX') === 'true') {
         const groupQrcodes = metaData.groupQRCodeMediaIds || [],
-              showWxQrcode = metaData.programStartAt ? true : false,
+              showWxQrcode = attributes.programStartAt ? true : false,
               newGroupQrcodes = groupQrcodes.filter(item => {
                 return item.active;
               }),

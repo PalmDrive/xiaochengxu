@@ -146,7 +146,7 @@ Page({
         // 关注过服务号, 弹出微信群二维码
         if (Auth.getLocalKey('isSubscribedWX') === 'true') {
           const groupQrcodes = metaData.groupQRCodeMediaIds || [],
-                showWxQrcode = metaData.programStartAt ? true : false,
+                showWxQrcode = albumAttributes.programStartAt ? true : false,
                 newGroupQrcodes = groupQrcodes.filter(item => {
                   return item.active;
                 }),
@@ -406,7 +406,7 @@ Page({
         ]);
       })
       .then(res => {
-        if (this.data.albumAttributes.metaData.programStartAt) {
+        if (this.data.albumAttributes.programStartAt) {
           wx.redirectTo({
             url: `/pages/album/daily?albumId=${albumId}`
           });

@@ -213,7 +213,7 @@ Page({
     updates.album = res.data;
     updates.albumAttributes = attributes;
     updates.metaData = metaData;
-    updates.programStartAt = metaData.programStartAt || 0;
+    updates.programStartAt = attributes.programStartAt || 0;
     updates.editorInfo = attributes.editorInfo;
     updates.catalog = attributes.catalog;
     updates.loadingStatus = null;
@@ -394,7 +394,7 @@ Page({
     const albumId = this.data.albumId;
     let url = `../album/show?id=${albumId}&trial=${true}`;
 
-    if (this.data.album.attributes.metaData.programStartAt) {
+    if (this.data.album.attributes.programStartAt) {
       url = `../album/daily?albumId=${albumId}&trial=true`;
     }
     wx.navigateTo({url});
