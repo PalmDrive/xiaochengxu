@@ -39,6 +39,8 @@ Page({
       dp: '%2FtoutiaoTab_XiaoChengXu',
       dt: '群头条tab页（小程序）'
     });
+    const {getPurchasedAlbumIdsMap} = require('../../utils/user');
+    getPurchasedAlbumIdsMap(true);
   },
 
   /**
