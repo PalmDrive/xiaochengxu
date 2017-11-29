@@ -46,7 +46,7 @@ Page({
    */
   _load(type) {
     return request({
-      url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=title,description,picurl,price,editorInfo,id,metaData&app_name=${app.globalData.appName}`,
+      url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=programStartAt,title,description,picurl,price,editorInfo,id,metaData&app_name=${app.globalData.appName}`,
     });
   },
 
