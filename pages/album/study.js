@@ -22,6 +22,8 @@ Page({
   },
 
   onShow() {
+    const {getPurchasedAlbumIdsMap} = require('../../utils/user');
+    getPurchasedAlbumIdsMap(true);
     /* 免费得七日辑 start */
     this.data.tempAlert && this.setData({
       tempAlert: null

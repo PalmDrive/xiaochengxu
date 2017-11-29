@@ -145,7 +145,7 @@ Page({
         Auth.setLocalKey( `${albumId}_hasShownSubscribedWX`, 'true');
         // 关注过服务号, 弹出微信群二维码
         if (Auth.getLocalKey('isSubscribedWX') === 'true') {
-          const groupQrcodes = metaData.groupQRCodeMediaIds || [],
+          const groupQrcodes = metaData.groupQrCodeMediaIds || [],
                 showWxQrcode = albumAttributes.programStartAt ? true : false,
                 newGroupQrcodes = groupQrcodes.filter(item => {
                   return item.active;

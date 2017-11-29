@@ -35,7 +35,6 @@ AV.init({
 App({
   onShow(options) {
     const app = this,
-          {getPurchasedAlbumIdsMap} = require('utils/user'),
           Auth = require('utils/auth');
     //console.log('app onShow options:', options);
     // for testing
@@ -50,7 +49,6 @@ App({
 
     const _afterLogin = () => {
       // Async fetch the user's subscribed topic ids
-      getPurchasedAlbumIdsMap.call(app, true);
       getPage()
         //page.onLoad() do not work in the ios and android device
         //while working in the simulator
@@ -85,7 +83,6 @@ App({
     if (!Auth.getLocalUserId() || !Auth.getLocalJWT() || !userAttrs.wxOpenId) {
       _login();
     } else if (env !== 'dev') {
-      getPurchasedAlbumIdsMap.call(this, true);
       wx.checkSession({
         fail(err) {
           console.log('wx checkSession failed:', err);
