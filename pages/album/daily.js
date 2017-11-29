@@ -107,7 +107,7 @@ Page({
     // 解决从答题页面返回数据不刷新问题
     if (albumId) { // page loaded
       console.log('call _load in onShow');
-      this._loadSurvey();
+      this._load();
     }
   },
 
