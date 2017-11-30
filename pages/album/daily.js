@@ -652,7 +652,7 @@ Page({
 
   startStudy: function(event) {
     wx.navigateTo({
-      url: `../album/study-web?albumId=${albumId}&postId=${postId}`
+      url: `../album/study-web?albumId=${albumId}&postId=${postId}&viewedMediumCount=${this.data.viewedMediumCount}`
     });
   }
 })

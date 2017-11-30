@@ -284,7 +284,7 @@ function showHint(page) {
   console.log('sys platform:', systemInfo.platform);
   if (systemInfo.platform === 'ios') {
     title = 'iOS用户福利';
-    content = 'App Store中下载“职得看”，获得更好体验。';
+    content = 'App Store中下载“七日辑”，获得更好体验。';
   } else {
     title = '小程序Tips';
     content = '点击右上角按钮，选择“添加到桌面”，可随时访问。';
