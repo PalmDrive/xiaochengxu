@@ -18,7 +18,7 @@ Page({
     })
 
     this.setData({
-      url: `https://ainterest.ailingual.cn/posts/${options.postId}?albumId=${options.albumId}&userId=${Auth.getLocalUserId()}`
+      url: `https://ainterest.ailingual.cn/posts/${options.postId}?albumId=${options.albumId}&userId=${Auth.getLocalUserId()}&viewedMediumCount=${options.viewedMediumCount}`
     });
   }
 })
