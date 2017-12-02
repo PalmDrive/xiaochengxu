@@ -156,7 +156,7 @@
   <view class="bottom-view"></view>
 
   <!-- 购买按钮 -->
-  <text bindtap="showPay" class="btn-buy btns-container"  wx:if="{{trial}}">立刻购买 {{albumAttributes.price / 100}}元</text>
+  <text bindtap="showPay" class="btn-buy btns-container"  wx:if="{{trial && !didUserPay}}">立刻购买 {{albumAttributes.price / 100}}元</text>
 
   <!-- shareAlert -->
   <view class="shareAlert" wx:if="{{shareAlert && !didUserPay && loadingStatus !== 'LOADING'}}">
