@@ -526,7 +526,9 @@ Page({
     });
   },
   tempAlertGoList: function () {
-    this.data.tempAlert = false;
+    this.setData({
+      tempAlert: null
+    });
   },
   changeTab: function(e) {
     const type = e.currentTarget.dataset.type;
