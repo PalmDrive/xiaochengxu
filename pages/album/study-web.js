@@ -15,10 +15,14 @@ Page({
     wx.setNavigationBarColor({
       frontColor: '#ffffff',
       backgroundColor: '#42BD56'
-    })
+    });
 
+    const url = `https://ainterest.ailingual.cn/posts/${options.postId}?albumId=${options.albumId}&userId=${Auth.getLocalUserId()}&viewedMediumCount=${options.viewedMediumCount}`;
+
+    console.log('web url:', url);
+    
     this.setData({
-      url: `https://ainterest.ailingual.cn/posts/${options.postId}?albumId=${options.albumId}&userId=${Auth.getLocalUserId()}&viewedMediumCount=${options.viewedMediumCount}`
+      url
     });
   }
 })
