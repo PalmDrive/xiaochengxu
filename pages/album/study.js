@@ -8,8 +8,8 @@ Page({
   data: {
     loadingStatus: null, // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
     page: {
-      studying: {number: 1, size: 5},
-      studied: {number: 1, size: 5}
+      studying: {number: 1, size: 10},
+      studied: {number: 1, size: 10}
     },
     albums: {
       studying: [],
@@ -137,7 +137,7 @@ Page({
 
   loadSuggestAlbum() {
     request({
-      url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=1&page[number]=1&fields[albums]=title,description,picurl,price,editorInfo,id,metaData&app_name=${app.globalData.appName}`,
+      url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=1&page[number]=1&fields[albums]=title,description,picurl,price,editorInfo,id,metaData,programStartAt&app_name=${app.globalData.appName}`,
     }).then(res => {
 
       let showSuggestAlbum = false;

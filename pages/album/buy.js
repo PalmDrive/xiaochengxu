@@ -237,7 +237,7 @@ Page({
       dt: `album_name:${this.data.albumAttributes.title},album_id:${this.data.albumId}`
     });
 
-    if (_showPaymentModal) {
+    if (_showPaymentModal && !updates.didUserPay) {
       this.showPay();
     }
   },
