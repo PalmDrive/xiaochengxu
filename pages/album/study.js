@@ -172,6 +172,8 @@ Page({
   },
 
   tempAlertGoList: function () {
-    this.data.tempAlert = false;
+    this.setData({
+      tempAlert: null
+    });
   }
 });
