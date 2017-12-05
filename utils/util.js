@@ -420,7 +420,6 @@ function goToAlbum(album) {
         }
       }
       wx.navigateTo({url});
-
     })
     .catch(err => wx.hideLoading());
 }
