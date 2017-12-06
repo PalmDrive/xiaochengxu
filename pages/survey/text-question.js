@@ -133,6 +133,15 @@ Page({
     if (_isUploading) {
       return;
     }
+
+    if ((this.data.question.attributes.questionType === 'text' || this.data.question.attributes.questionType === 'text & pic') && !answer.content) {
+      wx.showToast({
+        title: '请先输入答案',
+        duration: 1000,
+        image: '../../images/survey/delete.jpg'
+      });
+      return;
+    }
     _isUploading = true;
     data.data.push({
       attributes: {
