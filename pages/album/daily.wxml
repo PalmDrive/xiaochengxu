@@ -78,7 +78,7 @@
       <view class="banner-mask"></view>
       <view class="row start-study">
         <image src="../../images/survey/start.png" class="start-icon"></image>
-        <text class="text-white size-12">  {{viewedMediumCount > 0 ? viewedMediumCount + ' / ' + media.length : '开始'}}</text>
+        <text class="text-white size-12">  {{viewedMediumCount > 0 ? viewedMediumCount + ' / ' + mediaAndQuestionsCount : '开始'}}</text>
       </view>
     </view>
 
