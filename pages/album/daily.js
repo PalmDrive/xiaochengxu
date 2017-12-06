@@ -63,7 +63,6 @@ Page({
       albumId = options.albumId;
       postId = options.postId;
       that.setData({trial: options.trial === 'true' ? true : false});
-      Auth.getLocalUserId() && that._load();
     }
 
     // 免费得 判断是否是从好友的 二维码进入的
@@ -107,7 +106,7 @@ Page({
     // 解决从答题页面返回数据不刷新问题
     if (albumId) { // page loaded
       console.log('call _load in onShow');
-      this._load();
+      Auth.getLocalUserId() && this._load();
     }
   },
 
@@ -115,7 +114,7 @@ Page({
    * 加载数据
    */
   _load() {
-    const url = `${app.globalData.apiBase}/albums/post`,
+    const url = `${app.globalData.apiBase}/albums/post?&include=surveyQuestions`,
           data = {};
     if (albumId) data.albumId = albumId;
     if (postId) data.postId = postId;
@@ -161,25 +160,42 @@ Page({
         }
       }
 
+      let mediaAndQuestionsCount = 0;
+      let surveysData = res.included || [];
+
       let media = postRelationships.media ? postRelationships.media.data : [],
       viewedMediumCount = 0;
       media = media.map(medium => {
         let duration = medium.attributes.duration || 0;
         medium.attributes.durationString = util.convertTime(duration);
         if (medium.attributes.lastViewedAt) viewedMediumCount++;
+        mediaAndQuestionsCount ++;
+
+        // 找出文章卡片对应的问题及答案
+        // const questions = surveysData.filter(q => q.attributes.mediumId === medium.id);
+        // if (questions.length) {
+        //   questions.forEach(q => {
+        //     //判断是否有答案
+        //   })
+        // }
         return medium;
       });
 
       let dayList = res.meta.checkinStatus,
           unlockedDays = res.meta.unlockedDays,
           selectedIndex = post.attributes && post.attributes.dayIndex;
-      // unlockedDays = 7
-      if (unlockedDays > albumAttributes.postIds.length || dayList[albumAttributes.postIds.length - 1]) {
+      // -- test start--
+      // unlockedDays = 8;
+      // selectedIndex = undefined;
+      // dayList = [true,true,true,true,true,true,true];
+      // -- test end--
+      const unfinishedDays = dayList.filter(res => !res);
+      if (unlockedDays > albumAttributes.postIds.length || unfinishedDays.length === 0) {
+        dayList.push(true);
         if (!selectedIndex) {
           selectedIndex = albumAttributes.postIds.length + 1;
+          this._loadAlbum();
         }
-        dayList.push(true);
-        this._loadAlbum();
       }
 
       updates.isNewStyle = new Date(albumAttributes.programPromoteAt).getTime() > new Date('2017-11-21').getTime();
@@ -193,7 +209,8 @@ Page({
         dayList,
         unlockedDays,
         ...updates,
-        viewedMediumCount
+        viewedMediumCount,
+        completedAll: dayList[selectedIndex - 1]
       };
 
       this.setData(updatesData);
@@ -264,18 +281,17 @@ Page({
         }
       });
 
-      let completedAll = false;
-      const list = questionList.filter(res => res.attributes.questionType !== 'desc');
-      if (completeAmount === list.length) {
-        completedAll = true;
-        if (this.data.albumAttributes.postIds.length === this.data.dayList.length) {
-          this.data.dayList.push(true);
-        }
-      }
+      // let completedAll = false;
+      // const list = questionList.filter(res => res.attributes.questionType !== 'desc');
+      // if (completeAmount === list.length) {
+      //   completedAll = true;
+      //   if (this.data.albumAttributes.postIds.length === this.data.dayList.length) {
+      //     this.data.dayList.push(true);
+      //   }
+      // }
 
       this.setData({
         dayList: this.data.dayList,
-        completedAll,
         survey: res,
         questionList,
         questionTextList,
@@ -315,9 +331,9 @@ Page({
         this._loadAlbum();
       } else {
         wx.showToast({
-          title: '不可以点击哦',
+          title: '还未解锁',
           duration: 1000,
-          image: '../../images/survey/delete.jpg'
+          image: '../../images/survey/clock.png'
         })
       }
     }
@@ -627,7 +643,9 @@ Page({
   },
 
   tempAlertGoList: function () {
-    this.data.tempAlert = false;
+    this.setData({
+      tempAlert: null
+    });
   },
 
   gotoCard: function(event) {

@@ -237,7 +237,7 @@ Page({
       dt: `album_name:${this.data.albumAttributes.title},album_id:${this.data.albumId}`
     });
 
-    if (_showPaymentModal) {
+    if (_showPaymentModal && !updates.didUserPay) {
       this.showPay();
     }
   },
@@ -526,7 +526,9 @@ Page({
     });
   },
   tempAlertGoList: function () {
-    this.data.tempAlert = false;
+    this.setData({
+      tempAlert: null
+    });
   },
   changeTab: function(e) {
     const type = e.currentTarget.dataset.type;
