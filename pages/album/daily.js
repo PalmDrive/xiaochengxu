@@ -207,7 +207,7 @@ Page({
         ...updates,
         mediaAndQuestionsCount: dataAll.length,
         completedAll: dayList[selectedIndex - 1],
-        viewedMediumCount: res.meta.currentStudyCardCount[postId] || 0
+        viewedMediumCount: res.meta.currentStudyCardCount ? res.meta.currentStudyCardCount[postId] : 0
       };
 
       this.setData(updatesData);
