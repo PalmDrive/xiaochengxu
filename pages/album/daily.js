@@ -50,7 +50,8 @@ Page({
     completedAll: false,
     questions: [],
     isNewStyle: true,
-    viewedMediumCount: 0
+    viewedMediumCount: 0,
+    mediaAndQuestionsCount: 0
   },
 
   onLoad(options) {
@@ -160,24 +161,19 @@ Page({
         }
       }
 
-      let mediaAndQuestionsCount = 0;
-      let surveysData = res.included || [];
-
-      let media = postRelationships.media ? postRelationships.media.data : [],
-      viewedMediumCount = 0;
+      let surveysQuestionData = res.included.filter(res => res.type === 'surveyQuestions') || [],
+          media = postRelationships.media ? postRelationships.media.data : [],
+          dataAll = [];
       media = media.map(medium => {
         let duration = medium.attributes.duration || 0;
         medium.attributes.durationString = util.convertTime(duration);
-        if (medium.attributes.lastViewedAt) viewedMediumCount++;
-        mediaAndQuestionsCount ++;
+        dataAll.push(medium);
 
-        // 找出文章卡片对应的问题及答案
-        // const questions = surveysData.filter(q => q.attributes.mediumId === medium.id);
-        // if (questions.length) {
-        //   questions.forEach(q => {
-        //     //判断是否有答案
-        //   })
-        // }
+        // 找出文章卡片对应的问题
+        let questions = surveysQuestionData.filter(q => q.attributes.mediumId === medium.id);
+        if (questions.length > 0) {
+          dataAll = dataAll.concat(questions);
+        }
         return medium;
       });
 
@@ -209,8 +205,9 @@ Page({
         dayList,
         unlockedDays,
         ...updates,
-        viewedMediumCount,
-        completedAll: dayList[selectedIndex - 1]
+        mediaAndQuestionsCount: dataAll.length,
+        completedAll: dayList[selectedIndex - 1],
+        viewedMediumCount: res.meta.currentStudyCardCount ? res.meta.currentStudyCardCount[postId] : 0
       };
 
       this.setData(updatesData);
