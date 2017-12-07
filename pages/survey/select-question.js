@@ -202,6 +202,11 @@ Page({
         this.setData({
           committed: true
         })
+
+        wx.pageScrollTo({
+          scrollTop: 2000
+        });
+
         const list = this.data.allQuestionList.filter(res => res.attributes.questionType !== 'desc');
         if (completeAmount === list.length - 1) {
           if (!picurl) {

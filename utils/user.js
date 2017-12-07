@@ -25,7 +25,7 @@ function getPurchasedAlbumIdsMap(force) {
     return new Promise(resolve => resolve(_albumIdsMap));
   } else {
     return request({
-      url: `${app.globalData.apiBase}/user-albums?userId=${userId}&fields[userAlbums]=albumId&filter[role]=2`
+      url: `${app.globalData.apiBase}/user-albums?userId=${userId}&fields[userAlbums]=albumId,metaData&filter[role]=2`
     })
       .then(res => {
         _albumIdsMap = (res.data || [])
