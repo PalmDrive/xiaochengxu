@@ -206,7 +206,8 @@ Page({
         unlockedDays,
         ...updates,
         mediaAndQuestionsCount: dataAll.length,
-        completedAll: dayList[selectedIndex - 1]
+        completedAll: dayList[selectedIndex - 1],
+        viewedMediumCount: res.meta.currentStudyCardCount[postId] || 0
       };
 
       this.setData(updatesData);
@@ -292,8 +293,7 @@ Page({
         questionList,
         questionTextList,
         questionSelectList,
-        questionSelectCompleted: questionSelectList.filter(res => res.attributes.completed).length === questionSelectList.length,
-        viewedMediumCount: res.attributes.metaData.currentStudyCardCount || 0
+        questionSelectCompleted: questionSelectList.filter(res => res.attributes.completed).length === questionSelectList.length
       });
     });
   },
