@@ -43,7 +43,7 @@
     <!--  <text class="size-12 text-color2 ">2017.09.12</text>-->
     </view>
 
-    <text class="size-14 text-color2">{{unlockedDays <= albumAttributes.postIds.length ? survey.attributes.description : albumAttributes.metaData.endRemark}}</text>
+    <text class="size-14 text-color2">{{selectedIndex <= albumAttributes.postIds.length ? survey.attributes.description : albumAttributes.metaData.endRemark}}</text>
   </view>
 
   <!-- 小于等于7天正常显示， 第8天显示结营 -->
