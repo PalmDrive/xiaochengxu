@@ -173,7 +173,8 @@ page {
 }
 
 .description {
-  margin-top: 5px;
+  margin-top: 10px;
+  line-height: 25px;
 }
 
 .commit-btn {
