@@ -371,7 +371,7 @@ page {
   border-radius: 50%;
   height: 40px;
   width: 40px;
-  margin-right: 5px;
+  margin-right: 15px;
 }
 
 .ji-zhu-username {
@@ -379,7 +379,7 @@ page {
 }
 
 .ji-zhu-description {
-  margin-left: 45px;
+  margin-left: 55px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -781,4 +781,18 @@ page {
   background: #0BB908;
   border-radius: 3px;
   color: #fff;
+}
+
+.html-content {
+  font-family:PingFang SC,Lantinghei SC,Helvetica Neue,Helvetica,Arial,Microsoft YaHei,STHeitiSC-Light,simsun,WenQuanYi Zen Hei,WenQuanYi Micro Hei,"sans-serif";
+  font-size: 16px;
+  font-weight: normal;
+  color: #3d464d;
+  line-height: 27px;
+  text-align: justify;
+  padding: 20px;
+}
+
+.html-content image {
+  width: 100% !important;
 }

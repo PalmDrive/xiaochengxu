@@ -3,7 +3,9 @@ const app = getApp(),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
     {addAlbumId} = require('../../utils/user'),
-    baseUrl = app.globalData.apiBase;
+    baseUrl = app.globalData.apiBase,
+    WxParse = require('../../utils/wxParse/wxParse.js'),
+    he = require('../../utils/he.js');
 
 function loadData(id) {
   return request({
@@ -54,8 +56,8 @@ Page({
     tempAlert: null,
     programStartAt: 0,
     selectedIndex: 0,
-    toView: '#',
     screenHeight: 667,
+    toView: '#',
     showDetail: false // 只是展示七日辑详情 (购买页面没有底部的bar)
   },
 
@@ -209,6 +211,11 @@ Page({
 
     const attributes = res.data.attributes,
           metaData = attributes.metaData;
+    if (attributes.descriptionHtmlContent) {
+      const html = attributes.descriptionHtmlContent,
+        decoded = he.decode(html);
+      WxParse.wxParse('htmlContent', 'html', decoded, this, 0);
+    }
     updates.current = morningPosts.filter(d => d.meta.unlocked).length;
     updates.album = res.data;
     updates.albumAttributes = attributes;
