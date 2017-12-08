@@ -196,6 +196,11 @@ Page({
 
       updates.isNewStyle = new Date(albumAttributes.programPromoteAt).getTime() > new Date('2017-11-21').getTime();
 
+      let viewedMediumCount = 0;
+      if (res.meta.currentStudyCardCount && res.meta.currentStudyCardCount[postId]) {
+        viewedMediumCount = res.meta.currentStudyCardCount[postId];
+      }
+
       const updatesData = {
         albumAttributes,
         editorInfo: albumAttributes.editorInfo,
@@ -207,7 +212,7 @@ Page({
         ...updates,
         mediaAndQuestionsCount: dataAll.length,
         completedAll: dayList[selectedIndex - 1],
-        viewedMediumCount: res.meta.currentStudyCardCount ? res.meta.currentStudyCardCount[postId] : 0
+        viewedMediumCount: viewedMediumCount
       };
 
       this.setData(updatesData);

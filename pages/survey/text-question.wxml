@@ -58,7 +58,7 @@
 </view>
 
 <view class="column" hidden="{{mode === 'read'}}">
-  <textarea class="size-14 input-ans" placeholder="请输入内容" bindinput="onInput" data-qid="{{question.id}}" maxlength="2000" wx:if="{{question.attributes.questionType === 'text' || question.attributes.questionType === 'text & pic'}}" value="{{answer.content}}"/>
+  <textarea class="size-14 input-ans" placeholder="请输入内容" bindinput="onInput" bindblur="bindblur" bindconfirm="bindconfirm" data-qid="{{question.id}}" maxlength="2000" wx:if="{{question.attributes.questionType === 'text' || question.attributes.questionType === 'text & pic'}}" value="{{answer.content}}"/>
 
   <view class="pic-view row" wx:if="{{question.attributes.questionType === 'pic' || question.attributes.questionType === 'text & pic'}}">
     <view class="pic-item1" wx:for="{{question.attributes.picurlList}}" wx:for-item="pic" wx:key="" wx:for-index="idx">

@@ -204,7 +204,7 @@ Page({
         })
 
         wx.pageScrollTo({
-          scrollTop: 2000
+          scrollTop: 5000
         });
 
         const list = this.data.allQuestionList.filter(res => res.attributes.questionType !== 'desc');

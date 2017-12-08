@@ -96,15 +96,21 @@ Page({
   },
 
   onInput: _.debounce(function(event) {
-    const //questionId = event.currentTarget.dataset.qid,
-          content = event.detail.value;
+    const content = event.detail.value;
     this.data.answer.content = content;
-
-    // this.setData({
-    //   question: this.data.question,
-    //   answer: this.data.answer
-    // });
   }, 600),
+
+  bindblur() {
+    wx.pageScrollTo({
+      scrollTop: 5000
+    });
+  },
+
+  bindconfirm() {
+    wx.pageScrollTo({
+      scrollTop: 5000
+    });
+  },
 
   gotoEdit() {
     this.setData({mode: 'edit', committed: false});
