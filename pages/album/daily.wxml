@@ -117,7 +117,7 @@
     </view>
   </view>
 
-  <!-- 小于等于7天正常显示， 第8天显示结营 -->
+  <!-- 第8天显示结营 -->
   <view class="column" wx:if="{{selectedIndex > albumAttributes.postIds.length}}">
     <view class="green-view">
       <text class="main-color-green size-12 green-tip">成就报告</text>
@@ -138,7 +138,18 @@
 
     <view class="column green-view" wx:for="{{posts}}" wx:for-item="postItem" wx:key="" wx:for-index="pindex">
       <text class="main-color-green size-12 green-tip">第{{pindex + 1}}天</text>
-      <view class="column bg-gray" wx:for="{{postItem.relationships.media.data}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}"  data-pindex="{{pindex}}" bindtap="goToMedium">
+
+      <!-- 新版UI 文章卡片网页链接 -->
+      <view class="row banner-img" wx:if="{{isNewStyle}}" style="background-image: url('{{postItem.attributes.picUrl}}')" data-pindex="{{pindex}}" bindtap="startStudy">
+        <view class="banner-mask"></view>
+        <view class="row start-study">
+          <image src="../../images/survey/start.png" class="start-icon"></image>
+          <text class="text-white size-12">  {{studyProgress[postItem.id].currentCount > 0 ? studyProgress[postItem.id].currentCount + ' / ' + studyProgress[postItem.id].totalCount : '开始'}}</text>
+        </view>
+      </view>
+
+      <!-- 旧版UI -->
+      <view class="column bg-gray" wx:if="{{!isNewStyle}}" wx:for="{{postItem.relationships.media.data}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}"  data-pindex="{{pindex}}" bindtap="goToMedium">
         <view class="row method-row">
           <view class="row method-row-innner">
             <image src="../../images/survey/{{medium.attributes.mediumType}}.png" class="method-icon"></image>
