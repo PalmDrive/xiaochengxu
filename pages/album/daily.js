@@ -160,7 +160,9 @@ Page({
           }
         }
       }
-
+      if (!res.included) {
+        res.included = [];
+      }
       let surveysQuestionData = res.included.filter(res => res.type === 'surveyQuestions') || [],
           media = postRelationships.media ? postRelationships.media.data : [],
           dataAll = [];
