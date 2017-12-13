@@ -184,9 +184,9 @@ Page({
           unlockedDays = res.meta.unlockedDays,
           selectedIndex = post.attributes && post.attributes.dayIndex;
       // -- test start--
-      unlockedDays = 8;
-      selectedIndex = undefined;
-      dayList = [true,true,true,true,true,true,true];
+      // unlockedDays = 8;
+      // selectedIndex = undefined;
+      // dayList = [true,true,true,true,true,true,true];
       // -- test end--
       const unfinishedDays = dayList.filter(res => !res);
       if (unlockedDays > albumAttributes.postIds.length || unfinishedDays.length === 0) {
