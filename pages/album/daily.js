@@ -184,9 +184,9 @@ Page({
           unlockedDays = res.meta.unlockedDays,
           selectedIndex = post.attributes && post.attributes.dayIndex;
       // -- test start--
-      // unlockedDays = 8;
-      // selectedIndex = undefined;
-      // dayList = [true,true,true,true,true,true,true];
+      unlockedDays = 8;
+      selectedIndex = undefined;
+      dayList = [true,true,true,true,true,true,true];
       // -- test end--
       const unfinishedDays = dayList.filter(res => !res);
       if (unlockedDays > albumAttributes.postIds.length || unfinishedDays.length === 0) {
@@ -680,7 +680,7 @@ Page({
         count = this.data.viewedMediumCount;
     if (pindex >= 0) {
       const post = this.data.posts[pindex];
-      count = this.data.studyProgress[post.id].currentCount;
+      count = this.data.studyProgress[post.id] || 0;
       pid = post.id;
     }
 
