@@ -5,11 +5,16 @@
 <import src="../../templates/prompt.wxml"/>
 <include src="../../includes/hint.wxml"/>
 <import src="../../templates/button-formid.wxml"/>
+<import src="../../utils/wxParse/wxParse.wxml"/>
 
 <scroll-view scroll-y style="height: {{screenHeight}}px" scroll-into-view="{{toView}}" wx:if="{{loadingStatus === null}}" class="buy-page">
-
-  <include src="../../includes/album-intro.wxml" />
-
+  <view class="column" wx:if="{{!albumAttributes.descriptionHtmlContent}}">
+    <include src="../../includes/album-intro.wxml"/>
+  </view>
+  <view class="size-15 html-content" wx:if="{{albumAttributes.descriptionHtmlContent}}">
+    <template is="wxParse" data="{{wxParseData:htmlContent.nodes}}"/>
+  </view>
+  <view class="lessons-bottom"></view>
   <view class="btns-container row" wx:if="{{!showDetail}}">
     <view class="shidu column" bindtap="gotoTrial">
       <image src="/images/paid-group/probation.jpg" class="shidu-img" mode="aspectFill"></image>
