@@ -144,7 +144,7 @@
         <view class="banner-mask"></view>
         <view class="row start-study">
           <image src="../../images/survey/start.png" class="start-icon"></image>
-          <text class="text-white size-12">  {{studyProgress[postItem.id].currentCount > 0 ? studyProgress[postItem.id].currentCount + ' / ' + studyProgress[postItem.id].totalCount : '开始'}}</text>
+          <text class="text-white size-12">  {{studyProgress[postItem.id] > 0 ? studyProgress[postItem.id] + ' / ' + postItem.attributes.metaData.cardCount : '开始'}}</text>
         </view>
       </view>
 

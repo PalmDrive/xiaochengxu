@@ -184,9 +184,9 @@ Page({
           unlockedDays = res.meta.unlockedDays,
           selectedIndex = post.attributes && post.attributes.dayIndex;
       // -- test start--
-      unlockedDays = 8;
-      selectedIndex = undefined;
-      dayList = [true,true,true,true,true,true,true];
+      // unlockedDays = 8;
+      // selectedIndex = undefined;
+      // dayList = [true,true,true,true,true,true,true];
       // -- test end--
       const unfinishedDays = dayList.filter(res => !res);
       if (unlockedDays > albumAttributes.postIds.length || unfinishedDays.length === 0) {
@@ -242,7 +242,7 @@ Page({
       reportPicurl = res.included[0].userAlbum.data.attributes.metaData.picurl;
 
       this.setData({
-        studyProgress: res.included[0].userAlbum.data.attributes.metaData.currentStudyProgress || {},
+        studyProgress: res.included[0].userAlbum.data.attributes.metaData.currentStudyCardCount || {},
         posts: res.data.relationships.posts.data.reverse()
       });
 
@@ -683,7 +683,7 @@ Page({
       count = this.data.studyProgress[post.id].currentCount;
       pid = post.id;
     }
-    
+
     wx.navigateTo({
       url: `../album/study-web?albumId=${albumId}&postId=${pid}&viewedMediumCount=${count}`
     });
