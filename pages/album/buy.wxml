@@ -11,7 +11,7 @@
   <view class="column" wx:if="{{!albumAttributes.descriptionHtmlContent}}">
     <include src="../../includes/album-intro.wxml"/>
   </view>
-  <view class="html-content size-15" wx:if="{{albumAttributes.descriptionHtmlContent}}">
+  <view class="size-15 html-content" wx:if="{{albumAttributes.descriptionHtmlContent}}">
     <template is="wxParse" data="{{wxParseData:htmlContent.nodes}}"/>
   </view>
   <view class="lessons-bottom"></view>
