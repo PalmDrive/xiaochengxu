@@ -2,6 +2,7 @@ const app = getApp(),
     util = require('../../utils/util'),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
+    graphql = require('../../utils/graphql'),
     baseUrl = app.globalData.apiBase;
 
 Page({
@@ -47,9 +48,16 @@ Page({
    * 加载数据
    */
   _load(type) {
-    return request({
-      url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=programStartAt,title,description,picurl,price,editorInfo,id,metaData&app_name=${app.globalData.appName}`,
-    });
+    return graphql(
+      {
+        operationName: null,
+        query: '{albums{id,title,picurl,editorInfo,metaData,price}}',
+        variables: null
+      }
+    );
+    // return request({
+    //   url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=programStartAt,title,description,picurl,price,editorInfo,id,metaData&app_name=${app.globalData.appName}`,
+    // });
   },
 
   /**
@@ -60,14 +68,16 @@ Page({
     // console.log('=============')
     // console.log(res.data);
     // console.log('=============')
+    console.log(res);
     let loadingStatus;
-    if (!res.data.length) {
+    if (!res.length) {
       loadingStatus = 'LOADED_ALL';
     } else {
       loadingStatus = null;
     }
+    console.log(this.data.groups.concat(res.data.albums));
     this.setData({
-      groups: this.data.groups.concat(res.data),
+      groups: this.data.groups.concat(res.data.albums),
       loadingStatus: loadingStatus
     });
   },

@@ -2,7 +2,8 @@ const app = getApp(),
     util = require('../../utils/util'),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
-    baseUrl = app.globalData.apiBase;
+    baseUrl = app.globalData.apiBase,
+    graphql = require('../../utils/graphql');
 
 Page({
   data: {
@@ -51,6 +52,21 @@ Page({
   },
 
   onLoad(options) {
+
+
+    console.log('=============');
+    graphql(
+      {
+        operationName: null,
+        query: '{posts{id}}',
+        variables: null
+      }
+    ).then(d => {
+      console.log(d.data);
+    });
+    console.log('=============');
+
+
     const userId = Auth.getLocalUserId();
     if (userId) {
       this.loadData();

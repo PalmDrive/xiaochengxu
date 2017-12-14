@@ -1,25 +1,25 @@
 <view wx:for="{{groups}}" wx:for-item="group" wx:key class="groups" data-group="{{ group }}" bindtap="gotoPaidGroup">
   <!-- paid_group -->
-  <image src="{{group.attributes.picurl}}" mode="aspectFill" class="paid-group-pic"></image>
+  <image src="{{group.picurl}}" mode="aspectFill" class="paid-group-pic"></image>
   <!--
   <view class="description">
     <text class="description-text  size-10">{{group.attributes.description}}</text>
   </view>
   -->
   <view class="title">
-    <text class="title-text  size-26">{{group.attributes.title}}</text>
+    <text class="title-text  size-26">{{group.title}}</text>
     <text class="title-type">零基础</text>
   </view>
   <view class="bottom-view row">
-      <image src="{{group.attributes.editorInfo.profilePicUrl}}" class="head-img"></image>
+      <image src="{{group.editorInfo.profilePicUrl}}" class="head-img"></image>
       <view class="bottom-left-view column" >
         <text class="ji-zhu-text  size-10">辑主</text>
-        <text class="ji-zhu-name  size-12">{{group.attributes.editorInfo.username}}</text>
+        <text class="ji-zhu-name  size-12">{{group.editorInfo.username}}</text>
       </view>
       <view class="bottom-right-view">
         <text class="price-tip  size-12">售价</text>
-        <text class="price-tip price-old  size-12">￥{{(group.attributes.metaData.originalPrice || 4990) / 100}} </text>
-        <text class="price-now  size-20">{{(group.attributes.price === 0 ? '限时免费' : '￥' + (group.attributes.price / 100))}} </text>
+        <text class="price-tip price-old  size-12">￥{{(group.metaData.originalPrice || 4990) / 100}} </text>
+        <text class="price-now  size-20">{{(group.price === 0 ? '限时免费' : '￥' + (group.price / 100))}} </text>
       </view>
   </view>
   <view class="line-view"></view>
