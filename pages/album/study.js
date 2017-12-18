@@ -152,10 +152,14 @@ Page({
   },
 
   loadSuggestAlbum() {
-    request({
-      url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=1&page[number]=1&fields[albums]=title,description,picurl,price,editorInfo,id,metaData,programStartAt&app_name=${app.globalData.appName}`,
-    }).then(res => {
-
+    graphql(
+      {
+        operationName: null,
+        query: '{albums{id,title,picurl,editorInfo,metaData,price}}',
+        variables: null
+      }
+    ).then(res => {
+      console.log(res.data);
       let showSuggestAlbum = false;
       const studingCount = this.data.albums.studying.filter(r => r.id === res.data[0].id).length;
       const studiedCount = this.data.albums.studied.filter(r => r.id === res.data[0].id).length;
@@ -163,8 +167,9 @@ Page({
         showSuggestAlbum = true;
       }
 
+      console.log(res.data);
       this.setData({
-        groups: res.data,
+        groups: res.data.albums,
         showSuggestAlbum
       });
     });
