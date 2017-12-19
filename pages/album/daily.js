@@ -2,6 +2,7 @@ const app = getApp(),
     util = require('../../utils/util'),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
+    graphql = require('../../utils/graphql'),
     baseUrl = app.globalData.apiBase,
     {addAlbumId, getSurveyAndAnswers} = require('../../utils/user'),
     User = require('../../utils/user');
@@ -124,9 +125,20 @@ Page({
     wx.showLoading({
       title: '加载中',
     });
-    request({
-      url, data
-    }).then(res => {
+    const query = {
+
+    };
+
+    const data = {
+      operationName: null,
+      query: '{albums{id,title,picurl,editorInfo,metaData,price}}',
+      variables: null
+    };
+
+    // request({
+    //   url, data
+    // }).then(res => {
+    graphql(url, data).then(res => {
       wx.hideLoading();
       const albumAttributes = res.data.attributes || {},
             metaData = albumAttributes.metaData || {},

@@ -1,11 +1,11 @@
 const {request} = require('./request');
 
-const post = data => {
+const post = (url, data) => {
   return request({
     header: {
       Authorization: null
     },
-    url: `http://localhost:5000/graphql?`,
+    url: url, //`http://localhost:5000/graphql?`
     data,
     method: 'POST'
   })
