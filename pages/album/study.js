@@ -52,15 +52,6 @@ Page({
   },
 
   onLoad(options) {
-
-
-    console.log('=============');
-    graphql('{posts{id}}').then(d => {
-      console.log(d.data);
-    });
-    console.log('=============');
-
-
     const userId = Auth.getLocalUserId();
     if (userId) {
       this.loadData();
@@ -146,16 +137,17 @@ Page({
   },
 
   loadSuggestAlbum() {
-    graphql('{albums{id,title,picurl,editorInfo,metaData,price,programStartAt,programPromoteAt}}').then(res => {
-      console.log(res.data);
+    graphql(`{albums (
+                pageSize: 1,
+                pageNumber: 1
+              ) {id,title,picurl,editorInfo,metaData,price}}`
+    ).then(res => {
       let showSuggestAlbum = false;
       const studingCount = this.data.albums.studying.filter(r => r.id === res.data.albums[0].id).length;
       const studiedCount = this.data.albums.studied.filter(r => r.id === res.data.albums[0].id).length;
       if (studingCount + studiedCount === 0) {
         showSuggestAlbum = true;
       }
-
-      console.log(res.data);
       this.setData({
         groups: res.data.albums,
         showSuggestAlbum

@@ -48,7 +48,10 @@ Page({
    * 加载数据
    */
   _load(type) {
-    return graphql('{albums{id,title,picurl,editorInfo,metaData,price,programStartAt,programPromoteAt}}');
+    return graphql(`{albums (
+                        pageSize: ${this.data.page.size},
+                        pageNumber: ${this.data.page.number}
+                    ) {id,title,picurl,editorInfo,metaData,price}}`);
     // return request({
     //   url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=programStartAt,title,description,picurl,price,editorInfo,id,metaData&app_name=${app.globalData.appName}`,
     // });
@@ -62,9 +65,8 @@ Page({
     // console.log('=============')
     // console.log(res.data);
     // console.log('=============')
-    console.log(res);
     let loadingStatus;
-    if (!res.length) {
+    if (!(res && res.data && res.data.albums && res.data.albums.length)) {
       loadingStatus = 'LOADED_ALL';
     } else {
       loadingStatus = null;

@@ -1,4 +1,6 @@
-const {request} = require('./request');
+const {request} = require('./request'),
+      app = getApp(),
+      baseUrl = `${app.globalData.apiBase}../../../graphql`;
 
 const post = query => {
   const data = {
@@ -10,7 +12,7 @@ const post = query => {
     header: {
       Authorization: null
     },
-    url: `http://172.10.23.38:5000/graphql`,
+    url: baseUrl,
     data,
     method: 'POST'
   })
