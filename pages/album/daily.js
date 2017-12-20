@@ -125,7 +125,8 @@ Page({
     wx.showLoading({
       title: '加载中',
     });
-    const postParam = `id: "${postId || 'c6d8c990-d91b-11e7-927c-7fbafa06be08'}", albumId: "${albumId}", userId: "${Auth.getLocalUserId()}"`;
+    let paramPostId = postId ? `id: "${postId}",` : '';
+    const postParam = `${paramPostId}albumId: "${albumId}", userId: "${Auth.getLocalUserId()}"`;
 
     let param = `{
       post(${postParam}) {
@@ -233,7 +234,7 @@ Page({
         dayList,
         unlockedDays,
         ...updates,
-        mediaAndQuestionsCount: post.metaData.cardCount,
+        mediaAndQuestionsCount: post.metaData ? post.metaData.cardCount : 0,
         completedAll: dayList[selectedIndex - 1],
         viewedMediumCount: viewedMediumCount
       };
