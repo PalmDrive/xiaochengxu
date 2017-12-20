@@ -43,7 +43,7 @@
     <!--  <text class="size-12 text-color2 ">2017.09.12</text>-->
     </view>
 
-    <text class="size-14 text-color2">{{selectedIndex <= albumAttributes.postIds.length ? survey.attributes.description : albumAttributes.metaData.endRemark}}</text>
+    <text class="size-14 text-color2">{{selectedIndex <= albumAttributes.postIds.length ? survey.description : albumAttributes.metaData.endRemark}}</text>
   </view>
 
   <!-- 小于等于7天正常显示， 第8天显示结营 -->
@@ -59,14 +59,14 @@
         <view class="column bg-gray" wx:for="{{media}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}" bindtap="goToMedium">
           <view class="row method-row">
             <view class="row method-row-innner">
-              <image src="../../images/survey/{{medium.attributes.mediumType}}.png" class="method-icon"></image>
-              <text class="size-16 text-color2 medium-title">{{medium.attributes.title}}</text>
+              <image src="../../images/survey/{{medium.mediumType}}.png" class="method-icon"></image>
+              <text class="size-16 text-color2 medium-title">{{medium.title}}</text>
             </view>
-            <text class="size-9 look-detail" style="color: {{medium.attributes.lastViewedAt ? '#B0B0B0' : '#4A90E2'}}">{{medium.attributes.lastViewedAt ? '已完成' : '查看详情'}}</text>
+            <text class="size-9 look-detail" style="color: {{medium.lastViewedAt ? '#B0B0B0' : '#4A90E2'}}">{{medium.lastViewedAt ? '已完成' : '查看详情'}}</text>
           </view>
           <view class="column method-content">
-            <text class="size-12 text-color3 method-row summary" wx:if="{{medium.attributes.mediumType === 'article'}}">{{medium.attributes.summary}}</text>
-            <text class="size-9" wx:if="{{medium.attributes.mediumType !== 'article'}}">{{medium.attributes.durationString}}</text>
+            <text class="size-12 text-color3 method-row summary" wx:if="{{medium.mediumType === 'article'}}">{{medium.summary}}</text>
+            <text class="size-9" wx:if="{{medium.mediumType !== 'article'}}">{{medium.durationString}}</text>
           </view>
         </view>
       </view>
@@ -74,7 +74,7 @@
     </view>
 
     <!-- 文章卡片网页链接 -->
-    <view class="row banner-img" wx:if="{{isNewStyle}}" style="background-image: url('{{post.attributes.picUrl}}')" bindtap="startStudy">
+    <view class="row banner-img" wx:if="{{isNewStyle}}" style="background-image: url('{{post.picUrl}}')" bindtap="startStudy">
       <view class="banner-mask"></view>
       <view class="row start-study">
         <image src="../../images/survey/start.png" class="start-icon"></image>
@@ -105,13 +105,13 @@
       <view class="column bg-gray" wx:for="{{questionTextList}}" wx:for-item="question" wx:key="" data-question="{{question}}" data-idx="{{index}}" bindtap="goToTextQuestion">
         <view class="row method-row">
           <view class="row method-row-innner">
-            <image src="../../images/survey/apply_question{{question.attributes.completed ? '_complete' : ''}}.png" class="question-icon"></image>
-            <text class="size-16 text-color2 medium-title">{{question.attributes.questionType === 'desc' ? '线下任务（无需提交答案)' : '问答题'}}</text>
+            <image src="../../images/survey/apply_question{{question.completed ? '_complete' : ''}}.png" class="question-icon"></image>
+            <text class="size-16 text-color2 medium-title">{{question.questionType === 'desc' ? '线下任务（无需提交答案)' : '问答题'}}</text>
           </view>
-          <text class="size-9 look-detail" style="color: {{question.attributes.completed ? '#B0B0B0' : '#4A90E2'}}">{{question.attributes.completed ? '已完成' : '查看详情'}}</text>
+          <text class="size-9 look-detail" style="color: {{question.completed ? '#B0B0B0' : '#4A90E2'}}">{{question.completed ? '已完成' : '查看详情'}}</text>
         </view>
         <view class="column question-content">
-          <text class="size-12 text-color3 method-row">{{question.attributes.content}}</text>
+          <text class="size-12 text-color3 method-row">{{question.content}}</text>
         </view>
       </view>
     </view>
@@ -140,26 +140,26 @@
       <text class="main-color-green size-12 green-tip">第{{pindex + 1}}天</text>
 
       <!-- 新版UI 文章卡片网页链接 -->
-      <view class="row banner-img" wx:if="{{isNewStyle}}" style="background-image: url('{{postItem.attributes.picUrl}}')" data-pindex="{{pindex}}" bindtap="startStudy">
+      <view class="row banner-img" wx:if="{{isNewStyle}}" style="background-image: url('{{postItem.picUrl}}')" data-pindex="{{pindex}}" bindtap="startStudy">
         <view class="banner-mask"></view>
         <view class="row start-study">
           <image src="../../images/survey/start.png" class="start-icon"></image>
-          <text class="text-white size-12">  {{studyProgress[postItem.id] > 0 ? studyProgress[postItem.id] + ' / ' + postItem.attributes.metaData.cardCount : '开始'}}</text>
+          <text class="text-white size-12">  {{studyProgress[postItem.id] > 0 ? studyProgress[postItem.id] + ' / ' + postItem.metaData.cardCount : '开始'}}</text>
         </view>
       </view>
 
       <!-- 旧版UI -->
-      <view class="column bg-gray" wx:if="{{!isNewStyle}}" wx:for="{{postItem.relationships.media.data}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}"  data-pindex="{{pindex}}" bindtap="goToMedium">
+      <view class="column bg-gray" wx:if="{{!isNewStyle}}" wx:for="{{postItem.media.data}}" wx:for-item="medium" wx:key="" data-medium="{{medium}}" data-idx="{{index}}"  data-pindex="{{pindex}}" bindtap="goToMedium">
         <view class="row method-row">
           <view class="row method-row-innner">
-            <image src="../../images/survey/{{medium.attributes.mediumType}}.png" class="method-icon"></image>
-            <text class="size-16 text-color2 medium-title">{{medium.attributes.title}}</text>
+            <image src="../../images/survey/{{medium.mediumType}}.png" class="method-icon"></image>
+            <text class="size-16 text-color2 medium-title">{{medium.title}}</text>
           </view>
-          <text class="size-9 look-detail" style="color: {{medium.attributes.lastViewedAt ? '#B0B0B0' : '#4A90E2'}}">{{medium.attributes.lastViewedAt ? '已完成' : '查看详情'}}</text>
+          <text class="size-9 look-detail" style="color: {{medium.lastViewedAt ? '#B0B0B0' : '#4A90E2'}}">{{medium.lastViewedAt ? '已完成' : '查看详情'}}</text>
         </view>
         <view class="column method-content">
-          <text class="size-12 text-color3 method-row summary" wx:if="{{medium.attributes.mediumType === 'article'}}">{{medium.attributes.summary}}</text>
-          <text class="size-9" wx:if="{{medium.attributes.mediumType !== 'article'}}">{{medium.attributes.durationString}}</text>
+          <text class="size-12 text-color3 method-row summary" wx:if="{{medium.mediumType === 'article'}}">{{medium.summary}}</text>
+          <text class="size-9" wx:if="{{medium.mediumType !== 'article'}}">{{medium.durationString}}</text>
         </view>
       </view>
     </view>

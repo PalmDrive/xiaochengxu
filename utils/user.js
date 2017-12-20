@@ -1,4 +1,5 @@
 const {request} = require('./request'),
+      graphql = require('./graphql'),
       Auth = require('auth');
 
 let _albumIdsMap = null,
@@ -62,24 +63,49 @@ function getSurveyAndAnswers(postId, albumId, force) {
   if (_surveysMap[key] && !force) {
     return new Promise(resolve => resolve(_surveysMap[key]));
   } else {
-    return request({
-      url,
-      data: {albumId}
-    })
-    .then(res => {
-      const data = res.data,
-            relationships = data.relationships;
-      // Add question attributes from included data
-      if (relationships) {
-        relationships.surveyQuestions.data.forEach(q => {
-          const question = res.included.filter(d => d.type === 'SurveyQuestions' && d.id === q.id)[0];
-          q.attributes = question.attributes;
-        });
-        const userSurveyAnswer = res.included.filter(d => d.type === 'userSurveyAnswers')[0];
-        if (userSurveyAnswer) {
-          relationships.userSurveyAnswer = {data: userSurveyAnswer};
-        }
+    // return request({
+    //   url,
+    //   data: {albumId}
+    // })
+    // .then(res => {
+
+    let param = `{
+      survey(albumId: "${albumId}", postId: "${postId}", surveyType: "task") {
+        id,
+        description,
+        surveyQuestions{
+          id,
+          questionType,
+          content,
+          description,
+          options,
+          metaData
+        },
+        userSurveyAnswersCount,
+        metaData
       }
+      userSurveyAnswer(userId: "${Auth.getLocalUserId()}",postId:"${postId}") {
+        picurl,
+        answers,
+        updatedAt
+      }
+    }`;
+
+    return graphql(param).then(res => {
+      console.log(res);
+      const data = res.data;
+            // relationships = data.relationships;
+      // Add question attributes from included data
+      // if (relationships) {
+      //   relationships.surveyQuestions.data.forEach(q => {
+      //     const question = res.included.filter(d => d.type === 'SurveyQuestions' && d.id === q.id)[0];
+      //     q.attributes = question.attributes;
+      //   });
+      //   const userSurveyAnswer = res.included.filter(d => d.type === 'userSurveyAnswers')[0];
+      //   if (userSurveyAnswer) {
+      //     relationships.userSurveyAnswer = {data: userSurveyAnswer};
+      //   }
+      // }
       // add to _surveysMap
       _surveysMap[key] = data;
       return data;

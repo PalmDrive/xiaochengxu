@@ -1,17 +1,17 @@
 
 <view class="row space-between top-tip">
-  <text class="text-color1 size-18">{{question.attributes.questionType === 'desc' ? '线下任务（无需提交答案)' : '问答题'}}</text>
-  <text class="main-color size-14" bindtap="gotoMedium" data-medium="{{question.attributes.metaData.relatedMedium.medium}}" wx:if="{{question.attributes.metaData && question.attributes.metaData.relatedMedium}}">查看知识点</text>
-  <!-- wx:if="{{question.attributes.metaData && question.attributes.metaData.relatedMediumId}}" -->
+  <text class="text-color1 size-18">{{question.questionType === 'desc' ? '线下任务（无需提交答案)' : '问答题'}}</text>
+  <text class="main-color size-14" bindtap="gotoMedium" data-medium="{{question.metaData.relatedMedium.medium}}" wx:if="{{question.metaData && question.metaData.relatedMedium}}">查看知识点</text>
+  <!-- wx:if="{{question.metaData && question.metaData.relatedMediumId}}" -->
 </view>
 
 <view class="column bg-gray section">
   <!--<text class="size-14 text-white bg-main-color task-number">{{index + 1}}</text>-->
-  <text class="size-17 text-color1 pingfang-medium">{{question.attributes.content}}</text>
-  <text class="size-13 text-color1 description">{{question.attributes.description || ''}}</text>
+  <text class="size-17 text-color1 pingfang-medium">{{question.content}}</text>
+  <text class="size-13 text-color1 description">{{question.description || ''}}</text>
 </view>
 
-<image src="../../images/survey/quote.png" class="quotation" wx:if="{{(question.attributes.questionType === 'text' || question.attributes.questionType === 'text & pic') && mode !== 'read'}}"></image>
+<image src="../../images/survey/quote.png" class="quotation" wx:if="{{(question.questionType === 'text' || question.questionType === 'text & pic') && mode !== 'read'}}"></image>
 
 <view hidden="{{mode === 'edit'}}" class="section container-view">
   <view class="section">
@@ -27,17 +27,17 @@
     </view>
     <text class="answer-content size-14">{{answer.content ? answer.content : ''}}</text>
 
-    <image wx:for="{{question.attributes.picurlList}}" wx:for-item="pic" wx:key="" src="{{pic.url}}" class="answer-img" mode="widthFix"></image>
+    <image wx:for="{{question.picurlList}}" wx:for-item="pic" wx:key="" src="{{pic.url}}" class="answer-img" mode="widthFix"></image>
 
     <text class="size-12 text-gray answer-date">{{answer.displayedUpdatedAt}}</text>
   </view>
 
-  <view class="bg-gray section" wx:if="{{question.attributes.metaData && question.attributes.metaData.completionHint}}">
+  <view class="bg-gray section" wx:if="{{question.metaData && question.metaData.completionHint}}">
     <view class="row explain-view">
       <image src="../../images/survey/analysis.png" class="explain-icon"></image>
       <text class="size-16 text-color3">解析</text>
     </view>
-    <text class="answer-content size-15">{{question.attributes.metaData.completionHint}}</text>
+    <text class="answer-content size-15">{{question.metaData.completionHint}}</text>
   </view>
   <view wx:if="{{userSurveyAnswersCount}}" class="today-tip">
     <text class="size-12 today-ans">今日提交</text>
@@ -58,21 +58,21 @@
 </view>
 
 <view class="column" hidden="{{mode === 'read'}}">
-  <textarea class="size-14 input-ans" placeholder="请输入内容" bindinput="onInput" bindblur="bindblur" bindconfirm="bindconfirm" data-qid="{{question.id}}" maxlength="2000" wx:if="{{question.attributes.questionType === 'text' || question.attributes.questionType === 'text & pic'}}" value="{{answer.content}}"/>
+  <textarea class="size-14 input-ans" placeholder="请输入内容" bindinput="onInput" bindblur="bindblur" bindconfirm="bindconfirm" data-qid="{{question.id}}" maxlength="2000" wx:if="{{question.questionType === 'text' || question.questionType === 'text & pic'}}" value="{{answer.content}}"/>
 
-  <view class="pic-view row" wx:if="{{question.attributes.questionType === 'pic' || question.attributes.questionType === 'text & pic'}}">
-    <view class="pic-item1" wx:for="{{question.attributes.picurlList}}" wx:for-item="pic" wx:key="" wx:for-index="idx">
+  <view class="pic-view row" wx:if="{{question.questionType === 'pic' || question.questionType === 'text & pic'}}">
+    <view class="pic-item1" wx:for="{{question.picurlList}}" wx:for-item="pic" wx:key="" wx:for-index="idx">
       <image src="../../images/survey/delete.jpg" class="delete" bindtap="delete" data-idx="{{idx}}" data-picid="{{pic.id}}" ></image>
       <image src="{{pic.url}}" class="pic-item" mode="aspectFit"></image>
     </view>
   </view>
 
   <view class="row bottom-view">
-    <view class="row" bindtap="addPic" data-qid="{{question.id}}" wx:if="{{question.attributes.questionType === 'pic' || question.attributes.questionType === 'text & pic'}}">
+    <view class="row" bindtap="addPic" data-qid="{{question.id}}" wx:if="{{question.questionType === 'pic' || question.questionType === 'text & pic'}}">
       <image src="../../images/survey/photo.jpg" class="image-icon"></image>
       <text class="size-14 text-color3">添加图片</text>
     </view>
-    <!-- <text class="size-14 text-color3" wx:if="{{question.attributes.questionType === 'text' || question.attributes.questionType === 'text & pic'}}">{{answer.content ? answer.content.length : 0}}/2000</text> -->
+    <!-- <text class="size-14 text-color3" wx:if="{{question.questionType === 'text' || question.questionType === 'text & pic'}}">{{answer.content ? answer.content.length : 0}}/2000</text> -->
   </view>
 </view>
 

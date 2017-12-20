@@ -3,7 +3,6 @@ const app = getApp(),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
     baseUrl = app.globalData.apiBase,
-    {addAlbumId, getSurveyAndAnswers} = require('../../utils/user'),
     User = require('../../utils/user');
 
 let albumId = undefined;

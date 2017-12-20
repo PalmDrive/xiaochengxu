@@ -48,13 +48,7 @@ Page({
    * 加载数据
    */
   _load(type) {
-    return graphql(
-      {
-        operationName: null,
-        query: '{albums{id,title,picurl,editorInfo,metaData,price}}',
-        variables: null
-      }
-    );
+    return graphql('{albums{id,title,picurl,editorInfo,metaData,price,programStartAt,programPromoteAt}}');
     // return request({
     //   url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=programStartAt,title,description,picurl,price,editorInfo,id,metaData&app_name=${app.globalData.appName}`,
     // });

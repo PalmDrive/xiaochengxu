@@ -55,13 +55,7 @@ Page({
 
 
     console.log('=============');
-    graphql(
-      {
-        operationName: null,
-        query: '{posts{id}}',
-        variables: null
-      }
-    ).then(d => {
+    graphql('{posts{id}}').then(d => {
       console.log(d.data);
     });
     console.log('=============');
@@ -152,17 +146,11 @@ Page({
   },
 
   loadSuggestAlbum() {
-    graphql(
-      {
-        operationName: null,
-        query: '{albums{id,title,picurl,editorInfo,metaData,price}}',
-        variables: null
-      }
-    ).then(res => {
+    graphql('{albums{id,title,picurl,editorInfo,metaData,price,programStartAt,programPromoteAt}}').then(res => {
       console.log(res.data);
       let showSuggestAlbum = false;
-      const studingCount = this.data.albums.studying.filter(r => r.id === res.data[0].id).length;
-      const studiedCount = this.data.albums.studied.filter(r => r.id === res.data[0].id).length;
+      const studingCount = this.data.albums.studying.filter(r => r.id === res.data.albums[0].id).length;
+      const studiedCount = this.data.albums.studied.filter(r => r.id === res.data.albums[0].id).length;
       if (studingCount + studiedCount === 0) {
         showSuggestAlbum = true;
       }
