@@ -1,6 +1,5 @@
 const {request} = require('./request'),
-      app = getApp(),
-      baseUrl = `${app.globalData.apiBase}../../../graphql`;
+      baseUrl = `https://ainterest-service-production.ailingual.cn/graphql`;
 
 const post = query => {
   const data = {
