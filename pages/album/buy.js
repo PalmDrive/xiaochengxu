@@ -2,21 +2,37 @@ const app = getApp(),
     util = require('../../utils/util'),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
+    graphql = require('../../utils/graphql'),
     {addAlbumId} = require('../../utils/user'),
     baseUrl = app.globalData.apiBase,
     WxParse = require('../../utils/wxParse/wxParse.js'),
     he = require('../../utils/he.js');
 
 function loadData(id) {
-  return request({
-    url: `${app.globalData.apiBase}/albums/${id}?app_name=${app.globalData.appName}`,
-  });
-}
+  // return request({
+  //   url: `${app.globalData.apiBase}/albums/${id}?app_name=${app.globalData.appName}`,
+  // });
+  let param = `{
+    albums(id: "${id}") {
+      id,
+      title,
+      picurl,
+      editorInfo,
+      metaData,
+      price,
+      postIds,
+      description,
+      catalog,
+      programStartAt,
+      programPromoteAt,
+      descriptionHtmlContent
+    },
+    userAlbum(userId: "${Auth.getLocalUserId()}", albumId: "${id}") {
+      role
+    }
+  }`;
 
-function loadUserData(id) {
-  return request({
-    url: `${app.globalData.apiBase}/albums/${id}/relationships/users`
-  });
+  return graphql(param);
 }
 
 const PAID_USER_ROLE = 2;
@@ -24,9 +40,7 @@ let _showPaymentModal = false;
 
 Page({
   data: {
-    userRole: null,
     albumId: null,
-    album: {},
     albumAttributes: {},
     metaData: {},
     loadingStatus: 'LOADING', // 'LOADING', 'LOADING_MORE', 'LOADED_ALL'
@@ -35,11 +49,6 @@ Page({
     showHint: false,
     modalShown: false,
     qrcodeModalHidden: true,
-    bannerImage: {},
-    current: 0,
-    author: {},
-    subscribers: [],
-    subscribersCount: 0,
     processing: false,
     editorInfo: {},
     catalog: [],
@@ -68,35 +77,8 @@ Page({
 
   onLoad(options) {
     _showPaymentModal = options.showPaymentModal === 'true';
-    /* 免费得七日辑 start */
-    this.data.tempAlert && this.setData({
-      tempAlert: null
-    });
-    if (this.data.tempAlert === false) {
-      this.setData({
-        tempAlert: false
-      });
-    } else {
-      request({
-        url: `${baseUrl}/users/temp-alert`,
-      }).then(d => {
-        // d = {data:{title:"恭喜你!",content:"已经有5位朋友帮助了你\n恭喜免费获取\n《7天告别爵士乐小白》",link:"/pages/album/show?id=1b259840-b23c-11e7-8905-3f3cfcde362a","type":"referral","picurl":"http://ailingual-production.oss-cn-shanghai.aliyuncs.com/pics/%E4%B8%83%E6%97%A5%E8%BE%91/%E7%95%99%E5%AD%A6%E5%B0%8F%E7%99%BD%E5%A6%82%E4%BD%95%E5%8F%98%E8%BA%AB%E8%80%81%E5%8F%B8%E6%9C%BA/banner%E5%9B%BE.jpg"}}
-        if (d.data) {
-          this.setData({
-            tempAlert: d.data
-          });
-        }
 
-        if (d.meta) {
-          Auth.setLocalKey( `isSubscribedWX`, d.meta.isSubscribedWX + "")
-        }
-      })
-    }
-    /* 免费得七日辑 end */
-
-    //console.log(getCurrentPages()[1]);
-    const bannerImageRatio = 375 / 400, // width / height
-          updates = {
+    const updates = {
             albumId: options.id,
             trial: options.trial,
             loadingStatus: 'LOADING'
@@ -104,70 +86,11 @@ Page({
           that = this;
 
     this.setData({
-      userRole: Auth.getLocalUserInfo().attributes.role,
       showDetail: options.showDetail
     });
-    function init() {
-      //console.log(getCurrentPages()[1]);
-      const bannerImageRatio = 375 / 400, // width / height
-            updates = {
-              albumId: options.id,
-              trial: options.trial,
-              loadingStatus: 'LOADING'
-            };
-      //console.log(this);
-      wx.getSystemInfo({
-        success(res) {
-          updates.bannerImage = {height: res.windowWidth / bannerImageRatio};
-          updates.username = Auth.getLocalUserInfo().attributes.wxUsername;
-          updates.screenHeight = res.windowHeight
-          that.setData(updates);
-          Auth.getLocalUserId() && that._load();
-        },
-        fail() {
-          updates.bannerImage = {height: 400};
-          that.setData(updates);
-        }
-      });
-    }
 
-    // 免费得 判断是否是从好友的 二维码进入的
-    if (options.scene) {
-      options.scene = decodeURIComponent(options.scene);
-      request({
-        url: `${baseUrl}/scenes/${options.scene}`
-      }).then(res => {
-        options.id = res.data.attributes.productId;
-        this.setData({
-          id: options.id
-        });
-        init();
-        return request({
-          method: 'POST',
-          url: `${baseUrl}/referrals`,
-          data: {
-            data: {
-              attributes: {
-                refereeId: Auth.getLocalUserId(),
-                productId: this.data.albumId,
-                userId: res.data.attributes.createdBy
-              }
-            }
-          }
-        })
-      }).then(res => {
-        this.setData({
-          shareAlert: {
-            alert: true,
-            username: res.included.attributes.username
-          }
-        });
-      });
-    } else {
-      // 显示新手引导
-      this.showGuide();
-      init();
-    }
+    this.getTempAlert();
+    this.getScenes(options);
   },
 
   onShow(e) {
@@ -184,16 +107,6 @@ Page({
    * 加载数据
    */
   _load() {
-    loadUserData(this.data.albumId)
-      .then(data => {
-        const updates = {
-          author: data.relationships.author.data,
-          subscribers: data.data,
-          subscribersCount: data.meta.count
-        };
-        this.setData(updates);
-      });
-
     loadData(this.data.albumId)
       .then(this._onLoadSuccess);
   },
@@ -202,22 +115,17 @@ Page({
    */
   _onLoadSuccess: function (res) {
     // 找到已解锁到第几天
-    const morningPosts = res.data.relationships.posts.data;
-    const role = res.included[0].userAlbum.data.attributes.role;
+    const role = res.data.userAlbum ? res.data.userAlbum.role : 0;
 
-    let updates = {
-      posts: morningPosts
-    };
+    let updates = {};
 
-    const attributes = res.data.attributes,
+    const attributes = res.data.albums ? res.data.albums[0] : {},
           metaData = attributes.metaData;
     if (attributes.descriptionHtmlContent) {
       const html = attributes.descriptionHtmlContent,
         decoded = he.decode(html);
       WxParse.wxParse('htmlContent', 'html', decoded, this, 0);
     }
-    updates.current = morningPosts.filter(d => d.meta.unlocked).length;
-    updates.album = res.data;
     updates.albumAttributes = attributes;
     updates.metaData = metaData;
     updates.programStartAt = attributes.programStartAt || 0;
@@ -401,7 +309,7 @@ Page({
     const albumId = this.data.albumId;
     let url = `../album/show?id=${albumId}&trial=${true}`;
 
-    if (this.data.album.attributes.programStartAt) {
+    if (this.data.albumAttributes.programStartAt) {
       url = `../album/daily?albumId=${albumId}&trial=true`;
     }
     wx.navigateTo({url});
@@ -549,6 +457,113 @@ Page({
         toView: '#',
         selectedIndex: 0
       });
+    }
+  },
+
+  getTempAlert() {
+    /* 免费得七日辑 start */
+    this.data.tempAlert && this.setData({
+      tempAlert: null
+    });
+    if (this.data.tempAlert === false) {
+      this.setData({
+        tempAlert: false
+      });
+    } else {
+      // request({
+      //   url: `${baseUrl}/users/temp-alert`,
+      // }).then(d => {
+      let param = `{
+        users(id: "${Auth.getLocalUserId()}") {
+          id,tempAlert,isSubscribedWX
+        }
+      }`;
+
+      return graphql(param).then(d => {
+        const obj = d.data.users ? d.data.users[0] : undefined;
+        if (obj) {
+          this.setData({
+            tempAlert: obj.tempAlert
+          });
+        }
+
+        if (obj.isSubscribedWX) {
+          Auth.setLocalKey( `isSubscribedWX`, obj.isSubscribedWX + "")
+        }
+      })
+    }
+    /* 免费得七日辑 end */
+  },
+
+  pageInit(options) {
+    const updates = {
+            albumId: options.id,
+            trial: options.trial,
+            loadingStatus: 'LOADING'
+          },
+          that = this;
+
+    wx.getSystemInfo({
+      success(res) {
+        updates.username = Auth.getLocalUserInfo().attributes.wxUsername;
+        updates.screenHeight = res.windowHeight
+        that.setData(updates);
+        Auth.getLocalUserId() && that._load();
+      },
+      fail() {
+        that.setData(updates);
+      }
+    });
+  },
+
+  getScenes(options) {
+    options.scene = '1509356068e6hjsieiadak1x4unmi';
+    // 免费得 判断是否是从好友的 二维码进入的
+    if (options.scene) {
+      // options.scene = decodeURIComponent(options.scene);
+      options.scene = '1509356068e6hjsieiadak1x4unmi';
+      // request({
+      //   url: `${baseUrl}/scenes/${options.scene}`
+      // }).then(res => {
+      //
+      let param = `{
+        scenes(uuid: "${options.scene}") {
+          id,uuid,productId,createdBy
+        }
+      }`;
+
+      return graphql(param).then(res => {
+        const obj = res.data.scenes ? res.data.scenes[0] : {};
+        options.id = obj.productId || '';
+        this.setData({
+          id: options.id
+        });
+        this.pageInit(options);
+        return request({
+          method: 'POST',
+          url: `${baseUrl}/referrals`,
+          data: {
+            data: {
+              attributes: {
+                refereeId: Auth.getLocalUserId(),
+                productId: this.data.albumId,
+                userId: obj.createdBy
+              }
+            }
+          }
+        })
+      }).then(res => {
+        this.setData({
+          shareAlert: {
+            alert: true,
+            username: res.included.attributes.username
+          }
+        });
+      });
+    } else {
+      // 显示新手引导
+      this.showGuide();
+      this.pageInit(options);
     }
   }
 })
