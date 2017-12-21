@@ -51,7 +51,7 @@ Page({
     return graphql(`{albums (
                         pageSize: ${this.data.page.size},
                         pageNumber: ${this.data.page.number}
-                    ) {id,title,picurl,editorInfo,metaData,price}}`);
+                    ) {id,title,picurl,editorInfo,metaData,price,programStartAt}}`);
     // return request({
     //   url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=${this.data.page.size}&page[number]=${this.data.page.number}&fields[albums]=programStartAt,title,description,picurl,price,editorInfo,id,metaData&app_name=${app.globalData.appName}`,
     // });

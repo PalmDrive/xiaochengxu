@@ -141,7 +141,7 @@ Page({
           htmlContent
         }
       },
-      album(id: "${albumId}") {
+      albums(id: "${albumId}") {
         id,
         title,
         picurl,
@@ -167,7 +167,7 @@ Page({
     graphql(param).then(res => {
       console.log(res);
       wx.hideLoading();
-      const albumAttributes = res.data.album || {},
+      const albumAttributes = res.data.albums ? res.data.albums[0] : {},
             metaData = albumAttributes.metaData || {},
             post = res.data.post || {},
             userAlbum = res.data.userAlbum || {};
@@ -255,7 +255,7 @@ Page({
     // }).then(res => {
 
     let param = `{
-      album(id: "${albumId}") {
+      albums(id: "${albumId}") {
         id,
         title,
         picurl,
@@ -290,7 +290,7 @@ Page({
 
     graphql(param).then(res => {
       wx.hideLoading();
-
+      const album = res.data.albums ? res.data.albums[0] : {}
       // post.relationships.media.data
       // 加载filter 问题及答案
       // User.getFilterQuestions(albumId, true).then(res => {
@@ -300,7 +300,7 @@ Page({
 
       this.setData({
         studyProgress: res.data.userAlbum.metaData.currentStudyCardCount || {},
-        posts: res.data.album.posts.reverse()
+        posts: album.posts.reverse()
       });
 
       // 如果是第一次看到结营页面，则显示结营报告页面
