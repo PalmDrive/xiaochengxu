@@ -91,6 +91,7 @@ Page({
 
     this.getTempAlert();
     this.getScenes(options);
+
   },
 
   onShow(e) {
@@ -321,24 +322,6 @@ Page({
     });
   },
 
-  _getFromId(e) {
-    const tap = this[e.currentTarget.dataset.tap],
-          formId = e.detail.formId;
-
-    request({
-      method: 'POST',
-      url: `${baseUrl}/user-album/formid`,
-      data: {
-        userId: Auth.getLocalUserId(),
-        albumId: this.data.albumId,
-        formid: formId
-      }
-    }).then((d) => {
-      // wx.showToast({
-      //   title: formId || 'null'
-      // })
-    });
-  },
   closeAlert(options) {
     if (options.currentTarget.dataset.type === 'guide') {
       const showed = Auth.getLocalShowed();
@@ -383,40 +366,64 @@ Page({
   },
   // 解锁
   _unlockAlubm() {
-    return request({
-      url: `${app.globalData.apiBase}/albums/${this.data.albumId}/unlock`,
-      method: 'POST',
-      data: {
+    // return request({
+    //   url: `${app.globalData.apiBase}/albums/${this.data.albumId}/unlock`,
+    //   method: 'POST',
+    //   data: {
+    //   }
+    // }).then(res => {
+    //   console.log(res);
+    // });
+
+    let param = `
+      mutation {
+        userAlbumUnlock(albumId: "${this.data.albumId}", userId: "${Auth.getLocalUserId()}") {
+          id
+        }
       }
-    }).then(res => {
+    `;
+
+    return graphql(param).then(res => {
       console.log(res);
     });
   },
 
   // 查账 coupons
   findCoupon: function () {
-    return request({
-      url: `${baseUrl}/user-coupons`,
-      data: {
-        redeemedAt: true,
-        albumId: this.data.albumId
-      },
-      method: 'GET'
-    }).then(res => {
-      const coupons = {};
-      res.included && res.included.map(c => {
-        if (c.type = 'Coupons') {
-          coupons[c.id] = c;
+    // return request({
+    //   url: `${baseUrl}/user-coupons`,
+    //   data: {
+    //     redeemedAt: true,
+    //     albumId: this.data.albumId
+    //   },
+    //   method: 'GET'
+    // }).then(res => {
+
+
+    let param = `{
+      userCoupons(albumId: "${this.data.albumId}", ownerId: "${Auth.getLocalUserId()}",redeemedAt: true) {
+        id,
+        displayName,
+        Coupon {
+          id,
+          expiredAt,
+          albumId,
+          value,
         }
-      });
-      const couponsData = res.data.map(d => {
+      }
+    }`;
+
+    return graphql(param).then(res => {
+      const userCoupons = res.data.userCoupons;
+      const couponsData = userCoupons.map(d => {
+        const coupon = d.Coupon || {};
         return {
-          couponId: coupons[d.relationships.coupon.data.id].id,
+          couponId: coupon.id,
           userCouponId: d.id,
-          quota: coupons[d.relationships.coupon.data.id].attributes.value,
-          name: d.attributes.displayName,
-          validityTerm: `有效期至${this._formatDateToDay(new Date(coupons[d.relationships.coupon.data.id].attributes.expiredAt))}`,
-          range: coupons[d.relationships.coupon.data.id].attributes.albumId ? `仅限购买“${coupons[d.relationships.coupon.data.id].attributes.albumId}”` : '全场通用，最高折扣50元',
+          quota: coupon.value,
+          name: d.displayName,
+          validityTerm: `有效期至${this._formatDateToDay(new Date(coupon.expiredAt))}`,
+          range: coupon.albumId ? `仅限购买“${d.displayName}”` : '全场通用，最高折扣50元',
         }
       });
       this.setData({
@@ -539,24 +546,37 @@ Page({
           id: options.id
         });
         this.pageInit(options);
-        return request({
-          method: 'POST',
-          url: `${baseUrl}/referrals`,
-          data: {
-            data: {
-              attributes: {
-                refereeId: Auth.getLocalUserId(),
-                productId: this.data.albumId,
-                userId: obj.createdBy
+
+        let param = `
+          mutation {
+            referral(userId: "${obj.createdBy}", refereeId: "${Auth.getLocalUserId()}", productId: "${this.data.albumId}") {
+              id,User{
+                wxUsername,username
               }
             }
           }
-        })
+        `;
+
+        return graphql(param);
+        // return request({
+        //   method: 'POST',
+        //   url: `${baseUrl}/referrals`,
+        //   data: {
+        //     data: {
+        //       attributes: {
+        //         refereeId: Auth.getLocalUserId(),
+        //         productId: this.data.albumId,
+        //         userId: obj.createdBy
+        //       }
+        //     }
+        //   }
+        // })
       }).then(res => {
+        let user = res.data.referral.User || {};
         this.setData({
           shareAlert: {
             alert: true,
-            username: res.included.attributes.username
+            username: user.username || user.wxUsername
           }
         });
       });
