@@ -413,7 +413,7 @@ function goToAlbum(album) {
 
       let url = `/pages/album/buy?id=${album.id}`;
       if (albumIdsMap[album.id]) {
-        if (album.attributes.programStartAt || album.programStartAt) {
+        if (album.programStartAt || (album.attributes && album.attributes.programStartAt)) {
           url = `/pages/album/daily?albumId=${album.id}`;
         } else {
           url = `/pages/album/show?id=${album.id}`;
