@@ -209,26 +209,38 @@ Page({
 
     this.setData({processing: true});
 
-    request({
-      method: 'POST',
-      url,
-      data: {
-        data: {
-          totalFee: price,
-          name: this.data.albumAttributes.title,
-          openid: attrs.wxOpenId,
-          productId: this.data.albumId,
-          productType: 'Album'
+    // request({
+    //   method: 'POST',
+    //   url,
+    //   data: {
+    //     data: {
+    //       totalFee: price,
+    //       name: this.data.albumAttributes.title,
+    //       openid: attrs.wxOpenId,
+    //       productId: this.data.albumId,
+    //       productType: 'Album'
+    //     }
+    //   }
+    // })
+    let param = `
+      mutation {
+        order (appName: "days7", name: "${this.data.albumAttributes.title}", totalFee: ${price}, openid: "${attrs.wxOpenId}", productId: "${this.data.albumId}", productType: "Album"){
+          paySign,
+          timeStamp,
+          orderId,
+          prepay_id,
+          nonce_str
         }
       }
-    })
-      .then(data => {
+    `;
+
+    graphql(param).then(data => {
         const params = {
-          timeStamp: data.data.timeStamp,
-          nonceStr: data.data.nonce_str,
-          package: `prepay_id=${data.data.prepay_id}`,
+          timeStamp: data.data.order.timeStamp,
+          nonceStr: data.data.order.nonce_str,
+          package: `prepay_id=${data.data.order.prepay_id}`,
           signType: 'MD5',
-          paySign: data.data.paySign
+          paySign: data.data.order.paySign
         };
 
         // console.log('params:');
@@ -354,15 +366,23 @@ Page({
   },
   // 使用优惠券
   _useCoupon() {
-    return request({
-      url: `${app.globalData.apiBase}/user-coupons/${this.data.coupon.userCouponId}/redeem`,
-      method: 'POST',
-      data: {
-        albumId: this.data.albumId
+    // return request({
+    //   url: `${app.globalData.apiBase}/user-coupons/${this.data.coupon.userCouponId}/redeem`,
+    //   method: 'POST',
+    //   data: {
+    //     albumId: this.data.albumId
+    //   }
+    // }).then(res => {
+    //   console.log(res);
+    // });
+
+    let param = `mutation {
+      userCouponRedeem(albumId: "${this.data.albumId}", id: "${this.data.coupon.userCouponId}") {
+        id
       }
-    }).then(res => {
-      console.log(res);
-    });
+    }`;
+
+    return graphql(param);
   },
   // 解锁
   _unlockAlubm() {
@@ -414,7 +434,7 @@ Page({
     }`;
 
     return graphql(param).then(res => {
-      const userCoupons = res.data.userCoupons;
+      const userCoupons = res.data.userCoupons || [];
       const couponsData = userCoupons.map(d => {
         const coupon = d.Coupon || {};
         return {
@@ -524,11 +544,10 @@ Page({
   },
 
   getScenes(options) {
-    options.scene = '1509356068e6hjsieiadak1x4unmi';
     // 免费得 判断是否是从好友的 二维码进入的
     if (options.scene) {
-      // options.scene = decodeURIComponent(options.scene);
-      options.scene = '1509356068e6hjsieiadak1x4unmi';
+      options.scene = decodeURIComponent(options.scene);
+      // options.scene = '1509356068e6hjsieiadak1x4unmi';
       // request({
       //   url: `${baseUrl}/scenes/${options.scene}`
       // }).then(res => {
