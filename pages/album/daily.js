@@ -62,47 +62,9 @@ Page({
       backgroundColor: '#42BD56'
     })
     const that = this;
-    function init() {
-      albumId = options.albumId;
-      postId = options.postId;
-      that.setData({trial: options.trial === 'true' ? true : false});
-    }
-
-    // 免费得 判断是否是从好友的 二维码进入的
-    if (options.scene) {
-      options.scene = decodeURIComponent(options.scene);
-      request({
-        url: `${baseUrl}/scenes/${options.scene}`
-      }).then(res => {
-        options.albumId = res.data.attributes.productId;
-
-        init();
-        return request({
-          method: 'POST',
-          url: `${baseUrl}/referrals`,
-          data: {
-            data: {
-              attributes: {
-                refereeId: Auth.getLocalUserId(),
-                productId: options.albumId,
-                userId: res.data.attributes.createdBy
-              }
-            }
-          }
-        })
-      }).then(res => {
-        this.setData({
-          shareAlert: {
-            alert: true,
-            username: res.included.attributes.username
-          }
-        });
-      });
-    } else {
-      // 显示新手引导
-      this.showGuide();
-      init();
-    }
+    albumId = options.albumId;
+    postId = options.postId;
+    that.setData({trial: options.trial === 'true' ? true : false});
   },
 
   onShow() {
@@ -201,9 +163,9 @@ Page({
         }
       }
 
-      let dayList = userAlbum.checkinStatus,
-          unlockedDays = userAlbum.unlockedDays,
-          selectedIndex = post && post.dayIndex;
+      let dayList = userAlbum.checkinStatus || [],
+          unlockedDays = userAlbum.unlockedDays || 1,
+          selectedIndex = (post && post.dayIndex) || 1;
       // -- test start--
       // unlockedDays = 8;
       // selectedIndex = undefined;
@@ -512,26 +474,25 @@ Page({
 
     this.setData({processing: true});
 
-    request({
-      method: 'POST',
-      url,
-      data: {
-        data: {
-          totalFee: price,
-          name: this.data.albumAttributes.title,
-          openid: attrs.wxOpenId,
-          productId: albumId,
-          productType: 'Album'
+    let param = `
+      mutation {
+        order (appName: "days7", name: "${this.data.albumAttributes.title}", totalFee: ${price}, openid: "${attrs.wxOpenId}", productId: "${albumId}", productType: "Album"){
+          paySign,
+          timeStamp,
+          orderId,
+          prepay_id,
+          nonce_str
         }
       }
-    })
-      .then(data => {
+    `;
+
+    graphql(param).then(data => {
         const params = {
-          timeStamp: data.data.timeStamp,
-          nonceStr: data.data.nonce_str,
-          package: `prepay_id=${data.data.prepay_id}`,
+          timeStamp: data.data.order.timeStamp,
+          nonceStr: data.data.order.nonce_str,
+          package: `prepay_id=${data.data.order.prepay_id}`,
           signType: 'MD5',
-          paySign: data.data.paySign
+          paySign: data.data.order.paySign
         };
 
         // console.log('params:');
@@ -633,52 +594,55 @@ Page({
   },
   // 使用优惠券
   _useCoupon() {
-    return request({
-      url: `${app.globalData.apiBase}/user-coupons/${this.data.coupon.userCouponId}/redeem`,
-      method: 'POST',
-      data: {
-        albumId: albumId
+    let param = `mutation {
+      userCouponRedeem(albumId: "${albumId}", id: "${this.data.coupon.userCouponId}") {
+        id
       }
-    }).then(res => {
-      console.log(res);
-    });
+    }`;
+
+    return graphql(param);
   },
   // 解锁
   _unlockAlubm() {
-    return request({
-      url: `${app.globalData.apiBase}/albums/${albumId}/unlock`,
-      method: 'POST',
-      data: {
+    let param = `
+      mutation {
+        userAlbumUnlock(albumId: "${albumId}", userId: "${Auth.getLocalUserId()}") {
+          id
+        }
       }
-    }).then(res => {
+    `;
+
+    return graphql(param).then(res => {
       console.log(res);
     });
   },
 
   // 查账 coupons
   findCoupon: function () {
-    return request({
-      url: `${baseUrl}/user-coupons`,
-      data: {
-        redeemedAt: true,
-        albumId: albumId
-      },
-      method: 'GET'
-    }).then(res => {
-      const coupons = {};
-      res.included && res.included.map(c => {
-        if (c.type = 'Coupons') {
-          coupons[c.id] = c;
+    let param = `{
+      userCoupons(albumId: "${albumId}", ownerId: "${Auth.getLocalUserId()}",redeemedAt: true) {
+        id,
+        displayName,
+        Coupon {
+          id,
+          expiredAt,
+          albumId,
+          value,
         }
-      });
-      const couponsData = res.data.map(d => {
+      }
+    }`;
+
+    return graphql(param).then(res => {
+      const userCoupons = res.data.userCoupons || [];
+      const couponsData = userCoupons.map(d => {
+        const coupon = d.Coupon || {};
         return {
-          couponId: coupons[d.relationships.coupon.data.id].id,
+          couponId: coupon.id,
           userCouponId: d.id,
-          quota: coupons[d.relationships.coupon.data.id].attributes.value,
-          name: d.attributes.displayName,
-          validityTerm: `有效期至${this._formatDateToDay(new Date(coupons[d.relationships.coupon.data.id].attributes.expiredAt))}`,
-          range: coupons[d.relationships.coupon.data.id].attributes.albumId ? `仅限购买“${coupons[d.relationships.coupon.data.id].attributes.albumId}”` : '全场通用，最高折扣50元',
+          quota: coupon.value,
+          name: d.displayName,
+          validityTerm: `有效期至${this._formatDateToDay(new Date(coupon.expiredAt))}`,
+          range: coupon.albumId ? `仅限购买“${d.displayName}”` : '全场通用，最高折扣50元',
         }
       });
       this.setData({
