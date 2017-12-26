@@ -14,10 +14,10 @@
 
 <view class="studying">
   <view class="row album" wx:for="{{albums[mode]}}" wx:for-item="group" wx:key data-group="{{ group }}" bindtap="gotoPaidGroup">
-    <image src="{{group.attributes.picurl}}" mode="aspectFill" class="album-img" style="height: {{(screenWidth - 40) / 4}}px"></image>
+    <image src="{{group.picurl}}" mode="aspectFill" class="album-img" style="height: {{(screenWidth - 40) / 4}}px"></image>
     <view class="column right-row" style="height: {{(screenWidth - 40) / 4}}px">
-      <text class="title-text  size-17">{{group.attributes.title}}</text>
-      <text class="size-12" style="color: {{mode === 'studied' ? '#85858D' : (group.completedDays >= group.meta.unlockedDays ? '#85858D' : '#42BD56')}}">{{mode === 'studied' ? '已经结营' : (group.completedDays >= group.meta.unlockedDays ? '今日已学习' : '有新任务')}}</text>
+      <text class="title-text  size-17">{{group.title}}</text>
+      <text class="size-12" style="color: {{mode === 'studied' ? '#85858D' : (group.completedDays >= group.unlockedDays ? '#85858D' : '#42BD56')}}">{{mode === 'studied' ? '已经结营' : (group.completedDays >= group.meta.unlockedDays ? '今日已学习' : '有新任务')}}</text>
     </view>
   </view>
 
