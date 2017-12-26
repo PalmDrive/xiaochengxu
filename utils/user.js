@@ -25,12 +25,20 @@ function getPurchasedAlbumIdsMap(force) {
   if (_albumIdsMap && !force) {
     return new Promise(resolve => resolve(_albumIdsMap));
   } else {
-    return request({
-      url: `${app.globalData.apiBase}/user-albums?userId=${userId}&fields[userAlbums]=albumId,metaData&filter[role]=2`
-    })
-      .then(res => {
-        _albumIdsMap = (res.data || [])
-          .map(d => d.attributes.albumId)
+    // return request({
+    //   url: `${app.globalData.apiBase}/user-albums?userId=${userId}&fields[userAlbums]=albumId,metaData&filter[role]=2`
+    // })
+    //   .then(res => {
+    return graphql(`{
+      userAlbums(
+        userId: "${userId}",
+        role: "2") {
+          id,
+          albumId
+        }
+    }`).then(res => {
+        _albumIdsMap = (res.data.userAlbums || [])
+          .map(d => d.albumId)
           .reduce((memo, id) => {
             memo[id] = 1;
             return memo;

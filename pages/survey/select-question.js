@@ -3,7 +3,8 @@ const app = getApp(),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
     baseUrl = app.globalData.apiBase,
-    User = require('../../utils/user');
+    User = require('../../utils/user'),
+    graphql = require('../../utils/graphql');
 
 let surveyId = undefined,
     albumId = undefined,
@@ -201,11 +202,25 @@ Page({
 
     if (this.data.selectedAnwser.length > 0) {
       isUploading = true;
-      request({
-        url: `${app.globalData.apiBase}/surveys/${surveyId}/user-survey-answers`,
-        method: 'post',
-        data
-      }).then(res => {
+      // request({
+      //   url: `${app.globalData.apiBase}/surveys/${surveyId}/user-survey-answers`,
+      //   method: 'post',
+      //   data
+      // }).then(res => {
+      graphql(`
+        mutation {
+          userSurveyAnswer(
+            userId: "${Auth.getLocalUserId()}",
+            surveyId: "${surveyId}",
+            answers: [{
+              content: ${JSON.stringify(this.data.selectedAnwser)},
+              surveyQuestionId: "${this.data.questionList[this.data.qindex].id}"
+            }]) {
+            id
+          }
+        }
+        `
+      ).then(res => {
         isUploading = false;
         wx.showToast({
           title: '提交成功',

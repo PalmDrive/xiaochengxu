@@ -3,7 +3,8 @@ const app = getApp(),
       _ = require('../../vendors/underscore'),
       Auth = require('../../utils/auth'),
       Util = require('../../utils/util'),
-      {request} = require('../../utils/request');
+      {request} = require('../../utils/request'),
+      graphql = require('../../utils/graphql');
 /**
  * @return {Object} answer
  * {
@@ -160,11 +161,26 @@ Page({
       committed: true,
       answer: this.data.answer
     });
-    request({
-      url,
-      method: 'post',
-      data
-    }).then(res => {
+    // request({
+    //   url,
+    //   method: 'post',
+    //   data
+    // }).then(res => {
+    const answerContent = (!answer.content || answer.content === 'undefined') ? '' : answer.content;
+    graphql(`
+      mutation {
+        userSurveyAnswer(
+          userId: "${Auth.getLocalUserId()}",
+          surveyId: "${_survey.id}",
+          answers: [{
+            content: "${answerContent}",
+            surveyQuestionId: "${this.data.question.id}"
+          }]) {
+          id
+        }
+      }
+      `
+    ).then(res => {
       //console.log( `upload form over`);
       _isUploading = false;
       wx.showToast({

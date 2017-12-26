@@ -165,7 +165,7 @@ Page({
 
       let dayList = userAlbum.checkinStatus || [],
           unlockedDays = userAlbum.unlockedDays || 1,
-          selectedIndex = (post && post.dayIndex) || 1;
+          selectedIndex = (post && post.dayIndex);
       // -- test start--
       // unlockedDays = 8;
       // selectedIndex = undefined;
