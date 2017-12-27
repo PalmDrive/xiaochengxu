@@ -184,11 +184,11 @@ function goToMedium(event, gaOptions, options) {
 
   let url = `../medium/medium?id=${medium.id}&morningPostId=${options.morningPostId}`;
 
-  if (medium.attributes.mediumType === 'video') {
+  if (medium.mediumType === 'video') {
     url = `../medium/video?id=${medium.id}`;
   }
 
-  if (medium.attributes.mediumType === 'audio') {
+  if (medium.mediumType === 'audio') {
     url = `../medium/audio?id=${medium.id}`;
   }
 

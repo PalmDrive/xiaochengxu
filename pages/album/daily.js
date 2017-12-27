@@ -370,7 +370,7 @@ Page({
           count = this.data.media.length,
           gaOptions = {
             cid: Auth.getLocalUserId(),
-            ec: `article_title:${medium.attributes.title},article_id:${medium.id}`,
+            ec: `article_title:${medium.title},article_id:${medium.id}`,
             ea: 'click_article_in_albumShowPage',
             el: `album_name:${this.data.albumAttributes.title},album_id:${this.data.albumId}`,
             ev: 0
@@ -382,9 +382,9 @@ Page({
       index = event.currentTarget.dataset.pindex;
       key = 'day' + (parseInt(index) + 1);
       newPostId = this.data.posts[index].id
-      this.data.posts[index].relationships.media.data[idx].attributes.lastViewedAt = (new Date()).getTime();
+      this.data.posts[index].relationships.media.data[idx].lastViewedAt = (new Date()).getTime();
     } else {
-      this.data.media[idx].attributes.lastViewedAt = (new Date()).getTime();
+      this.data.media[idx].lastViewedAt = (new Date()).getTime();
     }
 
     util.goToMedium(event, gaOptions, {
