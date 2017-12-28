@@ -226,12 +226,12 @@ Page({
         .then(res => {
           const updates = {};
           //updates.userSurveyAnswersCount = res.meta.userSurveyAnswersCount;
-          const peerAnsweers = res.data.map(d => {
+          const peerAnsweers = res.data.userSurveyAnswers.map(d => {
             const ans = getAnswerForQuestion(d, this.data.question.id);
 
             // add user
-            if (ans && d.relationships.user.data) {
-              ans.user = d.relationships.user.data.attributes;
+            if (ans && d.user) {
+              ans.user = d.user;
             }
             return ans;
           })

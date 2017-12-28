@@ -129,26 +129,55 @@ function getFilterQuestions(albumId, force) {
   if (_filterQuestionsMap[key] && !force) {
     return new Promise(resolve => resolve(_filterQuestionsMap[key]));
   } else {
-    return request({
-      url,
-      data: {albumId}
-    })
-    .then(res => {
-      let data = res.data;
-      let answers = {};
-      data.map(d => {
-        if (d.type === 'UserSurveyAnswers') {
-          for (var i in d.attributes.answers) {
-            answers[i] = d.attributes.answers[i];
+    // return request({
+    //   url,
+    //   data: {albumId}
+    // })
+    // .then(res => {
+    let param = `
+      {
+        userSurveyAnswers (albumId: "${albumId}", userId: "${Auth.getLocalUserId()}") {
+          id,
+          surveyId,
+          userId,
+          answers
+        },
+        surveyQuestions (albumId: "${albumId}",isFeatured: true)
+        {
+          id,
+          surveyId,
+          isFeatured,
+          metaData,
+          content
+        }
+        albums (id: "${albumId}") {
+          id,
+          posts{
+            metaData
           }
         }
-      });
-      let questions = data.filter(d => d.type === 'SurveyQuestions');
+      }`;
 
+    return graphql(param).then(res => {
+      console.log(res);
+      const questions = res.data.surveyQuestions,
+            posts = res.data.albums[0].posts,
+            userSurveyAnswers = res.data.userSurveyAnswers;
+
+      let answers = {},
+          sumUpList = [];
+      userSurveyAnswers.map(obj => {
+         for (var i in obj.answers) {
+           answers[i] = obj.answers[i];
+         }
+      });
+      posts.map(post => {
+        sumUpList = sumUpList.concat(post.metaData.bulletpoints);
+      })
       let newData = {
         questions,
         answers,
-        sumUpList: res.meta.bulletpoints
+        sumUpList
       };
       _filterQuestionsMap[key] = newData;
       return newData;
@@ -162,27 +191,44 @@ function getPeerAnswers(postId, albumId, page) {
   },
        url = `${getApp().globalData.apiBase}/user-survey-answers/peers`;
   Object.assign(defaultPage, page || {});
-  return request({
-    url,
-    data: {
-      postId,
-      albumId,
-      include: 'users',
-      'page[size]': defaultPage.size,
-      'page[number]': defaultPage.number
-    }
-  })
-  .then(res => {
-    // add user attributes
-    res.data.forEach(d => {
-      const user = d.relationships.user.data;
-      if (user) {
-        const includedUser = res.included.filter(obj => obj.type === 'Users' && obj.id === user.id)[0];
-        user.attributes = includedUser ? includedUser.attributes : {};
+
+  let param = `
+    {
+      userSurveyAnswers (postId:"${postId}",albumId:"${albumId}", pageSize: ${page.size}, pageNumber: ${page.number}) {
+        id,
+        answers,
+        user{
+          id,
+          wxUsername,
+          profilePicUrl
+        }
       }
-    });
-    return res;
-  });
+    }`;
+
+  return graphql(param);
+
+
+  // return request({
+  //   url,
+  //   data: {
+  //     postId,
+  //     albumId,
+  //     include: 'users',
+  //     'page[size]': defaultPage.size,
+  //     'page[number]': defaultPage.number
+  //   }
+  // })
+  // .then(res => {
+    // add user attributes
+    // res.data.forEach(d => {
+    //   const user = d.relationships.user.data;
+    //   if (user) {
+    //     const includedUser = res.included.filter(obj => obj.type === 'Users' && obj.id === user.id)[0];
+    //     user.attributes = includedUser ? includedUser.attributes : {};
+    //   }
+    // });
+  //   return res;
+  // });
 }
 
 module.exports = {
