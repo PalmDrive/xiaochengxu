@@ -3,7 +3,8 @@ const app = getApp(),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
     baseUrl = app.globalData.apiBase,
-    User = require('../../utils/user');
+    User = require('../../utils/user'),
+    graphql = require('../../utils/graphql');
 
 let surveyId = undefined,
     albumId = undefined,
@@ -43,19 +44,19 @@ Page({
     User.getSurveyAndAnswers(postId, albumId, false)
       .then(res => {
 
-      let questionList = res.relationships.surveyQuestions.data;
-      let answerList = res.relationships.userSurveyAnswer ? [res.relationships.userSurveyAnswer] : [];
-
-      if (answerList.length > 0) {
-        picurl = answerList[0].data.attributes.picurl;
-        answerList = answerList[0].data.attributes.answers;
+      let questionList = res.survey.surveyQuestions;
+      let answerObj = {};
+      if (res.userSurveyAnswer) {
+        picurl = res.userSurveyAnswer.picurl;
+        answerObj = res.userSurveyAnswer.answers;
       }
 
       let list = questionList.filter(res => {
-        if (res.attributes.questionType === 'multi-select' || res.attributes.questionType === 'single-select') {
-           res.attributes.answer = answerList.filter(answer => { // 拿到已选择的答案列表
-            if (answer && answer.surveyQuestionId === res.id && Array.isArray(answer.content)) {
-              res.attributes.options = res.attributes.options.map(option => {
+        if (res.questionType === 'multi-select' || res.questionType === 'single-select') {
+          let answer = answerObj[res.id];
+          if (answer) {
+            if (Array.isArray(answer.content)) {
+              res.options = res.options.map(option => {
                 answer.content.map(ans => {
                   if (option.value === ans) { // question.options 里选择的答案selected = true
                     option.selected = true;
@@ -63,17 +64,30 @@ Page({
                 });
                 return option;
               });
-              return answer;
             }
-          });
+            res.answer = answer;
+          }
+          //  res.answer = answerList.filter(answer => { // 拿到已选择的答案列表
+          //   if (answer && answer.surveyQuestionId === res.id && Array.isArray(answer.content)) {
+          //     res.options = res.options.map(option => {
+          //       answer.content.map(ans => {
+          //         if (option.value === ans) { // question.options 里选择的答案selected = true
+          //           option.selected = true;
+          //         }
+          //       });
+          //       return option;
+          //     });
+          //     return answer;
+          //   }
+          // });
           return res;
         }
       });
 
-      const attributes = list[qindex].attributes;
+      const questionItem = list[qindex];
       let committed = false;
 
-      list[qindex].attributes.options = attributes.options.map(res => {
+      list[qindex].options = questionItem.options.map(res => {
         res.selected = res.selected ? res.selected : false;
         if (res.selected) {
           committed = true;
@@ -81,8 +95,8 @@ Page({
         return res;
       });
 
-      const rightAnwser = attributes.options.filter((res, i) => res.isRight === true);
-      const selectedAnwser = attributes.answer.length > 0 ? attributes.answer[0].content : [];
+      const rightAnwser = questionItem.options.filter((res, i) => res.isRight === true);
+      const selectedAnwser = questionItem.answer && questionItem.answer.content ? questionItem.answer.content : [];
       console.log(list);
 
       let nextButtonDisable = false;
@@ -97,7 +111,7 @@ Page({
       this.setData({
         questionList: list,
         qindex,
-        attributes,
+        attributes: questionItem,
         rightAnwser,
         preButtonDisable,
         nextButtonDisable,
@@ -143,7 +157,7 @@ Page({
   },
 
   changePage(index) {
-    this.data.questionList[this.data.qindex].attributes.answer = [{
+    this.data.questionList[this.data.qindex].answer = [{
       content: this.data.selectedAnwser
     }];
     this.onLoad({
@@ -188,11 +202,25 @@ Page({
 
     if (this.data.selectedAnwser.length > 0) {
       isUploading = true;
-      request({
-        url: `${app.globalData.apiBase}/surveys/${surveyId}/user-survey-answers`,
-        method: 'post',
-        data
-      }).then(res => {
+      // request({
+      //   url: `${app.globalData.apiBase}/surveys/${surveyId}/user-survey-answers`,
+      //   method: 'post',
+      //   data
+      // }).then(res => {
+      graphql(`
+        mutation {
+          userSurveyAnswer(
+            userId: "${Auth.getLocalUserId()}",
+            surveyId: "${surveyId}",
+            answers: [{
+              content: ${JSON.stringify(this.data.selectedAnwser)},
+              surveyQuestionId: "${this.data.questionList[this.data.qindex].id}"
+            }]) {
+            id
+          }
+        }
+        `
+      ).then(res => {
         isUploading = false;
         wx.showToast({
           title: '提交成功',
@@ -207,15 +235,14 @@ Page({
           scrollTop: 5000
         });
 
-        const list = this.data.allQuestionList.filter(res => res.attributes.questionType !== 'desc');
+        const list = this.data.allQuestionList.filter(res => res.questionType !== 'desc');
         if (completeAmount === list.length - 1) {
           if (!picurl) {
             User.getSurveyAndAnswers(postId, albumId, true)
               .then(res => {
-              if (!res.relationships) return;
-              let answerList = res.relationships.userSurveyAnswer ? [res.relationships.userSurveyAnswer] : [];
-              if (answerList.length > 0) {
-                picurl = answerList[0].data.attributes.picurl;
+              if (!res.survey) return;
+              if (res.userSurveyAnswer) {
+                picurl = res.userSurveyAnswer.picurl;
               }
               wx.navigateTo({
                 url: `../album/share?imgUrl=${picurl}`

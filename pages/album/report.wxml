@@ -12,7 +12,7 @@
 <view class="column" wx:for="{{questions}}" wx:for-item="question" wx:key="" wx:if="{{answers[question.id].content || (answers[question.id].pics && answers[question.id].pics.length > 0)}}">
   <view class="row bg-gray">
     <image src="../../images/survey/complete.png" class="complete-img"></image>
-    <text class="size-14 text-color1 pingfang-medium short-title">{{question.attributes.metaData.shortTitle}}</text>
+    <text class="size-14 text-color1 pingfang-medium short-title">{{question.metaData.shortTitle}}</text>
   </view>
   <view class="answer-view column">
     <text class="size-18 text-color2 answer-text" wx:if="{{answers[question.id].content}}">{{answers[question.id].content ? answers[question.id].content : ''}}</text>

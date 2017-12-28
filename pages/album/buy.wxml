@@ -1,10 +1,6 @@
 <!--topics.wxml-->
-<import src="../../templates/topic-list.wxml"/>
-<import src="../../templates/homepage-topic-section.wxml"/>
-<import src="../../templates/loading.wxml"/>
 <import src="../../templates/prompt.wxml"/>
 <include src="../../includes/hint.wxml"/>
-<import src="../../templates/button-formid.wxml"/>
 <import src="../../utils/wxParse/wxParse.wxml"/>
 
 <scroll-view scroll-y style="height: {{screenHeight}}px" scroll-into-view="{{toView}}" wx:if="{{loadingStatus === null}}" class="buy-page">

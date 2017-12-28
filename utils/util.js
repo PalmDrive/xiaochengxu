@@ -184,11 +184,11 @@ function goToMedium(event, gaOptions, options) {
 
   let url = `../medium/medium?id=${medium.id}&morningPostId=${options.morningPostId}`;
 
-  if (medium.attributes.mediumType === 'video') {
+  if (medium.mediumType === 'video') {
     url = `../medium/video?id=${medium.id}`;
   }
 
-  if (medium.attributes.mediumType === 'audio') {
+  if (medium.mediumType === 'audio') {
     url = `../medium/audio?id=${medium.id}`;
   }
 
@@ -413,7 +413,7 @@ function goToAlbum(album) {
 
       let url = `/pages/album/buy?id=${album.id}`;
       if (albumIdsMap[album.id]) {
-        if (album.attributes.programStartAt) {
+        if (album.programStartAt || (album.attributes && album.attributes.programStartAt)) {
           url = `/pages/album/daily?albumId=${album.id}`;
         } else {
           url = `/pages/album/show?id=${album.id}`;

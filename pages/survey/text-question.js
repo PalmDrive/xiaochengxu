@@ -3,7 +3,8 @@ const app = getApp(),
       _ = require('../../vendors/underscore'),
       Auth = require('../../utils/auth'),
       Util = require('../../utils/util'),
-      {request} = require('../../utils/request');
+      {request} = require('../../utils/request'),
+      graphql = require('../../utils/graphql');
 /**
  * @return {Object} answer
  * {
@@ -11,12 +12,12 @@ const app = getApp(),
    }
  */
 function getAnswerForQuestion(userSurveyAnswer, id) {
-  const ans = userSurveyAnswer.attributes.answers.filter(el => el && el.surveyQuestionId === id)[0];
+  if (!userSurveyAnswer.answers) return undefined;
+  const ans = userSurveyAnswer.answers[id];
   if (ans) {
-    ans.updatedAt = ans.updatedAt || userSurveyAnswer.attributes.updatedAt;
+    ans.updatedAt = ans.updatedAt || userSurveyAnswer.updatedAt;
     ans.displayedUpdatedAt = Util.formatDateToDay(new Date(ans.updatedAt));
   }
-
   return ans;
 };
 
@@ -69,17 +70,16 @@ Page({
           };
     User.getSurveyAndAnswers(_postId, _albumId, false /* set false when getSurveyAndAnswers is used in daily.js*/)
       .then(data => {
-        _survey = data;
-        const question = data.relationships.surveyQuestions.data.filter(d => d.id === questionId)[0];
-        const userSurveyAnswer = data.relationships.userSurveyAnswer && data.relationships.userSurveyAnswer.data;
-        question.attributes.picurlList = [];
-        if (userSurveyAnswer) {
-          _picurl = userSurveyAnswer.attributes.picurl;
-          const answer = getAnswerForQuestion(userSurveyAnswer, questionId);
+        _survey = data.survey;
+        const question = data.survey.surveyQuestions.filter(d => d.id === questionId)[0];
+        question.picurlList = [];
+        if (data.userSurveyAnswer) {
+          _picurl = data.userSurveyAnswer.picurl;
+          const answer = getAnswerForQuestion(data.userSurveyAnswer, questionId);
           if (answer) {
             this._afterSave();
             updates.answer = answer;
-            question.attributes.picurlList = answer.pics || [];
+            question.picurlList = answer.pics || [];
             if (answer.pics.length > 0) {
               const pic = answer.pics[answer.pics.length - 1];
               _picNumber = parseInt(pic.id.substr(4,1));
@@ -87,10 +87,10 @@ Page({
           }
         }
         updates.question = question;
-        if (updates.answer.content || question.attributes.picurlList.length > 0 || question.attributes.questionType === 'desc') {
+        if (updates.answer.content || question.picurlList.length > 0 || question.questionType === 'desc') {
           updates.committed = true;
         }
-        updates.allQuestionList = data.relationships.surveyQuestions.data;
+        updates.allQuestionList = data.survey.surveyQuestions;
         this.setData(updates);
       });
   },
@@ -140,7 +140,7 @@ Page({
       return;
     }
 
-    if ((this.data.question.attributes.questionType === 'text' || this.data.question.attributes.questionType === 'text & pic') && !answer.content) {
+    if ((this.data.question.questionType === 'text' || this.data.question.questionType === 'text & pic') && !answer.content) {
       wx.showToast({
         title: '请先输入答案',
         duration: 1000,
@@ -161,11 +161,26 @@ Page({
       committed: true,
       answer: this.data.answer
     });
-    request({
-      url,
-      method: 'post',
-      data
-    }).then(res => {
+    // request({
+    //   url,
+    //   method: 'post',
+    //   data
+    // }).then(res => {
+    const answerContent = (!answer.content || answer.content === 'undefined') ? '' : answer.content;
+    graphql(`
+      mutation {
+        userSurveyAnswer(
+          userId: "${Auth.getLocalUserId()}",
+          surveyId: "${_survey.id}",
+          answers: [{
+            content: "${answerContent}",
+            surveyQuestionId: "${this.data.question.id}"
+          }]) {
+          id
+        }
+      }
+      `
+    ).then(res => {
       //console.log( `upload form over`);
       _isUploading = false;
       wx.showToast({
@@ -175,7 +190,7 @@ Page({
           that._afterSave();
         }
       });
-      const list = this.data.allQuestionList.filter(res => res.attributes.questionType !== 'desc');
+      const list = this.data.allQuestionList.filter(res => res.questionType !== 'desc');
       if (_completeAmount >= list.length - 1) {
         /* 购买成功后弹窗 */
         const flag =  Auth.getLocalKey( `${_postId}_hasShownCompleteCard`) !== 'true';
@@ -184,10 +199,9 @@ Page({
           if (!_picurl) {
             User.getSurveyAndAnswers(_postId, _albumId, true)
               .then(res => {
-              if (!res.relationships) return;
-              let answerList = res.relationships.userSurveyAnswer ? [res.relationships.userSurveyAnswer] : [];
-              if (answerList.length > 0) {
-                _picurl = answerList[0].data.attributes.picurl;
+              if (!res.survey) return;
+              if (res.userSurveyAnswer) {
+                _picurl = res.userSurveyAnswer.picurl;
               }
               wx.navigateTo({
                 url: `../album/share?imgUrl=${_picurl}`
@@ -212,11 +226,12 @@ Page({
         .then(res => {
           const updates = {};
           //updates.userSurveyAnswersCount = res.meta.userSurveyAnswersCount;
-          const peerAnsweers = res.data.map(d => {
+          const peerAnsweers = res.data.userSurveyAnswers.map(d => {
             const ans = getAnswerForQuestion(d, this.data.question.id);
+
             // add user
-            if (ans && d.relationships.user.data) {
-              ans.user = d.relationships.user.data.attributes;
+            if (ans && d.user) {
+              ans.user = d.user;
             }
             return ans;
           })
@@ -271,7 +286,7 @@ Page({
             },
           })
 
-          that.data.question.attributes.picurlList.push({id: `pic_${_picNumber}`, url: res.tempFilePaths[i]});
+          that.data.question.picurlList.push({id: `pic_${_picNumber}`, url: res.tempFilePaths[i]});
         }
 
         that.setData({
@@ -284,7 +299,7 @@ Page({
   delete: function(event) {
     const idx = event.currentTarget.dataset.idx,
           picid = event.currentTarget.dataset.picid;
-    this.data.question.attributes.picurlList.splice(idx,1);
+    this.data.question.picurlList.splice(idx,1);
 
     this.setData({
       question: this.data.question
@@ -304,10 +319,10 @@ Page({
             cid: Auth.getLocalUserId(),
             ec: `article_title:${medium.attributes.title},article_id:${medium.id}`,
             ea: 'click_article_in_albumShowPage',
-            el: `album_name:${_survey.attributes.title},album_id:${_albumId}`,
+            el: `album_name:${_survey.title},album_id:${_albumId}`,
             ev: 0
           },
-          metaData = this.data.question.attributes.metaData || {},
+          metaData = this.data.question.metaData || {},
           relatedMedium = metaData.relatedMedium;
     if (relatedMedium) {
       Util.goToMedium(event, gaOptions, {

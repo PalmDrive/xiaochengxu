@@ -2,6 +2,7 @@ const app = getApp(),
     util = require('../../utils/util'),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
+    graphql = require('../../utils/graphql'),
     baseUrl = app.globalData.apiBase,
     {addAlbumId, getSurveyAndAnswers} = require('../../utils/user'),
     User = require('../../utils/user');
@@ -61,47 +62,9 @@ Page({
       backgroundColor: '#42BD56'
     })
     const that = this;
-    function init() {
-      albumId = options.albumId;
-      postId = options.postId;
-      that.setData({trial: options.trial === 'true' ? true : false});
-    }
-
-    // 免费得 判断是否是从好友的 二维码进入的
-    if (options.scene) {
-      options.scene = decodeURIComponent(options.scene);
-      request({
-        url: `${baseUrl}/scenes/${options.scene}`
-      }).then(res => {
-        options.albumId = res.data.attributes.productId;
-
-        init();
-        return request({
-          method: 'POST',
-          url: `${baseUrl}/referrals`,
-          data: {
-            data: {
-              attributes: {
-                refereeId: Auth.getLocalUserId(),
-                productId: options.albumId,
-                userId: res.data.attributes.createdBy
-              }
-            }
-          }
-        })
-      }).then(res => {
-        this.setData({
-          shareAlert: {
-            alert: true,
-            username: res.included.attributes.username
-          }
-        });
-      });
-    } else {
-      // 显示新手引导
-      this.showGuide();
-      init();
-    }
+    albumId = options.albumId;
+    postId = options.postId;
+    that.setData({trial: options.trial === 'true' ? true : false});
   },
 
   onShow() {
@@ -124,19 +87,57 @@ Page({
     wx.showLoading({
       title: '加载中',
     });
-    request({
-      url, data
-    }).then(res => {
+    let paramPostId = postId ? `id: "${postId}",` : '';
+    const postParam = `${paramPostId}albumId: "${albumId}", userId: "${Auth.getLocalUserId()}"`;
+
+    let param = `{
+      post(${postParam}) {
+        id,
+        picUrl,
+        dayIndex,
+        metaData,
+        media {
+          id,
+          title,
+          duration,
+          htmlContent
+        }
+      },
+      albums(id: "${albumId}") {
+        id,
+        title,
+        picurl,
+        editorInfo,
+        metaData,
+        price,
+        postIds,
+        programStartAt,
+        programPromoteAt
+      },
+      userAlbum(userId: "${Auth.getLocalUserId()}", albumId: "${albumId}") {
+        role,
+        checkinStatus,
+        unlockedDays,
+        metaData,
+        currentStudyCardCount
+      }
+    }`;
+
+    // request({
+    //   url, data
+    // }).then(res => {
+    graphql(param).then(res => {
+      console.log(res);
       wx.hideLoading();
-      const albumAttributes = res.data.attributes || {},
+      const albumAttributes = res.data.albums ? res.data.albums[0] : {},
             metaData = albumAttributes.metaData || {},
-            post = res.data.relationships.post.data || {},
-            postRelationships = post.relationships || {};
-      albumId = res.data.id;
+            post = res.data.post || {},
+            userAlbum = res.data.userAlbum || {};
+      albumId = albumAttributes.id;
       postId = post.id;
 
       let updates = {};
-      const role = res.data.relationships.userAlbum.data.attributes.role;
+      const role = userAlbum.role;
       updates.didUserPay = role === 2 || role === 1;
 
       /* 购买成功后弹窗 */
@@ -161,28 +162,10 @@ Page({
           }
         }
       }
-      if (!res.included) {
-        res.included = [];
-      }
-      let surveysQuestionData = res.included.filter(res => res.type === 'surveyQuestions') || [],
-          media = postRelationships.media ? postRelationships.media.data : [],
-          dataAll = [];
-      media = media.map(medium => {
-        let duration = medium.attributes.duration || 0;
-        medium.attributes.durationString = util.convertTime(duration);
-        dataAll.push(medium);
 
-        // 找出文章卡片对应的问题
-        let questions = surveysQuestionData.filter(q => q.attributes.mediumId === medium.id);
-        if (questions.length > 0) {
-          dataAll = dataAll.concat(questions);
-        }
-        return medium;
-      });
-
-      let dayList = res.meta.checkinStatus,
-          unlockedDays = res.meta.unlockedDays,
-          selectedIndex = post.attributes && post.attributes.dayIndex;
+      let dayList = userAlbum.checkinStatus || [],
+          unlockedDays = userAlbum.unlockedDays || 1,
+          selectedIndex = (post && post.dayIndex);
       // -- test start--
       // unlockedDays = 8;
       // selectedIndex = undefined;
@@ -200,20 +183,20 @@ Page({
       updates.isNewStyle = new Date(albumAttributes.programPromoteAt).getTime() > new Date('2017-11-21').getTime();
 
       let viewedMediumCount = 0;
-      if (res.meta.currentStudyCardCount && res.meta.currentStudyCardCount[postId]) {
-        viewedMediumCount = res.meta.currentStudyCardCount[postId];
+      if (userAlbum.currentStudyCardCount && userAlbum.currentStudyCardCount[postId]) {
+        viewedMediumCount = userAlbum.currentStudyCardCount[postId];
       }
 
       const updatesData = {
         albumAttributes,
         editorInfo: albumAttributes.editorInfo,
         post,
-        media,
+        media: post.media,
         selectedIndex,
         dayList,
         unlockedDays,
         ...updates,
-        mediaAndQuestionsCount: dataAll.length,
+        mediaAndQuestionsCount: post.metaData ? post.metaData.cardCount : 0,
         completedAll: dayList[selectedIndex - 1],
         viewedMediumCount: viewedMediumCount
       };
@@ -229,21 +212,57 @@ Page({
     wx.showLoading({
       title: '加载中',
     });
-    request({
-      url: `${app.globalData.apiBase}/albums/${albumId}?app_name=${app.globalData.appName}`,
-    }).then(res => {
-      wx.hideLoading();
+    // request({
+    //   url: `${app.globalData.apiBase}/albums/${albumId}?app_name=${app.globalData.appName}`,
+    // }).then(res => {
 
+    let param = `{
+      albums(id: "${albumId}") {
+        id,
+        title,
+        picurl,
+        editorInfo,
+        metaData,
+        price,
+        postIds,
+        posts {
+          picUrl,
+          id,
+          metaData,
+          media {
+            id,
+            title,
+            mediumType,
+            lastViewedAt,
+            summary,
+            duration
+          }
+        },
+        programStartAt,
+        programPromoteAt
+      },
+      userAlbum(userId: "${Auth.getLocalUserId()}", albumId: "${albumId}") {
+        role,
+        checkinStatus,
+        unlockedDays,
+        metaData,
+        currentStudyCardCount
+      }
+    }`;
+
+    graphql(param).then(res => {
+      wx.hideLoading();
+      const album = res.data.albums ? res.data.albums[0] : {}
       // post.relationships.media.data
       // 加载filter 问题及答案
-      User.getFilterQuestions(albumId, true).then(res => {
-        this.setData({questions: res.questions});
-      });
-      reportPicurl = res.included[0].userAlbum.data.attributes.metaData.picurl;
+      // User.getFilterQuestions(albumId, true).then(res => {
+      //   this.setData({questions: res.questions});
+      // });
+      reportPicurl = res.data.userAlbum.metaData.picurl || '';
 
       this.setData({
-        studyProgress: res.included[0].userAlbum.data.attributes.metaData.currentStudyCardCount || {},
-        posts: res.data.relationships.posts.data.reverse()
+        studyProgress: res.data.userAlbum.metaData.currentStudyCardCount || {},
+        posts: album.posts.reverse()
       });
 
       // 如果是第一次看到结营页面，则显示结营报告页面
@@ -264,25 +283,24 @@ Page({
     // @TODO: use getSurveyAndAnswers
     User.getSurveyAndAnswers(postId, albumId, true /* set false when getSurveyAndAnswers is used in daily.js*/)
       .then(res => {
-      if (!res.relationships) return;
-      let questionList = res.relationships.surveyQuestions.data;
-      let answerList = res.relationships.userSurveyAnswer ? [res.relationships.userSurveyAnswer] : [];
+      if (!res.survey) return;
+      let questionList = res.survey.surveyQuestions;
 
-      let questionTextList = questionList.filter(res => res.attributes.questionType !== 'multi-select' && res.attributes.questionType !== 'single-select');
+      let questionTextList = questionList.filter(res => res.questionType !== 'multi-select' && res.questionType !== 'single-select');
 
-      if (answerList.length > 0) {
-        picurl = answerList[0].data.attributes.picurl;
-        answerList = answerList[0].data.attributes.answers;
+      if (res.userSurveyAnswer) {
+        picurl = res.userSurveyAnswer.picurl;
+        const answerObj = res.userSurveyAnswer.answers;
         questionList.forEach((res) => {
-          res.attributes.completed = answerList.filter(a => a && a.surveyQuestionId === res.id).length > 0;
-          if (res.attributes.completed) {
+          res.completed = answerObj[res.id] ? true : false;
+          if (res.completed) {
             completeAmount ++;
           }
         });
       }
 
       let questionSelectList = questionList.filter(res => {
-        if (res.attributes.questionType === 'multi-select' || res.attributes.questionType === 'single-select') {
+        if (res.questionType === 'multi-select' || res.questionType === 'single-select') {
           return res;
         }
       });
@@ -298,11 +316,11 @@ Page({
 
       this.setData({
         dayList: this.data.dayList,
-        survey: res,
+        survey: res.survey,
         questionList,
         questionTextList,
         questionSelectList,
-        questionSelectCompleted: questionSelectList.filter(res => res.attributes.completed).length === questionSelectList.length
+        questionSelectCompleted: questionSelectList.filter(res => res.completed).length === questionSelectList.length
       });
     });
   },
@@ -321,7 +339,12 @@ Page({
           postIds = this.data.albumAttributes.postIds,
           newPostId = postIds[index];
     if (this.data.selectedIndex - 1 !== index) {
-      if (index < this.data.unlockedDays) {
+      if (index === this.data.albumAttributes.postIds.length) {
+        this.setData({
+          selectedIndex: index + 1
+        })
+        this._loadAlbum();
+      } else if (index < this.data.unlockedDays) {
         this.setData({
           selectedIndex: index + 1
         })
@@ -330,11 +353,6 @@ Page({
           albumId = albumId;
           this._load();
         }
-      } else if (index === this.data.albumAttributes.postIds.length) {
-        this.setData({
-          selectedIndex: index + 1
-        })
-        this._loadAlbum();
       } else {
         wx.showToast({
           title: '还未解锁',
@@ -352,7 +370,7 @@ Page({
           count = this.data.media.length,
           gaOptions = {
             cid: Auth.getLocalUserId(),
-            ec: `article_title:${medium.attributes.title},article_id:${medium.id}`,
+            ec: `article_title:${medium.title},article_id:${medium.id}`,
             ea: 'click_article_in_albumShowPage',
             el: `album_name:${this.data.albumAttributes.title},album_id:${this.data.albumId}`,
             ev: 0
@@ -364,9 +382,9 @@ Page({
       index = event.currentTarget.dataset.pindex;
       key = 'day' + (parseInt(index) + 1);
       newPostId = this.data.posts[index].id
-      this.data.posts[index].relationships.media.data[idx].attributes.lastViewedAt = (new Date()).getTime();
+      this.data.posts[index].relationships.media.data[idx].lastViewedAt = (new Date()).getTime();
     } else {
-      this.data.media[idx].attributes.lastViewedAt = (new Date()).getTime();
+      this.data.media[idx].lastViewedAt = (new Date()).getTime();
     }
 
     util.goToMedium(event, gaOptions, {
@@ -456,26 +474,25 @@ Page({
 
     this.setData({processing: true});
 
-    request({
-      method: 'POST',
-      url,
-      data: {
-        data: {
-          totalFee: price,
-          name: this.data.albumAttributes.title,
-          openid: attrs.wxOpenId,
-          productId: albumId,
-          productType: 'Album'
+    let param = `
+      mutation {
+        order (appName: "days7", name: "${this.data.albumAttributes.title}", totalFee: ${price}, openid: "${attrs.wxOpenId}", productId: "${albumId}", productType: "Album"){
+          paySign,
+          timeStamp,
+          orderId,
+          prepay_id,
+          nonce_str
         }
       }
-    })
-      .then(data => {
+    `;
+
+    graphql(param).then(data => {
         const params = {
-          timeStamp: data.data.timeStamp,
-          nonceStr: data.data.nonce_str,
-          package: `prepay_id=${data.data.prepay_id}`,
+          timeStamp: data.data.order.timeStamp,
+          nonceStr: data.data.order.nonce_str,
+          package: `prepay_id=${data.data.order.prepay_id}`,
           signType: 'MD5',
-          paySign: data.data.paySign
+          paySign: data.data.order.paySign
         };
 
         // console.log('params:');
@@ -577,52 +594,55 @@ Page({
   },
   // 使用优惠券
   _useCoupon() {
-    return request({
-      url: `${app.globalData.apiBase}/user-coupons/${this.data.coupon.userCouponId}/redeem`,
-      method: 'POST',
-      data: {
-        albumId: albumId
+    let param = `mutation {
+      userCouponRedeem(albumId: "${albumId}", id: "${this.data.coupon.userCouponId}") {
+        id
       }
-    }).then(res => {
-      console.log(res);
-    });
+    }`;
+
+    return graphql(param);
   },
   // 解锁
   _unlockAlubm() {
-    return request({
-      url: `${app.globalData.apiBase}/albums/${albumId}/unlock`,
-      method: 'POST',
-      data: {
+    let param = `
+      mutation {
+        userAlbumUnlock(albumId: "${albumId}", userId: "${Auth.getLocalUserId()}") {
+          id
+        }
       }
-    }).then(res => {
+    `;
+
+    return graphql(param).then(res => {
       console.log(res);
     });
   },
 
   // 查账 coupons
   findCoupon: function () {
-    return request({
-      url: `${baseUrl}/user-coupons`,
-      data: {
-        redeemedAt: true,
-        albumId: albumId
-      },
-      method: 'GET'
-    }).then(res => {
-      const coupons = {};
-      res.included && res.included.map(c => {
-        if (c.type = 'Coupons') {
-          coupons[c.id] = c;
+    let param = `{
+      userCoupons(albumId: "${albumId}", ownerId: "${Auth.getLocalUserId()}",redeemedAt: true) {
+        id,
+        displayName,
+        Coupon {
+          id,
+          expiredAt,
+          albumId,
+          value,
         }
-      });
-      const couponsData = res.data.map(d => {
+      }
+    }`;
+
+    return graphql(param).then(res => {
+      const userCoupons = res.data.userCoupons || [];
+      const couponsData = userCoupons.map(d => {
+        const coupon = d.Coupon || {};
         return {
-          couponId: coupons[d.relationships.coupon.data.id].id,
+          couponId: coupon.id,
           userCouponId: d.id,
-          quota: coupons[d.relationships.coupon.data.id].attributes.value,
-          name: d.attributes.displayName,
-          validityTerm: `有效期至${this._formatDateToDay(new Date(coupons[d.relationships.coupon.data.id].attributes.expiredAt))}`,
-          range: coupons[d.relationships.coupon.data.id].attributes.albumId ? `仅限购买“${coupons[d.relationships.coupon.data.id].attributes.albumId}”` : '全场通用，最高折扣50元',
+          quota: coupon.value,
+          name: d.displayName,
+          validityTerm: `有效期至${this._formatDateToDay(new Date(coupon.expiredAt))}`,
+          range: coupon.albumId ? `仅限购买“${d.displayName}”` : '全场通用，最高折扣50元',
         }
       });
       this.setData({

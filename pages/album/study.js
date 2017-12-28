@@ -2,7 +2,8 @@ const app = getApp(),
     util = require('../../utils/util'),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
-    baseUrl = app.globalData.apiBase;
+    baseUrl = app.globalData.apiBase,
+    graphql = require('../../utils/graphql');
 
 Page({
   data: {
@@ -110,18 +111,37 @@ Page({
     this.setData({
       loadingStatus: 'LOADING'
     });
-    request({
-      url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/albums?include=media,post&page[size]=${this.data.page[this.data.mode].size}&page[number]=${this.data.page[this.data.mode].number}&fields[albums]=title,picurl,metaData&app_name=${app.globalData.appName}&filter[unlocked]=true&filter[status]=${status}`,
-    }).then(res => {
+    graphql(`{
+      albums (
+          userId: "${Auth.getLocalUserId()}",
+          pageSize: ${this.data.page[this.data.mode].size},
+          pageNumber: ${this.data.page[this.data.mode].number},
+          status: ${status}){
+        id,
+        title,
+        picurl,
+        metaData,
+        programStartAt,
+        userAlbums {
+         logs,
+         unlockedDays
+       }
+      }
+    }`).then(res => {
+    // request({
+    //   url: `${app.globalData.apiBase}/users/${Auth.getLocalUserId()}/relationships/albums?include=media,post&page[size]=${this.data.page[this.data.mode].size}&page[number]=${this.data.page[this.data.mode].number}&fields[albums]=title,picurl,metaData&app_name=${app.globalData.appName}&filter[unlocked]=true&filter[status]=${status}`,
+    // }).then(res => {
       this.data.page[this.data.mode].number ++;
       let loadingStatus;
-      if (!res.data.length) {
+      if (!res.data.albums.length) {
         loadingStatus = 'LOADED_ALL';
       } else {
         loadingStatus = null;
       }
-      const data = res.data.map(album => {
-        album.completedDays = Object.keys(album.relationships.userAlbum.data.attributes.logs.days).length;
+      const data = res.data.albums.map(album => {
+        const days = album.userAlbums ? album.userAlbums[0].logs.days : {};
+        album.unlockedDays = album.userAlbums ? album.userAlbums[0].unlockedDays : 1;
+        album.completedDays = Object.keys(days).length;
         return album;
       })
       this.data.albums[this.data.mode] = this.data.albums[this.data.mode].concat(data);
@@ -136,19 +156,19 @@ Page({
   },
 
   loadSuggestAlbum() {
-    request({
-      url: `${app.globalData.apiBase}/albums?include=media,post&page[size]=1&page[number]=1&fields[albums]=title,description,picurl,price,editorInfo,id,metaData,programStartAt&app_name=${app.globalData.appName}`,
-    }).then(res => {
-
+    graphql(`{albums (
+                pageSize: 1,
+                pageNumber: 1
+              ) {id,title,picurl,editorInfo,metaData,price,programStartAt}}`
+    ).then(res => {
       let showSuggestAlbum = false;
-      const studingCount = this.data.albums.studying.filter(r => r.id === res.data[0].id).length;
-      const studiedCount = this.data.albums.studied.filter(r => r.id === res.data[0].id).length;
+      const studingCount = this.data.albums.studying.filter(r => r.id === res.data.albums[0].id).length;
+      const studiedCount = this.data.albums.studied.filter(r => r.id === res.data.albums[0].id).length;
       if (studingCount + studiedCount === 0) {
         showSuggestAlbum = true;
       }
-
       this.setData({
-        groups: res.data,
+        groups: res.data.albums,
         showSuggestAlbum
       });
     });

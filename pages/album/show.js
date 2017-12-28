@@ -2,6 +2,7 @@ const app = getApp(),
     util = require('../../utils/util'),
     Auth = require('../../utils/auth'),
     {request} = require('../../utils/request'),
+    graphql = require('../../utils/graphql'),
     {addAlbumId} = require('../../utils/user'),
     baseUrl = app.globalData.apiBase;
 
@@ -683,18 +684,16 @@ Page({
     const tap = this[e.currentTarget.dataset.tap],
           formId = e.detail.formId;
 
-    request({
-      method: 'POST',
-      url: `${baseUrl}/user-album/formid`,
-      data: {
-        userId: Auth.getLocalUserId(),
-        albumId: this.data.albumId,
-        formid: formId
+    let param = `
+      mutation {
+        userAlbumAddFromid(albumId: "${this.data.albumId}", userId: "${Auth.getLocalUserId()}", formid: "${formId}") {
+          id
+        }
       }
-    }).then((d) => {
-      // wx.showToast({
-      //   title: formId || 'null'
-      // })
+    `;
+
+    return graphql(param).then((d) => {
+      console.log(d);
     });
   },
 })
