@@ -1,0 +1,17 @@
+<view class="column container">
+  <image src="{{timeCapsule.coverPicurl}}" mode="widthFix" class="top-image"></image>
+
+  <text class="size-26 main-color-green">{{timeCapsule.title}}</text>
+  <text class="size-12 text-color3 from-text">来自 {{timeCapsule.ownerName}} {{timeCapsule.createdAtString}}</text>
+
+  <text class="size-14 text-color1 content-text">{{timeCapsule.content}}</text>
+
+  <view class="column container" wx:if="{{timeCapsule.participants.length > 0}}">
+    <text class="size-12 text-color3 from-text">你与他共享这个胶囊</text>
+
+    <image class="other-image"  wx:for="{{timeCapsule.participants}}" wx:for-item="participant" wx:key="" src="{{participant.profilePicUrl}}"></image>
+  </view>
+  <view class="row gift-view" bindtap="shareToOther" wx:if="{{capsule.isCreator && capsule.openAtString}}">
+    <image src="../../images/campaign/gift.png" mode="widthFix" class="gift-image"></image>
+  </view>
+</view>
