@@ -9,7 +9,7 @@
   </view>
 
   <input placeholder="请输入胶囊主题/关键字 30字以内" auto-focus maxlength="30" bindinput="onTitleInput" class="size-16"/>
-  <textarea class="size-16" placeholder="请输入胶囊内容 100字以内" bindinput="onContentInput" maxlength="100" value="{{answer.content}}"/>
+  <textarea class="size-16" placeholder="请输入胶囊内容 100字以内" bindinput="onContentInput" maxlength="100"/>
 
   <view class="row release-view">
     <view class="release-button" bindtap="release">

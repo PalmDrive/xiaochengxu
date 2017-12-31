@@ -64,17 +64,13 @@ Page({
           picUrl: res.tempFilePaths[0]
         });
         wx.uploadFile({
-          url: `${app.globalData.apiBase}/surveys/${_survey.id}/photo`,
+          url: `${app.globalData.apiBase}/timecapsule/${id}/photo`,
           filePath: res.tempFilePaths[0],
           name: 'photo',
           formData:{
-            userId: Auth.getLocalUserId(),
-            picId: `pic_${_picNumber}`
           },
           complete: function(data){
-            if (i === res.tempFilePaths.length - 1) {
-              wx.hideLoading();
-            }
+            wx.hideLoading();
           },
         })
       }
@@ -105,7 +101,7 @@ Page({
     graphql(param).then(res => {
       // openAt
       console.log(res);
-      wx.navigateTo({
+      wx.redirectTo({
         url: `./capsule`
       });
     });
