@@ -26,6 +26,13 @@ Page({
     // Auth.getLocalUserId();
   },
 
+  /**
+   * 下拉刷新
+   */
+  onPullDownRefresh() {
+    this.loadData();
+  },
+
   loadData() {
     wx.showLoading({
       title: '加载中',
@@ -60,7 +67,7 @@ Page({
 
         const days = util.getDays((new Date()), (new Date(capsule.openAt)));
 
-        capsule.openAtString = days > 0 ? Math.abs(days) : undefined;
+        capsule.openAtString = days < 0 ? Math.abs(days) : undefined;
         capsule.createdAtString = util.formatDateToDay(new Date(capsule.createdAt));
         capsule.ownerName = capsule.owner.wxUsername || '匿名';
         capsule.isCreator = capsule.ownerName === this.data.userInfo.wxUsername;
@@ -70,6 +77,8 @@ Page({
         timeCapsules: timeCapsules
       });
       wx.hideLoading();
+
+      wx.stopPullDownRefresh();
     });
   },
 

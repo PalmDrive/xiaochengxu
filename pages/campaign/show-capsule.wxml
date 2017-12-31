@@ -11,7 +11,7 @@
 
     <image class="other-image"  wx:for="{{timeCapsule.participants}}" wx:for-item="participant" wx:key="" src="{{participant.profilePicUrl}}"></image>
   </view>
-  <view class="row gift-view" bindtap="shareToOther" wx:if="{{capsule.isCreator && capsule.openAtString}}">
+  <view class="row gift-view" bindtap="shareToOther" wx:if="{{capsule.isCreator}}">
     <image src="../../images/campaign/gift.png" mode="widthFix" class="gift-image"></image>
   </view>
 </view>
