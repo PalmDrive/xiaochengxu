@@ -1,5 +1,10 @@
 const {request} = require('request');
 
+// 计算两个日期的相差天数
+function getDays(date1, date2) {
+  return Math.floor((date1 - date2) / (24 * 3600 * 1000));
+}
+
 function formatTime(date) {
   var year = date.getFullYear()
   var month = date.getMonth() + 1
@@ -449,5 +454,6 @@ module.exports = {
   mediumPageOnShow,
   convertTime,
   getAchieveProgress,
-  formatAlbumUnlockedAt
+  formatAlbumUnlockedAt,
+  getDays
 };

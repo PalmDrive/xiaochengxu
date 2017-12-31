@@ -164,6 +164,10 @@ view {
   flex-direction: column;
 }
 
+.column-center {
+  align-items: center;
+}
+
 .line-view {
   background-color: #EDEDED;
   width: 100%;

@@ -1,0 +1,19 @@
+<view class="column container">
+  <view class="top-view column column-center" bindtap="changePic">
+    <image src="{{picUrl}}" mode="widthFix" class="top-image"></image>
+    <view class="black-bg row">
+      <text class="size-25 main-color-green">{{date}}</text>
+      <text class="size-12 text-white">解封</text>
+    </view>
+    <text class="size-12 text-white tip-text">图片点击可更换</text>
+  </view>
+
+  <input placeholder="请输入胶囊主题/关键字 30字以内" auto-focus maxlength="30" bindinput="onTitleInput" class="size-16"/>
+  <textarea class="size-16" placeholder="请输入胶囊内容 100字以内" bindinput="onContentInput" maxlength="100" value="{{answer.content}}"/>
+
+  <view class="row release-view">
+    <view class="release-button" bindtap="release">
+      <text class="size-16 text-white pingfang-medium">确定发布</text>
+    </view>
+  </view>
+</view>

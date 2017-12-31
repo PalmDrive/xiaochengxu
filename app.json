@@ -1,5 +1,8 @@
 {
   "pages":[
+    "pages/campaign/capsule",
+    "pages/campaign/create-capsule",
+    "pages/campaign/show-capsule",
     "pages/album/study",
     "pages/album/study-web",
     "pages/album/report",

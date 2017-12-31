@@ -4,15 +4,24 @@
 		"urlCheck": false,
 		"es6": true,
 		"postcss": false,
-		"minified": true
+		"minified": true,
+		"newFeature": true
 	},
-	"compileType": "weapp",
+	"compileType": "miniprogram",
 	"libVersion": "1.5.2",
 	"appid": "wxfc198916fbbcdf80",
 	"projectname": "%E4%B8%83%E6%97%A5%E8%BE%91",
 	"condition": {
-		"weapp": {
+		"search": {
 			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"miniprogram": {
+			"current": 6,
 			"list": [
 				{
 					"id": 0,
@@ -54,16 +63,13 @@
 					"name": "Survey text answer",
 					"pathName": "pages/survey/text-question",
 					"query": "surveyQuestionId=1&postId=67048f40-c7f0-11e7-a5a5-61b12f2788b2&albumId=7dd578b0-c7f0-11e7-a5a5-61b12f2788b2"
+				},
+				{
+					"id": -1,
+					"name": "时间胶囊",
+					"pathName": "pages/campaign/capsule"
 				}
 			]
-		},
-		"search": {
-			"current": -1,
-			"list": []
-		},
-		"conversation": {
-			"current": -1,
-			"list": []
 		}
 	}
 }

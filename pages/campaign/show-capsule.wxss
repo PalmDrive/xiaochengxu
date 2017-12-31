@@ -1,0 +1,48 @@
+page {
+}
+
+.container {
+  padding: 15px;
+}
+
+.top-image {
+  width: 95%;
+  height: 200px !important;
+  border: 10px solid #FFF;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.08);
+}
+
+.size-26 {
+  margin-top: 20px;
+}
+
+.from-text {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.content-text {
+  margin-bottom: 60px;
+  letter-spacing: 1.12px;
+  line-height: 22px;
+}
+
+.other-image {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.gift-image {
+  width: 20px;
+  height: 20px !important;
+  padding: 10px;
+}
+
+.gift-view {
+  position: absolute;
+  bottom: 25px;
+  width: 100%;
+  justify-content:center;
+}
