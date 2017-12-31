@@ -53,7 +53,7 @@ Page({
     }`;
 
     graphql(param).then(res => {
-      console.log(res);
+      //console.log(res);
       const timeCapsules = res.data.timeCapsules || [];
 
       timeCapsules.map(capsule => {
@@ -74,6 +74,7 @@ Page({
   },
 
   addCapsule: function(event) {
+    //console.log('time:', event.detail.value);
     const days = util.getDays((new Date()), (new Date(event.detail.value)));
 
     if (days > 0) {
