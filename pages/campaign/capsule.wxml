@@ -16,7 +16,7 @@
     <view class="column">
       <view class="row unlock-tip" wx:if="{{capsule.openAtString}}">
         <text class="size-26 main-color-green">{{capsule.openAtString}}天后</text>
-        <text class="size-12 text-color2">解封</text>
+        <text class="size-12 text-color2 open-tip">解封</text>
       </view>
       <text class="size-18 text-color1 one-line pingfang-medium" wx:if="{{!capsule.openAtString}}">{{capsule.title}}</text>
       <text class="size-14 text-color2 one-line" wx:if="{{!capsule.openAtString}}">{{capsule.content}}</text>
@@ -32,6 +32,6 @@
 <picker mode="date" value="{{date}}" start="2017-01-01" end="2020-01-01" bindchange="addCapsule" class="add-view column column-center">
   <view class="column column-center">
     <image src="../../images/campaign/add.png" mode="widthFix" class="add-image"></image>
-    <text class="size-9 text-color1 tip-text">和你一起。见证一些时光</text>
+    <text class="size-9 text-color1 tip-text" wx:if="{{timeCapsules.length === 0}}">和你一起。见证一些时光</text>
   </view>
 </picker>
