@@ -1,0 +1,8 @@
+<view class="container">
+  <picker mode="date" value="{{date}}" start="2018-01-01" end="2020-01-01" bindchange="addCapsule">
+    <view class="column column-center text-color1">
+      <text class="pingfang-medium size-20">设置解封时间</text>
+      <text class="date-text size-18">{{date}} </text>
+    </view>
+  </picker>
+</view>

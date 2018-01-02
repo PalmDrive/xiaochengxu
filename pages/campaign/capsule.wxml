@@ -29,9 +29,9 @@
   </view>
 </view>
 
-<picker mode="date" value="{{date}}" start="2017-01-01" end="2020-01-01" bindchange="addCapsule" class="add-view column column-center">
-  <view class="column column-center">
+<view class="add-view column column-center">
+  <view class="column column-center" bindtap="addCapsule">
     <image src="../../images/campaign/add.png" mode="widthFix" class="add-image"></image>
     <text class="size-9 text-color1 tip-text" wx:if="{{timeCapsules.length === 0}}">和你一起。见证一些时光</text>
   </view>
-</picker>
+</view>

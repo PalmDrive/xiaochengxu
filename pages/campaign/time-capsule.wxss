@@ -1,0 +1,13 @@
+page {
+  background-color: #EDEDED;
+  height: 100%;
+}
+
+.container {
+  padding: 15px;
+  padding-top: 100px;
+}
+
+.date-text {
+  margin-top: 20px;
+}
