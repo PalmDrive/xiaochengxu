@@ -1,6 +1,6 @@
 <view class="column container">
   <view class="top-view column column-center" bindtap="changePic">
-    <image src="{{picUrl}}" mode="widthFix" class="top-image"></image>
+    <image src="{{picUrl}}" mode="aspectFill" class="top-image"></image>
     <view class="black-bg row">
       <text class="size-25 main-color-green">{{date}}</text>
       <text class="size-12 text-white">解封</text>

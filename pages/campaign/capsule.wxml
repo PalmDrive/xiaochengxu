@@ -18,11 +18,11 @@
         <text class="size-26 main-color-green">{{capsule.openAtString}}天后</text>
         <text class="size-12 text-color2 open-tip">解封</text>
       </view>
-      <text class="size-18 text-color1 one-line pingfang-medium" wx:if="{{!capsule.openAtString}}">{{capsule.title}}</text>
-      <text class="size-14 text-color2 one-line" wx:if="{{!capsule.openAtString}}">{{capsule.content}}</text>
+      <text class="size-18 pingfang-medium" wx:if="{{!capsule.openAtString}}">{{capsule.openAtString1}}</text>
+      <text class="size-18 text-color1 one-line" wx:if="{{!capsule.openAtString}}">{{capsule.title}}</text>
       <text class="size-12 text-color3 from-tip">来自 {{capsule.ownerName}} {{capsule.createdAtString}}</text>
     </view>
-    <view class="column column-center" wx:if="{{capsule.isCreator}}" bindtap="shareToOther" data-idx="{{index}}">
+    <view class="column column-center share-view" wx:if="{{capsule.isCreator}}" bindtap="shareToOther" data-idx="{{index}}">
       <image src="../../images/campaign/gift.png" mode="widthFix" class="gift-image"></image>
       <text class="size-9 text-color3">送朋友</text>
     </view>
