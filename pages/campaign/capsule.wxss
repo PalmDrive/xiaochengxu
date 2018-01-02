@@ -63,7 +63,7 @@ page {
 .gift-image {
   width: 20px;
   height: 20px !important;
-  padding: 10px;
+  margin-bottom: 5px;
 }
 
 .from-tip {
@@ -81,4 +81,8 @@ page {
   -webkit-line-clamp: 1;
   overflow:hidden;
   margin-bottom: 3px;
+}
+
+.share-view {
+  padding: 10px;
 }

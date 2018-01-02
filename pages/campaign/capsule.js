@@ -77,6 +77,7 @@ Page({
         const days = util.getDays((new Date()), (new Date(capsule.openAt)));
 
         capsule.openAtString = days < 0 ? Math.abs(days) : undefined;
+        capsule.openAtString1 = util.formatDateToDay(new Date(capsule.openAt));
         capsule.createdAtString = util.formatDateToDay(new Date(capsule.createdAt));
         capsule.ownerName = capsule.owner.wxUsername || '匿名';
         capsule.isCreator = capsule.ownerName === this.data.userInfo.wxUsername;

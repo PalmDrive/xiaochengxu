@@ -1,5 +1,5 @@
 <view class="column container">
-  <image src="{{timeCapsule.coverPicurl}}" mode="widthFix" class="top-image"></image>
+  <image src="{{timeCapsule.coverPicurl}}" mode="aspectFill" class="top-image"></image>
 
   <text class="size-26 main-color-green">{{timeCapsule.title}}</text>
   <text class="size-12 text-color3 from-text">来自 {{timeCapsule.ownerName}} {{timeCapsule.createdAtString}}</text>
