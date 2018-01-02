@@ -12,7 +12,7 @@ Page({
     openAt: 1,
     content: '',
     title: '',
-    picUrl: 'http://ailingual-production.oss-cn-shanghai.aliyuncs.com/medium_picurl/501de553-a7b7-452d-94bd-c22d2c1798c1.png'
+    picUrl: 'http://ailingual-production.oss-cn-shanghai.aliyuncs.com/time_capsule/2831514861881_.pic.jpg'
   },
 
   onLoad(options) {

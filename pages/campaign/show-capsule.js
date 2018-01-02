@@ -40,6 +40,15 @@ Page({
     });
   },
 
+  /**
+   * 分享给好友 事件
+   */
+  onShareAppMessage: function () {
+    return {
+      title: '时间胶囊'
+    }
+  },
+
   loadData() {
     wx.showLoading({
       title: '加载中',
