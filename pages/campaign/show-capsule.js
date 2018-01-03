@@ -30,14 +30,6 @@ Page({
   },
 
   onShow() {
-    // Auth.getLocalUserId();
-    this.setData({
-      timeCapsule: {
-        coverPicurl: 'http://ailingual-production.oss-cn-shanghai.aliyuncs.com/medium_picurl/501de553-a7b7-452d-94bd-c22d2c1798c1.png',
-        title: '主题主题主题',
-        content: '我是一句话，有时候，它会伴随着狂风，下得很凶暴。这们的雨尽管下在春天，但不是典型的春雨，只会损物而不会“润物”，自然不会使人“喜”，也不可能得到“好”评。'
-      }
-    });
   },
 
   /**
@@ -96,9 +88,9 @@ Page({
     });
   },
 
-  hareToOther: function(event) {
+  shareToOther: function(event) {
     wx.navigateTo({
-      url: `../album/share?imgUrl=${his.data.timeCapsule.sharedPicurl}`
+      url: `../album/share?imgUrl=${this.data.timeCapsule.sharedPicurl}`
     });
   },
 })
