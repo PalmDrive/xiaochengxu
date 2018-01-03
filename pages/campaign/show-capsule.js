@@ -53,28 +53,30 @@ Page({
     wx.showLoading({
       title: '加载中',
     });
-    let param = `{
-      timeCapsules (id: "${this.data.capsuleId}") {
-        id,
-        coverPicurl,
-        sharedPicurl,
-        title,
-        content,
-        openAt,
-        createdAt,
-        owner {
+    let param = `
+      query TimeCapsules($id: ID) {
+        timeCapsules (id: $id) {
           id,
-          wxUsername,
-          profilePicUrl
-        },
-        participants {
-          id,
-          profilePicUrl
+          coverPicurl,
+          sharedPicurl,
+          title,
+          content,
+          openAt,
+          createdAt,
+          owner {
+            id,
+            wxUsername,
+            profilePicUrl
+          },
+          participants {
+            id,
+            profilePicUrl
+          }
         }
       }
-    }`;
+    `;
 
-    graphql(param).then(res => {
+    graphql(param, {"id": this.data.capsuleId}).then(res => {
       console.log(res);
       const timeCapsules = res.data.timeCapsules || [];
 
