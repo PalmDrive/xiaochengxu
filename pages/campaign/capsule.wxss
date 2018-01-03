@@ -86,3 +86,7 @@ page {
 .share-view {
   padding: 10px;
 }
+
+.content-view {
+  width: 80%;
+}

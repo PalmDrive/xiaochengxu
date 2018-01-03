@@ -2,11 +2,11 @@ const {request} = require('./request'),
       // baseUrl =  `http://172.10.23.38:5000/graphql`;
       baseUrl = `https://ainterest-service-production.ailingual.cn/graphql`;
 
-const post = query => {
+const post = (query, variables) => {
   const data = {
     operationName: null,
     query: query,
-    variables: null
+    variables: variables || null
   };
   return request({
     header: {
