@@ -11,9 +11,9 @@
   <text class="size-12 text-color3 tip-text">这里还没有胶囊，快去创建一个吧</text>
 </view>
 
-<view class="column bg-gray" wx:for="{{timeCapsules}}" wx:for-item="capsule" wx:key="" bindtap="goToCapsule" data-idx="{{index}}">
+<view class="column bg-gray" wx:for="{{timeCapsules}}" wx:for-item="capsule" wx:key="">
   <view class="row item-row">
-    <view class="column">
+    <view class="column" data-idx="{{index}}" bindtap="goToCapsule">
       <view class="row unlock-tip" wx:if="{{capsule.openAtString}}">
         <text class="size-26 main-color-green">{{capsule.openAtString}}天后</text>
         <text class="size-12 text-color2 open-tip">解封</text>

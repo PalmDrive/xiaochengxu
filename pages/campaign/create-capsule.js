@@ -6,7 +6,6 @@ const app = getApp(),
 
 Page({
   data: {
-    capsuleId: '',
     userInfo: Auth.getLocalUserInfo().attributes,
     date: '321',
     openAt: 1,
@@ -65,19 +64,13 @@ Page({
           picUrl: res.tempFilePaths[0]
         });
         wx.uploadFile({
-          url: `${app.globalData.apiBase}/time-capsules/photo`,
+          url: `${app.globalData.apiBase}/photo/upload`,
           filePath: res.tempFilePaths[0],
+          path: 'time_capsule',
           name: 'photo',
-          formData:{
-          },
-          success: function (res) {
-            console.log('打开文档成功');
-          },
-          fail: function (res) {
-            console.log('打开文档失败');
-          },
           complete: function(data){
-            that.setData({capsuleId: JSON.parse(data.data).id});
+            console.log(data);
+            that.setData({picUrl: JSON.parse(data.data).data});
             wx.hideLoading();
           },
         })
@@ -96,12 +89,10 @@ Page({
       return;
     }
 
-    const idParam = this.data.capsuleId ? `, id: "${this.data.capsuleId}"` : '';
-
     let param = `
       mutation {
         timeCapsule(
-          title: "${this.data.title}",content: "${this.data.content}",userId: "${Auth.getLocalUserId()}",openAt: ${this.data.openAt},coverPicurl: "${this.data.picUrl}"${idParam}
+          title: "${this.data.title}",content: "${this.data.content}",userId: "${Auth.getLocalUserId()}",openAt: ${this.data.openAt},coverPicurl: "${this.data.picUrl}"
         ){
           title
         }
