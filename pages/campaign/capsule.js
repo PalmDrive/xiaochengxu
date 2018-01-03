@@ -18,12 +18,10 @@ Page({
     wx.setNavigationBarTitle({
       title: '时间胶囊'
     })
-
-    Auth.getLocalUserId()&& this.loadData();
   },
 
   onShow() {
-    // Auth.getLocalUserId();
+    Auth.getLocalUserId()&& this.loadData();
   },
 
   /**

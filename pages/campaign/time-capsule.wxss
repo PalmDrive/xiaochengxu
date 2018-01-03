@@ -8,6 +8,11 @@ page {
   padding-top: 100px;
 }
 
+.text-color1 {
+  justify-content: space-between;
+}
+
 .date-text {
-  margin-top: 20px;
+  margin-bottom: 3px;
+  margin-left: 5px;
 }
