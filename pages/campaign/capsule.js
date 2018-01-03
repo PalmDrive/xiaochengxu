@@ -21,7 +21,7 @@ Page({
   },
 
   onShow() {
-    Auth.getLocalUserId()&& this.loadData();
+    Auth.getLocalUserId() && this.loadData();
   },
 
   /**
