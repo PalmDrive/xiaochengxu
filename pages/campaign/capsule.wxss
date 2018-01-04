@@ -51,7 +51,7 @@ page {
 }
 
 .bg-gray {
-  padding: 20px 15px 0px 15px;
+  padding: 10px 15px;
 }
 
 .item-row {
@@ -89,4 +89,8 @@ page {
 
 .content-view {
   width: 80%;
+}
+
+.capsules-container {
+  padding: 10px 0; 
 }
