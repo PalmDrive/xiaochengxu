@@ -92,10 +92,10 @@ Page({
 
   shareToOther: function(event) {
     const index = event.currentTarget.dataset.idx,
-          sharedPicurl = this.data.timeCapsules[index].sharedPicurl;
+          obj = this.data.timeCapsules[index];
 
     wx.navigateTo({
-      url: `../album/share?imgUrl=${sharedPicurl}`
+      url: `../album/share?imgUrl=${obj.sharedPicurl}&capsuleId=${obj.id}`//${sharedPicurl}`
     });
   },
 

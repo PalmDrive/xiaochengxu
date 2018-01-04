@@ -3,7 +3,8 @@ const {request} = require('../../utils/request'),
       Auth = require('../../utils/auth'),
       {toPromise} = require('../../utils/util'),
       app = getApp(),
-      baseUrl = app.globalData.apiBase;
+      baseUrl = app.globalData.apiBase,
+      graphql = require('../../utils/graphql');
 
 function onError(err) {
   wx.showModal({
@@ -20,6 +21,9 @@ Page({
 
   onLoad(options) {
     console.log(options);
+    if (options.capsuleId && options.imgUrl === 'null') {
+      this.loadByCapsuleId(options.capsuleId);
+    }
 
     if (!options.id && options.imgUrl) {
       this.setData({
@@ -27,16 +31,55 @@ Page({
       });
       return;
     }
+
     wx.showLoading({
       title: '生成中',
       mask: true
     });
+
+    if (options.id) {
+      this.loadById(options.id);
+    }
+  },
+
+  loadByCapsuleId(capsuleId) {
+    let param = `
+      query TimeCapsules($id: ID) {
+        timeCapsules (id: $id) {
+          id,
+          sharedPicurl,
+        }
+      }
+    `;
+
+    graphql(param, {"id": capsuleId}).then(res => {
+      console.log(res);
+      const timeCapsules = res.data.timeCapsules || [],
+      timeCapsule = timeCapsules.length > 0 ? timeCapsules[0] : {},
+      url = timeCapsule.sharedPicurl;
+
+      if (!url) {
+        const that = this;
+        setTimeout(() => {
+          that.loadByCapsuleId(capsuleId);
+        }, 3000);
+      } else {
+        this.setData({
+          imgUrl: url.replace('http:','https:')
+        });
+        wx.hideLoading();
+        return;
+      }
+    });
+  },
+
+  loadById(id) {
     request({
       method: 'POST',
       url: `${baseUrl}/users/${Auth.getLocalUserId()}/referral-cards?app_name=days7Xiaochengxu`,
       data: {
         data: {
-          productId: options.id,
+          productId: id,
           productType: 'Album'
         }
       }
