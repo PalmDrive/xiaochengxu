@@ -25,26 +25,27 @@ Page({
   },
 
   addCapsule: function(event) {
-    //console.log('time:', event.detail.value);
-    const days = util.getDays((new Date()), (new Date(event.detail.value)));
+    const date = event.detail.value.replace(/-/g, "/");
+    const days = util.getDays((new Date()), (new Date(date)));
 
     if (days > 0) {
       wx.showModal({
-      title: '提示',
-      content: '解封时间不能选择过去的时间哦',
-      confirmText: '我知道了',
-      success: function(res) {
-        if (res.confirm) {
-          console.log('用户点击确定')
-        } else if (res.cancel) {
-          console.log('用户点击取消')
+        title: '提示',
+        content: '解封时间不能选择过去的时间哦',
+        confirmText: '我知道了',
+        success: function(res) {
+          if (res.confirm) {
+            console.log('用户点击确定')
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
         }
-      }
-    })
+      })
       return;
     }
+
     wx.navigateTo({
-      url: `./create-capsule?openAt=${event.detail.value}`
+      url: `./create-capsule?openAt=${date}`
     });
   }
 })

@@ -34,7 +34,7 @@ Page({
 
     this.setData({
       date: days,
-      openAt: (new Date(`${options.openAt}T00:00:00`)).getTime()
+      openAt: (new Date(`${options.openAt}`)).getTime()
     });
   },
 
