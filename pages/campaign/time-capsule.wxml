@@ -1,4 +1,5 @@
 <view class="container">
+  <text class="text-color1 size-18 pingfang-medium tip">选择一个时间就开始</text>
   <picker mode="date" value="{{date}}" start="2018-01-01" end="2020-01-01" bindchange="addCapsule">
     <view class="row text-color1 size-18">
       <text>设置解封时间</text>

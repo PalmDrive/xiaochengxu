@@ -4,8 +4,7 @@ page {
 }
 
 .container {
-  padding: 15px;
-  padding-top: 100px;
+  padding: 100px 40px 100px 40px;
 }
 
 .text-color1 {
@@ -15,4 +14,13 @@ page {
 .date-text {
   margin-bottom: 3px;
   margin-left: 5px;
+}
+
+.tip {
+  text-align: center;
+  display:block;
+}
+
+picker {
+  margin-top: 100px;
 }
