@@ -102,7 +102,7 @@ Page({
     graphql(param).then(res => {
       // openAt
       console.log(res);
-      wx.redirectTo({
+      wx.reLaunch({
         url: `./capsule`
       });
     });
