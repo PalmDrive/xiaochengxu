@@ -40,7 +40,7 @@ page {
 
 .add-view {
   position: fixed;
-  bottom: 12px;
+  bottom: 30px;
   width: 100%;
 }
 
