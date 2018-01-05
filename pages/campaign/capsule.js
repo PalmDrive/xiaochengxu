@@ -73,7 +73,7 @@ Page({
       timeCapsules.map(capsule => {
 
         const days = util.getDays((new Date()), (new Date(capsule.openAt)));
-
+        capsule.title = unescape(capsule.title);
         capsule.openAtString = days < 0 ? Math.abs(days) : undefined;
         capsule.openAtString1 = util.formatDateToDay(new Date(capsule.openAt));
         capsule.createdAtString = util.formatDateToDay(new Date(capsule.createdAt));
