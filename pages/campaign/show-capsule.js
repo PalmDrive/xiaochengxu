@@ -74,7 +74,8 @@ Page({
 
       timeCapsules.map(capsule => {
         const days = util.getDays((new Date()), (new Date(capsule.openAt)));
-
+        capsule.title = unescape(capsule.title);
+        capsule.content = unescape(capsule.content);
         capsule.openAtString = days < 0 ? Math.abs(days) : undefined;
         capsule.createdAtString = util.formatDateToDay(new Date(capsule.createdAt));
         capsule.ownerName = capsule.owner.wxUsername || '匿名';

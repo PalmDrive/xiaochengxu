@@ -92,7 +92,7 @@ Page({
     let param = `
       mutation {
         timeCapsule(
-          title: "${this.data.title}",content: "${this.data.content}",userId: "${Auth.getLocalUserId()}",openAt: ${this.data.openAt},coverPicurl: "${this.data.picUrl}"
+          title: "${escape(this.data.title)}",content: "${escape(this.data.content)}",userId: "${Auth.getLocalUserId()}",openAt: ${this.data.openAt},coverPicurl: "${this.data.picUrl}"
         ){
           title
         }
