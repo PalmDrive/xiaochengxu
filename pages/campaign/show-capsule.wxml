@@ -8,8 +8,9 @@
 
   <view class="column container" wx:if="{{timeCapsule.participants.length > 0}}">
     <text class="size-12 text-color3 from-text">你与他共享这个胶囊</text>
-
-    <image class="other-image"  wx:for="{{timeCapsule.participants}}" wx:for-item="participant" wx:key="" src="{{participant.profilePicUrl}}"></image>
+    <view class="row">
+      <image class="other-image"  wx:for="{{timeCapsule.participants}}" wx:for-item="participant" wx:key="" src="{{participant.profilePicUrl}}"></image>
+    </view>
   </view>
   <view class="row gift-view" bindtap="shareToOther" wx:if="{{timeCapsule.isCreator}}">
     <image src="../../images/campaign/gift.png" mode="widthFix" class="gift-image"></image>
