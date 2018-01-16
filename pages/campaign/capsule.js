@@ -68,7 +68,8 @@ Page({
 
     graphql(param).then(res => {
       console.log(res);
-      const timeCapsules = res.data.timeCapsules || [];
+      const timeCapsules = res.data.timeCapsules || [],
+            that = this;
 
       timeCapsules.map(capsule => {
 
@@ -78,10 +79,10 @@ Page({
         capsule.openAtString1 = util.formatDateToDay(new Date(capsule.openAt));
         capsule.createdAtString = util.formatDateToDay(new Date(capsule.createdAt));
         capsule.ownerName = capsule.owner.wxUsername || '匿名';
-        capsule.isCreator = capsule.ownerName === this.data.userInfo.wxUsername;
+        capsule.isCreator = capsule.ownerName === that.data.userInfo.wxUsername;
         return capsule;
       })
-      this.setData({
+      that.setData({
         timeCapsules: timeCapsules
       });
       wx.hideLoading();
