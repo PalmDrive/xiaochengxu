@@ -5,7 +5,7 @@ const app = getApp(),
 
 Page({
   data: {
-    userInfo: Auth.getLocalUserInfo().attributes,
+    userInfo: {},
     timeCapsules: [],
     date: new Date()
   },
@@ -22,6 +22,10 @@ Page({
 
   onShow() {
     Auth.getLocalUserId() && this.loadData();
+
+    this.setData({
+      userInfo: Auth.getLocalUserInfo().attributes
+    });
   },
 
   /**
