@@ -1,5 +1,6 @@
 {
   "pages":[
+    "pages/liveqa/live",
     "pages/album/study",
     "pages/album/study-web",
     "pages/album/report",
