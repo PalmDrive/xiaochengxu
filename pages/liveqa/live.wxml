@@ -1,14 +1,23 @@
 <view>
-  <!-- <live-pusher
+  <live-pusher
+    wx:if="{{role === 1}}"
+    mode="RTC"
+    autopush=true
+    enable-camera=true
     class="player"
-    url="rtmp://video-center-bj.alivecdn.com/liveqa/stream01?vhost=live.gecacademy.cn"
+    url="{{url}}"
     waiting-image="https://mbd.baidu.com/newspage/data/landingsuper?context=%7B%22nid%22%3A%22news_8084952642191984279%22%7D&n_type=0&p_from=1"
-  /> -->
+    bindstatechange="onPusherStateChange"
+    bindnetstatus="onPusherNetStatus"
+  />
 
-  <!-- <live-player class="player" src="rtmp://live.gecacademy.cn/liveqa/stream01"
+  <live-player class="player"
+    wx:if="{{role === 0}}"
+    autoplay=true
+    src="{{url}}"
     bindstatechange="onPlayerStateChange"
     bindnetstatus="onPlayerNetStatus"
-  /> -->
-  
+  />
+
   <text>role: {{role}}</text>
 </view>

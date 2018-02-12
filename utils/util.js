@@ -5,17 +5,25 @@ function getDays(date1, date2) {
   return Math.floor((date1 - date2) / (24 * 3600 * 1000));
 }
 
-function formatTime(date) {
-  var year = date.getFullYear()
-  var month = date.getMonth() + 1
-  var day = date.getDate()
+function formatDateOfWeek(date) {
+  return ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][date.getDay()];
+}
 
-  var hour = date.getHours()
-  var minute = date.getMinutes()
-  var second = date.getSeconds()
+function formatTime(date, isShort) {
+  const year = date.getFullYear(),
+        month = date.getMonth() + 1,
+        day = date.getDate(),
+        hour = date.getHours(),
+        minute = date.getMinutes(),
+        second = date.getSeconds();
 
   //return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':')
-  return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute].map(formatNumber).join(':')
+  const time = [hour, minute].map(formatNumber).join(':');
+  if (isShort) {
+    return time;
+  } else {
+    return [year, month, day].map(formatNumber).join('/') + ' ' + time;
+  }
 }
 /**
  * @return 'xxxx年x月x日'
@@ -432,6 +440,7 @@ function goToAlbum(album) {
 module.exports = {
   formatTime,
   formatDateToDay,
+  formatDateOfWeek,
   shortNumber,
   convertDate,
   formatPublishedAt,

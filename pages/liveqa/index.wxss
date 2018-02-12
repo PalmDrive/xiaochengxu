@@ -1,0 +1,138 @@
+.view-container {
+  background: #180343 url('http://cdn.ailingual.cn/pics/liveqa/bg.jpg') top/contain no-repeat;
+  padding: 20px 15px;
+  color: white;
+  font-size: 16px;
+}
+
+.liveqa-title {
+  display: block;
+  margin: 0 auto;
+  width: 272px;
+  height: 90px;
+}
+
+.timer {
+  width: 183px;
+  height: 40px;
+  background: url('http://cdn.ailingual.cn/pics/liveqa/banner_bg.png') center/cover no-repeat;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 7px;
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.schedule {
+  position: relative;
+  margin: 35px auto;
+  padding: 35px 25px 15px 25px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.schedule .list {
+  padding: 5px 0;
+}
+
+.schedule .list text {
+  line-height: 22px;
+  vertical-align: middle;
+}
+
+.schedule button {
+  width: 117px;
+  font-size: 16px;
+  background-color: #FEE300;
+}
+
+.label {
+  font-size: 12px;
+  line-height: 22px;
+  padding: 0 5px;
+  border-radius: 2px;
+  text-align: center;
+  margin-right: 5px;
+  display: inline-block;
+}
+
+.user-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.card-container {
+  border-radius: 10px;
+  text-align: center;
+  background-color: white;
+  color: black;
+}
+
+.card-container .top-container {
+  position: relative;
+  background-color: #8400FF;
+  padding: 28px 0 3px 0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  color: white;
+}
+
+.card-container .middle-container {
+  border-bottom: 1px solid rgba(25,0,76,0.24);
+  padding: 15px 0;
+}
+
+.card-container .bottom-container {
+  padding: 15px 0;
+}
+
+.card-container .bottom-container button {
+  width: 227px;
+  background-color: #B013FE;
+  color: white;
+  margin: 15px auto;
+}
+
+.rule-link {
+  text-align: right;
+  padding: 20px 0;
+}
+
+.schools-container {
+  padding: 20px 0;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.schools-container .title {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.table-head {
+  margin-bottom: 5px;
+}
+
+.table-row {
+  justify-content: space-around;
+  padding: 5px 0;
+}
+
+.table-body {
+  color: rgba(255,255,255,0.65);
+}
+
+.table-row text {
+  display: block;
+  width: 80px;
+  text-align: center;
+}

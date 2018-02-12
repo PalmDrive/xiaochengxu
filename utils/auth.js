@@ -13,7 +13,7 @@ const setLocalJWT = jwt => {
 };
 
 const getLocalUserInfo = () => {
-  return wx.getStorageSync(`${nameSpace}:userInfo`) || {};
+  return wx.getStorageSync(`${nameSpace}:userInfo`) || {attributes: {}};
 };
 
 const setLocalUserInfo = userInfo => {

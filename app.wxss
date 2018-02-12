@@ -64,6 +64,10 @@ view {
   padding: 9px;
 }
 
+.btn-round {
+  border-radius: 22px;
+}
+
 .btn-success {
   background-color: #42BD56;
   color: white;

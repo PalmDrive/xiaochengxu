@@ -14,8 +14,8 @@
   color: #B7B7B7;
 }
 
-.text-dark-grey {
-  color: #606060;
+.text-dark-gray {
+  color: #5D5D5D;
 }
 
 .text-white {
@@ -24,6 +24,10 @@
 
 .text-black {
   color: #000;
+}
+
+.text-purple {
+  color: #8400FF;
 }
 
 .text-color1 {
