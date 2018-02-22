@@ -20,14 +20,18 @@
 			"current": -1,
 			"list": []
 		},
-		"miniprogram": {
+		"game": {
 			"current": -1,
+			"list": []
+		},
+		"miniprogram": {
+			"current": 0,
 			"list": [
 				{
 					"id": 0,
 					"name": "吃货地图扫码进入",
-					"pathName": "pages/map/dazhaxie",
-					"query": "scene=59ce3d20a22b9d0061312243",
+					"pathName": "pages/liveqa/questions",
+					"query": "",
 					"scene": "1048"
 				},
 				{

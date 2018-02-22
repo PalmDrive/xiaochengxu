@@ -1,17 +1,26 @@
 <view class="view-container">
-  <view class="title-container">
-    <image class="liveqa-title" src="http://cdn.ailingual.cn/pics/liveqa/liveqa_title.png" />
-  </view>
-
-  <view class="schedule">
-    <view class="timer">距离下场时间</view>
-    <view class="left">
-      <view wx:for="{{live.schedule}}" wx:key class="list">
-        <text class="label" style="background-color:{{item.bgColor}}">{{item.label}}</text>
-        <text>{{item.time}}</text>
-      </view>
+  <view class="title-and-schedule-container">
+    <view class="cover" wx:if="{{live.status === 100 || live.status === 101}}">
+      <button class="btn-round">
+        <text>争夺战已经开始， 马上前往</text>
+        <image class="icon-arrow-right" src="https://cdn.ailingual.cn/pics/liveqa/icon_arrow_right.png" />
+      </button>
     </view>
-    <button class="right btn-round">预约</button>
+
+    <view class="title-container">
+      <image class="liveqa-title" src="https://cdn.ailingual.cn/pics/liveqa/liveqa_title.png" />
+    </view>
+
+    <view class="schedule">
+      <view class="timer">距离下场时间{{live.timeToNextLive}}</view>
+      <view class="left">
+        <view wx:for="{{live.schedule}}" wx:key class="list">
+          <text class="label" style="background-color:{{item.bgColor}}">{{item.label}}</text>
+          <text>{{item.time}}</text>
+        </view>
+      </view>
+      <button class="right btn-round">预约</button>
+    </view>
   </view>
 
   <view class="card-container">

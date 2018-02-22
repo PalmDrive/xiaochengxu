@@ -1,21 +1,25 @@
 const {request} = require('./request'),
-      // baseUrl =  `http://172.10.23.38:5000/graphql`;
-      baseUrl = `https://ainterest-service-production.ailingual.cn/graphql`;
+      baseUrls = {
+        dev: 'http://localhost:5000/graphql',
+        production: 'https://ainterest-service-production.ailingual.cn/graphql'
+      };
 
 const post = (query, variables) => {
   const data = {
-    operationName: null,
-    query: query,
-    variables: variables || null
-  };
+          operationName: null,
+          query: query,
+          variables: variables || null
+        },
+        app = getApp(),
+        env = app.globalData.env;
   return request({
     header: {
       Authorization: null
     },
-    url: baseUrl,
+    url: baseUrls[env],
     data,
     method: 'POST'
-  })
-}
+  });
+};
 
 module.exports = post;

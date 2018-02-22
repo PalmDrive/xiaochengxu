@@ -1,0 +1,24 @@
+.icon-ppl-gray {
+  width: 20px;
+  height: 30px;
+}
+
+.head {
+  justify-content: space-between;
+}
+
+.option {
+  background-color: #F4F4F4;
+  padding: 10px 30px;
+  line-height: 22px;
+  border-radius: 16px;
+  margin-top: 12px;
+}
+
+.option.selected {
+  background-color: #ACDAA1;
+}
+
+.card {
+  padding: 25px;
+}

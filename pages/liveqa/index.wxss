@@ -5,6 +5,28 @@
   font-size: 16px;
 }
 
+.title-and-schedule-container {
+  position: relative;
+}
+
+.title-and-schedule-container .cover {
+  position: absolute;
+  top: -20px;
+  left: -15px;
+  bottom: 0;
+  right: -15px;
+  background-color: rgba(25,0,76,0.87);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.title-and-schedule-container .cover button {
+  color: white;
+  background-color: #FF2C79;
+}
+
 .liveqa-title {
   display: block;
   margin: 0 auto;
@@ -135,4 +157,9 @@
   display: block;
   width: 80px;
   text-align: center;
+}
+
+.icon-arrow-right {
+  width: 10px;
+  height: 19px;
 }

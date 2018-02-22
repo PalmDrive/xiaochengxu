@@ -2,6 +2,7 @@
   "pages":[
     "pages/liveqa/index",
     "pages/liveqa/live",
+    "pages/liveqa/questions",
     "pages/album/study",
     "pages/album/study-web",
     "pages/album/report",
