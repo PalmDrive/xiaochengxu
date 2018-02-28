@@ -1,0 +1,22 @@
+<view>
+  <view class="row">
+    <view>验证学校邮箱</view>
+    <button>去验证</button>
+  </view>
+  <view class="row">
+    <view>分享到微信群</view>
+    <button>去分享</button>
+  </view>
+  <view class="row">
+    <view>到公众号领取</view>
+    <button>去领取</button>
+  </view>
+  <view class="row">
+    <view>输入邀请码</view>
+    <button>去输入</button>
+  </view>
+  <view class="row">
+    <view>分享到朋友圈</view>
+    <button>去分享</button>
+  </view>
+</view>

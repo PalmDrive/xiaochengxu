@@ -29,16 +29,16 @@
 			"list": [
 				{
 					"id": 0,
-					"name": "吃货地图扫码进入",
+					"name": "QA Questions",
 					"pathName": "pages/liveqa/questions",
 					"query": "",
 					"scene": "1048"
 				},
 				{
 					"id": 1,
-					"name": "吃货地图群进入",
-					"pathName": "pages/map/dazhaxie",
-					"query": "friendId=59cf5b9b67f3560042b30901&from=mapsession",
+					"name": "QA Profile",
+					"pathName": "pages/liveqa/profile",
+					"query": "",
 					"scene": "1008"
 				},
 				{
@@ -56,10 +56,10 @@
 					"scene": "1008"
 				},
 				{
-					"id": -1,
-					"name": "Video show",
-					"pathName": "pages/medium/video",
-					"query": "id=7f5fd080-b4dc-11e7-a975-51fb73f916c3",
+					"id": 4,
+					"name": "Revive Task",
+					"pathName": "pages/liveqa/revive-task",
+					"query": "",
 					"scene": "1048"
 				},
 				{

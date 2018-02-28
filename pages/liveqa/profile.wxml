@@ -1,0 +1,29 @@
+<view>
+  <image src="{{user.profilePicUrl}}" />
+  <text>{{user.wxUsername}}</text>
+  <view>
+    <text>{{user.mySchool ? user.mySchool.name : 'n/a'}}</text>
+    <text>{{user.isSchoolVerified ? '已认证' : '未认证'}}</text>
+  </view>
+
+  <view>
+    <view>资产</view>
+    <view>奖金：￥{{user.qaReward}}</view>
+    <button>提现</button>
+    <view>课程优惠券: ￥{{user.couponsReward}}</view>
+  </view>
+
+  <view>
+    <view>积分</view>
+    <view>本周贡献{{user.qaPointsThisWeek}}分</view>
+    <view>击败了{{Math.round((1-user.qaPointsThisWeekRankPercent) * 100) || 0}}%的校友</view>
+    <view>累计贡献{{user.qaPoints || 0}}分</view>
+
+    <view>复活卡: {{user.extraQALives || 0}}</view>
+    <button>获得更多</button>
+
+    <view>打卡记录</view>
+    <view>累计打卡: {{user.streakDays}}</view>
+    <!-- <navigator url="">查看</navigator> -->
+  </view>
+</view>

@@ -13,9 +13,6 @@ const post = (query, variables) => {
         app = getApp(),
         env = app.globalData.env;
   return request({
-    header: {
-      Authorization: null
-    },
     url: baseUrls[env],
     data,
     method: 'POST'
