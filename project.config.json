@@ -25,7 +25,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 0,
+			"current": 5,
 			"list": [
 				{
 					"id": 0,
@@ -64,9 +64,10 @@
 				},
 				{
 					"id": 5,
-					"name": "Survey text answer",
-					"pathName": "pages/survey/text-question",
-					"query": "surveyQuestionId=1&postId=67048f40-c7f0-11e7-a5a5-61b12f2788b2&albumId=7dd578b0-c7f0-11e7-a5a5-61b12f2788b2"
+					"name": "答题首页",
+					"pathName": "pages/liveqa/index",
+					"query": "surveyQuestionId=1&postId=67048f40-c7f0-11e7-a5a5-61b12f2788b2&albumId=7dd578b0-c7f0-11e7-a5a5-61b12f2788b2",
+					"scene": "1048"
 				},
 				{
 					"id": -1,

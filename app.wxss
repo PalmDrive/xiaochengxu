@@ -77,6 +77,10 @@ view {
   justify-content: space-between;
 }
 
+.block {
+  display: block;
+}
+
 /* modal */
 .modal {
   position: fixed;

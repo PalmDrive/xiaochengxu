@@ -27,11 +27,20 @@
   background-color: #FF2C79;
 }
 
-.liveqa-title {
+.liveqa-title,
+.liveqa-subtitle {
   display: block;
   margin: 0 auto;
-  width: 272px;
-  height: 90px;
+}
+
+.liveqa-title {
+  width: 338px;
+  height: 187px;
+}
+
+.liveqa-subtitle {
+  width: 160px;
+  height: 29px;
 }
 
 .timer {
@@ -45,6 +54,18 @@
   top: -18px;
   left: 50%;
   transform: translateX(-50%);
+}
+
+.btn-start {
+  background-color: #FFF358;
+  width: 275px;
+  padding: 15px 0;
+  color: #FF0000;
+  margin: 30px auto 60px auto;
+}
+
+.btn-start text {
+  line-height: 150%;
 }
 
 .schedule {
@@ -162,4 +183,50 @@
 .icon-arrow-right {
   width: 10px;
   height: 19px;
+}
+
+.school-selector-view {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #1b004c;
+  z-index: -100;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.school-selector-view.show {
+  z-index: 100;
+}
+
+.input-school-name {
+  background-color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+.school-list {
+  margin: 10px 0px;
+  background-color: white;
+}
+
+.school-list-item {
+  padding: 10px;
+  border-bottom: 1px solid #1b004c;
+  color: #1b004c;
+}
+
+.school-list-item.pressed {
+  background-color: #1b004c;
+  color: white;
+}
+
+.school-selector-view .btn-success {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
 }

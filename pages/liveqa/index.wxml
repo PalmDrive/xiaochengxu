@@ -8,10 +8,11 @@
     </view>
 
     <view class="title-container">
-      <image class="liveqa-title" src="https://cdn.ailingual.cn/pics/liveqa/liveqa_title.png" />
+      <image class="liveqa-title" src="https://cdn.ailingual.cn/pics/liveqa/qa_title.png" />
+      <image class="liveqa-subtitle" src="https://cdn.ailingual.cn/pics/liveqa/millions_reward.png" />
     </view>
 
-    <view class="schedule">
+    <!-- <view class="schedule">
       <view class="timer">距离下场时间{{live.timeToNextLive}}</view>
       <view class="left">
         <view wx:for="{{live.schedule}}" wx:key class="list">
@@ -20,7 +21,11 @@
         </view>
       </view>
       <button class="right btn-round">预约</button>
-    </view>
+    </view> -->
+    <button class="btn-round btn-start" bindtap="startQA">
+      <text class="size-24 block">开始答题</text>
+      <text class="size-14 block">本周夺冠收益: ￥100,000</text>
+    </button>
   </view>
 
   <view class="card-container">
@@ -31,14 +36,14 @@
     <view class="middle-container">
       <view class="text-dark-gray size-12">学校排名</view>
       <text class="text-purple">
-        <text>第{{user.liveSchool.ranking}}名</text>
-        <text class="size-12">（{{user.liveSchool.name}}）</text>
+        <text>第{{user.myLiveSchool.rtRanking}}名</text>
+        <text class="size-12">（{{user.myLiveSchool.name}}）</text>
       </text>
     </view>
     <view class="bottom-container">
-      <text class="size-18">我拥有复活卡{{user.extraQALives}}张</text>
-      <button class="btn-round">邀请好友获得复活卡</button>
-      <text class="size-12">您的学校人气榜排名第{{user.liveSchool.ranking}}名，赶紧拉好基友一起参加</text>
+      <text class="size-18">我拥有复活卡{{user.extraQALives || 0}}张</text>
+      <!-- <button class="btn-round">邀请好友获得复活卡</button>
+      <text class="size-12">您的学校人气榜排名第{{user.liveSchool.ranking}}名，赶紧拉好基友一起参加</text> -->
     </view>
   </view>
 
@@ -56,11 +61,24 @@
       </view>
       <view class="table-body">
         <view class="table-row row" wx:for="{{liveSchools}}" wx:key wx:for-item="school">
-          <text>{{school.ranking}}</text>
+          <text>{{index + 1}}</text>
           <text>{{school.name}}</text>
           <text>{{school.registeredUsersCount}}</text>
         </view>
       </view>
     </view>
   </view>
+</view>
+
+<view class="school-selector-view size-16 {{!user.myLiveSchool.name ? 'show' : ''}}">
+    <view class="text-white">
+      <text>选择你的学校, 开始答题</text>
+    </view>
+    <input type="text" placeholder="输入你的学校" bindinput="inputSchoolName" class="input-school-name" value="{{selectedSchool.name}}"/>
+
+    <view class="school-list">
+      <view wx:for="{{schoolList}}" wx:key="id" wx:for-item="school" hover-class="pressed" class="school-list-item" bindtap="selectSchool" data-item="{{school}}">{{school.name}}</view>
+    </view>
+
+    <button class="btn-round btn-success" disabled="{{!selectedSchool}}" bindtap="saveSelectedSchool">保存</button>
 </view>
