@@ -92,7 +92,7 @@ const page = Page({
 
     return graphql(query)
       .then(res => {
-        const userData = res.data.users[0],
+        const userData = res.data.users ? res.data.users[0] : {},
               data = {
                 user: _.extend(userData, user.attributes, {id: user.id}),
                 liveSchools: res.data.liveSchools

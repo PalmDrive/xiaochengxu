@@ -1,12 +1,12 @@
 //app.js
-const env = 'production';
-//const env = 'dev';
+//const env = 'production';
+const env = 'dev';
 const {reloadPage, showHint} = require('utils/util');
 
 const API_BASES = {
   production: 'https://ainterest-service-production.ailingual.cn/api/v1',
   staging: 'https://ainterest-service-staging.ailingual.cn/api/v1',
-  dev: 'http://172.10.22.24:5000/api/v1'
+  dev: 'http://localhost:5000/api/v1'
 };
 
 const apiBase = API_BASES[env];
