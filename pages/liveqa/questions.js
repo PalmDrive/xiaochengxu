@@ -7,6 +7,8 @@ const mockData = require('../../utils/mockData'),
 // cache userSurveyAnswers
 let userSurveyAnswers = [];
 
+let countDownTimer;
+
 const QA_SURVEY_ID = 'QASurvey',
       questionAttrs = 'id, content, questionType, questionOrder, options, surveyId, difficulty',
       answerAttrs = 'id, content, surveyId, surveyQuestionId, status, userId, difficulty';
@@ -16,20 +18,27 @@ Page({
     live: null,
     user: null,
     survey: null,
-    question: null
+    question: null,
+    timer: 10,
+    status: "答题中", // 答题中，回答错误，回答正确，已超时
+    state: 0 // 0: 答题进行中 1: 答题结束
   },
 
   onLoad(options) {
     this._fetchData()
       .then(data => {
         this._setQuestionOptions(data.survey.surveyQuestions);
-
-        this.setData({
-          //live: data.live,
+        const d = {
           user: data.user,
           survey: data.survey,
           question: data.question
-        });
+        };
+        if (!data.question) {
+          d.state = 1;
+        }
+        this.setData(d);
+
+        this._countDown();
       });
   },
 
@@ -62,19 +71,25 @@ Page({
     question.options.forEach(op => {
       op.selected = option.value === op.value;
     });
+    this.setData({question});
 
     this._saveUserSurveyAnswer(answer)
       .then(res => {
-        this.setData({
-          question
-        });
-
         if (option.isRight) {
+          this.setData({
+            status: '回答正确',
+            //question
+          });
           setTimeout(() => {
             this._nextQuestion();
           }, 500);
         } else {
-          console.log('Wrong answer');
+          this.setData({
+            status: '回答错误'
+          });
+          setTimeout(() => {
+            this.setData({state: 1});
+          }, 1000);
         }
       })
       .catch(err => {
@@ -192,12 +207,19 @@ Page({
               data = {
                 question,
                 survey,
+                timer: 10
               };
 
-        survey.surveyQuestions.push(question);
-        this._setQuestionOptions(survey.surveyQuestions);
+        if (question) {
+          survey.surveyQuestions.push(question);
+          this._setQuestionOptions(survey.surveyQuestions);
+        } else {
+          data.state = 1;
+        }
 
         this.setData(data);
+
+        this._clearTimer();
       });
   },
 
@@ -206,7 +228,7 @@ Page({
       userSurveyAnswer (
          surveyId: "${answer.surveyId}",
          userId: "${answer.userId}",
-         surveyQuestionId: "${answer.surveyQuestionId}"
+         surveyQuestionId: ${answer.surveyQuestionId}
          isNew: false,
          status: ${answer.status},
          content: "${answer.content}",
@@ -233,5 +255,26 @@ Page({
       }
     });
     return questions;
+  },
+
+  _clearTimer() {
+    if (countDownTimer) {
+      clearInterval(countDownTimer);
+      countDownTimer = null;
+    }
+  },
+
+  _countDown() {
+    this._clearTimer();
+
+    countDownTimer = setInterval(() => {
+      let timer = this.data.timer;
+      if (timer === 0) {
+        this.setData({status: '已超时'});
+      } else {
+        timer -= 1;
+        this.setData({timer});
+      }
+    }, 1000);
   }
 });

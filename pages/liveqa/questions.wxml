@@ -1,21 +1,27 @@
 <view>
   <view class="card">
-    <view class="head row">
-      <view class="ppl-count">
-        <image src="http://cdn.ailingual.cn/pics/liveqa/icon_ppl_gray.png" class="icon-ppl-gray"/>
-        <text>1000</text>
+    <view hidden="{{state !== 0}}"> <!-- 答题中 start -->
+      <view class="head row">
+        <!-- <view class="ppl-count">
+          <image src="http://cdn.ailingual.cn/pics/liveqa/icon_ppl_gray.png" class="icon-ppl-gray"/>
+          <text>1000</text>
+        </view> -->
+        <view class="count-down">{{timer}}S</view>
+        <!-- <view>集思学院</view> -->
       </view>
-      <view class="count-down"></view>
-      <view>集思学院</view>
-    </view>
 
-    <view>答题中</view>
+      <view class="status {{(status === '已超时' || status === '回答错误') ? 'red' : ''}}">{{status}}</view>
 
-    <view>
-      <view>{{question.content}}</view>
-      <view wx:for="{{question.options}}" wx:for-item="option" bindtap="selectAnswer" data-option="{{option}}" wx:key="value" class="option size-16 {{option.selected ? 'selected' : ''}}">
-        {{option.label}}
+      <view>
+        <view>{{question.content}}</view>
+        <view wx:for="{{question.options}}" wx:for-item="option" bindtap="selectAnswer" data-option="{{option}}" wx:key="value" class="option size-16 {{option.selected ? 'selected' : ''}}">
+          {{option.label}}
+        </view>
       </view>
-    </view>
+    </view><!-- 答题中 end -->
+
+    <view hidden="{{state !== 1}}"><!-- 答题结束 start -->
+      <text style="margin-top: 50px" class="block">今天的答题结束了</text>
+    </view><!-- 答题结束 end -->
   </view>
 </view>

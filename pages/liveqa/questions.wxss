@@ -4,7 +4,7 @@
 }
 
 .head {
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .option {
@@ -21,4 +21,19 @@
 
 .card {
   padding: 25px;
+}
+
+.status {
+  font-size: 18px;
+  line-height: 34px;
+  border-radius: 17px;
+  background-color: #5EAF00;
+  text-align: center;
+  color: white;
+  margin: 10px auto 25px;
+  width: 98px;
+}
+
+.status.red {
+  background-color: #FF8672;
 }
