@@ -1,27 +1,48 @@
-<view>
-  <view class="card">
-    <view hidden="{{state !== 0}}"> <!-- 答题中 start -->
-      <view class="head row">
-        <!-- <view class="ppl-count">
-          <image src="http://cdn.ailingual.cn/pics/liveqa/icon_ppl_gray.png" class="icon-ppl-gray"/>
-          <text>1000</text>
-        </view> -->
-        <view class="count-down">{{timer}}S</view>
-        <!-- <view>集思学院</view> -->
+<view class="questions-view">
+  <view hidden="{{state !== 0}}"> <!-- 答题中 start -->
+    <view class="row size-16 space-between">
+      <view class="round-label">
+        <image src="http://cdn.gecacademy.cn/miniprogram/heart.png" class="icon-heart" />
+        <text>复活卡{{user.extraQALives || 0}}张</text>
       </view>
+      <view class="round-label">
+        <image src="http://cdn.gecacademy.cn/miniprogram/coins.png" class="icon-coins" />
+        <text>积分{{user.rtQAPoints}}</text>
+      </view>
+    </view>
 
-      <view class="status {{(status === '已超时' || status === '回答错误') ? 'red' : ''}}">{{status}}</view>
+    <view class="count-down">
+      <view class="size-12">倒计时</view>
+      <view class="size-24">{{timer}}S</view>
+    </view>
 
-      <view>
-        <view>{{question.content}}</view>
-        <view wx:for="{{question.options}}" wx:for-item="option" bindtap="selectAnswer" data-option="{{option}}" wx:key="value" class="option size-16 {{option.selected ? 'selected' : ''}}">
-          {{option.label}}
+    <view class="card {{question.selected ? 'selected' : ''}}">
+    <!-- <view class="card selected"> -->
+      <!-- <view class="status {{(status === '已超时' || status === '回答错误') ? 'red' : ''}}">{{status}}</view> -->
+
+      <view class="size-18">
+        <view class="question">{{question.content}}</view>
+        <view wx:for="{{question.options}}" wx:for-item="option" bindtap="selectAnswer" data-option="{{option}}" wx:key="value" class="row space-between option size-16 {{!option.isRight && option.selected ? 'wrong' : ''}} {{option.isRight ? 'right' : ''}}">
+          <text>{{option.label}}</text>
+          <text class="icon icon-checkmark">✔</text>
+          <text class="icon icon-x">✗</text>
+        </view>
+
+        <view class="hint size-16">点击选项，即可回答</view>
+      </view>
+    </view>
+
+    <view class="pager">
+      <view class="row space-between size-14">
+        <view wx:for="{{pager}}" wx:key>
+          <view class="{{item.cash ? 'icon-red-envelop' : ''}} {{item.bonus ? 'icon-2x' : ''}}"></view>
+          <view class="label {{item.active ? 'active' : ''}}">{{item.label}}</view>
         </view>
       </view>
-    </view><!-- 答题中 end -->
+    </view>
+  </view><!-- 答题中 end -->
 
-    <view hidden="{{state !== 1}}"><!-- 答题结束 start -->
-      <text style="margin-top: 50px" class="block">今天的答题结束了</text>
-    </view><!-- 答题结束 end -->
-  </view>
+  <view hidden="{{state !== 1}}"><!-- 答题结束 start -->
+    <text style="margin-top: 50px" class="block">今天的答题结束了</text>
+  </view><!-- 答题结束 end -->
 </view>

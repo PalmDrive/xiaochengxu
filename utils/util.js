@@ -429,6 +429,49 @@ function goToAlbum(album) {
     .catch(err => wx.hideLoading());
 }
 
+
+//  1 2 3 4… 19
+// ... 5 6 7… 19
+// … 8 9 10 … 19
+// … 11 12 13 … 19
+// … 14 15 16 ... 19
+// ... 15 16 17 18 19
+/**
+ * @param page {Number} The current page
+ * @param pages {Number} The total pages
+ * @param length {Number} The length of the pager, including symbol
+ * @return pager {Array}
+ */
+function getPager(page, pages, length) {
+   const delta = length - 3,
+         symbol = '...',
+         pager = [],
+         minLast = pages - length + 2;
+
+   let min = 2, index, max;
+   if (page <= length - 2) {
+     pager[0] = 1;
+   } else {
+     pager[0] = symbol;
+   }
+
+   if (page >= minLast) {
+     for (let i = minLast; i <= pages; i++) {
+       pager.push(i);
+     }
+   } else {
+     index = Math.max(Math.floor((page - 2) /  delta) + 1, 1);
+     min = 2 + (index - 1) * delta;
+     max = min + delta - 1;
+     for (let i = min; i <= max; i++) {
+       pager.push(i);
+     }
+     pager.splice(pager.length, 0, symbol, pages)
+   }
+
+   return pager;
+ }
+
 module.exports = {
   formatTime,
   formatDateToDay,
@@ -456,5 +499,6 @@ module.exports = {
   convertTime,
   getAchieveProgress,
   formatAlbumUnlockedAt,
-  getDays
+  getDays,
+  getPager
 };

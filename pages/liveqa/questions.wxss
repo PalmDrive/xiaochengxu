@@ -1,10 +1,42 @@
-.icon-ppl-gray {
-  width: 20px;
-  height: 30px;
+.questions-view {
+  background-color: #220f48;
+  padding: 20px;
+  color: white;
+  position: fixed;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
 }
 
-.head {
-  justify-content: center;
+.icon-heart {
+  width: 15px;
+  height: 17px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.icon-coins {
+  width: 17px;
+  height: 18px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.count-down {
+  margin: 25px 0;
+  text-align: center;
+}
+
+.round-label {
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 7px 20px 7px 14px;
+  border-radius: 18px;
+}
+
+.question {
+  margin-bottom: 30px;
 }
 
 .option {
@@ -12,15 +44,46 @@
   padding: 10px 30px;
   line-height: 22px;
   border-radius: 16px;
-  margin-top: 12px;
+  margin-bottom: 15px;
+  color: #220f48;
 }
 
-.option.selected {
-  background-color: #ACDAA1;
+.hint {
+  text-align: center;
+  padding: 15px 0;
+  color: #8A78AB;
 }
+
+/*.option.selected {
+  background-color: #ACDAA1;
+}*/
 
 .card {
   padding: 25px;
+  background-color: #3C2E5D;
+  border-radius: 20px;
+}
+
+.card .icon {
+  display: none;
+}
+
+.card.selected .option.right .icon-checkmark {
+  display: block;
+}
+
+.card.selected .option.right {
+  background-color: #68B570 ;
+  color: white;
+}
+
+.card.selected .option.wrong {
+  background-color: #B03105;
+  color: white;
+}
+
+.card.selected .option.wrong .icon-x {
+  display: block;
 }
 
 .status {
@@ -36,4 +99,42 @@
 
 .status.red {
   background-color: #FF8672;
+}
+
+.pager {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  color: #3C2E5D;
+}
+
+.pager .label.active {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 12px;
+  text-align: center;
+  color: #220f48;
+  background-color: white;
+}
+
+.icon-red-envelop,
+.icon-2x {
+  background-size: cover;
+  position: absolute;
+  top: -20px;
+  transform: translateX(-2px);
+}
+
+.icon-red-envelop {
+  width: 14px;
+  height: 15px;
+  background-image: url('http://cdn.gecacademy.cn/miniprogram/red_envelop.png');
+}
+
+.icon-2x {
+  width: 19px;
+  height: 18px;
+  background-image: url('http://cdn.gecacademy.cn/miniprogram/2x.png');
 }

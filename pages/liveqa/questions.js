@@ -21,7 +21,8 @@ Page({
     question: null,
     timer: 10,
     status: "答题中", // 答题中，回答错误，回答正确，已超时
-    state: 0 // 0: 答题进行中 1: 答题结束
+    state: 0, // 0: 答题进行中 1: 答题结束
+    pager: null,
   },
 
   onLoad(options) {
@@ -36,6 +37,8 @@ Page({
         if (!data.question) {
           d.state = 1;
         }
+
+        d.pager = this._getPager(data.questionRewards);
         this.setData(d);
 
         this._countDown();
@@ -71,6 +74,7 @@ Page({
     question.options.forEach(op => {
       op.selected = option.value === op.value;
     });
+    question.selected = true;
     this.setData({question});
 
     this._saveUserSurveyAnswer(answer)
@@ -102,18 +106,14 @@ Page({
   _fetchQuestion(id) {
     if (id) {
       return graphql(`query {
-        surveyQuestions(id: "${id}") {
-          ${questionAttrs}
-        }
+        surveyQuestions(id: "${id}")
       }`)
       .then(res => res.data.surveyQuestions[0]);
     } else {
       return graphql(`query {
-        question {
-          ${questionAttrs}
-        }
+        question
       }`)
-      .then(res => res.data.question);
+      .then(res => res.data.question.question);
     }
   },
 
@@ -121,48 +121,44 @@ Page({
     const user = Auth.getLocalUserInfo(),
           beginningOfDay = new Date(),
           endOfDay = new Date(),
-          query = `query($userId: ID, $surveyId: ID, $filter: JSON) {
-            question {
-              ${questionAttrs}
-            },
-            userSurveyAnswers(userId: $userId, surveyId: $surveyId, filter: $filter) {
-              ${answerAttrs}
+          query = `query {
+            question
+            users(id: "${user.id}") {
+              rtQAPoints,
+              extraQALives
             }
-          }`,
-          variables = {
-            surveyId: QA_SURVEY_ID,
-            userId: user.id,
-            filter: {
-              createdAt: {
-                $gt: beginningOfDay,
-                $lte: endOfDay,
-              }
+            questionRewards {
+              cash,
+              bonus,
+              points,
+              index
             }
-          };
+          }`;
 
     beginningOfDay.setHours(0, 0, 0, 0);
     endOfDay.setHours(23, 59, 59, 0);
 
-    return graphql(query, variables)
+    return graphql(query)
       .then(res => {
-        const question = res.data.question,
+        const data = res.data.question,
+              question = data.question,
               survey = {
-                surveyQuestions: [question],
+                surveyQuestions: question ? [question] : [],
                 id: question && question.surveyId
               };
 
-        if (res.data.userSurveyAnswers) {
-          userSurveyAnswers = res.data.userSurveyAnswers;
+        if (data.todayAns) {
+          userSurveyAnswers = data.todayAns;
         }
 
-        const data = {
+        return {
           survey: survey,
           user: _.extend({
             id: user.id
-          }, user.attributes),
-          question
+          }, user.attributes, res.data.users[0]),
+          question,
+          questionRewards: res.data.questionRewards
         };
-        return data;
       });
   },
 
@@ -219,7 +215,7 @@ Page({
 
         this.setData(data);
 
-        this._clearTimer();
+        this._countDown();
       });
   },
 
@@ -243,7 +239,7 @@ Page({
 
   _setQuestionOptions(questions) {
     const key = 'value';
-    questions.forEach(q => {
+    questions.forEach((q, i) => {
       const ans = _.findWhere(userSurveyAnswers, {
         surveyQuestionId: q.id
       });
@@ -253,6 +249,9 @@ Page({
           option.selected = true;
         }
       }
+
+      // for testing
+      //q.options[0]. selected = true;
     });
     return questions;
   },
@@ -265,16 +264,42 @@ Page({
   },
 
   _countDown() {
+    return;
     this._clearTimer();
 
     countDownTimer = setInterval(() => {
       let timer = this.data.timer;
       if (timer === 0) {
-        this.setData({status: '已超时'});
+        this.setData({
+          status: '已超时',
+        });
+        setTimeout(() => {
+          this.setData({state: 1});
+        }, 1000);
       } else {
         timer -= 1;
         this.setData({timer});
       }
     }, 1000);
+  },
+
+  _getPager(questionRewards) {
+    const page = userSurveyAnswers.length + 1,
+          pages = questionRewards.length,
+          pagerLength = 13;
+    let pager = utils.getPager(page, pages, pagerLength);
+    pager = pager.map(p => {
+      const obj = {label: p};
+      if (obj.label !== '...') {
+        const reward = _.findWhere(questionRewards, {index: Number(p)});
+        if (reward.index === page) {
+          reward.active = true;
+        }
+        _.extend(obj, reward || {});
+      }
+
+      return obj;
+    });
+    return pager;
   }
 });
