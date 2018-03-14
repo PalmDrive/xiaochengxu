@@ -24,6 +24,13 @@
   margin-right: 5px;
 }
 
+.icon-coins-big {
+  width: 36px;
+  height: 38px;
+  display: block;
+  margin: 0 auto 20px;
+}
+
 .count-down {
   margin: 25px 0;
   text-align: center;
@@ -119,12 +126,17 @@
   background-color: white;
 }
 
+.pager-item {
+  position: relative;
+}
+
 .icon-red-envelop,
 .icon-2x {
   background-size: cover;
   position: absolute;
   top: -20px;
-  transform: translateX(-2px);
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .icon-red-envelop {
@@ -137,4 +149,23 @@
   width: 19px;
   height: 18px;
   background-image: url('http://cdn.gecacademy.cn/miniprogram/2x.png');
+}
+
+.modal-container {
+  position: fixed;
+  z-index: 110;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal {
+  background-color: white;
+  text-align: center;
+  padding: 25px 0;
+  width: 80%;
+  color: black;
+  line-height: 200%;
 }

@@ -7,7 +7,7 @@
       </view>
       <view class="round-label">
         <image src="http://cdn.gecacademy.cn/miniprogram/coins.png" class="icon-coins" />
-        <text>积分{{user.rtQAPoints}}</text>
+        <text>今日积分{{user.qaPointsToday}}</text>
       </view>
     </view>
 
@@ -34,7 +34,7 @@
 
     <view class="pager">
       <view class="row space-between size-14">
-        <view wx:for="{{pager}}" wx:key>
+        <view wx:for="{{pager}}" wx:key class="pager-item">
           <view class="{{item.cash ? 'icon-red-envelop' : ''}} {{item.bonus ? 'icon-2x' : ''}}"></view>
           <view class="label {{item.active ? 'active' : ''}}">{{item.label}}</view>
         </view>
@@ -45,4 +45,20 @@
   <view hidden="{{state !== 1}}"><!-- 答题结束 start -->
     <text style="margin-top: 50px" class="block">今天的答题结束了</text>
   </view><!-- 答题结束 end -->
+
+  <view class="modal-container" hidden="{{modal === 0}}">
+    <view class="modal size-18" hidden="{{modal !== 1}}">
+      <image src="http://cdn.gecacademy.cn/miniprogram/coins_big.png" class="icon-coins-big" />
+      <view>这下赚大了</view>
+      <view>您的今日积分已翻倍!</view>
+      <view class="size-16 text-red">当前今日积分: {{user.qaPointsToday}}</view>
+    </view>
+
+    <view class="modal size-18" hidden="{{modal !== 2}}">
+      <image src="http://cdn.gecacademy.cn/miniprogram/red_envelop_big.png" class="icon-red-envelop-big" />
+      <view>恭喜您</view>
+      <view>红包已经入账</view>
+      <view class="size-16 text-red">红包价值: </view>
+    </view>
+  </view>
 </view>

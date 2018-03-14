@@ -89,6 +89,7 @@ view {
   transform: translateX(-50%) translateY(-50%);
   z-index: 100;
   text-align: center;
+  border-radius: 5px;
 }
 
 .modal-drop {

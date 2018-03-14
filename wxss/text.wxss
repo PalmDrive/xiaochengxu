@@ -30,6 +30,10 @@
   color: #8400FF;
 }
 
+.text-red {
+  color: #EE4248;
+}
+
 .text-color1 {
   color: #1A1A1A
 }

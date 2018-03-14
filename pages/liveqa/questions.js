@@ -4,10 +4,13 @@ const mockData = require('../../utils/mockData'),
       _ = require('../../vendors/underscore'),
       graphql = require('../../utils/graphql');
 
-// cache userSurveyAnswers
-let userSurveyAnswers = [];
+// cache userSurveyAnswers, userLive, questionRewards
+let userSurveyAnswers = [],
+    userLive,
+    questionRewards;
 
-let countDownTimer;
+let countDownTimer,
+    processing = false;
 
 const QA_SURVEY_ID = 'QASurvey',
       questionAttrs = 'id, content, questionType, questionOrder, options, surveyId, difficulty',
@@ -15,12 +18,12 @@ const QA_SURVEY_ID = 'QASurvey',
 
 Page({
   data: {
-    live: null,
     user: null,
     survey: null,
     question: null,
     timer: 10,
     status: "答题中", // 答题中，回答错误，回答正确，已超时
+    modal: 0, // 1: 显示积分翻倍modal， 2： 显示红包奖励modal
     state: 0, // 0: 答题进行中 1: 答题结束
     pager: null,
   },
@@ -28,6 +31,9 @@ Page({
   onLoad(options) {
     this._fetchData()
       .then(data => {
+        userLive = data.userLive;
+        questionRewards = data.questionRewards;
+
         this._setQuestionOptions(data.survey.surveyQuestions);
         const d = {
           user: data.user,
@@ -38,7 +44,7 @@ Page({
           d.state = 1;
         }
 
-        d.pager = this._getPager(data.questionRewards);
+        d.pager = this._getPager();
         this.setData(d);
 
         this._countDown();
@@ -46,28 +52,24 @@ Page({
   },
 
   selectAnswer(e) {
-    const option = e.target.dataset.option,
-          question = this.data.question,
-          user = this.data.user,
-          answer = {
-            surveyId: QA_SURVEY_ID,
-            userId: user.id,
-            status: option.isRight ? 1 : 0,
-            content: option.value,
-            surveyQuestionId: question.id,
-            difficulty: question.difficulty
-          };
+    if (processing) {
+      console.log('double click prevented.');
+      return;
+    };
+    processing = true;
 
-    // if (option.isRight) {
-    //   userSurveyAnswers.status = 100;
-    //
-    //   if (!userSurveyAnswers.answers[question.id]) { // 防止重复增加streak
-    //     userSurveyAnswers.streak = userSurveyAnswers.streak + 1;
-    //   }
-    // } else {
-    //   userSurveyAnswers.status = 200; // 因打错导致答题结束
-    //   userSurveyAnswers.streak = 0;
-    // }
+    const question = this.data.question,
+          user = this.data.user,
+          option = e.currentTarget.dataset.option;
+
+    if(!option) {
+      console.log('e.target:');
+      console.log(e.target);
+      processing = false;
+      throw('option is invalid');
+    }
+
+    const answer = this._newAnswer(option);
 
     userSurveyAnswers.push(answer);
 
@@ -78,25 +80,9 @@ Page({
     this.setData({question});
 
     this._saveUserSurveyAnswer(answer)
-      .then(res => {
-        if (option.isRight) {
-          this.setData({
-            status: '回答正确',
-            //question
-          });
-          setTimeout(() => {
-            this._nextQuestion();
-          }, 500);
-        } else {
-          this.setData({
-            status: '回答错误'
-          });
-          setTimeout(() => {
-            this.setData({state: 1});
-          }, 1000);
-        }
-      })
+      .then(this._onSaveUserSurveyAnswer)
       .catch(err => {
+        processing = false;
         console.log('Data is not saved. Error:');
         // 数据没有保存上
         console.log(err);
@@ -124,7 +110,7 @@ Page({
           query = `query {
             question
             users(id: "${user.id}") {
-              rtQAPoints,
+              qaPointsToday,
               extraQALives
             }
             questionRewards {
@@ -157,13 +143,14 @@ Page({
             id: user.id
           }, user.attributes, res.data.users[0]),
           question,
-          questionRewards: res.data.questionRewards
+          questionRewards: res.data.questionRewards,
+          userLive: data.userLive,
         };
       });
   },
 
   _nextQuestion() {
-    let currIndex = 0,
+    let currIndex = null,
         nextQuestionId = null,
         nextQuestion = null,
         promise;
@@ -178,7 +165,7 @@ Page({
 
     // 先从userSurveyAnswers和this.data.survey.surveyQuestions
     // 中去取cached住的surveyQuestion
-    if (currIndex < userSurveyAnswers.length - 1) {
+    if (currIndex && currIndex < userSurveyAnswers.length - 1) {
       nextQuestionId = userSurveyAnswers[currIndex + 1].surveyQuestionId;
     }
     if (nextQuestionId) {
@@ -209,6 +196,7 @@ Page({
         if (question) {
           survey.surveyQuestions.push(question);
           this._setQuestionOptions(survey.surveyQuestions);
+          data.pager = this._getPager();
         } else {
           data.state = 1;
         }
@@ -216,6 +204,7 @@ Page({
         this.setData(data);
 
         this._countDown();
+        processing = false;
       });
   },
 
@@ -230,11 +219,61 @@ Page({
          content: "${answer.content}",
          difficulty: ${answer.difficulty}
       ) {
-        id
+        id, status,
+        user {
+          extraQALives, qaPointsToday
+        }
       }
     }`;
 
     return graphql(query);
+  },
+
+  _onSaveUserSurveyAnswer(res) {
+    const user = this.data.user,
+          status = res.data.userSurveyAnswer.status,
+          reward = questionRewards[userSurveyAnswers.length - 1],
+          data = {};
+
+    let wait = 1000;
+
+    if (status) {
+      _.extend(user, res.data.userSurveyAnswer.user);
+      data.user = user;
+      if (reward.bonus) {
+        wait = 3000;
+        this._showModal(1, wait + 200, data);
+      } else {
+        wx.showToast({
+          title: `积分 +${reward.points}`,
+          duration: wait,
+          icon: 'none'
+        });
+      }
+
+      this.setData(data);
+      // this.setData({
+      //   status: '回答正确',
+      //   //question
+      // });
+      setTimeout(() => {
+        this._nextQuestion();
+      }, wait);
+    } else {
+      // this.setData({
+      //   status: '回答错误'
+      // });
+
+      // 如果有复活卡，自动应用复活卡
+      if (user.extraQALives > 0) {
+        this._redeemExtraLiveAndGoOn(wait);
+      } else {
+        setTimeout(() => {
+          processing = false;
+          this.setData({state: 1});
+        }, wait);
+      }
+    }
   },
 
   _setQuestionOptions(questions) {
@@ -264,18 +303,25 @@ Page({
   },
 
   _countDown() {
+    // for dev
     return;
     this._clearTimer();
 
+    const user = this.data.user,
+          wait = 1000;
     countDownTimer = setInterval(() => {
       let timer = this.data.timer;
       if (timer === 0) {
-        this.setData({
-          status: '已超时',
+        this._clearTimer();
+        // this.setData({
+        //   status: '已超时',
+        // });
+        // Save an answer with content null
+        const answer = this._newAnswer({
+          value: null, isRight: 0
         });
-        setTimeout(() => {
-          this.setData({state: 1});
-        }, 1000);
+        return this._saveUserSurveyAnswer(answer)
+          .then(this._onSaveUserSurveyAnswer)
       } else {
         timer -= 1;
         this.setData({timer});
@@ -283,7 +329,7 @@ Page({
     }, 1000);
   },
 
-  _getPager(questionRewards) {
+  _getPager() {
     const page = userSurveyAnswers.length + 1,
           pages = questionRewards.length,
           pagerLength = 13;
@@ -292,14 +338,80 @@ Page({
       const obj = {label: p};
       if (obj.label !== '...') {
         const reward = _.findWhere(questionRewards, {index: Number(p)});
-        if (reward.index === page) {
-          reward.active = true;
-        }
+        reward.active = reward.index === page;
         _.extend(obj, reward || {});
       }
 
       return obj;
     });
     return pager;
+  },
+
+  _redeemExtraLiveAndGoOn(wait) {
+    return this._redeemExtraLive()
+      .then(updatedUser => {
+        this.setData({user: updatedUser});
+        wx.showToast({title: '自动扣除复活卡1张', duration: wait, icon: 'none'});
+        setTimeout(() => {
+          this._nextQuestion();
+        }, wait);
+      });
+  },
+
+  _updateUserLive(data) {
+    const query = `mutation userLive($data: JSON) {
+            userLive(id: "${userLive.id}", data: $data) {
+              id, status
+            }
+          }`,
+          variables = {
+            data
+          };
+    return graphql(query, variables)
+      .then(res => {
+        // Update local userLive cache
+        _.extend(userLive, data);
+        return res;
+      });
+  },
+
+  _redeemExtraLive() {
+    const user = this.data.user;
+
+    return this._updateUserLive({status: 100})
+      .then(() => {
+        user.extraQALives = user.extraQALives - 1;
+        return user;
+      });
+  },
+
+  _newAnswer(option) {
+    const question = this.data.question,
+          user = this.data.user,
+          answer = {
+            surveyId: QA_SURVEY_ID,
+            userId: user.id,
+            status: option.isRight ? 1 : 0,
+            content: option.value ? option.value : null,
+            surveyQuestionId: question.id,
+            difficulty: question.difficulty
+          };
+    return answer;
+  },
+
+  _showModal(modal, duration, data) {
+    duration = duration || 1000;
+
+    if (data) {
+      data.modal = modal;
+    } else {
+      this.setData({modal});
+    }
+
+    setTimeout(() => {
+      this.setData({modal: 0});
+    }, duration);
+
+    return data;
   }
 });
