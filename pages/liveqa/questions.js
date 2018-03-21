@@ -13,8 +13,7 @@ let countDownTimer,
     processing = false;
 
 const QA_SURVEY_ID = 'QASurvey',
-      questionAttrs = 'id, content, questionType, questionOrder, options, surveyId, difficulty',
-      answerAttrs = 'id, content, surveyId, surveyQuestionId, status, userId, difficulty';
+      questionAttrs = 'id, content, questionType, questionOrder, options, surveyId, difficulty';
 
 Page({
   data: {
@@ -24,8 +23,12 @@ Page({
     timer: 10,
     status: "答题中", // 答题中，回答错误，回答正确，已超时
     modal: 0, // 1: 显示积分翻倍modal， 2： 显示红包奖励modal
-    state: 0, // 0: 答题进行中 1: 答题结束
+    state: 0, // 0: 答题进行中 1: 打错or超级答题结束 2: 通关
     pager: null,
+    reward: {
+      points: null,
+      cash: null
+    }, // 记录回答一个题目正确以后获得的reward
   },
 
   onLoad(options) {
@@ -71,8 +74,6 @@ Page({
 
     const answer = this._newAnswer(option);
 
-    userSurveyAnswers.push(answer);
-
     question.options.forEach(op => {
       op.selected = option.value === op.value;
     });
@@ -87,6 +88,20 @@ Page({
         // 数据没有保存上
         console.log(err);
       });
+  },
+
+  onShareAppMessage(options) {
+    return {
+      title: `${this.data.user.wxUsername}邀请你参加高校答题番位争夺战`,
+      path: '/pages/liveqa/index',
+      imageUrl: 'http://cdn.gecacademy.cn/miniprogram/qa_cover.jpg'
+    };
+  },
+
+  gotoReviveTasks() {
+    wx.redirectTo({
+      url: '/pages/liveqa/revive-tasks'
+    });
   },
 
   _fetchQuestion(id) {
@@ -110,8 +125,13 @@ Page({
           query = `query {
             question
             users(id: "${user.id}") {
-              qaPointsToday,
-              extraQALives
+              qaRewardToday {
+                points, cash
+              },
+              extraQALives,
+              myLiveSchool {
+                name
+              }
             }
             questionRewards {
               cash,
@@ -153,6 +173,7 @@ Page({
     let currIndex = null,
         nextQuestionId = null,
         nextQuestion = null,
+        totalQuestionsCount = questionRewards.length,
         promise;
 
     // 确定当前question的index
@@ -198,7 +219,12 @@ Page({
           this._setQuestionOptions(survey.surveyQuestions);
           data.pager = this._getPager();
         } else {
-          data.state = 1;
+          if (userSurveyAnswers.length === totalQuestionsCount) {
+            // 牛逼, 通关了
+            data.state = 2;
+          } else {
+            data.state = 1;
+          }
         }
 
         this.setData(data);
@@ -219,9 +245,12 @@ Page({
          content: "${answer.content}",
          difficulty: ${answer.difficulty}
       ) {
-        id, status,
+        id, status, cash, points, content, userId, surveyId, surveyQuestionId, difficulty
         user {
-          extraQALives, qaPointsToday
+          extraQALives,
+          qaRewardToday {
+            cash, points
+          }
         }
       }
     }`;
@@ -231,18 +260,29 @@ Page({
 
   _onSaveUserSurveyAnswer(res) {
     const user = this.data.user,
-          status = res.data.userSurveyAnswer.status,
+          ans = res.data.userSurveyAnswer,
+          status = ans.status,
           reward = questionRewards[userSurveyAnswers.length - 1],
           data = {};
+
+    ['points', 'cash'].forEach(f => {
+      if (ans[f]) reward[f] = ans[f];
+    });
+    data.reward = reward;
+
+    userSurveyAnswers.push(ans);
 
     let wait = 1000;
 
     if (status) {
-      _.extend(user, res.data.userSurveyAnswer.user);
+      _.extend(user, ans.user);
       data.user = user;
       if (reward.bonus) {
         wait = 3000;
         this._showModal(1, wait + 200, data);
+      } else if (reward.cash) {
+        wait = 3000;
+        this._showModal(2, wait + 200, data);
       } else {
         wx.showToast({
           title: `积分 +${reward.points}`,
@@ -304,7 +344,7 @@ Page({
 
   _countDown() {
     // for dev
-    return;
+    //return;
     this._clearTimer();
 
     const user = this.data.user,

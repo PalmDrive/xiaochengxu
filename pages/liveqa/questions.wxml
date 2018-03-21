@@ -2,12 +2,12 @@
   <view hidden="{{state !== 0}}"> <!-- 答题中 start -->
     <view class="row size-16 space-between">
       <view class="round-label">
-        <image src="http://cdn.gecacademy.cn/miniprogram/heart.png" class="icon-heart" />
+        <image src="https://cdn.ailingual.cn/pics/liveqa/heart.png" class="icon-heart" />
         <text>复活卡{{user.extraQALives || 0}}张</text>
       </view>
       <view class="round-label">
-        <image src="http://cdn.gecacademy.cn/miniprogram/coins.png" class="icon-coins" />
-        <text>今日积分{{user.qaPointsToday}}</text>
+        <image src="https://cdn.ailingual.cn/pics/liveqa/coins.png" class="icon-coins" />
+        <text>今日积分{{user.qaRewardToday.points}}</text>
       </view>
     </view>
 
@@ -42,23 +42,52 @@
     </view>
   </view><!-- 答题中 end -->
 
-  <view hidden="{{state !== 1}}"><!-- 答题结束 start -->
-    <text style="margin-top: 50px" class="block">今天的答题结束了</text>
+  <view hidden="{{state !== 1}}" class="result"><!-- 答题结束 start -->
+    <view class="size-22 text-center title">本场斩获</view>
+    <view class="result-list size-16">
+      <view class="row">
+        <text>积分</text>
+        <text>{{user.qaRewardToday.points || 0}}</text>
+        </view>
+      <view class="row">
+        <text>现金</text>
+        <text>￥{{(user.qaRewardToday.cash || 0) / 100}}</text>
+      </view>
+    </view>
+
+    <button class="btn btn-round size-15 btn-extra-lives" bindtap="gotoReviveTasks">获得复活卡再战</button>
+
+    <button class="btn btn-round btn-share size-15 text-red" open-type="share">考考你的朋友</button>
   </view><!-- 答题结束 end -->
+
+  <view hidden="{{state !== 2}}" class="success-pass result">
+    <image src="{{user.profilePicUrl}}" class="user-photo" />
+    <view class="size-22">恭喜通关</view>
+    <image class="icon-trophy" src="https://cdn.ailingual.cn/pics/liveqa/trophy.png" />
+    <view class="size-15">
+      <view>我在高校番位争夺战中</view>
+      <view>答完了今日的所有题， 技压群雄</view>
+      <view>
+        为
+        <text class="text-red">{{user.myLiveSchool.name}}</text>
+        拿下了{{user.qaRewardToday.points}}
+      </view>
+    </view>
+  </view>
 
   <view class="modal-container" hidden="{{modal === 0}}">
     <view class="modal size-18" hidden="{{modal !== 1}}">
-      <image src="http://cdn.gecacademy.cn/miniprogram/coins_big.png" class="icon-coins-big" />
+      <image src="https://cdn.ailingual.cn/pics/liveqa/coins_big.png" class="icon-coins-big" />
       <view>这下赚大了</view>
       <view>您的今日积分已翻倍!</view>
       <view class="size-16 text-red">当前今日积分: {{user.qaPointsToday}}</view>
     </view>
 
     <view class="modal size-18" hidden="{{modal !== 2}}">
-      <image src="http://cdn.gecacademy.cn/miniprogram/red_envelop_big.png" class="icon-red-envelop-big" />
+      <image src="https://cdn.ailingual.cn/pics/liveqa/red_envelop_big.png" class="icon-red-envelop-big" />
       <view>恭喜您</view>
       <view>红包已经入账</view>
-      <view class="size-16 text-red">红包价值: </view>
+      <view class="size-16 text-red">红包价值: ￥{{reward.cash/100}}</view>
     </view>
   </view>
 </view>

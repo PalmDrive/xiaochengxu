@@ -23,7 +23,7 @@ Page({
             users(id: $userId) {
               id, qaReward, isSchoolVerified,
               mySchool {name},
-              qaPoints, qaPointsThisWeek, qaPointsThisWeekRankPercent, extraQALives, streakDays
+              rtQAPoints, qaPointsThisWeek, qaPointsThisWeekRankPercent, extraQALives, streakDays
             }
             userCoupons(ownerId: $userId, redeemed: false, couponType: "QA") {
               id, redeemedAt,
@@ -45,5 +45,8 @@ Page({
       });
   },
 
-  
+  gotoSharedPoster() {
+
+  }
+
 });

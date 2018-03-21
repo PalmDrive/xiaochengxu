@@ -31,6 +31,13 @@
   margin: 0 auto 20px;
 }
 
+.icon-red-envelop-big {
+  width: 31px;
+  height: 33px;
+  display: block;
+  margin: 0 auto 20px;
+}
+
 .count-down {
   margin: 25px 0;
   text-align: center;
@@ -142,13 +149,20 @@
 .icon-red-envelop {
   width: 14px;
   height: 15px;
-  background-image: url('http://cdn.gecacademy.cn/miniprogram/red_envelop.png');
+  background-image: url('https://cdn.ailingual.cn/pics/liveqa/red_envelop.png');
 }
 
 .icon-2x {
   width: 19px;
   height: 18px;
-  background-image: url('http://cdn.gecacademy.cn/miniprogram/2x.png');
+  background-image: url('https://cdn.ailingual.cn/pics/liveqa/2x.png');
+}
+
+.icon-trophy {
+  width: 73px;
+  height: 81px;
+  display: block;
+  margin: 25px auto;
 }
 
 .modal-container {
@@ -168,4 +182,49 @@
   width: 80%;
   color: black;
   line-height: 200%;
+}
+
+.result {
+  padding: 80px 40px 20px 40px;
+  text-align: center;
+}
+
+.result .title {
+  margin-bottom: 25px;
+}
+
+.result-list view {
+  background-color: #3C2E5D;
+  padding: 10px 50px;
+  margin-bottom: 2px;
+}
+
+.result-list view text {
+  width: 80px;
+}
+
+.result .btn {
+  width: 60%;
+  margin-top: 40px;
+}
+
+.result .btn-extra-lives {
+  background-color: #EE4248;
+  color: white;
+}
+
+.result .btn-share {
+  border: 2px #EE4248 solid;
+}
+
+.result .user-photo {
+  display: block;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 25px;
+  border-radius: 38px;
+}
+
+.success-pass {
+  line-height: 150%;
 }

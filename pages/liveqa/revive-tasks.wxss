@@ -1,0 +1,25 @@
+.revive-tasks {
+  padding: 40px 20px;
+  background-color: #220f48;
+  min-height: 100vh;
+}
+
+.well {
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.well .left {
+  width: 220px;
+  line-height: 150%;
+}
+
+.well .btn-round {
+  font-size: 14px;
+  line-height: 30px;
+  border-radius: 15px;
+  background-color: #A200FC;
+  color: white;
+}
