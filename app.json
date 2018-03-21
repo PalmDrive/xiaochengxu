@@ -49,7 +49,7 @@
   "window":{
     "backgroundTextStyle":"dark",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "七日辑",
+    "navigationBarTitleText": "集思高校番位争夺战",
     "navigationBarTextStyle":"black"
   },
   "tabBar": {

@@ -65,14 +65,20 @@ const page = Page({
     const user = this.data.user,
           school = this.data.selectedSchool;
     wx.showLoading({title: '', mask: true});
-    return graphql(`mutation {
-      user (id: "${user.id}", schoolId: "${school.id}") {
+
+    const variables = {
+      data: {
+        schoolId: school.id
+      }
+    };
+    return graphql(`mutation selectSchool($data: JSON) {
+      user (id: "${user.id}", data: $data) {
         id
       },
       liveSchool (schoolId: "${school.id}", name: "${school.name}") {
         id
       }
-    }`)
+    }`, variables)
       .then(() => this.onLoad());
   },
 
