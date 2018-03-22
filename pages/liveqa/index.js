@@ -79,7 +79,7 @@ const page = Page({
         id
       }
     }`, variables)
-      .then(() => this.onLoad());
+      .then(() => this.onShow());
   },
 
   _fetchData() {
