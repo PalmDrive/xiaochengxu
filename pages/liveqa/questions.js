@@ -44,13 +44,17 @@ Page({
           question: data.question
         };
         if (!data.question) {
-          d.state = 1;
+          if (userLive.status === 303) {
+            d.state = 2
+          } else {
+            d.state = 1;
+          }
+        } else {
+          this._countDown();
         }
 
         d.pager = this._getPager();
         this.setData(d);
-
-        this._countDown();
       });
   },
 
@@ -123,7 +127,10 @@ Page({
       return graphql(`query {
         question
       }`)
-      .then(res => res.data.question.question);
+      .then(res => {
+        userLive = res.data.question.userLive;
+        return res.data.question.question;
+      });
     }
   },
 
@@ -227,8 +234,9 @@ Page({
           survey.surveyQuestions.push(question);
           this._setQuestionOptions(survey.surveyQuestions);
           data.pager = this._getPager();
+          this._countDown();
         } else {
-          if (userSurveyAnswers.length === totalQuestionsCount) {
+          if (userLive.status === 303) {
             // 牛逼, 通关了
             data.state = 2;
           } else {
@@ -238,7 +246,6 @@ Page({
 
         this.setData(data);
 
-        this._countDown();
         processing = false;
       });
   },
