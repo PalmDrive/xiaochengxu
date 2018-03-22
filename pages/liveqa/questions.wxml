@@ -55,7 +55,7 @@
       </view>
     </view>
 
-    <button class="btn btn-round size-15 btn-extra-lives" bindtap="gotoReviveTasks">获得复活卡再战</button>
+    <!-- <button class="btn btn-round size-15 btn-extra-lives" bindtap="gotoReviveTasks">获得复活卡再战</button> -->
 
     <button class="btn btn-round btn-share size-15 text-red" open-type="share">考考你的朋友</button>
   </view><!-- 答题结束 end -->
@@ -80,7 +80,7 @@
       <image src="https://cdn.ailingual.cn/pics/liveqa/coins_big.png" class="icon-coins-big" />
       <view>这下赚大了</view>
       <view>您的今日积分已翻倍!</view>
-      <view class="size-16 text-red">当前今日积分: {{user.qaPointsToday}}</view>
+      <view class="size-16 text-red">当前今日积分: {{user.qaRewardToday.points}}</view>
     </view>
 
     <view class="modal size-18" hidden="{{modal !== 2}}">

@@ -50,27 +50,27 @@
   <navigator url="" class="size-12 rule-link">活动规则</navigator>
 
   <view class="schools-container">
-    <view class="size-18 title">当前人气排行榜</view>
+    <view class="size-18 title">当前排行榜</view>
     <view class="table size-12">
       <view class="table-head">
         <view class="table-row row">
           <text>排名</text>
           <text>学校</text>
-          <text>参与人数</text>
+          <text>总积分</text>
         </view>
       </view>
       <view class="table-body">
         <view class="table-row row" wx:for="{{liveSchools}}" wx:key wx:for-item="school">
           <text>{{index + 1}}</text>
           <text>{{school.name}}</text>
-          <text>{{school.registeredUsersCount}}</text>
+          <text>{{school.points}}</text>
         </view>
       </view>
     </view>
   </view>
 </view>
 
-<view class="school-selector-view size-16 {{!user.myLiveSchool.name ? 'show' : ''}}">
+<view class="school-selector-view size-16" hidden="{{user.myLiveSchool.name}}">
     <view class="text-white">
       <text>选择你的学校, 开始答题</text>
     </view>

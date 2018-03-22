@@ -24,7 +24,7 @@ const page = Page({
     selectedSchool: null
   },
 
-  onLoad(options) {
+  onShow(options) {
     wx.showLoading({title: '', mask: true});
     this._fetchData()
       .then(data => {

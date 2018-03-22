@@ -60,6 +60,7 @@ Page({
       return;
     };
     processing = true;
+    this._clearTimer();
 
     const question = this.data.question,
           user = this.data.user,
@@ -102,6 +103,14 @@ Page({
     wx.redirectTo({
       url: '/pages/liveqa/revive-tasks'
     });
+  },
+
+  onHide() {
+    this._clearTimer();
+  },
+
+  onUnload() {
+    this._clearTimer();
   },
 
   _fetchQuestion(id) {
@@ -239,7 +248,7 @@ Page({
       userSurveyAnswer (
          surveyId: "${answer.surveyId}",
          userId: "${answer.userId}",
-         surveyQuestionId: ${answer.surveyQuestionId}
+         surveyQuestionId: ${answer.surveyQuestionId},
          isNew: false,
          status: ${answer.status},
          content: "${answer.content}",
@@ -262,15 +271,16 @@ Page({
     const user = this.data.user,
           ans = res.data.userSurveyAnswer,
           status = ans.status,
-          reward = questionRewards[userSurveyAnswers.length - 1],
           data = {};
+
+    userSurveyAnswers.push(ans);
+
+    const reward = questionRewards[userSurveyAnswers.length - 1];
 
     ['points', 'cash'].forEach(f => {
       if (ans[f]) reward[f] = ans[f];
     });
     data.reward = reward;
-
-    userSurveyAnswers.push(ans);
 
     let wait = 1000;
 
