@@ -241,7 +241,7 @@ const openSetting = function() {
  * @notes: DO NOT use es6 =>, because the context 'this' needs to be passed
  */
 const _loginRequest = function(userInfo) {
-  const app = getApp() || this,
+  let app = getApp() || this,
         apiBase = app.globalData.apiBase,
         attributes = _.extend({}, userInfo);
 
@@ -251,6 +251,12 @@ const _loginRequest = function(userInfo) {
 
   attributes[openIdField] = userInfo.wxOpenId;
   delete attributes.wxOpenId;
+
+  // for testing
+  // Login with the specific wxUnionId
+  // attributes = {
+  //   wxUnionId: 'oD4HBwe8m6a1LHkYjmU6JAKD5QkQ'
+  // };
 
   return request({
     method: 'POST',

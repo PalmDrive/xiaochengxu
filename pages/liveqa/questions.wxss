@@ -2,12 +2,14 @@
   background-color: #220f48;
   padding: 20px;
   color: white;
-  position: fixed;
+  min-height: 100vh;
+  position: relative;
+  /*position: fixed;
   bottom: 0;
   top: 0;
   left: 0;
   right: 0;
-  overflow: hidden;
+  overflow: hidden;*/
 }
 
 .icon-heart {
@@ -47,6 +49,7 @@
   background-color: rgba(0, 0, 0, 0.4);
   padding: 7px 20px 7px 14px;
   border-radius: 18px;
+  white-space: nowrap;
 }
 
 .question {
@@ -64,7 +67,7 @@
 
 .hint {
   text-align: center;
-  padding: 15px 0;
+  padding: 15px 0 0 0;
   color: #8A78AB;
 }
 
@@ -116,10 +119,11 @@
 }
 
 .pager {
-  position: absolute;
+  margin-top: 40px;
+  /*position: absolute;
   bottom: 20px;
   left: 20px;
-  right: 20px;
+  right: 20px;*/
   color: #3C2E5D;
 }
 

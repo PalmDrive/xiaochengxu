@@ -176,8 +176,12 @@
 
 .table-row text {
   display: block;
-  width: 80px;
+  width: 125px;
   text-align: center;
+}
+
+.table-row .ranking {
+  width: 30px;
 }
 
 .icon-arrow-right {

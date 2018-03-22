@@ -54,14 +54,14 @@
     <view class="table size-12">
       <view class="table-head">
         <view class="table-row row">
-          <text>排名</text>
+          <text class="ranking">排名</text>
           <text>学校</text>
           <text>总积分</text>
         </view>
       </view>
       <view class="table-body">
         <view class="table-row row" wx:for="{{liveSchools}}" wx:key wx:for-item="school">
-          <text>{{index + 1}}</text>
+          <text class="ranking">{{index + 1}}</text>
           <text>{{school.name}}</text>
           <text>{{school.points}}</text>
         </view>
