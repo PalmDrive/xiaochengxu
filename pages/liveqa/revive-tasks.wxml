@@ -15,7 +15,7 @@
       <view class="size-16">到公众号领取</view>
       <view class="size-14 text-gray">关注公众号即可获取1张复活卡</view>
     </view>
-    <button class="btn btn-round">去领取</button>
+    <button class="btn btn-round" open-type="contact">去领取</button>
   </view>
   <view class="row well">
     <view class="left">

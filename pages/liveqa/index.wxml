@@ -29,11 +29,11 @@
   </view>
 
   <view class="card-container">
-    <view class="top-container">
+    <view class="top-container" bindtap="gotoProfile">
       <image src="{{user.profilePicUrl}}" class="user-photo" />
       <text>{{user.wxUsername}}</text>
     </view>
-    <view class="middle-container">
+    <view class="middle-container" bindtap="gotoProfile">
       <view class="text-dark-gray size-12">学校排名</view>
       <text class="text-purple">
         <text>第{{user.myLiveSchool.rtRanking}}名</text>

@@ -55,7 +55,7 @@
       </view>
     </view>
 
-    <!-- <button class="btn btn-round size-15 btn-extra-lives" bindtap="gotoReviveTasks">获得复活卡再战</button> -->
+    <button class="btn btn-round size-15 btn-extra-lives" bindtap="gotoReviveTasks">获得复活卡再战</button>
 
     <button class="btn btn-round btn-share size-15 text-red" open-type="share">考考你的朋友</button>
   </view><!-- 答题结束 end -->

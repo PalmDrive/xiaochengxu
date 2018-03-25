@@ -28,11 +28,21 @@ function formatTime(date, isShort) {
 /**
  * @return 'xxxx年x月x日'
  */
-function formatDateToDay(date) {
+function formatDateToDay(date, options) {
+  options = options || {
+    year: true
+  };
+
   const year = date.getFullYear(),
         month = date.getMonth() + 1,
         day = date.getDate();
-  return year + '年' + month + '月' + day + '日';
+  let res;
+  if (options.year) {
+    res = year + '年' + month + '月' + day + '日';
+  } else {
+    res = month + '月' + day + '日';
+  }
+  return res;
 }
 function formatNumber(n) {
   n = n.toString()

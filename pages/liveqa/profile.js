@@ -9,6 +9,7 @@ Page({
   },
 
   onLoad(options) {
+    wx.setNavigationBarTitle({title: '个人中心'});
     this._fetchData()
       .then(data => {
         this.setData({

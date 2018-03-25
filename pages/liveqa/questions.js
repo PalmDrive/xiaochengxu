@@ -104,7 +104,7 @@ Page({
   },
 
   gotoReviveTasks() {
-    wx.redirectTo({
+    wx.navigateTo({
       url: '/pages/liveqa/revive-tasks'
     });
   },

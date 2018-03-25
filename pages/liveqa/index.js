@@ -100,6 +100,11 @@ const page = Page({
     wx.navigateTo({url});
   },
 
+  gotoProfile() {
+    const url = `/pages/liveqa/profile`;
+    wx.navigateTo({url});
+  },
+
   changeLeaderboard(e) {
     const type = e.currentTarget.dataset.type;
 
