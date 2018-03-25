@@ -40,6 +40,17 @@ Page({
     if (options.id) {
       this.loadById(options.id);
     }
+
+    if (options.couponId) {
+      const appName = options.appName || 'qaXiaochengxu';
+      this._getSharedPoster(appName, options.couponId)
+        .then(poster => {
+          this.setData({
+            imgUrl: poster.picUrl.replace('http', 'https')
+          });
+          wx.hideLoading();
+        });
+    }
   },
 
   loadByCapsuleId(capsuleId) {
@@ -121,5 +132,15 @@ Page({
 
   cancel() {
     wx.navigateBack();
+  },
+
+  _getSharedPoster(appName, couponId) {
+    const query = `mutation {
+      sharedPoster(appName: "${appName}", couponId: "${couponId}") {
+        userId, picUrl
+      }
+    }`;
+    return graphql(query)
+      .then(res => res.data.sharedPoster);
   }
 });

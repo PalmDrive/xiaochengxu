@@ -42,8 +42,8 @@
     </view>
     <view class="bottom-container">
       <text class="size-18">我拥有复活卡{{user.extraQALives || 0}}张</text>
-      <!-- <button class="btn-round">邀请好友获得复活卡</button>
-      <text class="size-12">您的学校人气榜排名第{{user.liveSchool.ranking}}名，赶紧拉好基友一起参加</text> -->
+      <button class="btn-round" bindtap="gotoSharedPoster">邀请好友获得复活卡</button>
+      <!-- <text class="size-12">您的学校人气榜排名第{{user.liveSchool.ranking}}名，赶紧拉好基友一起参加</text> -->
     </view>
   </view>
 

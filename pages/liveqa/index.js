@@ -13,6 +13,8 @@ function querySchoolList(name) {
     .then(res => res.data.schoolList);
 }
 
+let couponId;
+
 const page = Page({
   data: {
     live: null,
@@ -24,10 +26,19 @@ const page = Page({
     selectedSchool: null
   },
 
-  onShow(options) {
+  onLoad(options) {
+    if (options.scene) {
+      const sceneId = decodeURIComponent(options.scene);
+      this._onOpenWithScene(sceneId);
+    }
+  },
+
+  onShow() {
     wx.showLoading({title: '', mask: true});
+
     this._fetchData()
       .then(data => {
+        couponId = data.couponId;
         this.setData({
           live: data.live,
           user: data.user,
@@ -82,9 +93,14 @@ const page = Page({
       .then(() => this.onShow());
   },
 
+  gotoSharedPoster() {
+    const url = `/pages/album/share?couponId=${couponId}&appName=qaXiaochengxu`;
+    wx.navigateTo({url});
+  },
+
   _fetchData() {
     const user = Auth.getLocalUserInfo(),
-          query = `query {
+          query = `query q($couponFilter: JSON) {
             liveSchools (order: [["points", "DESC"]]) {
               id, name, ranking, registeredUsersCount, points
             },
@@ -93,15 +109,22 @@ const page = Page({
                 name, rtRanking
               },
               extraQALives
+            },
+            coupons(filter: $couponFilter) {
+              id
             }
-          }`;
+          }`,
+          variables = {
+            couponFilter: {productType: 'ExtraLife'}
+          };
 
-    return graphql(query)
+    return graphql(query, variables)
       .then(res => {
         const userData = res.data.users ? res.data.users[0] : {},
               data = {
                 user: _.extend(userData, user.attributes, {id: user.id}),
-                liveSchools: res.data.liveSchools
+                liveSchools: res.data.liveSchools,
+                couponId: res.data.coupons[0].id
               };
 
         //this._setTimeToNextLive(mockData.live);
@@ -149,4 +172,13 @@ const page = Page({
        }
      }, 1000);
   },
+
+  _onOpenWithScene(sceneId) {
+    const query = `mutation {
+      scanScene(id: ${sceneId}, appName: "QAXCX") {
+        id
+      }
+    }`;
+    return graphql(query);
+  }
 });
