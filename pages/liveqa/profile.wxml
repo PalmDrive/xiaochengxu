@@ -1,14 +1,36 @@
-<view>
-  <image src="{{user.profilePicUrl}}" />
-  <text>{{user.wxUsername}}</text>
-  <view>
-    <text>{{user.mySchool ? user.mySchool.name : 'n/a'}}</text>
-    <text>{{user.isSchoolVerified ? '已认证' : '未认证'}}</text>
+<view class="profile size-16">
+  <view class="text-center">
+    <image src="{{user.profilePicUrl}}" class="profile-photo"/>
+    <view>{{user.wxUsername}}</view>
+    <view class="size-14">
+      <text>{{user.mySchool ? user.mySchool.name : 'n/a'}} </text>
+      <text class="text-gray">({{user.isSchoolVerified ? '已认证' : '未认证'}})</text>
+    </view>
   </view>
 
-  <view>
+  <view class="card-container">
+    <view class="top-container">
+      <text>累积获得</text>
+    </view>
+    <view class="middle-container row">
+      <view class="col left">
+        <view class="text-dark-gray size-12">积分</view>
+        <text class="text-purple">
+          <text>{{user.qaPoints}}</text>
+        </text>
+      </view>
+      <view class="col">
+        <view class="text-dark-gray size-12">奖金</view>
+        <text class="text-purple">
+          <text>￥{{user.cash}}</text>
+        </text>
+      </view>
+    </view>
+  </view>
+
+  <!-- <view>
     <view>资产</view>
-    <view>奖金：￥{{user.qaReward}}</view>
+    <view>奖金：￥{{user.cash}}</view>
     <button>提现</button>
     <view>课程优惠券: ￥{{user.couponsReward}}</view>
   </view>
@@ -25,5 +47,17 @@
     <view>打卡记录</view>
     <view>累计打卡: {{user.streakDays}}</view>
     <!-- <navigator url="">查看</navigator> -->
+  <!-- </view> -->
+
+  <view>
+    <view class="size-18 title">记录</view>
+    <view wx:for="{{user.userLives}}" wx:key wx:for-item="userLive" class="record">
+      <view class="subtitle">{{userLive.date}}</view>
+
+      <view wx:for="{{userLive.rewards}}" wx:key wx:for-item="reward" class="record-content">
+        <text>+ {{reward.value}} </text>
+        <text>({{reward.type}})</text>
+      </view>
+    </view>
   </view>
 </view>

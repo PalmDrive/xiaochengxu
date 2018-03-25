@@ -1,0 +1,60 @@
+.profile {
+  background-color: #180343;
+  padding: 20px;
+  color: white;
+  line-height: 150%;
+}
+
+.profile-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  /*margin: 10px auto;*/
+}
+
+.card-container {
+  border-radius: 10px;
+  text-align: center;
+  background-color: white;
+  color: black;
+  margin-top: 30px;
+}
+
+.card-container .top-container {
+  position: relative;
+  background-color: #8400FF;
+  padding: 12px 0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  color: white;
+}
+
+.card-container .middle-container {
+  border-bottom: 1px solid rgba(25,0,76,0.24);
+  padding: 15px 0;
+}
+
+.card-container .col {
+  width: 50%;
+}
+
+.card-container .col.left {
+  border-right: 1px solid rgba(25,0,76,0.24);
+}
+
+.record {
+  margin-bottom: 15px;
+  line-height: 200%;
+}
+
+.record-content {
+  color: rgba(255,255,255,0.85);
+}
+
+.title {
+  margin: 45px 0 15px;
+}
+
+.subtitle {
+  color: rgb(195,131,255);
+}

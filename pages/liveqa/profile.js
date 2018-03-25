@@ -21,22 +21,18 @@ Page({
     let user = Auth.getLocalUserInfo(),
           query = `query($userId: ID) {
             users(id: $userId) {
-              id, qaReward, isSchoolVerified,
+              id, isSchoolVerified, profilePicUrl, wxUsername, extraQALives, qaPoints
               mySchool {name},
-              rtQAPoints, qaPointsThisWeek, qaPointsThisWeekRankPercent, extraQALives, streakDays
             }
-            userCoupons(ownerId: $userId, redeemed: false, couponType: "QA") {
-              id, redeemedAt,
-              Coupon {
-                id, value, name, couponType
-              }
+            userlives(userId: "${user.id}") {
+              points, cash, createdAt
             }
           }`,
           variables = {userId: user.id};
     return graphql(query, variables)
       .then(res => {
         user = _.extend(res.data.users[0], user.attributes);
-        user.userCoupons = res.data.userCoupons;
+        user.userLives = res.data.userlives;
 
         this._formatData(user);
 
@@ -48,11 +44,31 @@ Page({
   },
 
   _formatData(user) {
-    user.qaReward = (user.qaReward / 100).toFixed(2);
-    user.couponsReward = user.userCoupons.reduce((memo, uc) => {
-      memo += uc.Coupon.value;
+    user.userLives = _.chain(user.userLives)
+                    .sortBy(obj => -obj.createdAt)
+                    .filter(obj => obj.points || obj.cash)
+                    .value();
+
+    user.cash = user.userLives.reduce((memo, obj) => {
+      // format userLive,
+      // add date, rewards properties
+      obj.date = utils.formatDateToDay(new Date(obj.createdAt), {year: false});
+      if (obj.cash) {
+        obj.rewards = obj.rewards || [];
+        obj.rewards.push({
+          type: '奖金', value: '￥' + (obj.cash / 100).toFixed(2)
+        });
+      }
+      if (obj.points) {
+        obj.rewards = obj.rewards || [];
+        obj.rewards.push({
+          type: '积分', value: obj.points
+        });
+      }
+
+      memo += (obj.cash || 0);
       return memo;
     }, 0);
-    user.couponsReward = ((user.couponReward / 100) || 0).toFixed(0);
+    user.cash = (user.cash / 100).toFixed(2);
   }
 });
