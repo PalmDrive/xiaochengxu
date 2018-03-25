@@ -43,9 +43,9 @@
 				},
 				{
 					"id": 2,
-					"name": "Album show",
-					"pathName": "pages/album/show",
-					"query": "id=35cb43c0-994b-11e7-83e6-811feeb3ae13",
+					"name": "海报分享",
+					"pathName": "pages/album/share",
+					"query": "",
 					"scene": "1008"
 				},
 				{
@@ -66,7 +66,7 @@
 					"id": 5,
 					"name": "答题首页",
 					"pathName": "pages/liveqa/index",
-					"query": "surveyQuestionId=1&postId=67048f40-c7f0-11e7-a5a5-61b12f2788b2&albumId=7dd578b0-c7f0-11e7-a5a5-61b12f2788b2",
+					"query": "scene=7623",
 					"scene": "1048"
 				},
 				{
