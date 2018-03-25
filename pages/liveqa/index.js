@@ -20,10 +20,11 @@ const page = Page({
     live: null,
     user: null,
     liveSchools: null,
-
+    students: null,
     //schoolList: [{id: 1, name: 'Stanford'}, {id: 2, name: '上海交通大学'}, {id: 3, name: 'Purdue University'}],
     schoolList: [], // for user select school
-    selectedSchool: null
+    selectedSchool: null,
+    leaderboardType: 'schools'
   },
 
   onLoad(options) {
@@ -42,7 +43,8 @@ const page = Page({
         this.setData({
           live: data.live,
           user: data.user,
-          liveSchools: data.liveSchools
+          liveSchools: data.liveSchools,
+          students: data.students
         });
         wx.hideLoading();
         //this._timeToNextLiveCountDown();
@@ -98,9 +100,17 @@ const page = Page({
     wx.navigateTo({url});
   },
 
+  changeLeaderboard(e) {
+    const type = e.currentTarget.dataset.type;
+
+    this.setData({
+      leaderboardType: type
+    });
+  },
+
   _fetchData() {
     const user = Auth.getLocalUserInfo(),
-          query = `query q($couponFilter: JSON) {
+          query = `query q($couponFilter: JSON, $userOrder: JSON, $userFilter: JSON) {
             liveSchools (order: [["points", "DESC"]]) {
               id, name, ranking, registeredUsersCount, points
             },
@@ -112,10 +122,17 @@ const page = Page({
             },
             coupons(filter: $couponFilter) {
               id
+            },
+            students: users (filter: $userFilter, order: $userOrder) {
+              profilePicUrl, wxUsername, qaPoints
             }
           }`,
           variables = {
-            couponFilter: {productType: 'ExtraLife'}
+            couponFilter: {productType: 'ExtraLife'},
+            userOrder: [['qaPoints', 'DESC']],
+            userFilter: {
+              qaPoints: {$gt: 0}
+            }
           };
 
     return graphql(query, variables)
@@ -124,7 +141,8 @@ const page = Page({
               data = {
                 user: _.extend(userData, user.attributes, {id: user.id}),
                 liveSchools: res.data.liveSchools,
-                couponId: res.data.coupons[0].id
+                couponId: res.data.coupons[0].id,
+                students: res.data.students
               };
 
         //this._setTimeToNextLive(mockData.live);

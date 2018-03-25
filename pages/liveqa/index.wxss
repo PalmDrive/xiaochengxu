@@ -151,14 +151,20 @@
   padding: 20px 0;
 }
 
-.schools-container {
+.leaderboard {
   padding: 20px 0;
   background-color: rgba(255, 255, 255, 0.15);
 }
 
-.schools-container .title {
+.leaderboard .title {
   text-align: center;
   margin-bottom: 10px;
+  padding: 0 15px;
+  color: #B7B7B7;
+}
+
+.leaderboard .title.active {
+  color: white;
 }
 
 .table-head {
