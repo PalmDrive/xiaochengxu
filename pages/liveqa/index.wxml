@@ -117,3 +117,9 @@
 
     <button class="btn-round btn-success" disabled="{{!selectedSchool}}" bindtap="saveSelectedSchool">保存</button>
 </view>
+
+<view class="splash {{splashShown ? 'show' : ''}}">
+  <image src="https://cdn.ailingual.cn/pics/liveqa/splash_fight.png" class="icon-splash-fight block" />
+  <image src="https://cdn.ailingual.cn/pics/liveqa/fist_left.png" class="icon-fist icon-fist-left block" />
+  <image src="https://cdn.ailingual.cn/pics/liveqa/fist_right.png" class="icon-fist icon-fist-right block" />
+</view>

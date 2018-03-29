@@ -264,3 +264,61 @@
   left: 20px;
   right: 20px;
 }
+
+.splash {
+  display: none;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 555;
+  background: url('https://cdn.ailingual.cn/pics/liveqa/splash_bg.jpg') center/cover no-repeat;
+}
+
+.splash.show {
+  display: block;
+}
+
+@keyframes slide-in-from-left {
+  0% {
+    left: -192px;
+  }
+
+  100% {
+    left: 0;
+  }
+}
+
+@keyframes slide-in-from-right {
+  0% {
+    right: -192px;
+  }
+
+  100% {
+    right: 0;
+  }
+}
+
+.icon-fist {
+  width: 192px;
+  height: 128px;
+  position: absolute;
+  top: 340px;
+}
+
+.splash.show .icon-fist-left {
+  left: -192px;
+  animation: slide-in-from-left 0.4s ease-in 1s 1 forwards;
+}
+
+.splash.show .icon-fist-right {
+  right: -192px;
+  animation: slide-in-from-right 0.4s ease-in 1s 1 forwards;
+}
+
+.icon-splash-fight {
+  width: 275px;
+  height: 335px;
+  margin: auto;
+}

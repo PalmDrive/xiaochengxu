@@ -24,13 +24,31 @@ const page = Page({
     //schoolList: [{id: 1, name: 'Stanford'}, {id: 2, name: '上海交通大学'}, {id: 3, name: 'Purdue University'}],
     schoolList: [], // for user select school
     selectedSchool: null,
-    leaderboardType: 'schools'
+    leaderboardType: 'schools',
+    splashShown: false,
   },
 
   onLoad(options) {
     if (options.scene) {
       const sceneId = decodeURIComponent(options.scene);
       this._onOpenWithScene(sceneId);
+    }
+
+    if (Auth.getLocalUserId()) {
+      this.setData({splashShown: true});
+
+      // show and hide splash
+      const audioCtx = wx.createInnerAudioContext();
+      audioCtx.src = 'https://cdn.ailingual.cn/audios/liveqa/punch_audio.mp3';
+
+      setTimeout(() => {
+        audioCtx.play();
+        setTimeout(() => {
+          this.setData({
+            splashShown: false
+          });
+        }, 800);
+      }, 1400);
     }
   },
 
