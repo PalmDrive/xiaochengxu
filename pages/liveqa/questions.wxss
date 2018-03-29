@@ -40,6 +40,13 @@
   margin: 0 auto 20px;
 }
 
+.icon-fight {
+  display: block;
+  width: 120px;
+  height: 96px;
+  margin-top: 25px;
+}
+
 .count-down {
   margin: 25px 0;
   text-align: center;

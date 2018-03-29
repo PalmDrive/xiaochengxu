@@ -13,6 +13,7 @@ let countDownTimer,
     processing = false;
 
 const QA_SURVEY_ID = 'QASurvey',
+      TIMER = 15,
       questionAttrs = 'id, content, questionType, questionOrder, options, surveyId, difficulty';
 
 Page({
@@ -20,7 +21,7 @@ Page({
     user: null,
     survey: null,
     question: null,
-    timer: 10,
+    timer: TIMER,
     status: "答题中", // 答题中，回答错误，回答正确，已超时
     modal: 0, // 1: 显示积分翻倍modal， 2： 显示红包奖励modal
     state: 0, // 0: 答题进行中 1: 打错or超级答题结束 2: 通关
@@ -227,7 +228,7 @@ Page({
               data = {
                 question,
                 survey,
-                timer: 10
+                timer: TIMER
               };
 
         if (question) {

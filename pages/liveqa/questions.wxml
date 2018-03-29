@@ -32,6 +32,8 @@
       </view>
     </view>
 
+    <image src="https://cdn.ailingual.cn/pics/liveqa/fight.png" class="icon-fight" />
+
     <view class="pager">
       <view class="row space-between size-14">
         <view wx:for="{{pager}}" wx:key class="pager-item">
