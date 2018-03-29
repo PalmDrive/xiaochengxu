@@ -123,6 +123,8 @@ const page = Page({
               myLiveSchool {
                 name, rtRanking
               },
+              rtQAPointsThisWeek
+              rtCash
               extraQALives
             },
             coupons(filter: $couponFilter) {

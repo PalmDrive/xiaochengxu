@@ -1,5 +1,5 @@
 .view-container {
-  background: #180343 url('https://cdn.ailingual.cn/pics/liveqa/bg.jpg') top/contain no-repeat;
+  background: #1e0e39 url('https://cdn.ailingual.cn/pics/liveqa/bg2.jpg') top/contain no-repeat;
   padding: 20px 15px;
   color: white;
   font-size: 16px;
@@ -34,8 +34,8 @@
 }
 
 .liveqa-title {
-  width: 338px;
-  height: 187px;
+  width: 320px;
+  height: 330px;
 }
 
 .liveqa-subtitle {
@@ -57,10 +57,11 @@
 }
 
 .btn-start {
-  background-color: #FFF358;
-  width: 275px;
-  padding: 15px 0;
-  color: #FF0000;
+  background-color: #FF9B00;
+  border-radius: 5px;
+  width: 100%;
+  padding: 12px 0;
+  color: white;
   margin: 30px auto 60px auto;
 }
 
@@ -123,7 +124,7 @@
 
 .card-container .top-container {
   position: relative;
-  background-color: #8400FF;
+  background-color: #312B67;
   padding: 28px 0 3px 0;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -132,7 +133,16 @@
 
 .card-container .middle-container {
   border-bottom: 1px solid rgba(25,0,76,0.24);
+}
+
+.card-container .middle-container .col {
+  width: 100%;
+  border-right: 1px solid rgba(25,0,76,0.24);
   padding: 15px 0;
+}
+
+.card-container .middle-container .col.left {
+  border-right: 100%;
 }
 
 .card-container .bottom-container {
@@ -141,7 +151,7 @@
 
 .card-container .bottom-container button {
   width: 227px;
-  background-color: #B013FE;
+  background-color: #FF5442;
   color: white;
   margin: 15px auto;
 }
@@ -153,18 +163,32 @@
 
 .leaderboard {
   padding: 20px 0;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: #31303d;
+  color: rgba(255, 255, 255, 0.65);
+  border-radius: 5px;
 }
 
-.leaderboard .title {
-  text-align: center;
+.leaderboard .hint {
+  margin: 0 0 20px 15px;
+}
+
+.leaderboard-type {
+  background-color: white;
   margin-bottom: 10px;
-  padding: 0 15px;
-  color: #B7B7B7;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
-.leaderboard .title.active {
+.leaderboard-type .title {
+  text-align: center;
+  padding: 8px 0;
+  color: #2E2C3B;
+  width: 50%;
+}
+
+.leaderboard-type .title.active {
   color: white;
+  background-color: #2E2C3B;
 }
 
 .table-head {
