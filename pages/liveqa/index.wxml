@@ -47,7 +47,7 @@
     </view>
   </view>
 
-  <navigator url="" class="size-12 rule-link">活动规则</navigator>
+  <navigator url="/pages/liveqa/rules" class="size-12 rule-link">活动规则</navigator>
 
   <view class="leaderboard">
     <view class="row">

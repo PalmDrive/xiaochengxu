@@ -1,0 +1,38 @@
+.live-rules-page {
+  padding: 40px 20px;
+}
+
+.title {
+  /*margin-bottom: 5px;*/
+}
+
+.icon-title {
+  width: 23px;
+  height: 24px;
+  margin-right: 8px;
+}
+
+.section {
+  /*margin-bottom: 30px;*/
+}
+
+.content {
+  margin: 10px 0 30px;
+  color: #505050;
+}
+
+.btn {
+  font-size: 18px;
+  padding: 10px 0;
+  width: 60%;
+  line-height: 26px;
+  text-align: center;
+  background-color: #B013FE;
+  color: white;
+  display: block;
+  margin: 0 auto 30px;
+}
+
+.btn-round {
+  border-radius: 23px;
+}

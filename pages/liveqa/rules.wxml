@@ -1,0 +1,17 @@
+<view class="live-rules-page size-14">
+  <view wx:for="{{rules}}" wx:key wx:for-item="rule" class="section">
+    <view class="title row size-16">
+      <image src="{{rule.titleIcon}}" class="icon-title"/>
+      <text>{{rule.title}}</text>
+    </view>
+    <view class="content">
+      <text>{{rule.content}}</text>
+    </view>
+    <navigator wx:if="{{rule.actionTitle}}" class="btn btn-round" url="{{rule.actionUrl}}">{{rule.actionTitle}}</navigator>
+  </view>
+  <view class="text-center text-gray size-12">
+    <view>请各位同学公平竞赛，如有任何问题</view>
+    <view>可在公众号“集思Lab”中留言联系我们</view>
+    <view>集思学院享有活动的最终解释权</view>
+  </view>
+</view>
