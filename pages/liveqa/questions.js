@@ -14,6 +14,16 @@ let countDownTimer,
 
 const QA_SURVEY_ID = 'QASurvey',
       TIMER = 15,
+      soundEffectSrc = {
+        rightAnswer: 'https://cdn.ailingual.cn/audios/liveqa/right_answer_audio.mp3',
+        wrongAnswer: 'https://cdn.ailingual.cn/audios/liveqa/wrong_answer_audio.mp3',
+        allPass: 'https://cdn.ailingual.cn/audios/liveqa/all_pass_audio.mp3',
+      },
+      audioCtxs = {
+        rightAnswer: null,
+        wrongAnswer: null,
+        allPass: null,
+      },
       questionAttrs = 'id, content, questionType, questionOrder, options, surveyId, difficulty';
 
 Page({
@@ -240,6 +250,7 @@ Page({
           if (userLive.status === 303) {
             // 牛逼, 通关了
             data.state = 2;
+            this._playSound('allPass');
           } else {
             data.state = 1;
           }
@@ -293,6 +304,8 @@ Page({
     let wait = 1000;
 
     if (status) {
+      this._playSound('rightAnswer');
+
       _.extend(user, ans.user);
       data.user = user;
       if (reward.bonus) {
@@ -318,6 +331,7 @@ Page({
         this._nextQuestion();
       }, wait);
     } else {
+      this._playSound('wrongAnswer');
       // this.setData({
       //   status: '回答错误'
       // });
@@ -471,5 +485,17 @@ Page({
     }, duration);
 
     return data;
+  },
+
+  _playSound(name) {
+    let ctx = audioCtxs[name];
+
+    if (!audioCtxs[name]) {
+      audioCtxs[name] = wx.createInnerAudioContext();
+      ctx = audioCtxs[name];
+      ctx.src = soundEffectSrc[name];
+    }
+
+    ctx.play();
   }
 });
