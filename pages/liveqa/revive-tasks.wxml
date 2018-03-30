@@ -6,24 +6,24 @@
   <view class="row well">
     <view class="left">
       <view class="size-16">分享到微信群/朋友圈</view>
-      <view class="size-14 text-gray">邀请1位好友答题，获取1张复活卡</view>
+      <view class="size-14 text-gray">每邀请1位好友答题，获取1张复活卡</view>
     </view>
     <button class="btn btn-round" bindtap="gotoSharePage">去分享</button>
   </view>
   <view class="row well">
     <view class="left">
       <view class="size-16">到公众号领取</view>
-      <view class="size-14 text-gray">关注公众号即可获取1张复活卡</view>
+      <view class="size-14 text-gray">关注公众号即可获取3张复活卡</view>
     </view>
     <button class="btn btn-round" open-type="contact">去领取</button>
   </view>
-  <view class="row well">
+  <!-- <view class="row well">
     <view class="left">
       <view class="size-16">输入邀请码</view>
       <view class="size-14 text-gray">输入邀请码获得复活卡</view>
     </view>
     <button class="btn btn-round">去输入</button>
-  </view>
+  </view> -->
   <!-- <view class="row well">
     <view>分享到朋友圈</view>
     <button>去分享</button>

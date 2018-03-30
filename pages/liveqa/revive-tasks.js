@@ -41,7 +41,7 @@ Page({
           variables = {
             userId: user.id,
             couponFilter: {
-              productType: 'ExtraLife'
+              name: '答题复活卡_邀请好友'
             }
           };
     return graphql(query, variables)

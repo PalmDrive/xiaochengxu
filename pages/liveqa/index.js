@@ -131,6 +131,14 @@ const page = Page({
     });
   },
 
+  onShareAppMessage(options) {
+    return {
+      title: `${this.data.user.wxUsername}邀请你参加高校答题番位争夺战`,
+      path: '/pages/liveqa/index',
+      imageUrl: 'http://cdn.gecacademy.cn/miniprogram/qa_cover.jpg'
+    };
+  },
+
   _fetchData() {
     const user = Auth.getLocalUserInfo(),
           query = `query q($couponFilter: JSON, $userOrder: JSON, $userFilter: JSON) {
@@ -153,7 +161,7 @@ const page = Page({
             }
           }`,
           variables = {
-            couponFilter: {productType: 'ExtraLife'},
+            couponFilter: {name: '答题复活卡_邀请好友'},
             userOrder: [['qaPoints', 'DESC']],
             userFilter: {
               qaPoints: {$gt: 0}
