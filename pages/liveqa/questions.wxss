@@ -196,7 +196,7 @@
 }
 
 .result {
-  padding: 80px 40px 20px 40px;
+  padding: 10px;
   text-align: center;
 }
 
@@ -219,9 +219,12 @@
   margin-top: 40px;
 }
 
-.result .btn-extra-lives {
+.result .btn-extra-lives,
+.result.success-pass .btn-share
+ {
   background-color: #EE4248;
   color: white;
+  border-width: 0;
 }
 
 .result .btn-share {
@@ -234,6 +237,10 @@
   height: 76px;
   margin: 0 auto 25px;
   border-radius: 38px;
+}
+
+.result .icon-fight {
+  margin: 20px auto;
 }
 
 .success-pass {

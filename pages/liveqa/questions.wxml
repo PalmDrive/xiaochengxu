@@ -67,13 +67,10 @@
     <view class="size-22">恭喜通关</view>
     <image class="icon-trophy" src="https://cdn.ailingual.cn/pics/liveqa/trophy.png" />
     <view class="size-15">
-      <view>我在高校番位争夺战中</view>
-      <view>答完了今日的所有题， 技压群雄</view>
-      <view>
-        为
-        <text class="text-red">{{user.myLiveSchool.name}}</text>
-        拿下了{{user.qaRewardToday.points}}
-      </view>
+      <view>今日我为{{user.myLiveSchool.name}}贡献了{{user.qaRewardToday.points || 0}}点智商积分</view>
+      <view>{{user.myLiveSchool.name}}已排到{{user.myLiveSchool.rtRanking}}名</view>
+      <image src="https://cdn.ailingual.cn/pics/liveqa/fight.png" class="block icon-fight" />
+      <button class="btn btn-share btn-round" bindtap="gotoSharedPosterForAllPass">炫耀一下</button>
     </view>
   </view>
 

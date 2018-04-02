@@ -145,7 +145,7 @@ const page = Page({
             liveSchools (order: [["points", "DESC"]]) {
               id, name, ranking, registeredUsersCount, points
             },
-            users (id: "${user.id}") {
+            users(id: "${user.id}") {
               myLiveSchool {
                 name, rtRanking
               },

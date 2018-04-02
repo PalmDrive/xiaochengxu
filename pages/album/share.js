@@ -43,7 +43,11 @@ Page({
 
     if (options.couponId) {
       const appName = options.appName || 'qaXiaochengxu';
-      this._getSharedPoster(appName, options.couponId)
+      let params = null;
+      if (options.params) {
+        params = JSON.parse(options.params);
+      }
+      this._getSharedPoster(appName, options.couponId, params)
         .then(poster => {
           this.setData({
             imgUrl: poster.picUrl.replace('http', 'https')
@@ -134,13 +138,13 @@ Page({
     wx.navigateBack();
   },
 
-  _getSharedPoster(appName, couponId) {
-    const query = `mutation {
-      sharedPoster(appName: "${appName}", couponId: "${couponId}") {
+  _getSharedPoster(appName, couponId, params) {
+    const query = `mutation m($params: JSON) {
+      sharedPoster(appName: "${appName}", couponId: "${couponId}", params: $params) {
         userId, picUrl
       }
     }`;
-    return graphql(query)
+    return graphql(query, {params})
       .then(res => res.data.sharedPoster);
   }
 });

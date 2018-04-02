@@ -10,6 +10,7 @@ let userSurveyAnswers = [],
     questionRewards;
 
 let countDownTimer,
+    couponId, // 用户生成分享海报
     processing = false;
 
 const QA_SURVEY_ID = 'QASurvey',
@@ -60,9 +61,9 @@ Page({
           } else {
             d.state = 1;
           }
-        } else {
-          this._countDown();
         }
+
+        if (!this.data.state) this._countDown();
 
         d.pager = this._getPager();
         this.setData(d);
@@ -82,8 +83,6 @@ Page({
           option = e.currentTarget.dataset.option;
 
     if(!option) {
-      console.log('e.target:');
-      console.log(e.target);
       processing = false;
       throw('option is invalid');
     }
@@ -120,6 +119,18 @@ Page({
     });
   },
 
+  gotoSharedPosterForAllPass() {
+    let params = {
+      points: this.data.user.qaRewardToday.points,
+      school: this.data.user.myLiveSchool.name,
+      ranking: this.data.user.myLiveSchool.rtRanking,
+    };
+    params = JSON.stringify(params);
+    const url = `/pages/album/share?couponId=${couponId}&params=${params}`;
+
+    wx.navigateTo({url});
+  },
+
   onHide() {
     this._clearTimer();
   },
@@ -149,7 +160,10 @@ Page({
     const user = Auth.getLocalUserInfo(),
           beginningOfDay = new Date(),
           endOfDay = new Date(),
-          query = `query {
+          variables = {
+            couponFilter: {name: '答题成绩分享'}
+          },
+          query = `query q($couponFilter: JSON) {
             question
             users(id: "${user.id}") {
               qaRewardToday {
@@ -166,12 +180,15 @@ Page({
               points,
               index
             }
+            coupons(filter: $couponFilter) {
+              id
+            }
           }`;
 
     beginningOfDay.setHours(0, 0, 0, 0);
     endOfDay.setHours(23, 59, 59, 0);
 
-    return graphql(query)
+    return graphql(query, variables)
       .then(res => {
         const data = res.data.question,
               question = data.question,
@@ -183,6 +200,8 @@ Page({
         if (data.todayAns) {
           userSurveyAnswers = data.todayAns;
         }
+
+        couponId = res.data.coupons[0] ? res.data.coupons[0].id : null;
 
         return {
           survey: survey,
@@ -238,7 +257,8 @@ Page({
               data = {
                 question,
                 survey,
-                timer: TIMER
+                timer: TIMER,
+                user: this.data.user
               };
 
         if (question) {
@@ -251,6 +271,17 @@ Page({
             // 牛逼, 通关了
             data.state = 2;
             this._playSound('allPass');
+
+            // Get liveschool ranking
+            graphql(`query {
+              users(id: "${this.data.user.id}") {
+                myLiveSchool { rtRanking }
+              }
+            }`)
+              .then(res => {
+                _.extend(data.user.myLiveSchool, res.data.users[0].myLiveSchool);
+                this.setData(data);
+              });
           } else {
             data.state = 1;
           }
