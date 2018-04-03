@@ -67,13 +67,16 @@
 
   <view class="leaderboard size-12">
     <view class="table" hidden="{{leaderboardType !== 'schools'}}">
-      <view class="text-red hint">排名前20的学校瓜分10万奖金</view>
+      <view class="text-red hint">
+        <text hidden="{{!live.endAtDisplay}}">{{live.endAtDisplay}}</text>
+        <text>排名前20的学校瓜分10万奖金</text>
+      </view>
 
       <view class="table-head">
         <view class="table-row row">
           <text class="ranking">排名</text>
           <text>学校</text>
-          <text>总积分</text>
+          <text>总智商积分</text>
         </view>
       </view>
       <view class="table-body">
@@ -90,7 +93,7 @@
         <view class="table-row row">
           <text class="ranking">排名</text>
           <text>用户</text>
-          <text>总积分</text>
+          <text>总智商积分</text>
         </view>
       </view>
       <view class="table-body">

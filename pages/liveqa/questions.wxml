@@ -7,7 +7,7 @@
       </view>
       <view class="round-label">
         <image src="https://cdn.ailingual.cn/pics/liveqa/coins.png" class="icon-coins" />
-        <text>今日积分{{user.qaRewardToday.points}}</text>
+        <text>今日智商积分{{user.qaRewardToday.points}}</text>
       </view>
     </view>
 
@@ -48,7 +48,7 @@
     <view class="size-22 text-center title">本场斩获</view>
     <view class="result-list size-16">
       <view class="row">
-        <text>积分</text>
+        <text>智商积分</text>
         <text>{{user.qaRewardToday.points || 0}}</text>
         </view>
       <view class="row">
@@ -78,8 +78,8 @@
     <view class="modal size-18" hidden="{{modal !== 1}}">
       <image src="https://cdn.ailingual.cn/pics/liveqa/coins_big.png" class="icon-coins-big" />
       <view>这下赚大了</view>
-      <view>您的今日积分已翻倍!</view>
-      <view class="size-16 text-red">当前今日积分: {{user.qaRewardToday.points}}</view>
+      <view>您的今日智商积分已翻倍!</view>
+      <view class="size-16 text-red">今日智商积分: {{user.qaRewardToday.points}}</view>
     </view>
 
     <view class="modal size-18" hidden="{{modal !== 2}}">

@@ -158,6 +158,9 @@ const page = Page({
             },
             students: users (filter: $userFilter, order: $userOrder) {
               profilePicUrl, wxUsername, qaPoints
+            },
+            currentLive {
+              endAtDisplay
             }
           }`,
           variables = {
@@ -175,7 +178,8 @@ const page = Page({
                 user: _.extend(userData, user.attributes, {id: user.id}),
                 liveSchools: res.data.liveSchools,
                 couponId: res.data.coupons[0].id,
-                students: res.data.students
+                students: res.data.students,
+                live: res.data.currentLive
               };
 
         //this._setTimeToNextLive(mockData.live);

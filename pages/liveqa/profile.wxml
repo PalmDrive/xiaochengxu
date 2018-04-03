@@ -14,7 +14,7 @@
     </view>
     <view class="middle-container row">
       <view class="col left">
-        <view class="text-dark-gray size-12">积分</view>
+        <view class="text-dark-gray size-12">智商积分</view>
         <text class="text-purple">
           <text>{{user.qaPoints}}</text>
         </text>
@@ -36,7 +36,7 @@
   </view>
 
   <view>
-    <view>积分</view>
+    <view>智商积分</view>
     <view>本周贡献{{user.qaPointsThisWeek}}分</view>
     <view>击败了{{Math.round((1-user.qaPointsThisWeekRankPercent) * 100) || 0}}%的校友</view>
     <view>累计贡献{{user.qaPoints || 0}}分</view>
