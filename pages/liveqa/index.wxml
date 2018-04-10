@@ -7,10 +7,9 @@
       </button>
     </view>
 
-    <view class="title-container">
+    <!-- <view class="title-container">
       <image class="liveqa-title" src="https://cdn.ailingual.cn/pics/liveqa/qa_title2.png" />
-      <!-- <image class="liveqa-subtitle" src="https://cdn.ailingual.cn/pics/liveqa/millions_reward.png" /> -->
-    </view>
+    </view> -->
 
     <!-- <view class="schedule">
       <view class="timer">距离下场时间{{live.timeToNextLive}}</view>
@@ -33,19 +32,19 @@
       <image src="{{user.profilePicUrl}}" class="user-photo" />
       <view>
         <text>{{user.wxUsername}}</text>
-        <text class="size-12"> (贡献: {{user.rtQAPointsThisWeek}}积分)</text>
+        <text class="size-12"> (贡献: {{user.rtQAPointsThisWeek}}智商积分)</text>
       </view>
     </view>
     <view class="middle-container row" bindtap="gotoProfile">
       <view class="col left">
         <view class="text-dark-gray size-12">累计奖金</view>
-        <text class="text-purple">
+        <text>
           <text>￥{{(user.rtCash / 100)}}</text>
         </text>
       </view>
       <view class="col">
         <view class="text-dark-gray size-12">学校排名</view>
-        <text class="text-purple">
+        <text>
           <text>第{{user.myLiveSchool.rtRanking}}名</text>
           <text class="size-12">（{{user.myLiveSchool.name}}）</text>
         </text>
@@ -53,7 +52,7 @@
     </view>
     <view class="bottom-container">
       <text class="size-18">我拥有复活卡{{user.extraQALives || 0}}张</text>
-      <button class="btn-round" bindtap="gotoSharedPoster">邀好友获得复活卡</button>
+      <button class="btn-round" bindtap="gotoSharedPoster">获得复活卡</button>
       <text class="size-12">您的学校排名第{{user.myLiveSchool.rtRanking}}，赶紧拉好友一起参加</text>
     </view>
   </view>

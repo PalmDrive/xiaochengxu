@@ -171,7 +171,7 @@ Page({
               },
               extraQALives,
               myLiveSchool {
-                name
+                name, rtRanking
               }
             }
             questionRewards {

@@ -1,5 +1,5 @@
 .questions-view {
-  background-color: #220f48;
+  background-color: #083850;
   padding: 20px;
   color: white;
   min-height: 100vh;
@@ -75,7 +75,7 @@
 .hint {
   text-align: center;
   padding: 15px 0 0 0;
-  color: #8A78AB;
+  color: #fff;
 }
 
 /*.option.selected {
@@ -84,7 +84,7 @@
 
 .card {
   padding: 25px;
-  background-color: #3C2E5D;
+  background-color: #0F5C82;
   border-radius: 20px;
 }
 
@@ -131,7 +131,7 @@
   bottom: 20px;
   left: 20px;
   right: 20px;*/
-  color: #3C2E5D;
+  color: #fff;
 }
 
 .pager .label.active {

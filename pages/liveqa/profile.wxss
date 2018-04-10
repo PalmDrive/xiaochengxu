@@ -1,5 +1,5 @@
 .profile {
-  background-color: #180343;
+  background-color: #083850;
   padding: 20px;
   color: white;
   line-height: 150%;
@@ -22,7 +22,7 @@
 
 .card-container .top-container {
   position: relative;
-  background-color: #8400FF;
+  background-color: #0F5C82;
   padding: 12px 0;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -56,5 +56,5 @@
 }
 
 .subtitle {
-  color: rgb(195,131,255);
+  color: #0091D6;
 }

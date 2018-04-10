@@ -27,7 +27,7 @@
   width: 60%;
   line-height: 26px;
   text-align: center;
-  background-color: #B013FE;
+  background-color: #0091D6;
   color: white;
   display: block;
   margin: 0 auto 30px;

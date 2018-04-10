@@ -1,6 +1,6 @@
 .revive-tasks {
   padding: 40px 20px;
-  background-color: #220f48;
+  background-color: #083850;
   min-height: 100vh;
 }
 
@@ -20,6 +20,6 @@
   font-size: 14px;
   line-height: 30px;
   border-radius: 15px;
-  background-color: #A200FC;
+  background-color: #0091D6;
   color: white;
 }

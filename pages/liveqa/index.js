@@ -114,7 +114,8 @@ const page = Page({
   },
 
   gotoSharedPoster() {
-    const url = `/pages/album/share?couponId=${couponId}&appName=qaXiaochengxu`;
+    const url = `/pages/liveqa/revive-tasks`;
+    //const url = `/pages/album/share?couponId=${couponId}&appName=qaXiaochengxu`;
     wx.navigateTo({url});
   },
 

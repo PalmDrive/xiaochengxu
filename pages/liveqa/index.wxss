@@ -1,6 +1,6 @@
 .view-container {
-  background: #1e0e39 url('https://cdn.ailingual.cn/pics/liveqa/bg2.jpg') top/contain no-repeat;
-  padding: 20px 15px;
+  background: #083850 url('https://cdn.ailingual.cn/pics/liveqa/bg3.jpg') top/contain no-repeat;
+  padding: 460px 15px 20px;
   color: white;
   font-size: 16px;
 }
@@ -124,7 +124,7 @@
 
 .card-container .top-container {
   position: relative;
-  background-color: #312B67;
+  background-color: #083850;
   padding: 28px 0 3px 0;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -163,7 +163,7 @@
 
 .leaderboard {
   padding: 20px 0;
-  background-color: #31303d;
+  background-color: rgba(255, 255, 255, 0.15);
   color: rgba(255, 255, 255, 0.65);
   border-radius: 5px;
 }
@@ -188,7 +188,7 @@
 
 .leaderboard-type .title.active {
   color: white;
-  background-color: #2E2C3B;
+  background-color: #0F5C82;
 }
 
 .table-head {
@@ -225,7 +225,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: #1b004c;
+  background-color: #083850;
   z-index: -100;
   padding: 20px;
   overflow: hidden;

@@ -1,7 +1,10 @@
 <view class="profile size-16">
   <view class="text-center">
     <image src="{{user.profilePicUrl}}" class="profile-photo"/>
-    <view>{{user.wxUsername}}</view>
+    <view>
+      <text>{{user.wxUsername}}</text>
+      <text class="size-12"> (贡献: {{user.qaPoints}}智商积分)</text>
+    </view>
     <view class="size-14">
       <text>{{user.mySchool ? user.mySchool.name : 'n/a'}} </text>
       <text class="text-gray">({{user.isSchoolVerified ? '已认证' : '未认证'}})</text>
@@ -14,16 +17,12 @@
     </view>
     <view class="middle-container row">
       <view class="col left">
-        <view class="text-dark-gray size-12">智商积分</view>
-        <text class="text-purple">
-          <text>{{user.qaPoints}}</text>
-        </text>
+        <view class="text-dark-gray size-12">奖金</view>
+        <text>￥{{user.cash}}</text>
       </view>
       <view class="col">
-        <view class="text-dark-gray size-12">奖金</view>
-        <text class="text-purple">
-          <text>￥{{user.cash}}</text>
-        </text>
+        <view class="text-dark-gray size-12">集思学院奖学金</view>
+        <text>￥{{user.gecSchoolarship}}</text>
       </view>
     </view>
   </view>
