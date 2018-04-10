@@ -205,7 +205,7 @@
 }
 
 .result-list view {
-  background-color: #3C2E5D;
+  background-color: #0F5C82;
   padding: 10px 50px;
   margin-bottom: 2px;
 }
