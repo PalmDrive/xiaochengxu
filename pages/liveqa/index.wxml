@@ -1,4 +1,4 @@
-<view class="view-container" hidden="{{!user.myLiveSchool.name}}">
+<form class="view-container" hidden="{{!user.myLiveSchool.name}}" bindsubmit="formSubmit" report-submit="true">
   <view class="title-and-schedule-container">
     <view class="cover" wx:if="{{live.status === 100 || live.status === 101}}">
       <button class="btn-round">
@@ -21,7 +21,8 @@
       </view>
       <button class="right btn-round">预约</button>
     </view> -->
-    <button class="btn-start" bindtap="startQA">
+    <!-- <button class="btn-start" bindtap="startQA"> -->
+    <button class="btn-start" formType="submit">
       <text class="size-18 block">开始答题</text>
       <!-- <text class="size-14 block">本周夺冠收益: ￥100,000</text> -->
     </button>
@@ -105,7 +106,7 @@
     </view>
 
   </view>
-</view>
+</form>
 
 <view class="school-selector-view size-16" hidden="{{user.myLiveSchool.name}}">
     <view class="text-white">

@@ -69,6 +69,14 @@ const page = Page({
       });
   },
 
+  formSubmit(e) {
+    const userId = this.data.user.id,
+          formId = e.detail.formId;
+
+    this._saveFormId(userId, formId)
+      .then(() => this.startQA());
+  },
+
   startQA() {
     wx.navigateTo({
       url: `./questions`
@@ -236,5 +244,18 @@ const page = Page({
       }
     }`;
     return graphql(query);
+  },
+
+  _saveFormId(userId, formId) {
+    const data = {
+      userId,
+      recordValue: formId,
+      recordType: 'WechatFormId'
+    };
+    return graphql(`mutation m($data: JSON) {
+      userStore(data: $data) {
+        id
+      }
+    }`, {data});
   }
 });
