@@ -325,3 +325,9 @@
   height: 335px;
   margin: auto;
 }
+
+@media (min-width: 400px) {
+  .view-container {
+    padding: 500px 15px 20px;
+  }
+}

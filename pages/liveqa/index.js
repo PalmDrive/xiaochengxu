@@ -144,7 +144,7 @@ const page = Page({
     return {
       title: `${this.data.user.wxUsername}邀请你参加高校答题番位争夺战`,
       path: '/pages/liveqa/index',
-      imageUrl: 'http://cdn.gecacademy.cn/miniprogram/qa_cover.jpg'
+      imageUrl: 'http://cdn.ailingual.cn/pics/liveqa/qa_cover.jpg'
     };
   },
 
