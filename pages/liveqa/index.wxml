@@ -46,16 +46,18 @@
         </view>
         <view class="col">
           <view class="text-dark-gray size-12">学校排名</view>
-          <text>
+          <view>第{{user.myLiveSchool.rtRanking}}名</view>
+          <view class="size-12 text-dark-gray">{{user.myLiveSchool.name}}</view>
+          <!-- <text>
             <text>第{{user.myLiveSchool.rtRanking}}名</text>
             <text class="size-12">（{{user.myLiveSchool.name}}）</text>
-          </text>
+          </text> -->
         </view>
       </view>
       <view class="bottom-container">
         <text class="size-18">我拥有复活卡{{user.extraQALives || 0}}张</text>
         <button class="btn-round" bindtap="gotoSharedPoster">获得复活卡</button>
-        <text class="size-12">您的学校排名第{{user.myLiveSchool.rtRanking}}，赶紧拉好友一起参加</text>
+        <text class="size-12 text-gray">您的学校排名第{{user.myLiveSchool.rtRanking}}，赶紧拉好友一起参加</text>
       </view>
     </view>
 

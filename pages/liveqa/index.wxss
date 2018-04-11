@@ -134,12 +134,14 @@
 
 .card-container .middle-container {
   border-bottom: 1px solid rgba(25,0,76,0.24);
+  line-height: 180%;
 }
 
 .card-container .middle-container .col {
   width: 100%;
   border-right: 1px solid rgba(25,0,76,0.24);
-  padding: 15px 0;
+  padding: 15px;
+  white-space: nowrap;
 }
 
 .card-container .middle-container .col.left {
