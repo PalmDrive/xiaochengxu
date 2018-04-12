@@ -2,7 +2,8 @@ const mockData = require('../../utils/mockData'),
       utils = require('../../utils/util'),
       Auth = require('../../utils/auth'),
       _ = require('../../vendors/underscore'),
-      graphql = require('../../utils/graphql');
+      graphql = require('../../utils/graphql'),
+      {saveFormId} = require('../../utils/user');
 
 function querySchoolList(name) {
   return graphql(`query {
@@ -50,9 +51,10 @@ const page = Page({
 
           if (this.data.live.notes) {
             setTimeout(() => {
-              wx.showToast({
-                title: this.data.live.notes,
-                icon: 'none'
+              wx.showModal({
+                title: '系统通知',
+                content: this.data.live.notes,
+                showCancel: false
               });
             }, 500);
           }
@@ -83,7 +85,7 @@ const page = Page({
     const userId = this.data.user.id,
           formId = e.detail.formId;
 
-    this._saveFormId(userId, formId)
+    saveFormId(userId, formId)
       .then(() => this.startQA());
   },
 
@@ -255,17 +257,4 @@ const page = Page({
     }`;
     return graphql(query);
   },
-
-  _saveFormId(userId, formId) {
-    const data = {
-      userId,
-      recordValue: formId,
-      recordType: 'WechatFormId'
-    };
-    return graphql(`mutation m($data: JSON) {
-      userStore(data: $data) {
-        id
-      }
-    }`, {data});
-  }
 });

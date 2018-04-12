@@ -19,17 +19,24 @@
     <view class="card {{question.selected ? 'selected' : ''}}">
     <!-- <view class="card selected"> -->
       <!-- <view class="status {{(status === '已超时' || status === '回答错误') ? 'red' : ''}}">{{status}}</view> -->
+      <form bindsubmit="formSubmit" report-submit="true">
+        <view class="size-18">
+          <view class="question">{{question.content}}</view>
+          <!-- <view wx:for="{{question.options}}" wx:for-item="option" bindtap="selectAnswer" data-option="{{option}}" wx:key="value" class="row space-between option size-16 {{!option.isRight && option.selected ? 'wrong' : ''}} {{option.isRight ? 'right' : ''}}">
+            <text>{{option.label}}</text>
+            <text class="icon icon-checkmark">✔</text>
+            <text class="icon icon-x">✗</text>
+          </view> -->
+          <!-- <button form-type="submit">submit it</button> -->
+          <button wx:for="{{question.options}}" wx:for-item="option" data-option="{{option}}" wx:key="value" class="row space-between option size-16 {{!option.isRight && option.selected ? 'wrong' : ''}} {{option.isRight ? 'right' : ''}}" form-type="submit">
+            <text>{{option.label}}</text>
+            <text class="icon icon-checkmark">✔</text>
+            <text class="icon icon-x">✗</text>
+          </button>
 
-      <view class="size-18">
-        <view class="question">{{question.content}}</view>
-        <view wx:for="{{question.options}}" wx:for-item="option" bindtap="selectAnswer" data-option="{{option}}" wx:key="value" class="row space-between option size-16 {{!option.isRight && option.selected ? 'wrong' : ''}} {{option.isRight ? 'right' : ''}}">
-          <text>{{option.label}}</text>
-          <text class="icon icon-checkmark">✔</text>
-          <text class="icon icon-x">✗</text>
+          <view class="hint size-16">点击选项，即可回答</view>
         </view>
-
-        <view class="hint size-16">点击选项，即可回答</view>
-      </view>
+      </form>
     </view>
 
     <image src="https://cdn.ailingual.cn/pics/liveqa/fight.png" class="icon-fight" />

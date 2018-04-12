@@ -2,7 +2,8 @@ const mockData = require('../../utils/mockData'),
       utils = require('../../utils/util'),
       Auth = require('../../utils/auth'),
       _ = require('../../vendors/underscore'),
-      graphql = require('../../utils/graphql');
+      graphql = require('../../utils/graphql'),
+      {saveFormId} = require('../../utils/user');
 
 // cache userSurveyAnswers, userLive, questionRewards
 let userSurveyAnswers = [],
@@ -137,6 +138,14 @@ Page({
 
   onUnload() {
     this._clearTimer();
+  },
+
+  formSubmit(e) {
+    const event = {
+      currentTarget: e.detail.target
+    };
+    saveFormId(this.data.user.id, e.detail.formId);
+    this.selectAnswer(event);
   },
 
   _fetchQuestion(id) {

@@ -19,10 +19,12 @@
       <view class="col left">
         <view class="text-dark-gray size-12">奖金</view>
         <text>￥{{user.cash}}</text>
+        <button class="btn btn-round btn-cash">提现</button>
       </view>
       <view class="col">
         <view class="text-dark-gray size-12">集思学院奖学金</view>
         <text>￥{{user.gecSchoolarship}}</text>
+        <button class="btn btn-round btn-course" style="visibility:hidden">购课</button>
       </view>
     </view>
   </view>

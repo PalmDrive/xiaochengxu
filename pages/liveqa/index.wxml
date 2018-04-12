@@ -23,7 +23,7 @@
         <button class="right btn-round">预约</button>
       </view> -->
       <!-- <button class="btn-start" bindtap="startQA"> -->
-      <button class="btn-start" formType="submit">
+      <button class="btn-start" form-type="submit">
         <text class="size-18 block">开始答题</text>
         <!-- <text class="size-14 block">本周夺冠收益: ￥100,000</text> -->
       </button>

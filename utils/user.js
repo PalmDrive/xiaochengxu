@@ -231,11 +231,25 @@ function getPeerAnswers(postId, albumId, page) {
   // });
 }
 
+function saveFormId(userId, formId) {
+  const data = {
+    userId,
+    recordValue: formId,
+    recordType: 'WechatFormId'
+  };
+  return graphql(`mutation m($data: JSON) {
+    userStore(data: $data) {
+      id
+    }
+  }`, {data});
+}
+
 module.exports = {
   getPurchasedAlbums,
   getPurchasedAlbumIdsMap,
   addAlbumId,
   getSurveyAndAnswers,
   getPeerAnswers,
-  getFilterQuestions
+  getFilterQuestions,
+  saveFormId
 }

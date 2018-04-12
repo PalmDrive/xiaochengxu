@@ -34,6 +34,19 @@
   padding: 15px 0;
 }
 
+.card-container .col .btn {
+  width: 80%;
+  margin-top: 20px;
+  border-width: 0;
+  font-size: 16px;
+}
+
+.btn-cash {
+  background-color: #B7B7B7;
+  color: white;
+}
+
+
 .card-container .col {
   width: 50%;
 }
