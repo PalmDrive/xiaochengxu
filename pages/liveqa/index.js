@@ -47,6 +47,15 @@ const page = Page({
           this.setData({
             splashShown: false
           });
+
+          if (this.data.live.notes) {
+            setTimeout(() => {
+              wx.showToast({
+                title: this.data.live.notes,
+                icon: 'none'
+              });
+            }, 500);
+          }
         }, 800);
       }, 1400);
     }
@@ -65,6 +74,7 @@ const page = Page({
           students: data.students
         });
         wx.hideLoading();
+
         //this._timeToNextLiveCountDown();
       });
   },
@@ -169,7 +179,7 @@ const page = Page({
               profilePicUrl, wxUsername, qaPoints
             },
             currentLive {
-              endAtDisplay
+              endAtDisplay, notes
             }
           }`,
           variables = {
