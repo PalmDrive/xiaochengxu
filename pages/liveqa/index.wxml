@@ -24,7 +24,7 @@
       </view> -->
       <!-- <button class="btn-start" bindtap="startQA"> -->
       <button class="btn-start" form-type="submit">
-        <text class="size-18 block">开始答题</text>
+        <text class="size-18 block">{{live.status === 303 ? '今日已通关，明日再来' : '开始答题'}}</text>
         <!-- <text class="size-14 block">本周夺冠收益: ￥100,000</text> -->
       </button>
     </view>

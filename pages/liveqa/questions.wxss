@@ -229,6 +229,7 @@
 
 .result .btn-share {
   border: 2px #EE4248 solid;
+  margin-bottom: 20px;
 }
 
 .result .user-photo {

@@ -181,7 +181,7 @@ const page = Page({
               profilePicUrl, wxUsername, qaPoints
             },
             currentLive {
-              endAtDisplay, notes
+              endAtDisplay, notes, status
             }
           }`,
           variables = {

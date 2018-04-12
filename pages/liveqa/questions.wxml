@@ -84,6 +84,7 @@
       <view>{{user.myLiveSchool.name}}已排到{{user.myLiveSchool.rtRanking}}名</view>
       <image src="https://cdn.ailingual.cn/pics/liveqa/fight.png" class="block icon-fight" />
       <button class="btn btn-share btn-round" bindtap="gotoSharedPosterForAllPass">炫耀一下</button>
+      <view>今日已通关， 明日再来</view>
     </view>
   </view>
 
