@@ -109,3 +109,47 @@
   <image src="https://cdn.ailingual.cn/pics/liveqa/fist_left.png" class="icon-fist icon-fist-left block" />
   <image src="https://cdn.ailingual.cn/pics/liveqa/fist_right.png" class="icon-fist icon-fist-right block" />
 </view>
+
+<view class="modal-container modal-login-rewards" hidden="{{!checkinRewardModalShown}}">
+  <view class="modal">
+    <view class="modal-head">
+      <view class="size-22 modal-title">登陆送奖励</view>
+      <view class="label size-12">已经连续登陆{{live.todayUserCheckin.streakDays}}天</view>
+    </view>
+    <view class="modal-body size-12">
+      <view class="reward-tiles row">
+        <view wx:for="{{live.checkinRewards}}" wx:key wx:for-item="reward" class="reward-tile size-10 {{reward.didReceiveReward ? 'active' : ''}}">
+          <view class="reward-tile-inner">
+            <view>第{{reward.dayIndex}}天</view>
+            <view class="text-gray">
+              <image src="http://cdn.ailingual.cn/pics/liveqa/icon_heart.png" class="icon-heart" />
+              <text>+{{reward.extraQALives}}</text>
+            </view>
+            <view wx:if="{{reward.points}}" class="text-gray">
+              <image src="http://cdn.ailingual.cn/pics/liveqa/copper.png" class="icon-copper" />
+              <text>+{{reward.points}}</text>
+            </view>
+            <image src="http://cdn.ailingual.cn/pics/liveqa/{{reward.didReceiveReward ? 'received' : 'not_received'}}_label.png" class="icon-received-label" />
+          </view>
+        </view>
+      </view>
+
+      <view class="today-reward-title">恭喜你， 今天获得：</view>
+      <view class="today-reward">
+        <view>
+          <image src="http://cdn.ailingual.cn/pics/liveqa/icon_heart.png" class="icon-heart" />
+          <text>复活卡</text>
+          <text class="text-gray"> +{{live.todayUserCheckin.checkinReward.extraQALives}}</text>
+        </view>
+
+        <view wx:if="{{live.todayUserCheckin.checkinReward.points}}">
+          <image src="http://cdn.ailingual.cn/pics/liveqa/copper.png" class="icon-copper" />
+          <text>智商积分</text>
+          <text class="text-gray"> +{{live.todayUserCheckin.checkinReward.points}}</text>
+        </view>
+      </view>
+
+      <button class="btn-get-reward btn btn-round" bindtap="closeCheckinRewardModal">领取奖励</button>
+    </view>
+  </view>
+</view>

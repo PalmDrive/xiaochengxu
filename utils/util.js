@@ -25,6 +25,14 @@ function formatTime(date, isShort) {
     return [year, month, day].map(formatNumber).join('/') + ' ' + time;
   }
 }
+
+function startOfDay(date) {
+  const year = date.getFullYear(),
+        month = date.getMonth() + 1,
+        day = date.getDate();
+  return new Date(`${year}-${month}-${day}T00:00:00+0800`);
+}
+
 /**
  * @return 'xxxx年x月x日'
  */
@@ -488,6 +496,7 @@ module.exports = {
   formatDateOfWeek,
   shortNumber,
   convertDate,
+  startOfDay,
   formatPublishedAt,
   formatTopic,
   formatMedium,

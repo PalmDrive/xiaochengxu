@@ -22,11 +22,11 @@ const page = Page({
     user: null,
     liveSchools: null,
     students: null,
-    //schoolList: [{id: 1, name: 'Stanford'}, {id: 2, name: '上海交通大学'}, {id: 3, name: 'Purdue University'}],
     schoolList: [], // for user select school
     selectedSchool: null,
     leaderboardType: 'schools',
     splashShown: false,
+    checkinRewardModalShown: false
   },
 
   onLoad(options) {
@@ -49,15 +49,15 @@ const page = Page({
             splashShown: false
           });
 
-          if (this.data.live.notes) {
-            setTimeout(() => {
-              wx.showModal({
-                title: '系统通知',
-                content: this.data.live.notes,
-                showCancel: false
-              });
-            }, 500);
-          }
+          // if (this.data.live.notes) {
+          //   setTimeout(() => {
+          //     wx.showModal({
+          //       title: '系统通知',
+          //       content: this.data.live.notes,
+          //       showCancel: false
+          //     });
+          //   }, 500);
+          // }
         }, 800);
       }, 1400);
     }
@@ -69,14 +69,20 @@ const page = Page({
     this._fetchData()
       .then(data => {
         couponId = data.couponId;
-        this.setData({
+         const states = {
           live: data.live,
           user: data.user,
           liveSchools: data.liveSchools,
           students: data.students
-        });
-        wx.hideLoading();
+        };
 
+        if (data.live.todayUserCheckin) {
+          states.checkinRewardModalShown = true;
+          this._formatCheckins(data.live.todayUserCheckin, data.live);
+        }
+
+        this.setData(states);
+        wx.hideLoading();
         //this._timeToNextLiveCountDown();
       });
   },
@@ -160,6 +166,18 @@ const page = Page({
     };
   },
 
+  closeCheckinRewardModal() {
+    this.setData({
+      checkinRewardModalShown: false
+    });
+    setTimeout(() => {
+      wx.showToast({
+        title: '领取成功',
+        icon: 'none'
+      });
+    }, 500);
+  },
+
   _fetchData() {
     const user = Auth.getLocalUserInfo(),
           query = `query q($couponFilter: JSON, $userOrder: JSON, $userFilter: JSON) {
@@ -181,8 +199,17 @@ const page = Page({
               profilePicUrl, wxUsername, qaPoints
             },
             currentLive {
-              endAtDisplay, notes, status
-            }
+              endAtDisplay, notes, status,
+              checkinRewards {
+                dayIndex, extraQALives, points
+              }
+              todayUserCheckin {
+                streakDays, createdAt,
+                checkinReward {
+                  points, extraQALives
+                }
+              }
+            },
           }`,
           variables = {
             couponFilter: {name: '答题复活卡_邀请好友'},
@@ -257,4 +284,16 @@ const page = Page({
     }`;
     return graphql(query);
   },
+
+  _formatCheckins(todayCheckin, live) {
+    const checkins = live.checkinRewards,
+          maxStreakDays = 7;
+
+    const streakDays = Math.min(maxStreakDays, todayCheckin.streakDays);
+    todayCheckin.streakDays = streakDays;
+    for (let i = 0; i < streakDays; i++) {
+      checkins[i].didReceiveReward = true;
+    }
+    return live;
+  }
 });

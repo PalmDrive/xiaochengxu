@@ -326,6 +326,115 @@
   margin: auto;
 }
 
+.modal-container {
+  position: fixed;
+  z-index: 110;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal {
+  background-color: white;
+  text-align: center;
+  width: 80%;
+  color: black;
+  overflow: hidden;
+}
+
+.modal-login-rewards .modal-body {
+  padding: 15px;
+}
+
+.modal-login-rewards .modal-head {
+  padding: 20px;
+  background-color: #FFC700;
+}
+
+.modal-login-rewards .label {
+  padding: 3px 10px;
+  line-height: 18px;
+  border-radius: 12px;
+  background-color: #000;
+  color: white;
+}
+
+.modal-login-rewards .today-reward-title {
+  margin-top: 15px;
+}
+
+.modal-login-rewards .today-reward {
+  margin: 15px auto;
+  width: 140px;
+  text-align: left;
+  line-height: 200%;
+  white-space: nowrap;
+}
+
+.reward-tiles {
+  flex-wrap: wrap;
+}
+
+.reward-tile {
+  width: 25%;
+  padding: 10px 5px;
+  line-height: 180%;
+}
+
+.reward-tile.active .reward-tile-inner {
+  background-color: #c9c3b7;
+}
+
+.reward-tile.active .reward-tile-inner .text-gray {
+  color: white;
+}
+
+.reward-tile .text-gray {
+  text-align: left;
+  white-space: nowrap;
+  margin-top: 5px;
+}
+
+.reward-tile-inner {
+  border-radius: 5px;
+  background-color: #FFF7E6;
+  padding: 5px;
+  height: 100px;
+  overflow: hidden;
+  position: relative;
+}
+
+.btn-get-reward {
+  background-color: #FFC700;
+  color: white;
+  margin-bottom: 20px;
+  width: 80%;
+}
+
+.icon-heart {
+  width: 12px;
+  height: 14px;
+  vertical-align: middle;
+  margin-right: 3px;
+}
+
+.icon-copper {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  margin-right: 3px;
+}
+
+.icon-received-label {
+  height: 15px;
+  width: 44px;
+  position: absolute;
+  left: 0;
+  bottom: 10px;
+}
+
 @media (min-width: 400px) {
   .view-container {
     padding: 500px 15px 20px;
