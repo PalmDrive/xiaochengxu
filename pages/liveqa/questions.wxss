@@ -1,5 +1,5 @@
 .questions-view {
-  background-color: #083850;
+  background-color: #0091D6;
   padding: 20px;
   color: white;
   min-height: 100vh;
@@ -62,13 +62,15 @@
 .question {
   margin-bottom: 30px;
   word-wrap: break-word;
+  color: #000;
 }
 
 .option {
-  background-color: #F4F4F4;
+  background-color: white;
+  border: 1px solid rgb(180, 180, 180);
   padding: 10px 30px;
   line-height: 22px;
-  border-radius: 16px;
+  border-radius: 20px;
   margin-bottom: 15px;
   color: #220f48;
 }
@@ -85,7 +87,7 @@
 
 .card {
   padding: 25px;
-  background-color: #0F5C82;
+  background-color: #fff;
   border-radius: 20px;
 }
 

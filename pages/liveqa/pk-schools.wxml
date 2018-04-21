@@ -1,0 +1,8 @@
+<view class="pk-schools">
+  <view wx:for="{{liveSchools}}" wx:key wx:for-item="school" class="row school-row">
+    <view>{{index + 1}}</view>
+    <view>{{school.name}}</view>
+    <view>{{school.points}}</view>
+    <button bindtap="startPK" data-item="{{school.id}}">PK</button>
+  </view>
+</view>
