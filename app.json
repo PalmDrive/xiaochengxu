@@ -7,6 +7,8 @@
     "pages/liveqa/profile",
     "pages/liveqa/revive-tasks",
     "pages/liveqa/rules",
+    "pages/liveqa/pk-schools",
+    "pages/liveqa/pk-school",
     "pages/album/study",
     "pages/album/study-web",
     "pages/album/report",
