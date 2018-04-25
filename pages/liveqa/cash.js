@@ -6,8 +6,9 @@ const utils = require('../../utils/util'),
 Page({
   data: {
     rtCash: 0,
-    cash: undefined,
-    userStores: []
+    cash: null,
+    userStores: [],
+    processing: false
   },
 
   onLoad(options) {
@@ -47,6 +48,9 @@ Page({
   },
 
   startCash() {
+    if (this.data.processing) {
+      return
+    }
     const lowLine = 1000
     const hightLine = 3000
     const cash = this.data.cash * 100
@@ -54,17 +58,22 @@ Page({
       this.showToast('请输入提现金额！')
       return
     }
-
-    if (cash > this.data.rtCash * 100) {
-      this.showToast('余额不足！')
-      return
-    }
-
-    if (this.data.cash < lowLine || this.data.cash > hightLine) {
-      this.showToast('提现金额范围10元-30元')
-      return
-    }
-
+    //
+    // if (cash > this.data.rtCash * 100) {
+    //   this.showToast('余额不足！')
+    //   return
+    // }
+    //
+    // if (this.data.cash < lowLine || this.data.cash > hightLine) {
+    //   this.showToast('提现金额范围10元-30元')
+    //   return
+    // }
+    this.setData({
+      processing: true
+    });
+    wx.showLoading({
+      title: '提现中',
+    })
     const user = Auth.getLocalUserInfo();
     let query = `mutation {
             cash(userId: "${user.id}", money: ${this.data.cash * 100}) {
@@ -78,9 +87,17 @@ Page({
       } else if (res.data.cash && res.data.cash.id){
         this.showToast('提现成功！', 'success')
         this._fetchData()
+        this.setData({
+          cash: null
+        });
+        wx.hideLoading()
       } else {
         this.showToast('提现异常，请重试！')
       }
+
+      this.setData({
+        processing: false
+      });
     });
   },
 
