@@ -73,10 +73,11 @@ const page = Page({
           live: data.live,
           user: data.user,
           liveSchools: data.liveSchools,
-          students: data.students
+          students: data.students,
+          canAnswer: data.canAnswer
         };
 
-        if (data.live.todayUserCheckin) {
+        if (data.live && data.live.todayUserCheckin) {
           states.checkinRewardModalShown = true;
           this._formatCheckins(data.live.todayUserCheckin, data.live);
         }
@@ -88,11 +89,18 @@ const page = Page({
   },
 
   formSubmit(e) {
-    const userId = this.data.user.id,
-          formId = e.detail.formId;
+    if (this.data.canAnswer) {
+      const userId = this.data.user.id,
+            formId = e.detail.formId;
 
-    saveFormId(userId, formId)
-      .then(() => this.startQA());
+      saveFormId(userId, formId)
+        .then(() => this.startQA());
+    } else {
+      wx.showToast({
+        title: '4月比赛结束，5月敬请期待',
+        icon: 'none'
+      });
+    }
   },
 
   startQA() {
@@ -162,7 +170,7 @@ const page = Page({
     return {
       title: `${this.data.user.wxUsername}邀请你参加高校答题番位争夺战`,
       path: '/pages/liveqa/index',
-      imageUrl: 'http://cdn.ailingual.cn/pics/liveqa/qa_cover.jpg'
+      imageUrl: 'http://cdn.ailingual.cn/pics/liveqa/qa_cover_new.jpg'
     };
   },
 
@@ -210,6 +218,7 @@ const page = Page({
                 }
               }
             },
+            canAnswer
           }`,
           variables = {
             couponFilter: {name: '答题复活卡_邀请好友'},
@@ -227,7 +236,8 @@ const page = Page({
                 liveSchools: res.data.liveSchools,
                 couponId: res.data.coupons[0].id,
                 students: res.data.students,
-                live: res.data.currentLive
+                live: res.data.currentLive,
+                canAnswer: res.data.canAnswer
               };
 
         //this._setTimeToNextLive(mockData.live);
