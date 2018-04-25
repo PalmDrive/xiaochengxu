@@ -1,0 +1,28 @@
+<view class="live-cash-page size-14">
+  <view class="section text-black pingfang-medium">
+    <text>零钱余额：￥{{rtCash}}</text>
+    <text class="text-blue" bindtap="allCash">全部提现</text>
+  </view>
+  <view class="content text-black column">
+    <text>提现金额</text>
+    <view class="row size-35">
+      <text>￥</text>
+      <input type="digit" value="{{cash}}" bindinput="bindKeyInput" auto-focus></input>
+      <text>元</text>
+    </view>
+    <text class="text-gray">1、微信实名认证的用户可以提现</text>
+    <text class="text-gray">2、提现最小金额 10 元，单日提现最大金额 30 元</text>
+    <text class="text-gray">3、提现申请通过后，0 ~ 3 个工作日可以到账</text>
+  </view>
+  <view class="button">
+    <text class="text-white size-18 btn" bindtap="startCash">提现</text>
+  </view>
+
+  <view class="recode" wx:if="{{userStores.length > 0}}">
+    <view class="size-18 recode-tip">提现记录</view>
+    <view wx:for="{{userStores}}" wx:key wx:for-item="userStore" class="row space-between recode-item">
+      <text class="text-color3 size-14">{{userStore.createdAtString}}</text>
+      <text class="size-16">{{userStore.value}}</text>
+    </view>
+  </view>
+</view>

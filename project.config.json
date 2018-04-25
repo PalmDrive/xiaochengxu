@@ -20,6 +20,10 @@
 			"current": -1,
 			"list": []
 		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
 		"game": {
 			"current": -1,
 			"list": []
@@ -73,6 +77,12 @@
 					"id": -1,
 					"name": "时间胶囊",
 					"pathName": "pages/campaign/capsule",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "提现",
+					"pathName": "pages/liveqa/cash",
 					"query": ""
 				}
 			]

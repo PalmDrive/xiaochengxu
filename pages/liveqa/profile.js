@@ -24,7 +24,8 @@ Page({
             users(id: $userId) {
               id, isSchoolVerified, profilePicUrl, wxUsername, extraQALives, qaPoints
               mySchool {name},
-              gecSchoolarship
+              gecSchoolarship,
+              rtCash
             }
             userlives(userId: "${user.id}") {
               points, cash, createdAt
@@ -71,7 +72,7 @@ Page({
       memo += (obj.cash || 0);
       return memo;
     }, 0);
-    user.cash = (user.cash / 100).toFixed(2);
+    user.cash = (user.rtCash / 100).toFixed(2);
     user.gecSchoolarship = (user.gecSchoolarship / 100).toFixed(2);
   }
 });
