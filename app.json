@@ -1,6 +1,7 @@
 {
   "pages":[
     "pages/liveqa/index",
+    "pages/liveqa/cash",
     "pages/liveqa/live",
     "pages/liveqa/questions",
     "pages/liveqa/profile",

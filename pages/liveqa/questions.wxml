@@ -39,7 +39,7 @@
       </form>
     </view>
 
-    <image src="https://cdn.ailingual.cn/pics/liveqa/fight.png" class="icon-fight" />
+    <image src="https://cdn.ailingual.cn/pics/liveqa/fight_new.png" class="icon-fight" />
 
     <view class="pager">
       <view class="row space-between size-14">
@@ -66,7 +66,7 @@
       </view>
     </view>
 
-    <image src="https://cdn.ailingual.cn/pics/liveqa/fight.png" class="block icon-fight" />
+    <image src="https://cdn.ailingual.cn/pics/liveqa/fight_new.png" class="block icon-fight" />
 
     <button class="btn btn-round size-15 btn-extra-lives" bindtap="gotoReviveTasks">获得复活卡再战</button>
 
@@ -82,7 +82,7 @@
     <view class="size-15">
       <view>今日我为{{user.myLiveSchool.name}}贡献了{{user.qaRewardToday.points || 0}}点智商积分</view>
       <view>{{user.myLiveSchool.name}}已排到{{user.myLiveSchool.rtRanking}}名</view>
-      <image src="https://cdn.ailingual.cn/pics/liveqa/fight.png" class="block icon-fight" />
+      <image src="https://cdn.ailingual.cn/pics/liveqa/fight_new.png" class="block icon-fight" />
       <button class="btn btn-share btn-round" bindtap="gotoSharedPosterForAllPass">炫耀一下</button>
       <view>今日已通关， 明日再来</view>
     </view>

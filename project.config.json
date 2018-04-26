@@ -20,6 +20,10 @@
 			"current": -1,
 			"list": []
 		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
 		"game": {
 			"current": -1,
 			"list": []
@@ -75,6 +79,12 @@
 					"pathName": "pages/liveqa/pk-school",
 					"query": "liveId=k8zezry55d",
 					"scene": "1008"
+				},
+				{
+					"id": 7,
+					"name": "提现",
+					"pathName": "pages/liveqa/cash",
+					"query": ""
 				}
 			]
 		}
