@@ -42,8 +42,10 @@
 }
 
 .btn-cash {
-  background-color: #B7B7B7;
+  background-color: #FF9B00;
   color: white;
+  margin-left: 10%;
+  padding: 5px;
 }
 
 

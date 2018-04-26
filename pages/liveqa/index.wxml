@@ -3,7 +3,7 @@
     <view class="title-and-schedule-container">
       <!-- <button class="btn-start" bindtap="startQA"> -->
       <button class="btn-start" form-type="submit">
-        <text class="size-18 block">{{live.status === 303 ? '今日已通关，明日再来' : '开始答题'}}</text>
+        <text class="size-18 block">{{ canAnswer ? (live.status === 303 ? '今日已通关，明日再来' : '开始答题') : '4月比赛结束，5月敬请期待'}}</text>
         <!-- <text class="size-14 block">本周夺冠收益: ￥100,000</text> -->
       </button>
     </view>
@@ -105,7 +105,7 @@
 </view>
 
 <view class="splash {{splashShown ? 'show' : ''}}">
-  <image src="https://cdn.ailingual.cn/pics/liveqa/splash_fight.png" class="icon-splash-fight block" />
+  <image src="https://cdn.ailingual.cn/pics/liveqa/splash_fight_new.png" class="icon-splash-fight block" />
   <image src="https://cdn.ailingual.cn/pics/liveqa/fist_left.png" class="icon-fist icon-fist-left block" />
   <image src="https://cdn.ailingual.cn/pics/liveqa/fist_right.png" class="icon-fist icon-fist-right block" />
 </view>

@@ -19,7 +19,7 @@
       <view class="col left">
         <view class="text-dark-gray size-12">奖金</view>
         <text>￥{{user.cash}}</text>
-        <button class="btn btn-round btn-cash">提现</button>
+        <navigator url="/pages/liveqa/cash" class="btn btn-round btn-cash">提现</navigator>
       </view>
       <view class="col">
         <view class="text-dark-gray size-12">集思学院奖学金</view>

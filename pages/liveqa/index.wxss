@@ -1,5 +1,5 @@
 .view-container {
-  background: #083850 url('https://cdn.ailingual.cn/pics/liveqa/bg3.jpg') top/contain no-repeat;
+  background: #083850 url('https://cdn.ailingual.cn/pics/liveqa/bg3_new.jpg') top/contain no-repeat;
   padding: 460px 15px 20px;
   color: white;
   font-size: 16px;

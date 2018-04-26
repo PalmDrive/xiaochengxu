@@ -1,0 +1,55 @@
+.title {
+  /*margin-bottom: 5px;*/
+}
+
+.section {
+  padding: 20px;
+  background: #FBFBFB;
+}
+
+input {
+  min-height: 40px;
+}
+
+.text-blue {
+  margin-left: 20px;
+}
+
+.text-gray {
+  line-height: 23px;
+}
+
+.content {
+  margin: 25px 20px 35px 20px;
+}
+
+.size-35 {
+  border-bottom: 1px solid rgba(237,237,237,1);
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.recode {
+  padding: 40px 20px;
+}
+
+.recode-tip {
+  margin-bottom: 10px;
+}
+
+.recode-item {
+  padding: 15px 0px;
+  border-bottom: 0.3px solid rgba(25,0,76,0.04);
+}
+
+.btn {
+  padding: 10px 0;
+  width: 100%;
+  text-align: center;
+  background: #1AAC1A;
+  display: block;
+}
+
+.button {
+  padding: 0px 20px;
+}
