@@ -58,16 +58,16 @@ Page({
       this.showToast('请输入提现金额！')
       return
     }
-    //
-    // if (cash > this.data.rtCash * 100) {
-    //   this.showToast('余额不足！')
-    //   return
-    // }
-    //
-    // if (this.data.cash < lowLine || this.data.cash > hightLine) {
-    //   this.showToast('提现金额范围10元-30元')
-    //   return
-    // }
+
+    if (cash > this.data.rtCash * 100) {
+      this.showToast('余额不足！')
+      return
+    }
+
+    if (this.data.cash < lowLine || this.data.cash > hightLine) {
+      this.showToast('提现金额范围10元-30元')
+      return
+    }
     this.setData({
       processing: true
     });
