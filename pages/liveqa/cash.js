@@ -90,10 +90,11 @@ Page({
         this.setData({
           cash: null
         });
-        wx.hideLoading()
       } else {
         this.showToast('提现异常，请重试！')
       }
+
+      wx.hideLoading()
 
       this.setData({
         processing: false
