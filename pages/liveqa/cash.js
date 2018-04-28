@@ -91,7 +91,12 @@ Page({
           cash: null
         });
       } else {
-        this.showToast('提现异常，请重试！')
+        wx.showModal({
+          title: '提现异常，请重试！',
+          content: JSON.stringify(res),
+          success: function(res) {
+          }
+        })
       }
 
       wx.hideLoading()
