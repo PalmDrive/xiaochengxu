@@ -64,7 +64,7 @@ Page({
       return
     }
 
-    if (this.data.cash < lowLine || this.data.cash > hightLine) {
+    if (cash < lowLine || cash > hightLine) {
       this.showToast('提现金额范围10元-30元')
       return
     }
@@ -76,7 +76,7 @@ Page({
     })
     const user = Auth.getLocalUserInfo();
     let query = `mutation {
-            cash(userId: "${user.id}", money: ${this.data.cash * 100}) {
+            cash(userId: "${user.id}", money: ${cash}) {
               id
             },
           }`;
@@ -90,10 +90,16 @@ Page({
         this.setData({
           cash: null
         });
-        wx.hideLoading()
       } else {
-        this.showToast('提现异常，请重试！')
+        wx.showModal({
+          title: '提现异常，请重试！',
+          content: JSON.stringify(res),
+          success: function(res) {
+          }
+        })
       }
+
+      wx.hideLoading()
 
       this.setData({
         processing: false
