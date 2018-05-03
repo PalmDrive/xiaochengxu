@@ -1,0 +1,18 @@
+<view class="profile size-16">
+  <view class="result">
+    <image src="{{user.profilePicUrl}}" class="user-photo block"/>
+    <view class="size-22 text-center title">本场斩获</view>
+    <view class="result-list size-16">
+      <view class="row">
+        <text>智商积分</text>
+        <text>{{user.qaRewardToday.points || 0}}</text>
+        </view>
+      <view class="row">
+        <text>现金</text>
+        <text>￥{{(user.qaRewardToday.cash || 0) / 100}}</text>
+      </view>
+    </view>
+
+    <button class="btn btn-round size-15 btn-extra-lives" bindtap="backHome">返回首页</button>
+  </view>
+</view>
