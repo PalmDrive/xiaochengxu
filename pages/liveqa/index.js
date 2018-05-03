@@ -26,7 +26,8 @@ const page = Page({
     selectedSchool: null,
     leaderboardType: 'schools',
     splashShown: false,
-    checkinRewardModalShown: false
+    checkinRewardModalShown: false,
+    notificationSubscribed: false // 订阅开赛通知
   },
 
   onLoad(options) {
@@ -89,18 +90,29 @@ const page = Page({
   },
 
   formSubmit(e) {
-    if (this.data.canAnswer) {
-      const userId = this.data.user.id,
-            formId = e.detail.formId;
+    const userId = this.data.user.id,
+          formId = e.detail.formId;
 
-      saveFormId(userId, formId)
-        .then(() => this.startQA());
-    } else {
-      wx.showToast({
-        title: '4月比赛结束，5月敬请期待',
-        icon: 'none'
+    if (!this.data.notificationSubscribed) {
+      this.setData({
+        notificationSubscribed: true
       });
     }
+
+    saveFormId(userId, formId);
+    
+    // if (this.data.canAnswer) {
+    //   const userId = this.data.user.id,
+    //         formId = e.detail.formId;
+    //
+    //   saveFormId(userId, formId)
+    //     .then(() => this.startQA());
+    // } else {
+    //   wx.showToast({
+    //     title: '4月比赛结束，5月敬请期待',
+    //     icon: 'none'
+    //   });
+    //}
   },
 
   startQA() {
