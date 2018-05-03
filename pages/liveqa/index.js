@@ -100,7 +100,7 @@ const page = Page({
     }
 
     saveFormId(userId, formId);
-    
+
     // if (this.data.canAnswer) {
     //   const userId = this.data.user.id,
     //         formId = e.detail.formId;
@@ -186,7 +186,9 @@ const page = Page({
     };
   },
 
-  closeCheckinRewardModal() {
+  closeCheckinRewardModal(e) {
+    saveFormId(this.data.user.id, e.detail.formId);
+
     this.setData({
       checkinRewardModalShown: false
     });

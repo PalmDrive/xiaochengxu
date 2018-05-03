@@ -4,7 +4,7 @@
       <!-- <button class="btn-start" bindtap="startQA"> -->
       <button class="btn-start" form-type="submit">
         <!-- <text class="size-18 block">{{ canAnswer ? (live.status === 303 ? '今日已通关，明日再来' : '开始答题') : '4月比赛结束，5月敬请期待'}}</text> -->
-        <text class="size-18 block">{{notificationSubscribed ? '订阅成功' : '订阅开赛通知'}}</text>
+        <text class="size-18 block">{{notificationSubscribed ? '订阅成功' : '订阅开赛提醒'}}</text>
       </button>
     </view>
 
@@ -149,7 +149,9 @@
         </view>
       </view>
 
-      <button class="btn-get-reward btn btn-round" bindtap="closeCheckinRewardModal">领取奖励</button>
+      <form bindsubmit="closeCheckinRewardModal" report-submit="true">
+        <button class="btn-get-reward btn btn-round" form-type="submit">领取奖励</button>
+      </form>
     </view>
   </view>
 </view>
