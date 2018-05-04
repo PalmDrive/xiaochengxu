@@ -1,110 +1,5 @@
-.home-container {
+.ranking-container {
   background-color: #0091D6;
-}
-
-.home-main {
-  padding: 0px 20px 60px 20px;
-  margin-top: -10px;
-}
-
-form {
-  width: 100%;
-}
-
-.home-banner {
-  width: 100%;
-}
-
-.home-box {
-  border-radius: 10px;
-  margin-bottom: 10px;
-  height: 120px;
-  width: 100%;
-}
-
-.home-status {
-  margin-top: 70px;
-  margin-left: 35px;
-  font-family: PingFangSC-Regular;
-  letter-spacing: 0.1;
-}
-
-.text-purple-dark {
-  padding: 15px 50px;
-  background: white;
-  width: 100%;
-  border-radius: 10px;
-  margin-bottom: 10px;
-}
-
-.column-first {
-  border-right: 1px solid #ccc;
-  width: 50%;
-}
-
-.home-start {
-  background:  url('http://cdn.gecacademy.cn/miniprogram/version_2/home_start.png') center center no-repeat/cover;
-}
-
-.home-pk {
-  background: url('http://cdn.gecacademy.cn/miniprogram/version_2/home_pk.png') center center no-repeat/cover;
-}
-
-.home-enroll {
-  background:  url('http://cdn.gecacademy.cn/miniprogram/version_2/home_enroll.png') center center no-repeat/cover;
-}
-
-.home-user-info {
-  background:  url('http://cdn.gecacademy.cn/miniprogram/version_2/home_user_info.jpg') center center no-repeat/cover;
-  height: 120px;
-  padding-top: 15px;
-}
-
-.home-user-info .column {
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.relive-task {
-  background:  url('http://cdn.gecacademy.cn/miniprogram/version_2/relive_task.jpg') center center no-repeat/cover;
-  height: 70px;
-  width: 50%;
-}
-
-.home-ranking {
-  background:  url('http://cdn.gecacademy.cn/miniprogram/version_2/home_ranking.jpg') center center no-repeat/cover;
-  height: 70px;
-  width: 45%;
-}
-
-.coin {
-  width: 10px;
-  height: 11px;
-  margin-right: 5px;
-}
-
-.cup {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-}
-
-.pk-rule {
-  width: 175px;
-  height: 32px;
-  margin-top: 30px;
-}
-
-.two-box-row {
-  width: 100%;
-}
-
-.view-container {
-  background:  url('https://cdn.ailingual.cn/pics/liveqa/bg3_new.jpg') top/contain no-repeat;
-  padding: 460px 15px 20px;
-  color: white;
-  font-size: 16px;
-  display: block;
 }
 
 .title-and-schedule-container {
@@ -208,10 +103,13 @@ form {
 }
 
 .user-photo {
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  margin-bottom: 5px;
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .card-container {
@@ -276,20 +174,20 @@ form {
 .leaderboard-type {
   background-color: white;
   margin-bottom: 10px;
-  border-radius: 5px;
+  border-radius: 0px;
   overflow: hidden;
 }
 
 .leaderboard-type .title {
   text-align: center;
   padding: 8px 0;
-  color: #2E2C3B;
+  color: #0091D6;
   width: 50%;
 }
 
 .leaderboard-type .title.active {
   color: white;
-  background-color: #0F5C82;
+  background-color: #0091D6;
 }
 
 .table-head {

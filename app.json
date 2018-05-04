@@ -2,6 +2,8 @@
   "pages":[
     "pages/liveqa/index",
     "pages/liveqa/cash",
+    "pages/liveqa/pk-success",
+    "pages/liveqa/ranking",
     "pages/liveqa/live",
     "pages/liveqa/questions",
     "pages/liveqa/profile",

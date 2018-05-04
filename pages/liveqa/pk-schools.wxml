@@ -1,8 +1,26 @@
-<view class="pk-schools">
-  <view wx:for="{{liveSchools}}" wx:key wx:for-item="school" class="row school-row">
-    <view>{{index + 1}}</view>
-    <view>{{school.name}}</view>
-    <view>{{school.points}}</view>
-    <button bindtap="startPK" data-item="{{school.id}}">PK</button>
+<view class="pk-schools size-12">
+  <view class="size-12 text-white pk-count">剩余挑战次数：{{pkCount}}</view>
+  <view class="row text-white space-between my-school">
+    <view class="row">
+      <view class="size-22">{{userSchool.rtRanking}}</view>
+      <image src="{{userSchool.profilePicUrl}}" class="school-image"/>
+      <view>{{userSchool.name}}</view>
+    </view>
+    <view class="row">
+      <image src="{{ossUrl + 'coin.png'}}" class="coin"/>
+      <view>{{userSchool.points}}</view>
+    </view>
+  </view>
+  <view wx:for="{{liveSchools}}" wx:key wx:for-item="school" class="row school-row text-white space-between" style="background: {{school.bgImage}}">
+    <view class="row">
+      <view class="size-22">{{index + 1}}</view>
+      <image src="{{school.profilePicUrl}}" class="school-image"/>
+      <view>{{school.name}}</view>
+    </view>
+    <view class="row">
+      <image src="{{ossUrl + 'coin.png'}}" class="coin"/>
+      <view>{{school.points}}</view>
+    </view>
+    <image src="{{school.pkButtonImage}}" class="pk-button" bindtap="startPK" data-item="{{school.id}}" data-ranking="{{index + 1}}"/>
   </view>
 </view>

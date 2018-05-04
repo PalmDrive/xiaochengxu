@@ -77,6 +77,14 @@ view {
   justify-content: space-between;
 }
 
+.space-around {
+  justify-content: space-around;
+}
+
+.text-right {
+  text-align: right;
+}
+
 .block {
   display: block;
 }

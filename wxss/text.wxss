@@ -30,6 +30,10 @@
   color: #8400FF;
 }
 
+.text-purple-dark {
+  color: #312B67;
+}
+
 .text-red {
   color: #EE4248;
 }
@@ -59,7 +63,7 @@
 }
 
 .main-color {
-  color: #0090E7
+  color: #0091D6;
 }
 
 .main-color-green {
@@ -117,7 +121,7 @@
 }
 
 .size-22 {
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .size-24 {

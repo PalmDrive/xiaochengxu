@@ -1,6 +1,6 @@
 const {request} = require('./request'),
       baseUrls = {
-        dev: 'http://localhost:5000/graphql',
+        dev: 'http://192.168.1.10:10001/graphql',
         production: 'https://ainterest-service-production.ailingual.cn/graphql'
       };
 

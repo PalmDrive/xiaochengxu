@@ -27,9 +27,7 @@ const page = Page({
     leaderboardType: 'schools',
     splashShown: false,
     checkinRewardModalShown: false,
-    notificationSubscribed: false, // 订阅开赛通知
-    ossUrl: 'http://cdn.gecacademy.cn/miniprogram/version_2/',
-    pkCount: 0
+    notificationSubscribed: false // 订阅开赛通知
   },
 
   onLoad(options) {
@@ -77,8 +75,7 @@ const page = Page({
           user: data.user,
           liveSchools: data.liveSchools,
           students: data.students,
-          canAnswer: data.canAnswer,
-          pkCount: data.pkCount
+          canAnswer: data.canAnswer
         };
 
         if (data.live && data.live.todayUserCheckin) {
@@ -93,29 +90,29 @@ const page = Page({
   },
 
   formSubmit(e) {
-    if (this.data.canAnswer) {
-      const userId = this.data.user.id,
-            formId = e.detail.formId;
-
-      saveFormId(userId, formId)
-        .then(() => this.startQA());
-    } else {
-      wx.showToast({
-        title: '4月比赛结束，5月敬请期待',
-        icon: 'none'
-      });
-    }
-  },
-
-  pkFormSubmit(e) {
     const userId = this.data.user.id,
           formId = e.detail.formId;
 
-    saveFormId(userId, formId).then(() => {
-      wx.navigateTo({
-        url: `./pk-schools`
+    if (!this.data.notificationSubscribed) {
+      this.setData({
+        notificationSubscribed: true
       });
-    });
+    }
+
+    saveFormId(userId, formId);
+
+    // if (this.data.canAnswer) {
+    //   const userId = this.data.user.id,
+    //         formId = e.detail.formId;
+    //
+    //   saveFormId(userId, formId)
+    //     .then(() => this.startQA());
+    // } else {
+    //   wx.showToast({
+    //     title: '4月比赛结束，5月敬请期待',
+    //     icon: 'none'
+    //   });
+    //}
   },
 
   startQA() {
@@ -236,7 +233,6 @@ const page = Page({
               }
             },
             canAnswer
-            pkCount(userId: "${user.id}")
           }`,
           variables = {
             couponFilter: {name: '答题复活卡_邀请好友'},
@@ -255,8 +251,7 @@ const page = Page({
                 couponId: res.data.coupons[0].id,
                 students: res.data.students,
                 live: res.data.currentLive,
-                canAnswer: res.data.canAnswer,
-                pkCount: res.data.pkCount
+                canAnswer: res.data.canAnswer
               };
 
         //this._setTimeToNextLive(mockData.live);

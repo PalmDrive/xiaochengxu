@@ -1,0 +1,47 @@
+<view class="ranking-container">
+  <view class="row leaderboard-type">
+    <view class="size-18 title {{leaderboardType === 'schools' ? 'active' : ''}}" data-type="schools" bindtap="changeLeaderboard">学校排行榜</view>
+    <view class="size-18 title {{leaderboardType === 'students' ? 'active' : ''}}" data-type="students" bindtap="changeLeaderboard">用户排行榜</view>
+  </view>
+
+  <view class="leaderboard size-12">
+    <view class="table" hidden="{{leaderboardType !== 'schools'}}">
+      <view class="text-red hint">
+        <text hidden="{{!live.endAtDisplay}}">{{live.endAtDisplay}}</text>
+        <text>前30名高校玩家，瓜分50万大奖</text>
+      </view>
+
+      <view class="table-head">
+        <view class="table-row row">
+          <text class="ranking">排名</text>
+          <text>学校</text>
+          <text>总智商积分</text>
+        </view>
+      </view>
+      <view class="table-body">
+        <view class="table-row row" wx:for="{{liveSchools}}" wx:key wx:for-item="school">
+          <text class="ranking">{{index + 1}}</text>
+          <text>{{school.name}}</text>
+          <text>{{school.points}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="table size-12" hidden="{{leaderboardType !== 'students'}}">
+      <view class="table-head">
+        <view class="table-row row">
+          <text class="ranking">排名</text>
+          <text>用户</text>
+          <text>总智商积分</text>
+        </view>
+      </view>
+      <view class="table-body">
+        <view class="table-row row" wx:for="{{students}}" wx:key wx:for-item="student">
+          <text class="ranking">{{index + 1}}</text>
+          <text>{{student.wxUsername}}</text>
+          <text>{{student.qaPoints}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

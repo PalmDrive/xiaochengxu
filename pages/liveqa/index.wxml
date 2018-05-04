@@ -1,94 +1,57 @@
-<view class="view-container" hidden="{{!user.myLiveSchool.name}}">
-  <form bindsubmit="formSubmit" report-submit="true">
-    <view class="title-and-schedule-container">
-      <!-- <button class="btn-start" bindtap="startQA"> -->
-      <button class="btn-start" form-type="submit">
-        <!-- <text class="size-18 block">{{ canAnswer ? (live.status === 303 ? '今日已通关，明日再来' : '开始答题') : '4月比赛结束，5月敬请期待'}}</text> -->
-        <text class="size-18 block">{{notificationSubscribed ? '订阅成功' : '订阅开赛提醒'}}</text>
+<view class="home-container" hidden="{{!user.myLiveSchool.name}}">
+  <image src="{{ossUrl + 'home_banner.png'}}" class="home-banner" />
+
+  <view class="home-main column column-center">
+    <view class="row text-purple-dark space-between">
+      <view class="column column-first">
+        <text class="size-12">本场奖金价值</text>
+        <text class="size-18">500000</text>
+      </view>
+      <view class="column">
+        <text class="size-12">结算日期</text>
+        <text class="size-18">5月22日</text>
+      </view>
+    </view>
+    <form bindsubmit="formSubmit" report-submit="true">
+      <button class="home-box row home-start" form-type="submit">
+        <text class="size-10 text-white home-status">{{live.status === 303 ? '今日已通关' : '第二赛季进行中'}}</text>
       </button>
+    </form>
+    <form bindsubmit="pkFormSubmit" report-submit="true">
+      <button class="home-box row home-pk" form-type="submit">
+        <text class="size-10 text-white home-status">{{pkCount === 3 ? '今日已完成挑战' : '比赛进行中 (' + pkCount + '/3)'}}</text>
+      </button>
+    </form>
+    <!--
+    <view class="home-box row home-enroll">
+      <text class="size-10 text-white home-status">中外名校battle</text>
     </view>
-
-    <view class="card-container">
-      <view class="top-container" bindtap="gotoProfile">
+    -->
+    <view class="row space-between two-box-row">
+      <navigator class="home-box relive-task" url="/pages/liveqa/revive-tasks"></navigator>
+      <navigator class="home-box home-ranking" url="/pages/liveqa/ranking"></navigator>
+    </view>
+    <navigator class="home-box home-user-info column text-white size-12" url="/pages/liveqa/profile">
+      <view class="column">
         <image src="{{user.profilePicUrl}}" class="user-photo" />
-        <view>
-          <text>{{user.wxUsername}}</text>
-          <text class="size-12"> (贡献: {{user.rtQAPointsThisWeek}}智商积分)</text>
+        <text>{{user.wxUsername}}</text>
+      </view>
+      <view class="row space-around">
+        <view class="row">
+          <image src="http://cdn.gecacademy.cn/miniprogram/version_2/coin.png" class="coin"/>
+          <text> {{user.rtQAPointsThisWeek}}</text>
+        </view>
+        <view class="row">
+          <image src="http://cdn.gecacademy.cn/miniprogram/version_2/cup.png" class="cup"/>
+          <text>{{user.myLiveSchool.name + '  (' + user.myLiveSchool.rtRanking + '名)'}}</text>
         </view>
       </view>
-      <view class="middle-container row" bindtap="gotoProfile">
-        <view class="col left">
-          <view class="text-dark-gray size-12">累计奖金</view>
-          <text>
-            <text>￥{{(user.rtCash / 100)}}</text>
-          </text>
-        </view>
-        <view class="col">
-          <view class="text-dark-gray size-12">学校排名</view>
-          <view>第{{user.myLiveSchool.rtRanking}}名</view>
-          <view class="size-12 text-dark-gray">{{user.myLiveSchool.name}}</view>
-          <!-- <text>
-            <text>第{{user.myLiveSchool.rtRanking}}名</text>
-            <text class="size-12">（{{user.myLiveSchool.name}}）</text>
-          </text> -->
-        </view>
-      </view>
-      <view class="bottom-container">
-        <text class="size-18">我拥有复活卡{{user.extraQALives || 0}}张</text>
-        <button class="btn-round" bindtap="gotoSharedPoster">获得复活卡</button>
-        <text class="size-12 text-gray">您的学校排名第{{user.myLiveSchool.rtRanking}}，赶紧拉好友一起参加</text>
-      </view>
-    </view>
+    </navigator>
+    <navigator url="/pages/liveqa/rules">
+      <image src="{{ossUrl + 'pk_rule.png'}}" class="pk-rule" />
+    </navigator>
+  </view>
 
-    <navigator url="/pages/liveqa/rules" class="size-12 rule-link">活动规则</navigator>
-
-    <view class="row leaderboard-type">
-      <view class="size-18 title {{leaderboardType === 'schools' ? 'active' : ''}}" data-type="schools" bindtap="changeLeaderboard">学校排行榜</view>
-      <view class="size-18 title {{leaderboardType === 'students' ? 'active' : ''}}" data-type="students" bindtap="changeLeaderboard">用户排行榜</view>
-    </view>
-
-    <view class="leaderboard size-12">
-      <view class="table" hidden="{{leaderboardType !== 'schools'}}">
-        <view class="text-red hint">
-          <text hidden="{{!live.endAtDisplay}}">{{live.endAtDisplay}}</text>
-          <text>排名前20的学校瓜分10万奖金</text>
-        </view>
-
-        <view class="table-head">
-          <view class="table-row row">
-            <text class="ranking">排名</text>
-            <text>学校</text>
-            <text>总智商积分</text>
-          </view>
-        </view>
-        <view class="table-body">
-          <view class="table-row row" wx:for="{{liveSchools}}" wx:key wx:for-item="school">
-            <text class="ranking">{{index + 1}}</text>
-            <text>{{school.name}}</text>
-            <text>{{school.points}}</text>
-          </view>
-        </view>
-      </view>
-
-      <view class="table size-12" hidden="{{leaderboardType !== 'students'}}">
-        <view class="table-head">
-          <view class="table-row row">
-            <text class="ranking">排名</text>
-            <text>用户</text>
-            <text>总智商积分</text>
-          </view>
-        </view>
-        <view class="table-body">
-          <view class="table-row row" wx:for="{{students}}" wx:key wx:for-item="student">
-            <text class="ranking">{{index + 1}}</text>
-            <text>{{student.wxUsername}}</text>
-            <text>{{student.qaPoints}}</text>
-          </view>
-        </view>
-      </view>
-
-    </view>
-  </form>
 </view>
 
 <view class="school-selector-view size-16" hidden="{{user.myLiveSchool.name}}">
