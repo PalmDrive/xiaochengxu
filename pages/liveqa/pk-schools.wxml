@@ -1,5 +1,5 @@
 <view class="pk-schools size-12">
-  <view class="size-12 text-white pk-count">剩余挑战次数：{{pkCount}}</view>
+  <view class="size-12 text-white pk-count">今日剩余挑战次数：{{pkCount}}</view>
   <view class="row text-white space-between my-school">
     <view class="row">
       <view class="size-22">{{userSchool.rtRanking}}</view>

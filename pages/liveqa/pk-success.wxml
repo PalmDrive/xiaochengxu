@@ -2,7 +2,7 @@
   <view class="column">
     <image src="{{user.profilePicUrl}}" class="user-photo block"/>
     <view class="size-16 text-center user-name">{{user.wxUsername}}</view>
-    <view class="row">
+    <view class="row user-coin-row">
       <image src="http://cdn.gecacademy.cn/miniprogram/version_2/coin.png" class="coin"/>
       <view class="size-14 user-coin">{{user.qaPoints}}</view>
     </view>
@@ -10,16 +10,14 @@
 
   <view class="result-list size-16 column">
     <image src="http://cdn.gecacademy.cn/miniprogram/version_2/pk_success_list.png" class="pk-success-image"/>
+    <text class="size-12 score-tip">{{user.wxUsername}}偷了{{pkPoints}}分</text>
     <view class="row space-between school-row">
       <view class="row">
         <image src="{{liveSchool.profilePicUrl}}" class="pk-school-image {{liveSchool.hiddenImage ? 'hide' : 'show'}}"/>
         <text class="text-white size-20 {{liveSchool.hiddenImage ? 'show' : 'hide'}}">{{liveSchool.firstLetter}}</text>
         <text class="size-14">{{liveSchool.name}}</text>
       </view>
-      <view class="row">
-        <image src="http://cdn.gecacademy.cn/miniprogram/version_2/coin.png" class="coin"/>
-        <text class="size-12"> -{{pkPoints}}</text>
-      </view>
+      <text class="size-12"> 损失了{{pkPoints}}</text>
     </view>
   </view>
 

@@ -236,7 +236,7 @@ const page = Page({
               }
             },
             canAnswer
-            pkCount(userId: "${user.id}")
+            remainingPkCount(userId: "${user.id}")
           }`,
           variables = {
             couponFilter: {name: '答题复活卡_邀请好友'},
@@ -256,7 +256,7 @@ const page = Page({
                 students: res.data.students,
                 live: res.data.currentLive,
                 canAnswer: res.data.canAnswer,
-                pkCount: res.data.pkCount
+                pkCount: 3 - res.data.remainingPkCount
               };
 
         //this._setTimeToNextLive(mockData.live);

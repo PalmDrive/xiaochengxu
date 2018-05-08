@@ -3,23 +3,23 @@
 
   <view class="home-main column column-center">
     <view class="row text-purple-dark space-between">
-      <view class="column column-first">
+      <view class="column column-first column-center">
         <text class="size-12">本场奖金价值</text>
         <text class="size-18">500000</text>
       </view>
-      <view class="column">
+      <view class="column column-center">
         <text class="size-12">结算日期</text>
-        <text class="size-18">5月22日</text>
+        <text class="size-18">6月01日</text>
       </view>
     </view>
     <form bindsubmit="formSubmit" report-submit="true">
       <button class="home-box row home-start" form-type="submit">
-        <text class="size-10 text-white home-status">{{live.status === 303 ? '今日已通关' : '第二赛季进行中'}}</text>
+        <text class="size-11 text-white home-status">{{live.status === 303 ? '今日已通关' : '第二赛季进行中'}}</text>
       </button>
     </form>
     <form bindsubmit="pkFormSubmit" report-submit="true">
       <button class="home-box row home-pk" form-type="submit">
-        <text class="size-10 text-white home-status">{{pkCount === 3 ? '今日已完成挑战' : '比赛进行中 (' + pkCount + '/3)'}}</text>
+        <text class="size-11 text-white home-status">{{pkCount === 3 ? '今日已完成挑战' : '比赛进行中 (' + pkCount + '/3)'}}</text>
       </button>
     </form>
     <!--

@@ -23,10 +23,11 @@ form {
 }
 
 .home-status {
-  margin-top: 70px;
-  margin-left: 35px;
+  margin-top: 73px;
+  margin-left: 7px;
   font-family: PingFangSC-Regular;
   letter-spacing: 0.1;
+  color: rgba(255,255,255,0.6)
 }
 
 .text-purple-dark {

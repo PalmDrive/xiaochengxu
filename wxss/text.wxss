@@ -88,6 +88,10 @@
   font-size: 10px;
 }
 
+.size-11 {
+  font-size: 11px;
+}
+
 .size-12 {
   font-size: 12px;
 }

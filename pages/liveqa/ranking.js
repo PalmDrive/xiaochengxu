@@ -35,33 +35,6 @@ const page = Page({
       const sceneId = decodeURIComponent(options.scene);
       this._onOpenWithScene(sceneId);
     }
-
-    if (Auth.getLocalUserId()) {
-      this.setData({splashShown: true});
-
-      // show and hide splash
-      const audioCtx = wx.createInnerAudioContext();
-      audioCtx.src = 'https://cdn.ailingual.cn/audios/liveqa/punch_audio.mp3';
-
-      setTimeout(() => {
-        audioCtx.play();
-        setTimeout(() => {
-          this.setData({
-            splashShown: false
-          });
-
-          // if (this.data.live.notes) {
-          //   setTimeout(() => {
-          //     wx.showModal({
-          //       title: '系统通知',
-          //       content: this.data.live.notes,
-          //       showCancel: false
-          //     });
-          //   }, 500);
-          // }
-        }, 800);
-      }, 1400);
-    }
   },
 
   onShow() {

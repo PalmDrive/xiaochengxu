@@ -4,9 +4,8 @@ page {
 
 .pk-success {
   background-color: #0091D6;
-  padding: 20px;
+  padding: 50px 20px 20px 20px;
   line-height: 150%;
-  height: 100%;
 }
 
 .user-name {
@@ -14,17 +13,26 @@ page {
   margin-bottom: 10px;
 }
 
+.user-coin-row {
+  margin: 15px 0px;
+}
+
 .user-photo {
-  width: 50px;
-  height: 50px;
+  min-width:50px;
+  min-height:50px;
+  max-height:50px;
+  max-width:50px;
   border-radius: 25px;
-  margin-top: 30px;
 }
 
 .pk-success-image {
   width: 180px;
   height: 100px;
-  margin-bottom: 25px;
+}
+
+.score-tip {
+  margin-bottom: 20px;
+  margin-top: 15px;
 }
 
 .coin {
@@ -42,6 +50,7 @@ page {
   padding: 20px;
   margin: 25px 0px 60px 0px;
   width: 100%;
+  min-height: 400px;
 }
 
 .school-row {
@@ -54,6 +63,7 @@ page {
   width: 50px;
   height: 50px;
   border-radius: 25px;
+  margin-right: 10px;
 }
 
 .size-20 {

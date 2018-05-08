@@ -1,6 +1,6 @@
 .revive-tasks {
   padding: 40px 20px;
-  background-color: #083850;
+  background-color: #0091D6;
   min-height: 100vh;
 }
 

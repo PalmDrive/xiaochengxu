@@ -84,7 +84,7 @@ const page = Page({
           id, name, rtRanking, profilePicUrl, points
         }
       }
-      pkCount(userId: "${Auth.getLocalUserId()}")
+      remainingPkCount(userId: "${Auth.getLocalUserId()}")
     }`,
           variables = {
             order: [['points', 'DESC']]
@@ -94,7 +94,7 @@ const page = Page({
         const schools = res.data.liveSchools,
               user = res.data.users.length > 0 ? res.data.users[0] : {},
               userSchool = user.myLiveSchool,
-              pkCount = res.data.pkCount;
+              pkCount = res.data.remainingPkCount;
 
         schools.map((obj, index) => {
           if (obj.id === userSchool.id) {
