@@ -1,81 +1,93 @@
-<view class="questions-view">
+<view class="full-screen">
 <!-- 顶部 双方头像 + 时间 -->
-  <view class="{{state !== 0 ? 'top' : ''}}">
-    <view class="row space-between top-user">
-      <image src="{{ossUrl + 'pk_hat.png'}}" class="pk-hat  {{result.points > 0 ? 'pk-hat-left' : 'pk-hat-right'}}" hidden="{{state !== 1}}"/>
-      <view class="atk column">
-        <image src="{{user.profilePicUrl}}" class="user-photo" />
-        <text class="text-white size-12">{{user.wxUsername}}</text>
-      </view>
-      <view hidden="{{state !== 1}}">
-        <image src="{{ossUrl + 'vs_small.png'}}" class="vs-small" />
-      </view>
-      <view class="count-down" hidden="{{state !== 0}}">
-        <view class="size-12">倒计时</view>
-        <view class="size-24">{{timer}}S</view>
-      </view>
-      <view class="atk column">
-        <image src="{{defSchool.profilePicUrl}}" class="user-photo {{defSchool.hiddenImage ? 'hide' : 'show'}}"/>
-        <text class="text-white size-28 {{defSchool.hiddenImage ? 'show' : 'hide'}}">{{defSchool.firstLetter}}</text>
-        <text class="text-white size-12">{{defSchool.name}}</text>
-      </view>
+  <view class="pk-bg {{hidePkImage ? 'hide' : 'show'}}">
+    <view class="atk column atk-user">
+      <image src="{{user.profilePicUrl}}" class="user-photo" />
+      <text class="text-white size-12 text-name">{{user.wxUsername}}</text>
     </view>
-
-    <view class="progress space-between row" hidden="{{state !== 0}}">
-      <progress percent="{{user.points / 20000 * 100}}" activeColor="#CD2D00" backgroundColor="white"/>
-      <progress percent="{{!defSchool.DEF ? 100 : (100 - defSchool.DEF / 20000 * 100)}}" activeColor="white" backgroundColor="#CD2D00"/>
-    </view>
-
-    <view class="record space-between row pingfang-medium {{state !== 0 ? 'record-padding' : ''}}">
-      <text class="size-20">{{user.points || 0}}</text>
-      <text class="size-20">{{defSchool.DEF || 0}}</text>
+    <view class="atk column def-user">
+      <image src="{{defSchool.profilePicUrl}}" class="user-photo {{defSchool.hiddenImage ? 'hide' : 'show'}}"/>
+      <text class="text-white size-28 {{defSchool.hiddenImage ? 'show' : 'hide'}}">{{defSchool.firstLetter}}</text>
+      <text class="text-white size-12 text-name">{{defSchool.name}}</text>
     </view>
   </view>
-
-  <view hidden="{{state !== 0}}"> <!-- 答题中 start -->
-    <view class="card {{(question.selected || question.schoolSelected) ? 'selected' : ''}}">
-      <form bindsubmit="formSubmit" report-submit="true">
-        <view class="size-18">
-          <view class="question">{{question.content}}</view>
-          <button wx:for="{{question.options}}" wx:for-item="option" data-option="{{option}}" wx:key="value" class="row space-between option size-16 {{((!option.isRight && option.selected) || (!question.isRight && question.schoolSelected && question.schoolSelectedOption ===  option.value)) ? 'wrong' : ''}} {{(option.isRight || (question.isRight &&  question.schoolSelectedOption ===  option.value)) ? 'right' : ''}}" form-type="submit">
-            <view>
-              <text class="icon icon-x" wx:if="{{option.selected && !option.isRight}}">✗</text>
-              <text class="icon icon-checkmark" wx:if="{{option.selected && option.isRight}}">✔</text>
-            </view>
-            <text>{{option.label}}</text>
-            <view>
-              <text class="icon icon-x" wx:if="{{question.schoolSelected && !question.isRight && question.schoolSelectedOption ===  option.value}}">✗</text>
-              <text class="icon icon-checkmark" wx:if="{{question.schoolSelected && question.isRight && question.schoolSelectedOption ===  option.value}}">✔</text>
-            </view>
-          </button>
-
-          <view class="main-color size-9 pk-hint">点击选项，即可回答</view>
+  <view class="{{hidePkImage ? 'show' : 'hide'}} questions-view">
+    <view class="{{state !== 0 ? 'top' : ''}}">
+      <view class="row space-between top-user">
+        <image src="{{ossUrl + 'pk_hat.png'}}" class="pk-hat  {{result.points > 0 ? 'pk-hat-left' : 'pk-hat-right'}}" hidden="{{state !== 1}}"/>
+        <view class="atk column">
+          <image src="{{user.profilePicUrl}}" class="user-photo" />
+          <text class="text-white size-12 text-name">{{user.wxUsername}}</text>
         </view>
-      </form>
+        <view hidden="{{state !== 1}}">
+          <image src="{{ossUrl + 'vs_small.png'}}" class="vs-small" />
+        </view>
+        <view class="count-down" hidden="{{state !== 0}}">
+          <view class="size-12">倒计时</view>
+          <view class="size-24">{{timer}}S</view>
+        </view>
+        <view class="atk column">
+          <image src="{{defSchool.profilePicUrl}}" class="user-photo {{defSchool.hiddenImage ? 'hide' : 'show'}}"/>
+          <text class="text-white size-28 {{defSchool.hiddenImage ? 'show' : 'hide'}}">{{defSchool.firstLetter}}</text>
+          <text class="text-white size-12 text-name">{{defSchool.name}}</text>
+        </view>
+      </view>
+
+      <view class="progress space-between row" hidden="{{state !== 0}}">
+        <progress percent="{{user.points / 20000 * 100}}" activeColor="#CD2D00" backgroundColor="white"/>
+        <progress percent="{{!defSchool.DEF ? 100 : (100 - defSchool.DEF / 20000 * 100)}}" activeColor="white" backgroundColor="#CD2D00"/>
+      </view>
+
+      <view class="record space-between row pingfang-medium {{state !== 0 ? 'record-padding' : ''}}">
+        <text class="size-20">{{user.points || 0}}</text>
+        <text class="size-20">{{defSchool.DEF || 0}}</text>
+      </view>
     </view>
-    <view class="text-white size-12 text-right">已答：{{questionIndex + 1}}/5</view>
-  </view><!-- 答题中 end -->
 
-  <!-- 挑战结果 start -->
-  <view hidden="{{state !== 1}}" class="result">
-    <image src="{{ossUrl + (result.points > 0 ? 'pk_success.png' : 'pk_fail.png')}}" class="vs-result {{result.points > 0 ? 'vs-success' : ''}}" />
-    <view class="result-list size-16">
-      <view class="row">
-        <text>积分：</text>
-        <text>{{result.points > 0 ? '+ ' : '- '}} {{result.points}}</text>
+    <view hidden="{{state !== 0}}"> <!-- 答题中 start -->
+      <view class="card {{(question.selected || question.schoolSelected) ? 'selected' : ''}}">
+        <form bindsubmit="formSubmit" report-submit="true">
+          <view class="size-18">
+            <view class="question">{{question.content}}</view>
+            <button wx:for="{{question.options}}" wx:for-item="option" data-option="{{option}}" wx:key="value" class="row space-between option size-16 {{((!option.isRight && option.selected) || (!question.isRight && question.schoolSelected && question.schoolSelectedOption ===  option.value)) ? 'wrong' : ''}} {{((option.isRight && option.selected) || (question.isRight && question.schoolSelected && question.schoolSelectedOption ===  option.value) || (option.isRight && question.selected && question.schoolSelected)) ? 'right' : ''}}" form-type="submit">
+              <view>
+                <text class="icon icon-x" wx:if="{{option.selected && !option.isRight}}">✗</text>
+                <text class="icon icon-checkmark" wx:if="{{option.selected && option.isRight}}">✔</text>
+              </view>
+              <text>{{option.label}}</text>
+              <view>
+                <text class="icon icon-x" wx:if="{{question.schoolSelected && !question.isRight && question.schoolSelectedOption ===  option.value}}">✗</text>
+                <text class="icon icon-checkmark" wx:if="{{question.schoolSelected && question.isRight && question.schoolSelectedOption ===  option.value}}">✔</text>
+              </view>
+            </button>
+
+            <view class="main-color size-9 pk-hint">点击选项，即可回答</view>
+          </view>
+        </form>
       </view>
-      <view class="row">
-        <text>ATK值：</text>
-        <text>{{result.ATK || 0}}</text>
+      <view class="text-white size-12 text-right">进度：{{questionIndex + 1}}/5</view>
+    </view><!-- 答题中 end -->
+
+    <!-- 挑战结果 start -->
+    <view hidden="{{state !== 1}}" class="result">
+      <image src="{{ossUrl + (result.points > 0 ? 'pk_success.png' : 'pk_fail.png')}}" class="vs-result {{result.points > 0 ? 'vs-success' : ''}}" />
+      <view class="result-list size-16">
+        <view class="row">
+          <text>积分：</text>
+          <text>{{result.points >= 0 ? '+ ' : ''}} {{result.points || 0}}</text>
+        </view>
+        <view class="row">
+          <text>ATK值：</text>
+          <text>{{result.ATK || 0}}</text>
+        </view>
+        <view class="row">
+          <text>DEF值：</text>
+          <text>{{result.DEF || 0}}</text>
+        </view>
       </view>
-      <view class="row">
-        <text>DEF值：</text>
-        <text>{{result.DEF || 0}}</text>
-      </view>
+
+      <button class="size-20 btn-share1 main-color" bindtap="clickFirstButton"> {{result.points > 0 ? '炫耀战绩' : (pkCount > 0 ? ('继续挑战 (' + pkCount + '/3)') : '挑战次数为0，明日再战')}}</button>
+      <button class="size-20 btn-share2 text-white" open-type="share">邀请校友助威</button>
     </view>
-
-    <button class="size-20 btn-share1 main-color" bindtap="clickFirstButton"> {{result.points > 0 ? '炫耀战绩' : (pkCount > 0 ? ('继续挑战 (' + pkCount + '/3)') : '挑战次数为0，明日再战')}}</button>
-    <button class="size-20 btn-share2 text-white" open-type="share">邀请校友助威</button>
-
   </view>
 </view>

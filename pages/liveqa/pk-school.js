@@ -37,11 +37,12 @@ class LivePk {
         question: null,
         timer: settings.TIMER,
         defSchool: {points: 0}, // 守方学校
-        state: 1,
+        state: 0,
         result: {},
         pkCount: 0,
         questionIndex: 0,
-        ossUrl: 'http://cdn.gecacademy.cn/miniprogram/version_2/'
+        ossUrl: 'http://cdn.gecacademy.cn/miniprogram/version_2/',
+        hidePkImage: false
       },
 
       onLoad(options) {
@@ -49,6 +50,9 @@ class LivePk {
         liveSchoolId = options.liveSchoolId
         ranking = options.ranking
         this._fetchData()
+        setTimeout(() => {
+          this.setData({hidePkImage: true})
+        }, 2000)
       },
 
       selectAnswer(e) {
@@ -72,6 +76,7 @@ class LivePk {
             op.selected = true;
             user.leftTime = this.data.timer;
             user.isRight = op.isRight ? true : false;
+            op.showWrong = !op.isRight
           }
         });
         question.selected = true;
@@ -143,7 +148,7 @@ class LivePk {
                 userPkQuestions(userId: "${user.id}", rank: ${parseInt(ranking)}) {
                   content,id,options,pkTime,isRight,difficulty
                 }
-                pkCount(userId: "${user.id}")
+                remainingPkCount(userId: "${user.id}")
                 coupons(filter: $couponFilter) {
                   id
                 }
@@ -154,7 +159,7 @@ class LivePk {
 
         return graphql(query, variables)
           .then(res => {
-            const pkCount = res.data.pkCount;
+            const pkCount = res.data.remainingPkCount;
             couponId = res.data.coupons[0] ? res.data.coupons[0].id : null;
 
             const userPkQuestions = res.data.userPkQuestions || [];
@@ -179,6 +184,7 @@ class LivePk {
               })
               return obj
             })
+
             const d = {
               user:  _.extend({
                 id: user.id
@@ -188,13 +194,24 @@ class LivePk {
               pkCount: pkCount
             };
             questions = userPkQuestions
-            this._countDown();
             this.setData(d);
+
+            if (pkCount <= 0) {
+              wx.showToast({
+                title: '今日挑战次数剩余为0，明日再战',
+                icon: 'none',
+                duration: 2000
+              })
+              setTimeout(() => {
+                wx.redirectTo({url: `/pages/liveqa/index`});
+              }, 1000)
+            } else {
+              this._countDown();
+            }
           })
       },
 
       _nextQuestion() {
-        this._clearTimer();
         if (this.data.questionIndex < questions.length - 1) {
           this.setData({
             question: questions[this.data.questionIndex + 1],
@@ -276,10 +293,11 @@ class LivePk {
               user: this.data.user,
               defSchool: this.data.defSchool
             })
+            this._clearTimer();
             setTimeout(() => {
               processing = false;
               this._nextQuestion();
-            }, 1000);
+            }, 2000);
         })
       },
 
@@ -304,7 +322,7 @@ class LivePk {
 
       clickFirstButton() {
         if (this.data.result.points > 0) {
-          wx.navigateTo({url: '/pages/liveqa/pk-success'});
+          wx.navigateTo({url: `/pages/liveqa/pk-success?liveId=${liveId}&liveSchoolId=${liveSchoolId}`});
         } else if (this.data.pkCount > 0) {
           wx.navigateBack({
             delta: 1
@@ -312,7 +330,7 @@ class LivePk {
         } else {
           wx.showToast({
             title: '今日挑战次数剩余为0，明日再战',
-            icon: icon || 'none',
+            icon: 'none',
             duration: 2000
           })
         }
