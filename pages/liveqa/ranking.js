@@ -52,7 +52,7 @@ const page = Page({
 
   onShareAppMessage(options) {
     return {
-      title: `${this.data.user.wxUsername}邀请你参加高校答题番位争夺战`,
+      title: `${this.data.user.wxUsername}邀你参战为母校争光 瓜分50万大奖`,
       path: '/pages/liveqa/index',
       imageUrl: 'http://cdn.gecacademy.cn/miniprogram/version_2/share.jpg'
     };

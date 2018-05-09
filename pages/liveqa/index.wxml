@@ -43,7 +43,7 @@
         </view>
         <view class="row">
           <image src="http://cdn.gecacademy.cn/miniprogram/version_2/cup.png" class="cup"/>
-          <text>{{user.myLiveSchool.name + '  (' + user.myLiveSchool.rtRanking + '名)'}}</text>
+          <text>{{user.myLiveSchool.name + '  (第' + user.myLiveSchool.rtRanking + '名)'}}</text>
         </view>
       </view>
     </navigator>
