@@ -7,7 +7,7 @@
     </view>
     <view class="atk column def-user">
       <image src="{{defSchool.profilePicUrl}}" class="user-photo {{defSchool.hiddenImage ? 'hide' : 'show'}}"/>
-      <text class="text-white size-28 {{defSchool.hiddenImage ? 'show' : 'hide'}}">{{defSchool.firstLetter}}</text>
+      <view class="text-white size-12 school-default-img" style="display: {{defSchool.hiddenImage ? 'block' : 'none'}}">{{defSchool.firstLetter}}</view>
       <text class="text-white size-12 text-name">{{defSchool.name}}</text>
     </view>
   </view>
@@ -28,7 +28,7 @@
         </view>
         <view class="atk column">
           <image src="{{defSchool.profilePicUrl}}" class="user-photo {{defSchool.hiddenImage ? 'hide' : 'show'}}"/>
-          <text class="text-white size-28 {{defSchool.hiddenImage ? 'show' : 'hide'}}">{{defSchool.firstLetter}}</text>
+          <view class="text-white size-12 school-default-img" style="display: {{defSchool.hiddenImage ? 'block' : 'none'}}">{{defSchool.firstLetter}}</view>
           <text class="text-white size-12 text-name">{{defSchool.name}}</text>
         </view>
       </view>
@@ -86,8 +86,8 @@
         </view>
       </view>
 
-      <button class="size-20 btn-share1 main-color" bindtap="clickFirstButton"> {{result.points > 0 ? '炫耀战绩' : (pkCount > 0 ? ('继续挑战 (' + pkCount + '/3)') : '挑战次数为0，明日再战')}}</button>
-      <button class="size-20 btn-share2 text-white" open-type="share">邀请校友助威</button>
+      <button class="size-20 btn-share1 main-color pingfang-medium" bindtap="clickFirstButton"> {{(pkCount > 0 ? ('继续挑战 (' + pkCount + '/3)') : '挑战次数为0，明日再战')}}</button>
+      <button class="size-20 btn-share2 text-white pingfang-medium" open-type="share">炫耀战绩</button>
     </view>
   </view>
 </view>

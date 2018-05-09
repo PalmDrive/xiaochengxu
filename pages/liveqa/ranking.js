@@ -27,14 +27,11 @@ const page = Page({
     leaderboardType: 'schools',
     splashShown: false,
     checkinRewardModalShown: false,
-    notificationSubscribed: false // 订阅开赛通知
+    notificationSubscribed: false, // 订阅开赛通知
+    ossUrl: 'http://cdn.gecacademy.cn/miniprogram/version_2/'
   },
 
   onLoad(options) {
-    if (options.scene) {
-      const sceneId = decodeURIComponent(options.scene);
-      this._onOpenWithScene(sceneId);
-    }
   },
 
   onShow() {
@@ -44,111 +41,13 @@ const page = Page({
       .then(data => {
         couponId = data.couponId;
          const states = {
-          live: data.live,
           user: data.user,
           liveSchools: data.liveSchools,
-          students: data.students,
-          canAnswer: data.canAnswer
+          students: data.students
         };
-
-        if (data.live && data.live.todayUserCheckin) {
-          states.checkinRewardModalShown = true;
-          this._formatCheckins(data.live.todayUserCheckin, data.live);
-        }
-
         this.setData(states);
         wx.hideLoading();
-        //this._timeToNextLiveCountDown();
       });
-  },
-
-  formSubmit(e) {
-    const userId = this.data.user.id,
-          formId = e.detail.formId;
-
-    if (!this.data.notificationSubscribed) {
-      this.setData({
-        notificationSubscribed: true
-      });
-    }
-
-    saveFormId(userId, formId);
-
-    // if (this.data.canAnswer) {
-    //   const userId = this.data.user.id,
-    //         formId = e.detail.formId;
-    //
-    //   saveFormId(userId, formId)
-    //     .then(() => this.startQA());
-    // } else {
-    //   wx.showToast({
-    //     title: '4月比赛结束，5月敬请期待',
-    //     icon: 'none'
-    //   });
-    //}
-  },
-
-  startQA() {
-    wx.navigateTo({
-      url: `./questions`
-    });
-  },
-
-  inputSchoolName: _.debounce(function(e) { // 必须是function, 不能用 =>
-    const name = e.detail.value;
-    //console.log(`school: ${name}`);
-    querySchoolList(name)
-      .then(data => {
-        this.setData({schoolList: data});
-      });
-  }, 500),
-
-  selectSchool(e) {
-    const school = e.target.dataset.item;
-    this.setData({
-      selectedSchool: school,
-      schoolList: []
-    });
-  },
-
-  saveSelectedSchool() {
-    const user = this.data.user,
-          school = this.data.selectedSchool;
-    wx.showLoading({title: '', mask: true});
-
-    const variables = {
-      data: {
-        schoolId: school.id
-      }
-    };
-    return graphql(`mutation selectSchool($data: JSON) {
-      user (id: "${user.id}", data: $data) {
-        id
-      },
-      liveSchool (schoolId: "${school.id}", name: "${school.name}") {
-        id
-      }
-    }`, variables)
-      .then(() => this.onShow());
-  },
-
-  gotoSharedPoster() {
-    const url = `/pages/liveqa/revive-tasks`;
-    //const url = `/pages/album/share?couponId=${couponId}&appName=qaXiaochengxu`;
-    wx.navigateTo({url});
-  },
-
-  gotoProfile() {
-    const url = `/pages/liveqa/profile`;
-    wx.navigateTo({url});
-  },
-
-  changeLeaderboard(e) {
-    const type = e.currentTarget.dataset.type;
-
-    this.setData({
-      leaderboardType: type
-    });
   },
 
   onShareAppMessage(options) {
@@ -159,53 +58,33 @@ const page = Page({
     };
   },
 
-  closeCheckinRewardModal(e) {
-    saveFormId(this.data.user.id, e.detail.formId);
+  changeLeaderboard(e) {
+    const type = e.currentTarget.dataset.type;
 
     this.setData({
-      checkinRewardModalShown: false
+      leaderboardType: type
     });
-    setTimeout(() => {
-      wx.showToast({
-        title: '领取成功',
-        icon: 'none'
-      });
-    }, 500);
   },
 
   _fetchData() {
     const user = Auth.getLocalUserInfo(),
-          query = `query q($couponFilter: JSON, $userOrder: JSON, $userFilter: JSON) {
+          query = `query q($userOrder: JSON, $userFilter: JSON) {
             liveSchools (order: [["points", "DESC"]]) {
-              id, name, ranking, registeredUsersCount, points
+              id, name, ranking, registeredUsersCount, points,profilePicUrl
             },
             users(id: "${user.id}") {
               myLiveSchool {
-                name, rtRanking
+                name, rtRanking,profilePicUrl,points
               },
               rtQAPointsThisWeek
               rtCash
-              extraQALives
-            },
-            coupons(filter: $couponFilter) {
-              id
+              extraQALives,profilePicUrl,
+              qaPoints,
+              rtRanking
             },
             students: users (filter: $userFilter, order: $userOrder) {
-              profilePicUrl, wxUsername, qaPoints
-            },
-            currentLive {
-              endAtDisplay, notes, status,
-              checkinRewards {
-                dayIndex, extraQALives, points
-              }
-              todayUserCheckin {
-                streakDays, createdAt,
-                checkinReward {
-                  points, extraQALives
-                }
-              }
-            },
-            canAnswer
+              profilePicUrl, wxUsername, qaPoints,profilePicUrl
+            }
           }`,
           variables = {
             couponFilter: {name: '答题复活卡_邀请好友'},
@@ -220,77 +99,16 @@ const page = Page({
         const userData = res.data.users ? res.data.users[0] : {},
               data = {
                 user: _.extend(userData, user.attributes, {id: user.id}),
-                liveSchools: res.data.liveSchools,
-                couponId: res.data.coupons[0].id,
-                students: res.data.students,
-                live: res.data.currentLive,
-                canAnswer: res.data.canAnswer
+                liveSchools: res.data.liveSchools.map(school => {
+                  if (!school.profilePicUrl) {
+                    school.firstLetter = school.name.substr(0,1)
+                    school.hiddenImage = true
+                  }
+                  return school
+                }),
+                students: res.data.students
               };
-
-        //this._setTimeToNextLive(mockData.live);
-        //mockData.live.schedule = this._formatSchedule(mockData.live);
-
         return data;
       });
-  },
-
-  _formatSchedule(live) {
-    const schedule = live.metaData.schedule.concat([]);
-    schedule.unshift(+live.startAt);
-    return schedule.map((timestamp, index) => {
-      const date = new Date(timestamp),
-            now = new Date(),
-            obj = {time: utils.formatTime(date, true), label: '', bgColor: '#99E2FA'};
-
-      if (utils.formatDateToDay(now) === utils.formatDateToDay(date)) {
-        obj.label = '今';
-        obj.bgColor = '#FF0000';
-      } else {
-        obj.label = utils.formatDateOfWeek(date);
-      }
-      return obj;
-    });
-  },
-
-  _setTimeToNextLive(live) {
-    const nextLiveStartAt = live.metaData.schedule[0],
-          deltaTime = nextLiveStartAt - (+new Date());
-    live.timeToNextLive = utils.convertTime(deltaTime / 1000);
-    return live;
-  },
-
-  _timeToNextLiveCountDown() {
-     const live = this.data.live;
-     const loop = setInterval(() => {
-       this._setTimeToNextLive(live);
-       if (live.timeToNextLive === '00:00:00') {
-         // @todo: clear the interval loop
-       } else {
-         this.setData({
-           live
-         });
-       }
-     }, 1000);
-  },
-
-  _onOpenWithScene(sceneId) {
-    const query = `mutation {
-      scanScene(id: ${sceneId}, appName: "QAXCX") {
-        id
-      }
-    }`;
-    return graphql(query);
-  },
-
-  _formatCheckins(todayCheckin, live) {
-    const checkins = live.checkinRewards,
-          maxStreakDays = 7;
-
-    const streakDays = Math.min(maxStreakDays, todayCheckin.streakDays);
-    todayCheckin.streakDays = streakDays;
-    for (let i = 0; i < streakDays; i++) {
-      checkins[i].didReceiveReward = true;
-    }
-    return live;
   }
 });

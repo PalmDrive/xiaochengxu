@@ -534,6 +534,10 @@ form {
   bottom: 10px;
 }
 
+.end-date {
+  width: 117px;
+}
+
 @media (min-width: 400px) {
   .view-container {
     padding: 500px 15px 20px;

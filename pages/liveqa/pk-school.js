@@ -95,9 +95,9 @@ class LivePk {
 
       onShareAppMessage(options) {
         return {
-          title: `${this.data.user.wxUsername}邀请你参加高校答题番位争夺战`,
-          path: '/pages/liveqa/index',
-          imageUrl: 'http://cdn.gecacademy.cn/miniprogram/version_2/share.jpg'
+          title: `${this.data.user.wxUsername}邀你参战为母校争光 瓜分50万大奖`,
+          path: `/pages/liveqa/pk-success?liveId=${liveId}&liveSchoolId=${liveSchoolId}`,
+          imageUrl: 'http://cdn.gecacademy.cn/miniprogram/version_2/success_share.jpg'
         };
       },
 
@@ -321,9 +321,7 @@ class LivePk {
       },
 
       clickFirstButton() {
-        if (this.data.result.points > 0) {
-          wx.navigateTo({url: `/pages/liveqa/pk-success?liveId=${liveId}&liveSchoolId=${liveSchoolId}`});
-        } else if (this.data.pkCount > 0) {
+        if (this.data.pkCount > 0) {
           wx.navigateBack({
             delta: 1
           })
@@ -333,6 +331,10 @@ class LivePk {
             icon: 'none',
             duration: 2000
           })
+
+          setTimeout(() => {
+            wx.redirectTo({url: `/pages/liveqa/index`});
+          }, 2000)
         }
       }
     };

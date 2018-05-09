@@ -14,7 +14,7 @@
     <view class="row space-between school-row">
       <view class="row">
         <image src="{{liveSchool.profilePicUrl}}" class="pk-school-image {{liveSchool.hiddenImage ? 'hide' : 'show'}}"/>
-        <text class="text-white size-20 {{liveSchool.hiddenImage ? 'show' : 'hide'}}">{{liveSchool.firstLetter}}</text>
+        <view class="text-white size-12 school-default-img" style="display: {{liveSchool.hiddenImage ? 'block' : 'none'}}">{{liveSchool.firstLetter}}</view>
         <text class="size-14">{{liveSchool.name}}</text>
       </view>
       <text class="size-12"> 损失了{{pkPoints}}</text>

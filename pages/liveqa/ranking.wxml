@@ -1,45 +1,70 @@
 <view class="ranking-container">
+  <view class="ranking-banner"></view>
   <view class="row leaderboard-type">
-    <view class="size-18 title {{leaderboardType === 'schools' ? 'active' : ''}}" data-type="schools" bindtap="changeLeaderboard">学校排行榜</view>
-    <view class="size-18 title {{leaderboardType === 'students' ? 'active' : ''}}" data-type="students" bindtap="changeLeaderboard">用户排行榜</view>
+    <view class="size-14 title {{leaderboardType === 'schools' ? 'active' : ''}}" data-type="schools" bindtap="changeLeaderboard">学校排行榜</view>
+    <view class="size-14 title {{leaderboardType === 'students' ? 'active' : ''}}" data-type="students" bindtap="changeLeaderboard">用户排行榜</view>
   </view>
 
   <view class="leaderboard size-12">
     <view class="table" hidden="{{leaderboardType !== 'schools'}}">
-      <view class="text-red hint">
-        <text hidden="{{!live.endAtDisplay}}">{{live.endAtDisplay}}</text>
-        <text>前30名高校玩家，瓜分50万大奖</text>
-      </view>
-
-      <view class="table-head">
-        <view class="table-row row">
-          <text class="ranking">排名</text>
-          <text>学校</text>
-          <text>总智商积分</text>
+      <view class="table-head-row row space-between">
+        <view class="row row-left">
+          <view class="size-16 row-index"></view>
+          <image src="{{user.myLiveSchool.profilePicUrl}}" class="school-image"/>
+          <view class="column">
+            <view class="size-16">{{user.myLiveSchool.name}}</view>
+            <view class="size-12 {{user.myLiveSchool.rtRanking > 50 ? 'text-color3' : 'main-color'}}">目前排名：第{{user.myLiveSchool.rtRanking}}名</view>
+          </view>
+        </view>
+        <view class="row row-right">
+          <image src="http://cdn.gecacademy.cn/miniprogram/coins_big.png" class="coin"/>
+          <view>{{user.myLiveSchool.points}}</view>
         </view>
       </view>
       <view class="table-body">
-        <view class="table-row row" wx:for="{{liveSchools}}" wx:key wx:for-item="school">
-          <text class="ranking">{{index + 1}}</text>
-          <text>{{school.name}}</text>
-          <text>{{school.points}}</text>
+        <view class="table-row row space-between" wx:for="{{liveSchools}}" wx:key wx:for-item="school">
+          <view class="row row-left">
+            <view class="size-16 row-index" wx:if="{{index > 2}}">{{index + 1}}</view>
+            <image src="{{ossUrl + 'ranking' + (index + 1) + '.png'}}" class="index-icon" wx:if="{{index < 3}}"/>
+            <image src="{{school.profilePicUrl}}" class="school-image" style="display: {{school.hiddenImage ? 'none' : 'block'}}"/>
+            <view class="text-white size-12 school-default-img" style="display: {{school.hiddenImage ? 'block' : 'none'}}">{{school.firstLetter}}</view>
+            <view class="size-16">{{school.name}}</view>
+          </view>
+          <view class="row row-right">
+            <image src="http://cdn.gecacademy.cn/miniprogram/coins_big.png" class="coin"/>
+            <view>{{school.points}}</view>
+          </view>
         </view>
       </view>
     </view>
 
     <view class="table size-12" hidden="{{leaderboardType !== 'students'}}">
-      <view class="table-head">
-        <view class="table-row row">
-          <text class="ranking">排名</text>
-          <text>用户</text>
-          <text>总智商积分</text>
+      <view class="table-head-row row space-between">
+        <view class="row row-left">
+          <view class="size-16 row-index"></view>
+          <image src="{{user.profilePicUrl}}" class="school-image"/>
+          <view class="column">
+            <view class="size-16">{{user.wxUsername}}</view>
+            <view class="size-12 {{user.rtRanking > 50 ? 'text-color3' : 'main-color'}}">目前排名：第{{user.rtRanking}}名</view>
+          </view>
+        </view>
+        <view class="row row-right">
+          <image src="http://cdn.gecacademy.cn/miniprogram/coins_big.png" class="coin"/>
+          <view>{{user.qaPoints}}</view>
         </view>
       </view>
       <view class="table-body">
-        <view class="table-row row" wx:for="{{students}}" wx:key wx:for-item="student">
-          <text class="ranking">{{index + 1}}</text>
-          <text>{{student.wxUsername}}</text>
-          <text>{{student.qaPoints}}</text>
+        <view class="table-row row space-between" wx:for="{{students}}" wx:key wx:for-item="student">
+          <view class="row row-left">
+            <view class="size-16 row-index" style="display: {{index > 2 ? 'block' : 'none'}}">{{index + 1}}</view>
+            <image src="{{ossUrl + 'ranking' + (index + 1) + '.png'}}" class="index-icon" wx:if="{{index < 3}}"/>
+            <image src="{{student.profilePicUrl}}" class="school-image"/>
+            <view class="size-16">{{student.wxUsername}}</view>
+          </view>
+          <view class="row">
+            <image src="http://cdn.gecacademy.cn/miniprogram/coins_big.png" class="coin"/>
+            <view>{{student.qaPoints}}</view>
+          </view>
         </view>
       </view>
     </view>

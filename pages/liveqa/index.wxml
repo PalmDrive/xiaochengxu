@@ -7,7 +7,7 @@
         <text class="size-12">本场奖金价值</text>
         <text class="size-18">500000</text>
       </view>
-      <view class="column column-center">
+      <view class="column column-center end-date">
         <text class="size-12">结算日期</text>
         <text class="size-18">6月01日</text>
       </view>

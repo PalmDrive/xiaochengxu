@@ -236,3 +236,14 @@ view {
   margin-top: 15px;
   width:100%;
 }
+
+.school-default-img {
+  border: 3px solid #fff;
+  padding: 13px 16px;
+  min-width: 50px;
+  max-width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 0px 5px 0px 10px;
+  background: url('http://cdn.gecacademy.cn/miniprogram/version_2/school_default.jpg') center center no-repeat/cover;
+}
