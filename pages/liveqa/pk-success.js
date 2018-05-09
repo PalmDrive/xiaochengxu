@@ -3,7 +3,8 @@ const utils = require('../../utils/util'),
       _ = require('../../vendors/underscore'),
       graphql = require('../../utils/graphql');
 let liveId,
-    liveSchoolId;
+    liveSchoolId,
+    userId;
 Page({
   data: {
     user: null,
@@ -14,6 +15,7 @@ Page({
   onLoad(options) {
     liveId = options.liveId
     liveSchoolId = options.liveSchoolId
+    userId = options.userId
     wx.setNavigationBarTitle({title: '炫耀战绩'});
     this._fetchData();
   },
@@ -38,17 +40,17 @@ Page({
             users(id: $userId) {
               id, isSchoolVerified, profilePicUrl, wxUsername, qaPoints
             }
-            userlives(userId: "${user.id}",liveId: "${liveId}", type: "pk") {
+            userlives(userId: "${userId}",liveId: "${liveId}", type: "pk") {
               points
             }
             liveSchools (id: "${liveSchoolId}") {
               id, name, profilePicUrl
             }
           }`,
-          variables = {userId: user.id};
+          variables = {userId: userId};
     return graphql(query, variables)
       .then(res => {
-        user = _.extend(res.data.users[0], user.attributes);
+        user = res.data.users[0];
 
         const userLive = res.data.userlives.length > 0 ? res.data.userlives[0] : {},
               school = res.data.liveSchools.length > 0 ? res.data.liveSchools[0] : {};

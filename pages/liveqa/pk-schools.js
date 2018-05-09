@@ -11,6 +11,10 @@ const page = Page({
   },
 
   onLoad() {
+
+  },
+
+  onShow () {
     this._fetchData();
   },
 

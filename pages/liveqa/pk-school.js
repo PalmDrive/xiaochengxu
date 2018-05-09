@@ -96,7 +96,7 @@ class LivePk {
       onShareAppMessage(options) {
         return {
           title: `${this.data.user.wxUsername}邀你参战为母校争光 瓜分50万大奖`,
-          path: `/pages/liveqa/pk-success?liveId=${liveId}&liveSchoolId=${liveSchoolId}`,
+          path: `/pages/liveqa/pk-success?liveId=${liveId}&liveSchoolId=${liveSchoolId}&userId=${this.data.user.id}`,
           imageUrl: 'http://cdn.gecacademy.cn/miniprogram/version_2/success_share.jpg'
         };
       },
