@@ -52,12 +52,12 @@
             <button wx:for="{{question.options}}" wx:for-item="option" data-option="{{option}}" wx:key="value" class="row space-between option size-16 {{((!option.isRight && option.selected) || (!question.isRight && question.schoolSelected && question.schoolSelectedOption ===  option.value)) ? 'wrong' : ''}} {{((option.isRight && option.selected) || (question.isRight && question.schoolSelected && question.schoolSelectedOption ===  option.value) || (option.isRight && question.selected && question.schoolSelected)) ? 'right' : ''}}" form-type="submit">
               <view>
                 <text class="icon icon-x" wx:if="{{option.selected && !option.isRight}}">✗</text>
-                <text class="icon icon-checkmark" wx:if="{{option.selected && option.isRight}}">✔</text>
+                <text class="icon icon-checkmark text-white" wx:if="{{option.selected && option.isRight}}">✔</text>
               </view>
               <text>{{option.label}}</text>
               <view>
                 <text class="icon icon-x" wx:if="{{question.schoolSelected && !question.isRight && question.schoolSelectedOption ===  option.value}}">✗</text>
-                <text class="icon icon-checkmark" wx:if="{{question.schoolSelected && question.isRight && question.schoolSelectedOption ===  option.value}}">✔</text>
+                <text class="icon icon-checkmark text-white" wx:if="{{question.schoolSelected && question.isRight && question.schoolSelectedOption ===  option.value}}">✔</text>
               </view>
             </button>
 

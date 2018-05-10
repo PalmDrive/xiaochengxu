@@ -314,6 +314,7 @@ class LivePk {
               this._playSound('allPass');
             }
             this.setData({
+              pkCount: this.data.pkCount - 1,
               result: calculatePkPoints,
               state: 1
             })
