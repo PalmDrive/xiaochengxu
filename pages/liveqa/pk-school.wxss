@@ -46,6 +46,29 @@
   margin-bottom: 25px;
 }
 
+.vs-list {
+  width: 100%;
+}
+
+.vs-list .column {
+  width: 33%;
+}
+
+.vs-atk {
+  color: rgba(255,255,255,0.70);
+}
+
+.vs-head {
+  background: rgba(255,255,255,0.30);
+  margin-bottom: 2px;
+  padding: 10px 25px;
+}
+
+.vs-body {
+  background: rgba(255,255,255,0.20);
+  padding: 10px 25px;
+}
+
 .vs-success {
   height: 100px;
 }

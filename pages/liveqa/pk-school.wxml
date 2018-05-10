@@ -71,18 +71,18 @@
     <!-- 挑战结果 start -->
     <view hidden="{{state !== 1}}" class="result">
       <image src="{{ossUrl + (result.points > 0 ? 'pk_success.png' : 'pk_fail.png')}}" class="vs-result {{result.points > 0 ? 'vs-success' : ''}}" />
-      <view class="result-list size-16">
-        <view class="row">
-          <text>积分：</text>
-          <text>{{result.points >= 0 ? '+ ' : ''}} {{result.points || 0}}</text>
+      <view class="size-16 row vs-list">
+        <view class="column vs-atk">
+          <text class="vs-head">攻击值</text>
+          <text class="vs-body">{{result.ATK || 0}}</text>
         </view>
-        <view class="row">
-          <text>ATK值：</text>
-          <text>{{result.ATK || 0}}</text>
+        <view class="column vs-atk">
+          <text class="vs-head">防守值</text>
+          <text class="vs-body">{{result.DEF || 0}}</text>
         </view>
-        <view class="row">
-          <text>DEF值：</text>
-          <text>{{result.DEF || 0}}</text>
+        <view class="column">
+          <text class="vs-head">本场获得</text>
+          <text class="vs-body">{{result.points >= 0 ? '+ ' : ''}} {{result.points || 0}}</text>
         </view>
       </view>
 
