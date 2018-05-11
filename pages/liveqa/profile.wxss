@@ -31,7 +31,7 @@
 
 .card-container .middle-container {
   border-bottom: 1px solid rgba(25,0,76,0.24);
-  padding: 15px 0;
+  padding: 15px 0px;
 }
 
 .card-container .col .btn {
@@ -44,13 +44,13 @@
 .btn-cash {
   background-color: #FF9B00;
   color: white;
-  margin-left: 10%;
   padding: 5px;
 }
 
 
 .card-container .col {
   width: 50%;
+  align-items:center;
 }
 
 .card-container .col.left {

@@ -16,15 +16,15 @@
       <text>累积获得</text>
     </view>
     <view class="middle-container row">
-      <view class="col left">
+      <view class="col left column">
         <view class="text-dark-gray size-12">奖金</view>
         <text>￥{{user.cash}}</text>
         <navigator url="/pages/liveqa/cash" class="btn btn-round btn-cash">提现</navigator>
       </view>
-      <view class="col">
+      <view class="col column">
         <view class="text-dark-gray size-12">集思学院奖学金</view>
         <text>￥{{user.gecSchoolarship}}</text>
-        <button class="btn btn-round btn-course" style="visibility:hidden">购课</button>
+        <navigator url="/pages/liveqa/courses" class="btn btn-round btn-cash">去购课</navigator>
       </view>
     </view>
   </view>

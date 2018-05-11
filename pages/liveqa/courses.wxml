@@ -1,0 +1,9 @@
+<view class="live-courses-page size-14">
+  <navigator wx:for="{{courses}}" wx:key wx:for-item="course" class="row" url="{{'/pages/liveqa/course?courseId=' + course.id}}">
+    <view class="image" style="background:  url('{{course.coverImgUrl}}') center center no-repeat/cover"></view>
+    <view class="column row-right">
+      <text class="size-14 pingfang-medium text-color1">{{course.name}}</text>
+      <text class="size-12 main-color">{{course.timeSubtitle}}</text>
+    </view>
+  </navigator>
+</view>

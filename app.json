@@ -11,6 +11,8 @@
     "pages/liveqa/rules",
     "pages/liveqa/pk-schools",
     "pages/liveqa/pk-school",
+    "pages/liveqa/courses",
+    "pages/liveqa/course",
     "pages/album/study",
     "pages/album/study-web",
     "pages/album/report",
