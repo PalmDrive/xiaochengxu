@@ -428,6 +428,8 @@ class Live {
           let timer = this.data.timer;
           if (timer === 0) {
             this._clearTimer();
+            // 倒计时为0 用户不可以再操作了
+            processing = true;
             // this.setData({
             //   status: '已超时',
             // });
