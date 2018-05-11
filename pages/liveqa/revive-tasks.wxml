@@ -5,10 +5,10 @@
   </view> -->
   <view class="row well">
     <view class="left">
-      <view class="size-16">分享到微信群/朋友圈</view>
+      <view class="size-16">邀请好友</view>
       <view class="size-14 text-gray">每邀请1位好友答题，获取1张复活卡</view>
     </view>
-    <button class="btn btn-round" bindtap="gotoSharePage">去分享</button>
+    <button class="btn btn-round" bindtap="gotoSharePage">去邀请</button>
   </view>
   <view class="row well">
     <view class="left">
