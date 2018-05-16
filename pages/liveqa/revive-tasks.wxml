@@ -3,19 +3,45 @@
     <view class="left">验证学校邮箱</view>
     <button class="btn btn-round">去验证</button>
   </view> -->
-  <view class="row well">
+  <view class="top-banner"></view>
+  <view class="row well space-between">
     <view class="left">
-      <view class="size-16">邀请好友</view>
-      <view class="size-14 text-gray">每邀请1位好友答题，获取1张复活卡</view>
+      <view class="size-16">登录任务</view>
+      <view class="size-14 text-gray">每日都有新奖励</view>
+      <view class="row" wx:if="{{checkinReward !== null }}">
+        <view class="text-gray">
+          <image src="http://cdn.ailingual.cn/pics/liveqa/icon_heart.png" class="icon-heart" />
+          <text class="size-12">+ {{checkinReward.extraQALives}}</text>
+        </view>
+        <view wx:if="{{checkinReward.points}}" class="text-gray">
+          <image src="http://cdn.ailingual.cn/pics/liveqa/copper.png" class="icon-copper" />
+          <text class="size-12">+ {{checkinReward.points}}</text>
+        </view>
+      </view>
     </view>
-    <button class="btn btn-round" bindtap="gotoSharePage">去邀请</button>
+    <button class="btn btn-round btn-gray text-color1">已完成</button>
   </view>
-  <view class="row well">
+  <view class="row well space-between">
+    <view class="left">
+      <view class="size-16">邀请好友 </view>
+      <view class="size-14 text-gray">每邀请1位好友答题，获取1张复活卡</view>
+      <view class="text-gray">
+        <image src="http://cdn.ailingual.cn/pics/liveqa/icon_heart.png" class="icon-heart" />
+        <text class="size-12">+ 1</text>
+      </view>
+    </view>
+    <button class="btn btn-round btn-blue" bindtap="gotoSharePage">去做任务</button>
+  </view>
+  <view class="row well space-between">
     <view class="left">
       <view class="size-16">到公众号领取</view>
       <view class="size-14 text-gray">点击“去领取”，回复“复活卡”</view>
+      <view class="text-gray">
+        <image src="http://cdn.ailingual.cn/pics/liveqa/icon_heart.png" class="icon-heart" />
+        <text class="size-12">+ 1</text>
+      </view>
     </view>
-    <button class="btn btn-round" open-type="contact">去领取</button>
+    <button class="btn btn-round btn-blue" open-type="contact">去做任务</button>
   </view>
   <!-- <view class="row well">
     <view class="left">
