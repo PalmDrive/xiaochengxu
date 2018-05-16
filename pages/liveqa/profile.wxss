@@ -51,6 +51,7 @@
 .card-container .col {
   width: 50%;
   align-items:center;
+  height:102px;
 }
 
 .card-container .col.left {

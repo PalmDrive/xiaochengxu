@@ -10,7 +10,7 @@ Page({
 
   onLoad(options) {
     wx.setNavigationBarTitle({title: '支付中'});
-    getApp().globalData.paySuccessUrl = `https://gecacademy.cn/#/success?orderId=${options.orderId}`
+    getApp().globalData.paySuccessUrl = `https://www.gecacademy.cn/#/success?orderId=${options.orderId}`
     // wx.navigateBack();
     const params = {
       timeStamp: options.timeStamp,

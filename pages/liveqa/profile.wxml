@@ -24,7 +24,7 @@
       <view class="col column">
         <view class="text-dark-gray size-12">集思学院奖学金</view>
         <text>￥{{user.gecSchoolarship}}</text>
-        <navigator url="/pages/liveqa/courses" class="btn btn-round btn-cash">去购课</navigator>
+        <navigator url="/pages/liveqa/courses" wx:if="{{user.gecSchoolarship > 0}}" class="btn btn-round btn-cash">去购课</navigator>
       </view>
     </view>
   </view>
