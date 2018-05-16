@@ -104,6 +104,12 @@
 					"name": "课程列表",
 					"pathName": "pages/liveqa/courses",
 					"query": ""
+				},
+				{
+					"id": 11,
+					"name": "支付页面",
+					"pathName": "pages/liveqa/pay",
+					"query": "timeStamp=1526437094&nonceStr=F16iYjWFBi4jsYQn&prepay_id=wx16101814419106520943e38b1459774633&paySign=DFCFEDC6BC189C41C286A9209CC185A5&orderId=1526437080dr3dk6ac1vxdho94fgvi"
 				}
 			]
 		}

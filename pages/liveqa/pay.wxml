@@ -1,0 +1,3 @@
+<view class="text-color2 size-22">
+  {{message}}
+</view>
