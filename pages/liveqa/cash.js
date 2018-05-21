@@ -82,6 +82,7 @@ Page({
           }`;
     return graphql(query)
     .then(res => {
+      wx.hideLoading()
       if (res.errors && res.errors.length > 0) {
         this.showToast(res.errors[0].message)
       } else if (res.data.cash && res.data.cash.id){
@@ -98,8 +99,6 @@ Page({
           }
         })
       }
-
-      wx.hideLoading()
 
       this.setData({
         processing: false

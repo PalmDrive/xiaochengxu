@@ -141,6 +141,20 @@ class Live {
 
       onUnload() {
         this._clearTimer();
+        wx.showModal({
+          title: '提示',
+          content: '因中途退出，本题默认答错',
+          success: function(res) {
+          }
+        })
+        const that = this
+        setTimeout(() => {
+          const answer = that._newAnswer({
+            value: null, isRight: 0
+          });
+          return that._saveUserSurveyAnswer(answer)
+            .then(that._onSaveUserSurveyAnswer)
+        }, 1000)
       },
 
       formSubmit(e) {
