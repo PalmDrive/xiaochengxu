@@ -54,9 +54,9 @@
 				},
 				{
 					"id": 3,
-					"name": "Album buy",
-					"pathName": "pages/album/buy",
-					"query": "id=68625905-db73-4ea4-93f7-5a675f8977c9",
+					"name": "pk schools list",
+					"pathName": "pages/liveqa/pk-schools",
+					"query": "",
 					"scene": "1008"
 				},
 				{
@@ -74,13 +74,14 @@
 					"scene": "1048"
 				},
 				{
-					"id": -1,
-					"name": "时间胶囊",
-					"pathName": "pages/campaign/capsule",
-					"query": ""
+					"id": 6,
+					"name": "pk",
+					"pathName": "pages/liveqa/pk-school",
+					"query": "liveId=k8zezry55d",
+					"scene": "1008"
 				},
 				{
-					"id": -1,
+					"id": 7,
 					"name": "提现",
 					"pathName": "pages/liveqa/cash",
 					"query": ""
